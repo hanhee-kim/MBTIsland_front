@@ -4,6 +4,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import Main from "./component/Main";
+import Join from "./component/Join";
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
       <BrowserRouter>
         <Main />
         <Routes>
-          <Route exact path="/" element={<Main />} />
+          <Route exact path="/" element={<Join />} />
         </Routes>
       </BrowserRouter>
       {/* </PersistGate> */}
