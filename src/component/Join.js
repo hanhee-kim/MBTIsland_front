@@ -23,7 +23,7 @@ const Join = () => {
           <h3>JOIN</h3>
         </FormGroup>
         <FormGroup row>
-          <Label for="join_id" sm={2}>
+          <Label for="join_id" sm={3}>
             아이디
           </Label>
           <Col sm={7}>
@@ -39,7 +39,7 @@ const Join = () => {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Label for="join_password" sm={2}>
+          <Label for="join_password" sm={3}>
             비밀번호
           </Label>
           <Col sm={7}>
@@ -48,6 +48,32 @@ const Join = () => {
               name="join_password"
               id="join_password"
               placeholder="PASSWORD를 입력하세요."
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup row>
+          <Label for="join_password_check" sm={3}>
+            비밀번호 확인
+          </Label>
+          <Col sm={7}>
+            <Input
+              type="password"
+              name="join_password_check"
+              id="join_password_check"
+              placeholder="PASSWORD를 한번더 입력하세요."
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup row>
+          <Label for="join_nick" sm={3}>
+            닉네임
+          </Label>
+          <Col sm={7}>
+            <Input
+              type="password"
+              name="join_nick"
+              id="join_nick"
+              placeholder="NICKNAME 입력하세요."
             />
           </Col>
         </FormGroup>
