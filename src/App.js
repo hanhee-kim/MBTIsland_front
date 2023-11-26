@@ -14,7 +14,8 @@ function App() {
       <BrowserRouter>
         <Main />
         <Routes>
-          <Route exact path="/" element={<Join />} />
+          <Route exact path="/" element={<Main />} />
+          <Route exact path="/join" element={<Join />} />
         </Routes>
       </BrowserRouter>
       {/* </PersistGate> */}
