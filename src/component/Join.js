@@ -2,14 +2,18 @@ import React, { useState } from "react";
 import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
 
 const Join = () => {
+  //---css
   const joinFormStyle = {
     border: "1px solid black",
     borderRadius: "15px",
     width: "750px",
-    height: "550px",
+    height: "600px",
     padding: "15px",
     margin: "0 auto",
     boxShadow: "5px 5px lightGray",
+    fontSize:"20px",
+    fontWeight:"500",
+    marginTop:"100px",
   };
   const mbtiCheckBoxStyle = {
     border: "1px solid gray",
@@ -24,23 +28,15 @@ const Join = () => {
     alignItems: "center",
     gap: "10px",
   };
+  //css---
+  //---state
   const [user, setUser] = useState({
-    id: "",
+    username: "",
     password: "",
-    nick: "",
+    nickname: "",
     mbti: "",
     email: "",
   });
-
-  const [mbti, setMbti] = useState("");
-  const [arrMbti, setArrMbti] = useState([]);
-  const change = (e) => {
-    // e.target.name
-  };
-  const submit = (e) => {
-    e.preventDefault();
-    setUser({ ...user, id: "", password: "", nick: "", mbti: "" });
-  };
   const [mbtiCheckE, setMbtiCheckE] = useState(false);
   const [mbtiCheckI, setMbtiCheckI] = useState(false);
   const [mbtiCheckN, setMbtiCheckN] = useState(false);
@@ -49,6 +45,18 @@ const Join = () => {
   const [mbtiCheckF, setMbtiCheckF] = useState(false);
   const [mbtiCheckP, setMbtiCheckP] = useState(false);
   const [mbtiCheckJ, setMbtiCheckJ] = useState(false);
+
+  const [mbti, setMbti] = useState("");
+  const [arrMbti, setArrMbti] = useState([]);
+  //state---
+  //---function
+  const change = (e) => {
+    // e.target.name
+  };
+  const submit = (e) => {
+    e.preventDefault();
+    setUser({ ...user, id: "", password: "", nick: "", mbti: "" });
+  };
 
   const getLabelBackgroundColor = (type) => {
     if (type === "E" && mbtiCheckE) {
@@ -159,10 +167,11 @@ const Join = () => {
       console.log("P:" + mbtiCheckP + ",J:" + mbtiCheckJ);
       console.log("arrMBTI : " + arrMbti);
       const mb = arrMbti.join("");
-      // console.log(mb);
-      // console.log(mb.length);
+      console.log(mb);
+      console.log(mb.length);
     }
   };
+  //function---
   return (
     <div>
       <Form style={joinFormStyle}>
@@ -458,11 +467,12 @@ const Join = () => {
           </Col>
         </FormGroup>
         <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
-          <button
+          <Button
+          color="dark"
             style={{
               borderRadius: "10px",
-              backgroundColor: "black",
-              color: "white",
+              // backgroundColor: "black",
+              // color: "white",
               marginRight: "40px",
               marginTop: "25px",
               width: "100px",
@@ -473,7 +483,7 @@ const Join = () => {
             onClick={submit}
           >
             가입
-          </button>
+          </Button>
         </FormGroup>
       </Form>
     </div>
