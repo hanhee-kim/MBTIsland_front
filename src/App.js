@@ -6,6 +6,7 @@ import { PersistGate } from "redux-persist/lib/integration/react";
 import Main from "./component/Main";
 import Join from "./component/Join";
 import Login from './component/Login';
+import AddJoin from "./component/AddJoin";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route exact path="/" element={<Main />} />
           <Route exact path="/join" element={<Join />} />
           <Route exact path="/login" element={<Login />} />
+          <Route exact path="/addjoin" element={<AddJoin />} />
         </Routes>
       </BrowserRouter>
       {/* </PersistGate> */}

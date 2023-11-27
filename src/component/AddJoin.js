@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
+import React, { useState } from 'react';
+import { Button, Col, Form, FormGroup, Input, Label } from 'reactstrap';
 
-const Join = () => {
-  //---css
-  const joinFormStyle = {
-    border: "1px solid black",
-    borderRadius: "15px",
-    width: "750px",
-    height: "600px",
-    padding: "15px",
-    margin: "0 auto",
-    boxShadow: "5px 5px lightGray",
-    fontSize:"20px",
-    fontWeight:"500",
-    marginTop:"100px",
-  };
+const AddJoin = () => {
+//css
+  const addJoinFormStyle ={
+    width:"700px",
+      height : "450px",
+      padding: "15px",
+      margin: "0 auto",
+      boxShadow: "5px 5px lightGray",
+      border: "1px solid black",
+      borderRadius: "15px",
+      fontSize:"20px",
+      fontWeight:"500",
+      marginTop:"200px",
+  }
   const mbtiCheckBoxStyle = {
     border: "1px solid gray",
     borderRadius: "10px",
@@ -28,15 +28,13 @@ const Join = () => {
     alignItems: "center",
     gap: "10px",
   };
-  //css---
-  //---state
-  const [user, setUser] = useState({
-    username: "",
-    userPassword: "",
-    userNickname: "",
-    userMbti: "",
-    userEmail: "",
-  });
+  //state,effect,...
+  const [user,setUser] = useState({
+  userMbti:'',
+  userEmail:'',
+})
+const [emailCode,setEmailCode] = useState('');
+
   const [mbtiCheckE, setMbtiCheckE] = useState(false);
   const [mbtiCheckI, setMbtiCheckI] = useState(false);
   const [mbtiCheckN, setMbtiCheckN] = useState(false);
@@ -48,203 +46,142 @@ const Join = () => {
 
   // const [mbti, setMbti] = useState("");
   const [arrMbti, setArrMbti] = useState([]);
-  //state---
-  //---function
-  const change = (e) => {
-    setUser({...user,[e.target.name]:[e.target.value],userMbti:arrMbti.join("")});
-    console.log("user:"+user.username+"  "+user.userPassword);
-  };
-  const submit = (e) => {
-    e.preventDefault();
-    setUser({ ...user});
-  };
+//보내기를 눌렀는지? 인증이 되었는지?mbti 4개 선택 했는지
+//function
+const addJoin = (e) =>{
+  e.preventDefault();
+}
+const change = (e) => {
+  setUser({...user,[e.target.name]:[e.target.value],userMbti:arrMbti.join("")});
+  console.log("user:"+user.userMbti+"email:"+user.userEmail);
+};
+const codeChange = (e) =>{
+  setEmailCode(e.target.value);
+  console.log(emailCode);
+}
+const getLabelBackgroundColor = (type) => {
+  if (type === "E" && mbtiCheckE) {
+    return "#25B2A2";
+  } else if (type === "I" && mbtiCheckI) {
+    return "#25B2A2";
+  }
+  if (type === "N" && mbtiCheckN) {
+    return "#25B2A2";
+  } else if (type === "S" && mbtiCheckS) {
+    return "#25B2A2";
+  }
+  if (type === "T" && mbtiCheckT) {
+    return "#25B2A2";
+  } else if (type === "F" && mbtiCheckF) {
+    return "#25B2A2";
+  }
+  if (type === "P" && mbtiCheckP) {
+    return "#25B2A2";
+  } else if (type === "J" && mbtiCheckJ) {
+    return "#25B2A2";
+  }
+};
+const getLabelColor = (type) => {
+  if (type === "E" && mbtiCheckE) {
+    return "white";
+  } else if (type === "I" && mbtiCheckI) {
+    return "white";
+  }
+  if (type === "N" && mbtiCheckN) {
+    return "white";
+  } else if (type === "S" && mbtiCheckS) {
+    return "white";
+  }
+  if (type === "T" && mbtiCheckT) {
+    return "white";
+  } else if (type === "F" && mbtiCheckF) {
+    return "white";
+  }
+  if (type === "P" && mbtiCheckP) {
+    return "white";
+  } else if (type === "J" && mbtiCheckJ) {
+    return "white";
+  }
+};
+const mbtiClick = (type, e) => {
+  const newMbti = [...arrMbti];
+  if (type === "E") {
+    setMbtiCheckE(true);
+    setMbtiCheckI(false);
+    newMbti[0] = "E";
+    setArrMbti(newMbti);
+    console.log("E:" + mbtiCheckE + ",I:" + mbtiCheckI);
+    console.log("arrMBTI : " + arrMbti);
+  } else if (type === "I") {
+    setMbtiCheckE(false);
+    setMbtiCheckI(true);
+    newMbti[0] = "I";
+    setArrMbti(newMbti);
+    console.log("E:" + mbtiCheckE + ",I:" + mbtiCheckI);
+    console.log("arrMBTI : " + arrMbti);
+  }
+  if (type === "N") {
+    setMbtiCheckN(true);
+    setMbtiCheckS(false);
+    newMbti[1] = "N";
+    setArrMbti(newMbti);
+    console.log("N:" + mbtiCheckN + ",S:" + mbtiCheckS);
+    console.log("arrMBTI : " + arrMbti);
+  } else if (type === "S") {
+    setMbtiCheckN(false);
+    setMbtiCheckS(true);
+    newMbti[1] = "S";
+    setArrMbti(newMbti);
+    console.log("N:" + mbtiCheckN + ",S:" + mbtiCheckS);
+    console.log("arrMBTI : " + arrMbti);
+  }
+  if (type === "T") {
+    setMbtiCheckT(true);
+    setMbtiCheckF(false);
+    newMbti[2] = "T";
+    setArrMbti(newMbti);
+    console.log("T:" + mbtiCheckT + ",F:" + mbtiCheckF);
+    console.log("arrMBTI : " + arrMbti);
+  } else if (type === "F") {
+    setMbtiCheckT(false);
+    setMbtiCheckF(true);
+    newMbti[2] = "F";
+    setArrMbti(newMbti);
+    console.log("T:" + mbtiCheckT + ",F:" + mbtiCheckF);
+    console.log("arrMBTI : " + arrMbti);
+  }
+  if (type === "P") {
+    setMbtiCheckP(true);
+    setMbtiCheckJ(false);
+    newMbti[3] = "P";
+    setArrMbti(newMbti);
+    console.log("P:" + mbtiCheckP + ",J:" + mbtiCheckJ);
+    console.log("arrMBTI : " + arrMbti);
+  } else if (type === "J") {
+    setMbtiCheckP(false);
+    setMbtiCheckJ(true);
+    newMbti[3] = "J";
+    setArrMbti(newMbti);
+    console.log("P:" + mbtiCheckP + ",J:" + mbtiCheckJ);
+    console.log("arrMBTI : " + arrMbti);
+    const mb = arrMbti.join("");
+    console.log(mb);
+    console.log(mb.length);
+  }
+};
 
-  const getLabelBackgroundColor = (type) => {
-    if (type === "E" && mbtiCheckE) {
-      return "#25B2A2";
-    } else if (type === "I" && mbtiCheckI) {
-      return "#25B2A2";
-    }
-    if (type === "N" && mbtiCheckN) {
-      return "#25B2A2";
-    } else if (type === "S" && mbtiCheckS) {
-      return "#25B2A2";
-    }
-    if (type === "T" && mbtiCheckT) {
-      return "#25B2A2";
-    } else if (type === "F" && mbtiCheckF) {
-      return "#25B2A2";
-    }
-    if (type === "P" && mbtiCheckP) {
-      return "#25B2A2";
-    } else if (type === "J" && mbtiCheckJ) {
-      return "#25B2A2";
-    }
-  };
-  const getLabelColor = (type) => {
-    if (type === "E" && mbtiCheckE) {
-      return "white";
-    } else if (type === "I" && mbtiCheckI) {
-      return "white";
-    }
-    if (type === "N" && mbtiCheckN) {
-      return "white";
-    } else if (type === "S" && mbtiCheckS) {
-      return "white";
-    }
-    if (type === "T" && mbtiCheckT) {
-      return "white";
-    } else if (type === "F" && mbtiCheckF) {
-      return "white";
-    }
-    if (type === "P" && mbtiCheckP) {
-      return "white";
-    } else if (type === "J" && mbtiCheckJ) {
-      return "white";
-    }
-  };
-  // const [eRef,setERef] =useRef(false);
-  const mbtiClick = (type, e) => {
-    const newMbti = [...arrMbti];
-    // e.target.backgroundColor:"";
-    if (type === "E") {
-      setMbtiCheckE(true);
-      setMbtiCheckI(false);
-      newMbti[0] = "E";
-      setArrMbti(newMbti);
-      // console.log(e);
-      console.log("E:" + mbtiCheckE + ",I:" + mbtiCheckI);
-      console.log("arrMBTI : " + arrMbti);
-    } else if (type === "I") {
-      setMbtiCheckE(false);
-      setMbtiCheckI(true);
-      newMbti[0] = "I";
-      setArrMbti(newMbti);
-      console.log("E:" + mbtiCheckE + ",I:" + mbtiCheckI);
-      console.log("arrMBTI : " + arrMbti);
-    }
-    if (type === "N") {
-      setMbtiCheckN(true);
-      setMbtiCheckS(false);
-      newMbti[1] = "N";
-      setArrMbti(newMbti);
-      console.log("N:" + mbtiCheckN + ",S:" + mbtiCheckS);
-      console.log("arrMBTI : " + arrMbti);
-    } else if (type === "S") {
-      setMbtiCheckN(false);
-      setMbtiCheckS(true);
-      newMbti[1] = "S";
-      setArrMbti(newMbti);
-      console.log("N:" + mbtiCheckN + ",S:" + mbtiCheckS);
-      console.log("arrMBTI : " + arrMbti);
-    }
-    if (type === "T") {
-      setMbtiCheckT(true);
-      setMbtiCheckF(false);
-      newMbti[2] = "T";
-      setArrMbti(newMbti);
-      console.log("T:" + mbtiCheckT + ",F:" + mbtiCheckF);
-      console.log("arrMBTI : " + arrMbti);
-    } else if (type === "F") {
-      setMbtiCheckT(false);
-      setMbtiCheckF(true);
-      newMbti[2] = "F";
-      setArrMbti(newMbti);
-      console.log("T:" + mbtiCheckT + ",F:" + mbtiCheckF);
-      console.log("arrMBTI : " + arrMbti);
-    }
-    if (type === "P") {
-      setMbtiCheckP(true);
-      setMbtiCheckJ(false);
-      newMbti[3] = "P";
-      setArrMbti(newMbti);
-      console.log("P:" + mbtiCheckP + ",J:" + mbtiCheckJ);
-      console.log("arrMBTI : " + arrMbti);
-    } else if (type === "J") {
-      setMbtiCheckP(false);
-      setMbtiCheckJ(true);
-      newMbti[3] = "J";
-      setArrMbti(newMbti);
-      console.log("P:" + mbtiCheckP + ",J:" + mbtiCheckJ);
-      console.log("arrMBTI : " + arrMbti);
-      const mb = arrMbti.join("");
-      console.log(mb);
-      console.log(mb.length);
-    }
-  };
-  //function---
   return (
     <div>
-      <Form style={joinFormStyle}>
-        <FormGroup row style={{ justifyContent: "center" }}>
-          <h3 style={{ fontSize: "40px" }}>JOIN</h3>
-        </FormGroup>
-        <FormGroup row>
-          <Label for="username" sm={3}>
-            아이디
-          </Label>
-          <Col sm={7}>
-            <Input
-              type="text"
-              name="username"
-              id="username"
-              placeholder="ID를 입력하세요."
-              onChange={change}
-            />
-          </Col>
-          <Col sm={2}>
-            <Button
-              color="white"
-              style={{ border: "1px solid black", fontWeight: "600" }}
-            >
-              중복확인
-            </Button>
-          </Col>
-        </FormGroup>
-        <FormGroup row>
-          <Label for="userPassword" sm={3}>
-            비밀번호
-          </Label>
-          <Col sm={7}>
-            <Input
-              type="password"
-              name="userPassword"
-              id="userPassword"
-              placeholder="PASSWORD를 입력하세요."
-              onChange={change}
-            />
-          </Col>
-        </FormGroup>
-        <FormGroup row>
-          <Label for="user_password_check" sm={3}>
-            비밀번호 확인
-          </Label>
-          <Col sm={7}>
-            <Input
-              type="password"
-              name="user_password_check"
-              id="user_password_check"
-              placeholder="PASSWORD를 한번더 입력하세요."
-              onChange={change}
-            />
-          </Col>
-        </FormGroup>
-        <FormGroup row>
-          <Label for="userNickname" sm={3}>
-            닉네임
-          </Label>
-          <Col sm={7}>
-            <Input
-              type="text"
-              name="userNickname"
-              id="userNickname"
-              placeholder="NICKNAME 입력하세요."
-              onChange={change}
-            />
-          </Col>
-        </FormGroup>
-
-        <FormGroup tag="fieldset" style={{ display: "flex", gap: "10px" }}>
+      <Form style={addJoinFormStyle}>
+      <FormGroup row style={{ justifyContent: "center" }}>
+        <h3 style={{ fontSize: "40px" }}>ADD</h3>
+      </FormGroup>
+      <FormGroup>
+      <Label sm={12}>
+          필수입력 정보 미추가시 정상 회원가입이 되지 않습니다.
+        </Label>
+      </FormGroup>
+      <FormGroup tag="fieldset" style={{ display: "flex", gap: "10px" }}>
           <Label for="mbti" sm={3}>
             MBTI
           </Label>
@@ -446,16 +383,16 @@ const Join = () => {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Label for="join_code" sm={3}>
+          <Label for="emailCode" sm={3}>
             인증코드
           </Label>
           <Col sm={7}>
             <Input
               type="text"
-              name="join_code"
-              id="join_code"
+              name="emailCode"
+              id="emailCode"
               placeholder="인증코드를 입력하세요."
-              onChange={change}
+              onChange={codeChange}
             />
           </Col>
           <Col sm={2}>
@@ -467,9 +404,10 @@ const Join = () => {
             </Button>
           </Col>
         </FormGroup>
-        <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
+      
+      <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
           <Button
-          color="dark"
+          color='dark'
             style={{
               borderRadius: "10px",
               // backgroundColor: "black",
@@ -481,9 +419,9 @@ const Join = () => {
             }}
             type="submit"
             name="submit"
-            onClick={submit}
+            onClick={addJoin}
           >
-            가입
+            추가
           </Button>
         </FormGroup>
       </Form>
@@ -491,4 +429,4 @@ const Join = () => {
   );
 };
 
-export default Join;
+export default AddJoin;

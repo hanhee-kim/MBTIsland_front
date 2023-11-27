@@ -46,7 +46,7 @@ const Login = () => {
     console.log("user:"+user.username+"  "+user.password);
   }
   const submit = (e) => {
-    e.preventDefalut();
+    e.preventDefault();
   }
   const goJoin = () => {
     navigate("/join");
@@ -80,7 +80,7 @@ const Login = () => {
           <Input type='password' name='password' id='password'placeholder='PW를 입력하세요.' onChange={change}/>
         </Col>
       </FormGroup>
-      <div style={socialBtnStyle}><img src={'../kakao_login.png'} onClick={goKakaoLogin}/><img src={'../naver_Login.png'} style={{width:"183px",height:"45px"}} onClick={goNaverLogin}/></div>
+      <div style={socialBtnStyle}><img src={'../kakao_login.png'} style={{width:"183px",height:"45px"}} onClick={goKakaoLogin}/><img src={'../naver_Login.png'} style={{width:"183px",height:"45px"}} onClick={goNaverLogin}/></div>
       <div style={BtnGroupStyle}>
         <a  sm={4} href='/findusername'>
           아이디 찾기
