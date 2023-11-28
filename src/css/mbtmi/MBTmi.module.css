@@ -1,0 +1,226 @@
+.container{
+    padding-top: 80px;
+    /* border: 1px solid blue; */
+	height: auto;
+    min-height: 100%;
+    padding-bottom: 60px; /* 푸터 높이만큼 확보해둠 */
+    
+    display: flex;
+    justify-content: center;
+}
+
+.section {
+    /* border: 1px solid red; */
+    min-height: 900px; /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
+    width: 883px;
+    font-size: 20px;
+}
+
+.boardTitleB {
+    background-color:#F3F3F3;
+    width:883px; 
+    height:110px;
+    border: 1px solid #A6A6A6;
+    border-radius: 10px;
+    padding-left: 35px;
+    margin-bottom: 40px;
+    padding-top: 20px;
+}
+.boardTitleB>span>p:first-child {
+    font-size: 25px;
+    margin-bottom: 0px;
+} 
+.boardTitleB>span>p+p {
+    font-size: 15px;
+    font-weight: 600;
+} 
+
+.weekyHotPostsTitle {
+    font-weight: 600;
+    padding-left: 12px;
+    margin-bottom: 12px;
+}
+.weeklyHotPosts {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 30px;
+    padding-right: 30px;
+    width: 883px;
+    height: 230px;
+    border: 1px solid #A6A6A6;
+    border-radius: 10px;
+    font-size: 18px;
+}
+.weeklyPostsTable {
+    width: 100%;
+}
+.weeklyPostsTable>tbody>tr:not(:first-child) {
+    border-top: 1px solid #9B9B9B;
+}
+.weeklyPostsTable>tbody>tr>td {
+    padding: 5px;
+}
+.weeklyPostsTable>tbody>tr>td:first-child,
+.weeklyPostsTable>tbody>tr>td:nth-child(4) {
+    color: #A3A3A3
+}
+.weeklyPostsTable>tbody>tr>td:nth-child(2)>small {
+    color: #6e6e6e;
+}
+.profileColor {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #F0A4AB;
+    background: #F0A4AB;
+    border-radius: 50%;
+}
+.thumbIcon {
+    width: 25px;
+}
+.categoryAndFilter {
+    height: 260px;
+    display: flex;
+    flex-direction: column;
+    /* border: 1px dashed orange; */
+    align-items: center;
+    justify-content: center;
+}
+.categoryBtns {
+    font-size: 16px;
+    margin-bottom: 35px;
+}
+.categoryBtns>span {
+    font-size: 24px;
+}
+.mbtiFilterBtns>span {
+    font-size: 24px;
+}
+.categoryBtns>button {
+    padding: 6px 10px 6px 10px;
+    background: white;   
+    border-radius: 5px;
+    border: 1px solid #E6E6E6;
+}
+.categoryBtns>button:not(:first-child) {
+    padding: 3px 10px 3px 10px;
+    margin-left: 15px;
+}
+.activeCategory {
+    background: #E6E6E6 !important;
+}
+.mbtiFilterBtns input[type=radio]{
+    display: none;
+}
+.mbtiFilterBtns input[type=radio]+label{
+    font-size: 25px !important;
+    line-height: 35px !important;
+    font-weight: 500 !important;
+    display: inline-block;
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    border: 1px solid #E9E9E9;
+    border-radius: 8px;
+    line-height: 24px;
+    text-align: center;
+    font-weight:bold;
+    font-size:13px;
+    background-color: #ffff;
+    margin: 0 3px 0 3px;
+}
+.mbtiFilterBtns input[type=radio]:checked+label{
+    background-color: #25B2A2;
+    border: 1px solid #25B2A2;
+    border-radius: 8px;
+    color: #ffff;
+}
+
+.aboveTable {
+    display:flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.aboveTable>span>button {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 6px 15px 6px 15px;
+    margin-right: 10px;
+    border: none;
+    background: none;
+    border-radius: 4px;
+}
+.aboveTable>span>button:last-child { 
+    border: 1px solid #E6E6E6;
+}
+.sortIcon {
+    width: 18px;
+    margin-right: 5px;
+    margin-top: -3px;
+}
+.writebtnIcon {
+    width: 16px;
+    margin-right: 5px;
+    margin-top: -3px;
+}
+
+.searchBar>input {
+    border-radius: 25px;
+    height: 40px;
+    position: relative;
+    padding: 3px;
+}
+.mbtmiTable {
+    width: 100%;
+    border-top: 1px solid #9B9B9B;
+    border-bottom: 1px solid #9B9B9B;
+}
+.mbtmiTable>tbody>tr:not(:first-child) {
+    border-top: 1px solid #9B9B9B;
+}
+.mbtmiTable>tbody>tr {
+    /* background: seashell; */
+    height: 90px;
+}
+.mbtmiTable>tbody>tr>td>div {
+    /* background: lightgoldenrodyellow; */
+    margin: 6px 0 6px 0;
+    padding: 0px 20px 0px 20px;
+}
+.td1row>span {
+    margin-bottom: 10px;
+    margin-right: 22px;
+}
+.td1row>small {
+    color: #6e6e6e;
+}
+.td2row {
+    display: flex;
+    justify-content: space-between;
+}
+.td2row>span>small {
+    color: #A3A3A3;
+}
+.commentIcon {
+    width: 23px;
+    margin-left: 20px; 
+}
+
+.paging {
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+}
+.paging>span {
+    display: inline-block;
+    margin: 5px;
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    border: 0px solid white;
+    text-align: center;
+    line-height: 32px;
+}
+.activePage {
+    border: 1px solid #A3A3A3 !important;
+}
