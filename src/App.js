@@ -22,7 +22,6 @@ function App() {
       {/* <Provider store={store}> */}
       {/* <PersistGate persistor={persister}> */}
       <BrowserRouter>
-        <Main />
         <Header />
         <Routes>
           <Route exact path="/notice" element={<Notice />} />
