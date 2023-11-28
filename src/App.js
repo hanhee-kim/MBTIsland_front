@@ -11,6 +11,8 @@ import NoticeDetail from "./component/notice/NoticeDeatil";
 import AdminNotice from "./component/admin/AdminNotice";
 import AdminNoticeForm from './component/admin/AdminNoticeForm';
 import Join from './component/user/Join';
+import MbtyMain from './component/mbty/MbtyMain';
+import Mbty from './component/mbty/Mbty';
 import Header from "./component/common/Header";
 import Footer from './component/common/Footer';
 
@@ -20,7 +22,6 @@ function App() {
       {/* <Provider store={store}> */}
       {/* <PersistGate persistor={persister}> */}
       <BrowserRouter>
-        <Main/>
         <Header/>
         <Routes>
           <Route exact path="/" element={<Join/>} />
@@ -29,6 +30,8 @@ function App() {
           <Route exact path="/adminNotice" element={<AdminNotice/>} />
           <Route exact path="/adminNoticeForm" element={<AdminNoticeForm/>} />
           <Route exact path="/mbtmi" element={<MBTmi/>} />
+          <Route exect path="/mbtymain" element={<MbtyMain/>}/>
+          <Route exect path="/mbty" element={<Mbty/>}/>
         </Routes>
         <Footer/>
       </BrowserRouter>
