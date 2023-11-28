@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import { Button, Col, Form, FormGroup, Input, Label } from 'reactstrap';
+import React, { useState } from "react";
+import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
 
 const AddJoin = () => {
-//css
-  const addJoinFormStyle ={
-    width:"700px",
-      height : "450px",
-      padding: "15px",
-      margin: "0 auto",
-      boxShadow: "5px 5px lightGray",
-      border: "1px solid black",
-      borderRadius: "15px",
-      fontSize:"20px",
-      fontWeight:"500",
-      marginTop:"200px",
-  }
+  //css
+  const addJoinFormStyle = {
+    width: "700px",
+    height: "450px",
+    padding: "15px",
+    margin: "0 auto",
+    boxShadow: "5px 5px lightGray",
+    border: "1px solid black",
+    borderRadius: "15px",
+    fontSize: "20px",
+    fontWeight: "500",
+    marginTop: "200px",
+  };
   const mbtiCheckBoxStyle = {
     border: "1px solid gray",
     borderRadius: "10px",
@@ -28,203 +28,98 @@ const AddJoin = () => {
     alignItems: "center",
     gap: "10px",
   };
+  const btnSelStyle = {
+    ...mbtiCheckBoxStyle,
+    backgroundColor: "#25B2A2",
+    color: "white",
+    borderColor: "#25B2A2",
+  };
+
+  const btnOrgStyle = {
+    ...mbtiCheckBoxStyle,
+    backgroundColor: "white",
+    color: "black",
+    borderColor: "gray",
+  };
   //state,effect,...
-  const [user,setUser] = useState({
-  userMbti:'',
-  userEmail:'',
-})
-const [emailCode,setEmailCode] = useState('');
+  const [user, setUser] = useState({
+    userMbti: "",
+    userEmail: "",
+  });
+  const [emailCode, setEmailCode] = useState("");
 
-  const [mbtiCheckE, setMbtiCheckE] = useState(false);
-  const [mbtiCheckI, setMbtiCheckI] = useState(false);
-  const [mbtiCheckN, setMbtiCheckN] = useState(false);
-  const [mbtiCheckS, setMbtiCheckS] = useState(false);
-  const [mbtiCheckT, setMbtiCheckT] = useState(false);
-  const [mbtiCheckF, setMbtiCheckF] = useState(false);
-  const [mbtiCheckP, setMbtiCheckP] = useState(false);
-  const [mbtiCheckJ, setMbtiCheckJ] = useState(false);
+  const [mbtiCheckEI, setMbtiCheckEI] = useState("E");
+  const [mbtiCheckNS, setMbtiCheckNS] = useState("N");
+  const [mbtiCheckTF, setMbtiCheckTF] = useState("T");
+  const [mbtiCheckPJ, setMbtiCheckPJ] = useState("P");
+  //보내기를 눌렀는지? 인증이 되었는지?mbti 4개 선택 했는지
+  //function
+  const addJoin = (e) => {
+    e.preventDefault();
+    let sendUser = {
+      ...user,
+      muserMbti: mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ,
+    };
+  };
+  const change = (e) => {
+    setUser({ ...user });
+    console.log("user:" + user.userMbti + "email:" + user.userEmail);
+  };
+  const codeChange = (e) => {
+    setEmailCode(e.target.value);
+    console.log(emailCode);
+  };
+  const mbtiEIClick = (e, ei) => {
+    e.stopPropagation();
+    setMbtiCheckEI(ei);
+  };
 
-  // const [mbti, setMbti] = useState("");
-  const [arrMbti, setArrMbti] = useState([]);
-//보내기를 눌렀는지? 인증이 되었는지?mbti 4개 선택 했는지
-//function
-const addJoin = (e) =>{
-  e.preventDefault();
-}
-const change = (e) => {
-  setUser({...user,[e.target.name]:[e.target.value],userMbti:arrMbti.join("")});
-  console.log("user:"+user.userMbti+"email:"+user.userEmail);
-};
-const codeChange = (e) =>{
-  setEmailCode(e.target.value);
-  console.log(emailCode);
-}
-const getLabelBackgroundColor = (type) => {
-  if (type === "E" && mbtiCheckE) {
-    return "#25B2A2";
-  } else if (type === "I" && mbtiCheckI) {
-    return "#25B2A2";
-  }
-  if (type === "N" && mbtiCheckN) {
-    return "#25B2A2";
-  } else if (type === "S" && mbtiCheckS) {
-    return "#25B2A2";
-  }
-  if (type === "T" && mbtiCheckT) {
-    return "#25B2A2";
-  } else if (type === "F" && mbtiCheckF) {
-    return "#25B2A2";
-  }
-  if (type === "P" && mbtiCheckP) {
-    return "#25B2A2";
-  } else if (type === "J" && mbtiCheckJ) {
-    return "#25B2A2";
-  }
-};
-const getLabelColor = (type) => {
-  if (type === "E" && mbtiCheckE) {
-    return "white";
-  } else if (type === "I" && mbtiCheckI) {
-    return "white";
-  }
-  if (type === "N" && mbtiCheckN) {
-    return "white";
-  } else if (type === "S" && mbtiCheckS) {
-    return "white";
-  }
-  if (type === "T" && mbtiCheckT) {
-    return "white";
-  } else if (type === "F" && mbtiCheckF) {
-    return "white";
-  }
-  if (type === "P" && mbtiCheckP) {
-    return "white";
-  } else if (type === "J" && mbtiCheckJ) {
-    return "white";
-  }
-};
-const mbtiClick = (type, e) => {
-  const newMbti = [...arrMbti];
-  if (type === "E") {
-    setMbtiCheckE(true);
-    setMbtiCheckI(false);
-    newMbti[0] = "E";
-    setArrMbti(newMbti);
-    console.log("E:" + mbtiCheckE + ",I:" + mbtiCheckI);
-    console.log("arrMBTI : " + arrMbti);
-  } else if (type === "I") {
-    setMbtiCheckE(false);
-    setMbtiCheckI(true);
-    newMbti[0] = "I";
-    setArrMbti(newMbti);
-    console.log("E:" + mbtiCheckE + ",I:" + mbtiCheckI);
-    console.log("arrMBTI : " + arrMbti);
-  }
-  if (type === "N") {
-    setMbtiCheckN(true);
-    setMbtiCheckS(false);
-    newMbti[1] = "N";
-    setArrMbti(newMbti);
-    console.log("N:" + mbtiCheckN + ",S:" + mbtiCheckS);
-    console.log("arrMBTI : " + arrMbti);
-  } else if (type === "S") {
-    setMbtiCheckN(false);
-    setMbtiCheckS(true);
-    newMbti[1] = "S";
-    setArrMbti(newMbti);
-    console.log("N:" + mbtiCheckN + ",S:" + mbtiCheckS);
-    console.log("arrMBTI : " + arrMbti);
-  }
-  if (type === "T") {
-    setMbtiCheckT(true);
-    setMbtiCheckF(false);
-    newMbti[2] = "T";
-    setArrMbti(newMbti);
-    console.log("T:" + mbtiCheckT + ",F:" + mbtiCheckF);
-    console.log("arrMBTI : " + arrMbti);
-  } else if (type === "F") {
-    setMbtiCheckT(false);
-    setMbtiCheckF(true);
-    newMbti[2] = "F";
-    setArrMbti(newMbti);
-    console.log("T:" + mbtiCheckT + ",F:" + mbtiCheckF);
-    console.log("arrMBTI : " + arrMbti);
-  }
-  if (type === "P") {
-    setMbtiCheckP(true);
-    setMbtiCheckJ(false);
-    newMbti[3] = "P";
-    setArrMbti(newMbti);
-    console.log("P:" + mbtiCheckP + ",J:" + mbtiCheckJ);
-    console.log("arrMBTI : " + arrMbti);
-  } else if (type === "J") {
-    setMbtiCheckP(false);
-    setMbtiCheckJ(true);
-    newMbti[3] = "J";
-    setArrMbti(newMbti);
-    console.log("P:" + mbtiCheckP + ",J:" + mbtiCheckJ);
-    console.log("arrMBTI : " + arrMbti);
-    const mb = arrMbti.join("");
-    console.log(mb);
-    console.log(mb.length);
-  }
-};
+  const mbtiNSClick = (e, ns) => {
+    e.stopPropagation();
+    setMbtiCheckNS(ns);
+  };
+
+  const mbtiTFClick = (e, tf) => {
+    e.stopPropagation();
+    setMbtiCheckTF(tf);
+  };
+
+  const mbtiPJClick = (e, pj) => {
+    e.stopPropagation();
+    setMbtiCheckPJ(pj);
+  };
 
   return (
     <div>
       <Form style={addJoinFormStyle}>
-      <FormGroup row style={{ justifyContent: "center" }}>
-        <h3 style={{ fontSize: "40px" }}>ADD</h3>
-      </FormGroup>
-      <FormGroup>
-      <Label sm={12}>
-          필수입력 정보 미추가시 정상 회원가입이 되지 않습니다.
-        </Label>
-      </FormGroup>
-      <FormGroup tag="fieldset" style={{ display: "flex", gap: "10px" }}>
+        <FormGroup row style={{ justifyContent: "center" }}>
+          <h3 style={{ fontSize: "40px" }}>ADD</h3>
+        </FormGroup>
+        <FormGroup>
+          <Label sm={12}>
+            필수입력 정보 미추가시 정상 회원가입이 되지 않습니다.
+          </Label>
+        </FormGroup>
+        <FormGroup tag="fieldset" style={{ display: "flex", gap: "10px" }} row>
           <Label for="mbti" sm={3}>
             MBTI
           </Label>
           <div style={mbtiCheckBox}>
             <FormGroup>
-              {/* <input type="hidden" name="mbti" value={mbti} /> */}
               <Label
-                style={{
-                  ...mbtiCheckBoxStyle,
-                  backgroundColor: getLabelBackgroundColor("E"),
-                  color: getLabelColor("E"),
-                }}
+                style={mbtiCheckEI === "E" ? btnSelStyle : btnOrgStyle}
                 check
-                onClick={(e) => mbtiClick("E", e)}
+                onClick={(e) => mbtiEIClick(e, "E")}
               >
-                <input
-                  style={{ display: "none" }}
-                  type="radio"
-                  name="emti1"
-                  checked={mbtiCheckE}
-                  onChange={() => mbtiClick("E")}
-                />
                 E
               </Label>
             </FormGroup>
-
             <FormGroup>
               <Label
-                style={{
-                  ...mbtiCheckBoxStyle,
-                  backgroundColor: getLabelBackgroundColor("I"),
-                  color: getLabelColor("I"),
-                }}
+                style={mbtiCheckEI === "I" ? btnSelStyle : btnOrgStyle}
                 check
-                onClick={(e) => mbtiClick("I", e)}
+                onClick={(e) => mbtiEIClick(e, "I")}
               >
-                <input
-                  style={{ display: "none" }}
-                  type="radio"
-                  name="emti1"
-                  checked={mbtiCheckI}
-                  readOnly
-                />
                 {""}I
               </Label>
             </FormGroup>
@@ -233,42 +128,19 @@ const mbtiClick = (type, e) => {
           <div style={mbtiCheckBox}>
             <FormGroup>
               <Label
-                style={{
-                  ...mbtiCheckBoxStyle,
-                  backgroundColor: getLabelBackgroundColor("N"),
-                  color: getLabelColor("N"),
-                }}
+                style={mbtiCheckNS === "N" ? btnSelStyle : btnOrgStyle}
                 check
-                onClick={() => mbtiClick("N")}
+                onClick={(e) => mbtiNSClick(e, "N")}
               >
-                <input
-                  style={{ display: "none" }}
-                  type="radio"
-                  name="emti2"
-                  checked={mbtiCheckN}
-                  readOnly
-                  onChange={() => {}}
-                />
                 {""}N
               </Label>
             </FormGroup>
             <FormGroup>
               <Label
-                style={{
-                  ...mbtiCheckBoxStyle,
-                  backgroundColor: getLabelBackgroundColor("S"),
-                  color: getLabelColor("S"),
-                }}
+                style={mbtiCheckNS === "S" ? btnSelStyle : btnOrgStyle}
                 check
-                onClick={() => mbtiClick("S")}
+                onClick={(e) => mbtiNSClick(e, "S")}
               >
-                <input
-                  style={{ display: "none" }}
-                  type="radio"
-                  name="emti2"
-                  checked={mbtiCheckS}
-                  readOnly
-                />
                 {""}S
               </Label>
             </FormGroup>
@@ -277,41 +149,19 @@ const mbtiClick = (type, e) => {
           <div style={mbtiCheckBox}>
             <FormGroup>
               <Label
-                style={{
-                  ...mbtiCheckBoxStyle,
-                  backgroundColor: getLabelBackgroundColor("T"),
-                  color: getLabelColor("T"),
-                }}
+                style={mbtiCheckTF === "T" ? btnSelStyle : btnOrgStyle}
                 check
-                onClick={() => mbtiClick("T")}
+                onClick={(e) => mbtiTFClick(e, "T")}
               >
-                <input
-                  style={{ display: "none" }}
-                  type="radio"
-                  name="emti3"
-                  checked={mbtiCheckT}
-                  readOnly
-                />
                 {""}T
               </Label>
             </FormGroup>
             <FormGroup>
               <Label
-                style={{
-                  ...mbtiCheckBoxStyle,
-                  backgroundColor: getLabelBackgroundColor("F"),
-                  color: getLabelColor("F"),
-                }}
+                style={mbtiCheckTF === "F" ? btnSelStyle : btnOrgStyle}
                 check
-                onClick={() => mbtiClick("F")}
+                onClick={(e) => mbtiTFClick(e, "F")}
               >
-                <input
-                  style={{ display: "none" }}
-                  type="radio"
-                  name="emti3"
-                  checked={mbtiCheckF}
-                  readOnly
-                />
                 {""}F
               </Label>
             </FormGroup>
@@ -320,41 +170,19 @@ const mbtiClick = (type, e) => {
           <div style={mbtiCheckBox}>
             <FormGroup>
               <Label
-                style={{
-                  ...mbtiCheckBoxStyle,
-                  backgroundColor: getLabelBackgroundColor("P"),
-                  color: getLabelColor("P"),
-                }}
+                style={mbtiCheckPJ === "P" ? btnSelStyle : btnOrgStyle}
                 check
-                onClick={() => mbtiClick("P")}
+                onClick={(e) => mbtiPJClick(e, "P")}
               >
-                <input
-                  style={{ display: "none" }}
-                  type="radio"
-                  name="emti4"
-                  checked={mbtiCheckP}
-                  readOnly
-                />
                 {""}P
               </Label>
             </FormGroup>
             <FormGroup>
               <Label
-                style={{
-                  ...mbtiCheckBoxStyle,
-                  backgroundColor: getLabelBackgroundColor("J"),
-                  color: getLabelColor("J"),
-                }}
+                style={mbtiCheckPJ === "J" ? btnSelStyle : btnOrgStyle}
                 check
-                onClick={() => mbtiClick("J")}
+                onClick={(e) => mbtiPJClick(e, "J")}
               >
-                <input
-                  style={{ display: "none" }}
-                  type="radio"
-                  name="emti4"
-                  checked={mbtiCheckJ}
-                  readOnly
-                />
                 {""}J
               </Label>
             </FormGroup>
@@ -404,10 +232,10 @@ const mbtiClick = (type, e) => {
             </Button>
           </Col>
         </FormGroup>
-      
-      <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
+
+        <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
           <Button
-          color='dark'
+            color="dark"
             style={{
               borderRadius: "10px",
               // backgroundColor: "black",
