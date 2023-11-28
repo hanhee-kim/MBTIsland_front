@@ -1,0 +1,134 @@
+.container {
+    display: inline-flex;
+}
+
+.sectionPageHeader {
+    width: 600px;
+    margin: 0 auto;
+}
+
+.pageHeader {
+    display: flex;
+    border-bottom: solid #4D6879 3px;
+}
+
+/* .abortStyle {
+    margin: 0 auto;
+    border: none;
+    box-shadow: none;
+    background-color: white;
+    color: black;
+} */
+
+.pageHeader > h1 {
+    width: 70%;
+    text-align: left;
+}
+
+.pageHeader > h6 {
+    width: 10%;
+    margin: auto;
+    cursor: pointer;
+}
+
+.abortImg {
+    height: 30px;
+    margin-right: 10px;
+}
+
+.sectionBoards {
+    cursor: pointer;
+}
+
+.sectionBoard {
+    padding: 25px;
+    border-bottom: solid #C5C5C5 2px;
+    font-weight: bold;
+}
+
+.hotTag {
+    margin-bottom: 10px;
+    text-align: left;
+    color: red;
+}
+
+.hotTag > img {
+    height: 30px;
+    margin-right: 10px;
+}
+
+.boardWriter {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.boardWriter > div {
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+}
+
+.boardDate {
+    display: flex;
+    margin-bottom: 30px;
+    padding-left: 35px;
+    color: #C5C5C5;
+}
+
+.boardContent {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    width: 500px;
+    text-align: left;
+    margin-bottom: 30px;
+    padding-left: 35px;
+}
+
+.boardLower {
+    display: flex;
+    color: #C5C5C5;
+    font-size: 20px;
+    padding-left: 35px;
+}
+
+.boardLower > div > img {
+    height: 30px;
+    margin-right: 10px;
+}
+
+.pagingLabel {
+    margin: 0 auto;
+    width: 600px;
+}
+
+.sectionSearch {
+    width: 600px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.sectionSide {
+    display: inline-block;
+    margin-left: 100px;
+    margin-top: 100px;
+}
+
+.sectionSide > div {
+    display: flex;
+    width: 90px;
+    height: 40px;
+    margin: 10px;
+    border: solid #C5C5C5 2px;
+    border-radius: 10px;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+    transition: all ease 0.3s 0s;
+}
+
+.sectionSide > div:hover {
+    transform: translateX(-20px);
+    transition: all ease 0.3s 0s;
+}

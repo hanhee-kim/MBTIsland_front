@@ -11,8 +11,10 @@ import MBTmi from "./component/mbtmi/MBTmi";
 import Notice from "./component/notice/NoticeList";
 import NoticeDetail from "./component/notice/NoticeDeatil";
 import AdminNotice from "./component/admin/AdminNotice";
-import AdminNoticeForm from "./component/admin/AdminNoticeForm";
-import Join from "./component/user/Join";
+import AdminNoticeForm from './component/admin/AdminNoticeForm';
+import Join from './component/user/Join';
+import MbtyMain from './component/mbty/MbtyMain';
+import Mbty from './component/mbty/Mbty';
 import Header from "./component/common/Header";
 import Footer from "./component/common/Footer";
 
@@ -33,6 +35,8 @@ function App() {
           <Route exact path="/" element={<Main />} />
           <Route exact path="/join" element={<Join />} />
           <Route exact path="/login" element={<Login />} />
+          <Route exect path="/mbtymain" element={<MbtyMain/>}/>
+          <Route exect path="/mbty" element={<Mbty/>}/>
           <Route exact path="/addjoin" element={<AddJoin />} />
         </Routes>
         <Footer />
