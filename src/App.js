@@ -17,6 +17,7 @@ import MbtyMain from './component/mbty/MbtyMain';
 import Mbty from './component/mbty/Mbty';
 import Header from "./component/common/Header";
 import Footer from "./component/common/Footer";
+import MbtyDetail from "./component/mbty/MbtyDetail";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route exect path="/mbtymain" element={<MbtyMain/>}/>
           <Route exect path="/mbty" element={<Mbty/>}/>
           <Route exact path="/addjoin" element={<AddJoin />} />
+          <Route exact path="/mbtydetail" element={<MbtyDetail />} /> 
         </Routes>
         <Footer />
       </BrowserRouter>

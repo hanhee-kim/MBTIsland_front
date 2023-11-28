@@ -19,7 +19,7 @@ import style from "../../css/mbty/Mbty.module.css";
 
 function Mbty() {
 
-    const [boards, setBoards] = useState([
+    const [boards, setBoard] = useState([
         {
             num:1,
             mbti:"INTP",
@@ -31,7 +31,7 @@ function Mbty() {
             viewCount:23
         },
         {
-            num:1,
+            num:2,
             mbti:"INTP",
             writer:"마춤뻡파괴왕",
             date:"1일전",
@@ -41,7 +41,7 @@ function Mbty() {
             viewCount:23
         },
         {
-            num:1,
+            num:3,
             mbti:"INTP",
             writer:"마춤뻡파괴왕",
             date:"1일전",
@@ -51,7 +51,7 @@ function Mbty() {
             viewCount:23
         },
         {
-            num:1,
+            num:4,
             mbti:"INTP",
             writer:"마춤뻡파괴왕",
             date:"1일전",
@@ -61,7 +61,7 @@ function Mbty() {
             viewCount:23
         },
         {
-            num:1,
+            num:5,
             mbti:"INTP",
             writer:"마춤뻡파괴왕",
             date:"1일전",
@@ -99,26 +99,6 @@ function Mbty() {
     const [type, setType] = useState('');
     const [keyword, setKeyword] = useState('');
 
-    const deleteBoard = (e) => {
-        let boardNum = e.target.id;
-        
-        axios.get(`http://localhost:8090/boarddelete/${boardNum}`)
-        .then(res=> {
-            // 삭제된 부분만 없어지도록 렌더링
-            // 게시판의 최대 페이지 수보다 삭제된 하나만큼 적은 리스트를 보여줌
-            // let num = res.data;  // boards 배열에서 boardNum에 해당되는 요소만 filter를 이용해 삭제하여 reboards로 초기화
-            // let reboards = boards.filter(board => board.num!==num);
-            // setBoards([...reboards]); // 얕은 복사 (새로운 값에 할당하듯이 주면, 새로운 값을 변경하면 원본 값도 변경되기에 (동일한 주소 참조))
-
-            // 삭제 후, 다시 페이징하여 렌더링
-            // 게시판의 최대 페이지 수만큼 보여짐
-            pageChange(pageInfo.curPage);
-        })
-        .catch(err=> {
-            console.log(err);
-        })
-    };
-
     const handleToggle = () => {
         setOpen(!open);
     };
@@ -145,7 +125,7 @@ function Mbty() {
             let pageInfo = res.data.pageInfo;
             let list = res.data.boardList;
 
-            setBoards([...list]);
+            setBoard([...list]);
             
             let btn = [];
             for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
@@ -181,7 +161,7 @@ function Mbty() {
             let pageInfo = res.data.pageInfo;
             let list = res.data.boardList;
 
-            setBoards([...list]);
+            setBoard([...list]);
             
             let btn = [];
             for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
@@ -204,7 +184,7 @@ function Mbty() {
         e.preventDefault();
     };
 
-    const abortStyle = {
+    const sortStyle = {
         margin:"0 auto",
         border:"none",
         boxShadow:"none",
@@ -217,7 +197,7 @@ function Mbty() {
         textDecoration: "none",color:"black"
     }
 
-    const searchStyle = {
+    const buttonStyle = {
         background:"white",
         color:"black",
         border:"1px solid lightgray"
@@ -232,8 +212,8 @@ function Mbty() {
                     <h1>ISTP</h1>
                     <h6>글 작성</h6>
                     <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                        <DropdownToggle style={abortStyle}>
-                            <img className={style.abortImg} src="/sortIcon.png"></img>
+                        <DropdownToggle style={sortStyle}>
+                            <img className={style.sortImg} src="/sortIcon.png"></img>
                             {selectedOption}
                         </DropdownToggle>
                         <DropdownMenu>
@@ -283,31 +263,31 @@ function Mbty() {
                 <div className={style.sectionBoards}>
                     {boards.length !== 0 && boards.map(board => {
                         return (
-                            <div key={hotBoard.num} className={style.sectionBoard}>
+                            <div key={board.num} className={style.sectionBoard}>
                                 <Link to={"/detailform/only-detail/" + board.num}></Link>
                                 <div className={style.boardWriter}>
                                 <div style={{backgroundColor:"#9BB7D4"}}> </div>&nbsp;&nbsp;&nbsp;
-                                    {hotBoard.mbti}&nbsp;&nbsp;&nbsp;
-                                    {hotBoard.writer}
+                                    {board.mbti}&nbsp;&nbsp;&nbsp;
+                                    {board.writer}
                                 </div>
                                 <div className={style.boardDate}>
-                                    {hotBoard.date}
+                                    {board.date}
                                 </div>
                                 <div className={style.boardContent}>
-                                    {hotBoard.content}
+                                    {board.content}
                                 </div>
                                 <div className={style.boardLower}>
                                     <div>
                                         <img src="/commentIcon.png"></img>
-                                        {hotBoard.commentCount}
+                                        {board.commentCount}
                                     </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <div>
                                         <img src="/thumbIcon.png"></img>
-                                        {hotBoard.likeCount}
+                                        {board.likeCount}
                                     </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <div>
                                         <img src="/view-icon.png"></img>
-                                        {hotBoard.viewCount}
+                                        {board.viewCount}
                                     </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </div>
                             </div>
@@ -364,7 +344,7 @@ function Mbty() {
                         <Input type="text" name="keyword" onChange={(e)=>setKeyword(e.target.value)}/>
                     </Col>
                     <Col sm={3}>
-                        <Button style={searchStyle} onClick={searchSubmit}>검색</Button>
+                        <Button style={buttonStyle} onClick={searchSubmit}>검색</Button>
                     </Col>
                 </FormGroup>
             </div>

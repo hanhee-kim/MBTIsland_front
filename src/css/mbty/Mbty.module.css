@@ -12,7 +12,7 @@
     border-bottom: solid #4D6879 3px;
 }
 
-/* .abortStyle {
+/* .sortStyle {
     margin: 0 auto;
     border: none;
     box-shadow: none;
@@ -31,7 +31,7 @@
     cursor: pointer;
 }
 
-.abortImg {
+.sortImg {
     height: 30px;
     margin-right: 10px;
 }
