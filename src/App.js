@@ -4,6 +4,9 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import Main from "./component/Main";
+import Join from "./component/Join";
+import Login from './component/Login';
+import AddJoin from "./component/AddJoin";
 
 import MBTmi from "./component/mbtmi/MBTmi";
 import Notice from "./component/notice/NoticeList";
@@ -23,12 +26,15 @@ function App() {
         <Main/>
         <Header/>
         <Routes>
-          <Route exact path="/" element={<Join/>} />
           <Route exact path="/notice" element={<Notice/>} />
           <Route exact path="/noticeDetail" element={<NoticeDetail/>} />
           <Route exact path="/adminNotice" element={<AdminNotice/>} />
           <Route exact path="/adminNoticeForm" element={<AdminNoticeForm/>} />
           <Route exact path="/mbtmi" element={<MBTmi/>} />
+          <Route exact path="/" element={<Main />} />
+          <Route exact path="/join" element={<Join />} />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/addjoin" element={<AddJoin />} />
         </Routes>
         <Footer/>
       </BrowserRouter>
