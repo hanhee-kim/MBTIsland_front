@@ -15,6 +15,8 @@ import AdminNoticeForm from "./component/admin/AdminNoticeForm";
 import Join from "./component/user/Join";
 import Header from "./component/common/Header";
 import Footer from "./component/common/Footer";
+import Mypage from "./component/user/Mypage";
+import DefaultMypage from "./component/user/DefaultMypage";
 
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
           <Route exact path="/join" element={<Join />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/addjoin" element={<AddJoin />} />
+          <Route exact path="/mypage" element={<Mypage/>} />
         </Routes>
         <Footer />
       </BrowserRouter>
