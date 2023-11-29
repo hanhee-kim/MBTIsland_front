@@ -8,8 +8,8 @@ const MBTmiForm = () => {
     return (
         <>
         <div className={style.container}>
-
             <section className={style.section}>
+
                 <div className={style.boardTitleB}>
                         <span>
                             <p>MB-TMI</p>
@@ -23,13 +23,12 @@ const MBTmiForm = () => {
                     <li>본문</li>
                     <textarea className={style.formContent} rows="18"/>
                     <div className={style.formBtns}>
-                    <input type="button" value="취소"/>
-                    <input type="submit" value="저장"/>
+                        <input type="button" value="취소"/>
+                        <input type="submit" value="저장"/>
                     </div>
                 </form>    
 
             </section>
-
         </div>
         </>
     );
