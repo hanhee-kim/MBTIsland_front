@@ -1,18 +1,34 @@
 import { Popover, PopoverBody, Table } from "reactstrap";
 
 import style from "../../css/mbtmi/MBTmi.module.css";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {Link} from "react-router-dom";
 
 const MBTmiDetail = () => {
 
-    // const [openPopover1,setOpenPopover1]=useState(false);
-    // const [openPopover2,setOpenPopover2]=useState(false);
-
+    // 팝오버 여닫힘 상태, 함수
     const [popoverStates, setPopoverStates] = useState({popover1:false, popover2:false});
     const togglePopover = (popoverKey) => {
         setPopoverStates((prevState) => ({...prevState, [popoverKey]:!prevState[popoverKey]}));
     };
+
+    // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
+    useEffect(() => {
+
+        const clickOutsidePopover = (event) => {
+            const popoverElements = document.querySelectorAll(".popover");
+            // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
+            if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
+                setPopoverStates({popover1: false, popover2: false});
+            } 
+        };
+    
+        document.addEventListener("mousedown", clickOutsidePopover);
+        return () => {
+            document.removeEventListener("mousedown", clickOutsidePopover);
+        };
+
+    }, []);
 
     return (
         <>
