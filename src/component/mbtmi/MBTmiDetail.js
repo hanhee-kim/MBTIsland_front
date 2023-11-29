@@ -97,8 +97,56 @@ const MBTmiDetail = () => {
                                     <div className={style.commentTd2row}>
                                         댓글내용 댓글내용 댓글내용 댓글내용 댓글내용 댓글내용
                                     </div>
+                                    <div className={style.commentTd3row}>
+                                        <small>답글쓰기</small>
+                                    </div>
                                 </td>
                             </tr>
+                            <tr className={style.loginUsersComment}>
+                                <td>
+                                    <div className={style.commentTd1row}>
+                                        <div className={style.CommentProfileColor}/>&nbsp;
+                                        <span>ISFJ 너부리</span>
+                                        <small>6분 전</small>
+                                        <span>
+                                            <img src={"/popover-icon.png" } alt="..." className={style.commentPopoverIcon} onClick={()=>togglePopover("popover2")} id="popover2"/>
+                                            <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover2} target="popover2" toggle={()=>togglePopover("popover2")}>
+                                                    <PopoverBody className={style.popoverItem}>수정</PopoverBody>
+                                                    <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
+                                            </Popover>
+                                        </span>
+                                    </div>
+                                    <div className={style.commentTd2row}>
+                                        댓글내용 댓글내용 댓글내용 댓글내용 댓글내용 댓글내용
+                                    </div>
+                                    <div className={style.commentTd3row}>
+                                        <small>답글쓰기</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div className={style.commentTd1row}>
+                                        <div className={style.CommentProfileColor}/>&nbsp;
+                                        <span>ISFJ 너부리</span>
+                                        <small>2023년 11월 19일  02:14</small> 
+                                        <span>
+                                            <img src={"/popover-icon.png" } alt="..." className={style.commentPopoverIcon} onClick={()=>togglePopover("popover2")} id="popover2"/>
+                                            <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover2} target="popover2" toggle={()=>togglePopover("popover2")}>
+                                                    <PopoverBody className={style.popoverItem}>수정</PopoverBody>
+                                                    <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
+                                            </Popover>
+                                        </span>
+                                    </div>
+                                    <div className={style.commentTd2row}>
+                                        댓글내용 댓글내용 댓글내용 댓글내용 댓글내용 댓글내용
+                                    </div>
+                                    <div className={style.commentTd3row}>
+                                        <small>답글쓰기</small>
+                                    </div>
+                                </td>
+                            </tr>
+
                         </tbody>
                     </table>
                 </div>

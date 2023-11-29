@@ -316,22 +316,31 @@
     width: 18px;
     padding-bottom: 5px;
 }
+
+
 /* 댓글 영역 */
 .commentArea {
     width: 100%;
-    height: 400px;
-    background: aliceblue;
+    /* background: aliceblue; */
+}
+.commentArea>h6 {
+    padding: 10px 0 10px 0;
 }
 .commentArea>table,
 .commentArea>table>tbody>tr>td {
     width: 100%;
+    padding: 8px 10px 3px 10px;
+}
+.commentArea>table>tbody>tr:not(:first-child) {
+    border-top: 1px solid #BEBEBE;
 }
 .commentTd1row {
     width: 100%;
     min-height: 30px;
-    border: 1px plum ridge;
+    /* border: 1px plum ridge; */
     font-size: 18px;
     font-weight: 500;
+    padding-bottom: 5px;
 }
 .CommentProfileColor {
     display: inline-block;
@@ -347,38 +356,23 @@
     margin-left: 15px;
     font-size: 15px;
 }
-.commentTd1row>span:nth-child(3) {
+.commentTd1row>span:nth-child(3) { /* 작성자 표시태그 */
+    font-size: 13px;
     border: 1px solid #8F8F8F;
-    padding: 1px 3px 3px 3px;
+    padding: 0px 3px 0px 3px;
     border-radius: 4px;
     margin-left: 10px;
 }
-.commentTd2row {
+.commentTd2row,
+.commentTd3row {
     width: 100%;
     min-height: 30px;
-    border: 1px plum ridge;
     font-size: 16px;
     font-weight: 500;
+    padding: 0 20px 0 20px;
+    white-space: normal;
+    word-break: keep-all; /* 줄바꿈시 단어 단위 유지 */
 }
-/*
-.popover {
-    width: 100px;
-    text-align: center;
-}
-.popoverIcon {
-    width: 20px;
-    cursor: pointer;
-
-    position: relative;
-    top: -45px;
-    right: -50px;
-}
-.popoverItem {
-    cursor: pointer;
-    min-width: 60px;
-    text-align: center;
-}
-*/
 .commentPopoverIcon {
     width: 20px;
     cursor: pointer;
@@ -386,4 +380,12 @@
     position: relative;
     top: 10px;
     right: 10px; 
+}
+.commentTd3row {
+    /* border: 1px plum ridge; */
+    color: #8F8F8F;
+}
+/* 로그인한 유저의 코멘트 */
+.loginUsersComment {
+    background-color: #F8F8F8;
 }
