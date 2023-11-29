@@ -3,7 +3,7 @@ import {useLocation } from 'react-router';
 import style from "../../css/user/Mypage.module.css";
 import DefaultMypage from './DefaultMypage';
 
-const Aside = ({changePage}) => {
+const Aside = (props) => {
   //state,effect...
    // URL의 path값을 받아올 수 있다.
    const pathName = useLocation().pathname;
@@ -62,6 +62,7 @@ const Aside = ({changePage}) => {
       default : return "black";
     }
    }
+   const changePage = props.changePage;
    const changePath = (e,path) => {
     console.log("e"+e+" path:"+path);
     changePage(path);

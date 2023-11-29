@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import style from "../../css/user/Mypage.module.css";
 import { Button, Col, Form, FormGroup, Input, Label } from 'reactstrap';
 
-const DefaultMypage = (user) => {
+const DefaultMypage = (props) => {
   //---css
   const formStyle = {
     border: "1px solid black",
     borderRadius: "15px",
     width: "750px",
-    height: "600px",
-    padding: "15px",
+    height: "auto",
+    padding: "25px",
     margin: "0 auto",
     boxShadow: "5px 5px lightGray",
     fontSize: "20px",
@@ -44,23 +44,57 @@ const DefaultMypage = (user) => {
     borderColor: "gray",
   };
   //css---
+
+  //state
+  const user = props.user;
+  const [mbtiCheckEI, setMbtiCheckEI] = useState("E");
+  const [mbtiCheckNS, setMbtiCheckNS] = useState("N");
+  const [mbtiCheckTF, setMbtiCheckTF] = useState("T");
+  const [mbtiCheckPJ, setMbtiCheckPJ] = useState("P");
+  const today = new Date();
+  // var yy = today.getFullYear;
+  // var mon = today.getMonth;
+  // var day = today.getDate;
+
+  //function
+  const mbtiEIClick = (e, ei) => {
+    e.stopPropagation();
+    setMbtiCheckEI(ei);
+  };
+
+  const mbtiNSClick = (e, ns) => {
+    e.stopPropagation();
+    setMbtiCheckNS(ns);
+  };
+
+  const mbtiTFClick = (e, tf) => {
+    e.stopPropagation();
+    setMbtiCheckTF(tf);
+  };
+
+  const mbtiPJClick = (e, pj) => {
+    e.stopPropagation();
+    setMbtiCheckPJ(pj);
+  };
   return (
     <div style={{fontFamily:"GangwonEdu_OTFBoldA"}}>
       {/* <div style={{width:"800px",height:"2000px",backgroundColor:"pink"}}></div> */}
-      <div className="title">
+      <div className={style.title}>
         프로필
       </div>
-      <div>
-        <div>방문</div>
-        <div className="cnt">{user.visitCnt} 회</div>
-      </div>
-      <div>
-        <div>가입한지</div>
-        <div className="cnt">{user.joinDate} 일</div>
-      </div>
-      <div>
-        <div>작성글수</div>
-        <div className="cnt">몇 개</div>
+      <div className={style.sectionGr}>
+        <div className={style.section}>
+          <div className={style.sectionTitle}>방문</div>
+          <div className={style.sectionCnt}>{user.visitCnt} 회</div>
+        </div>
+        <div className={style.section}>
+          <div className={style.sectionTitle}>가입한지</div>
+          <div className={style.sectionCnt}>{user.joinDate} 일</div>
+        </div>
+        <div className={style.section}>
+          <div className={style.sectionTitle}>작성글수</div>
+          <div className={style.sectionCnt}>몇 개</div>
+        </div>
       </div>
       <Form style={formStyle}>
         <FormGroup row style={{ justifyContent: "center" }}>
@@ -75,19 +109,12 @@ const DefaultMypage = (user) => {
               type="text"
               name="username"
               id="username"
-              placeholder="ID를 입력하세요."
-              // onChange={change}
+              readOnly
+              value={user.username}
             />
           </Col>
-          {/* <Col sm={2}>
-            <Button
-              color="white"
-              style={{ border: "1px solid black", fontWeight: "600" }}
-            >
-              중복확인
-            </Button>
-          </Col> */}
         </FormGroup>
+        {user.provider === "nomal" &&<>
         <FormGroup row>
           <Label for="userPassword" sm={3}>
             비밀번호
@@ -97,9 +124,8 @@ const DefaultMypage = (user) => {
               type="password"
               name="userPassword"
               id="userPassword"
-              placeholder="PASSWORD를 입력하세요."
               // onChange={change}
-            />
+              />
           </Col>
         </FormGroup>
         <FormGroup row>
@@ -113,11 +139,14 @@ const DefaultMypage = (user) => {
               id="user_password_check"
               placeholder="PASSWORD를 한번더 입력하세요."
               // onChange={change}
-            />
+              />
           </Col>
         </FormGroup>
+              </>
+            }
+
         <FormGroup row>
-          <Label for="userNickname" sm={3}>
+          <Label for="userNickname" sm={3} style={{ display: "flex"}}>
             닉네임
           </Label>
           <Col sm={7}>
@@ -125,13 +154,12 @@ const DefaultMypage = (user) => {
               type="text"
               name="userNickname"
               id="userNickname"
-              placeholder="NICKNAME 입력하세요."
+              value={user.userNickname}
               // onChange={change}
             />
           </Col>
         </FormGroup>
-
-        {/* <FormGroup tag="fieldset" style={{ display: "flex", gap: "10px" }}>
+        <FormGroup tag="fieldset" style={{ display: "flex", gap: "10px" }}>
           <Label for="mbti" sm={3}>
             MBTI
           </Label>
@@ -219,7 +247,7 @@ const DefaultMypage = (user) => {
               </Label>
             </FormGroup>
           </div>
-        </FormGroup> */}
+        </FormGroup>
         <FormGroup row>
           <Label for="userEmail" sm={3}>
             이메일
@@ -229,11 +257,11 @@ const DefaultMypage = (user) => {
               type="text"
               name="userEmail"
               id="userEmail"
-              placeholder="Email 입력하세요."
+              value={user.userEmail}
               // onChange={change}
             />
           </Col>
-          <Col sm={2}>
+          {/* <Col sm={2}>
             <Button
               color="white"
               style={{ border: "1px solid black", fontWeight: "600" }}
@@ -262,7 +290,7 @@ const DefaultMypage = (user) => {
             >
               인증
             </Button>
-          </Col>
+          </Col> */}
         </FormGroup>
         <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
           <Button

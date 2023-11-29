@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import style from "../../css/user/Mypage.module.css";
 import DefaultMypage from './DefaultMypage';
 import Aside from './Aside';
+import MyMbtWhy from './MyMbtWhy';
 
 const Mypage = () => {
   //더미데이터
@@ -35,7 +36,7 @@ const Mypage = () => {
       {/* sidebar  유저정보 리덕스에? */}
       <Aside changePage={changePage} />
       {currentPage === '/default' && <DefaultMypage user={user}/>}
-      {currentPage === '/mbtwhy' && <></>}
+      {currentPage === '/mbtwhy' && <MyMbtWhy user={user}/>}
       {currentPage === '/mbtmi' && <></>}
       {currentPage === '/qna' && <></>}
       {currentPage === '/bookmark' && <></>}
