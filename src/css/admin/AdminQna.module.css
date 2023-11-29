@@ -1,0 +1,36 @@
+.table {
+    width: 900px;
+    /* font-size: 18px; */
+}
+.table>thead>tr>td,
+.table>tbody>tr>td {
+    padding: 15px 10px;
+}
+.table>thead>tr {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+}
+.table>tbody>tr:not(:first-child) {
+    border-top: 1px solid #d9d9d9;
+}
+.table>tbody>tr:last-child {
+    border-bottom: 1px solid black;
+}
+.table>thead,
+.table>tbody>tr>td:not(:nth-child(3)) {
+    text-align: center;
+}
+.table>tbody>tr>td:nth-child(4):hover {
+    cursor: pointer;
+    text-shadow: 0 0 1.5px rgba(0, 0, 0, 1);
+}
+.completedQna>td:last-child {
+    color: #a5a5a5;
+}
+
+.popoverItem {
+    padding: 10px 15px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bolder;
+}

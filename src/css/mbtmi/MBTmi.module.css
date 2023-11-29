@@ -139,7 +139,7 @@
 .aboveTable {
     display:flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 .aboveTable>span>button {
     font-size: 16px;
@@ -164,12 +164,28 @@
     margin-top: -3px;
 }
 
+.searchBar {
+    display: inline-block;
+    position: relative;
+}
 .searchBar>input {
+    border: 1px solid #767676;
     border-radius: 25px;
     height: 40px;
-    position: relative;
-    padding: 3px;
+    padding: 3px 42px 3px 13px;
+    width: 220px;
+    font-size: 18px;
 }
+.searchBtnIcon {
+    position: absolute;
+    top: 8px;
+    right: 14px;
+    width: 23px;
+    z-index: 1;
+    cursor: pointer;
+}
+
+
 .mbtmiTable {
     width: 100%;
     border-top: 1px solid #9B9B9B;

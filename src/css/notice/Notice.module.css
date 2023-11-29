@@ -30,13 +30,12 @@
     margin-bottom: 40px;
 }
 
-.row1st {
+.aboveTable {
     display:flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     margin-left: 10px;
 }
-
 .table>tbody>tr>td {
     padding-top: 15px;
     padding-bottom: 15px;
@@ -44,41 +43,50 @@
 .table>tbody>tr:last-child {
     border-bottom: #dee2e6 1px solid;
 }
+.table>tbody>tr>td:not(:nth-child(2)) {
+    color:#8F8F8F;
+}
 
 .paging {
     display: flex;
     justify-content: center;
+    margin-top: 33px;
 }
-
 .paging>span {
     display: inline-block;
     margin: 5px;
     font-size: 18px;
     width: 32px;
     height: 32px;
+    line-height: 32px;
     border:0px solid white;
     text-align: center;
-    line-height: 32px;
 }
-
 .activePage {
     border: 1px solid #A3A3A3 !important;
     background: #f8f8f8;
 }
 
+.searchBar {
+    display: inline-block;
+    position: relative;
+}
 .searchBar>input {
+    border: 1px solid #767676;
     border-radius: 25px;
     height: 40px;
-    position: relative;
-    padding: 3px;
+    padding: 3px 42px 3px 13px;
+    width: 220px;
+    font-size: 18px;
 }
-
-/* .searchBtn {
+.searchBtnIcon {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 20px;
-} */
+    top: 8px;
+    right: 14px;
+    width: 23px;
+    z-index: 1;
+    cursor: pointer;
+}
 
 
 /* 상세 */

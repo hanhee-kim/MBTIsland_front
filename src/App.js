@@ -20,6 +20,7 @@ import Footer from "./component/common/Footer";
 import MbtyDetail from "./component/mbty/MbtyDetail";
 import MBTmiDetail from "./component/mbtmi/MBTmiDetail";
 import MBTmiForm from "./component/mbtmi/MBTmiForm";
+import AdminQna from "./component/admin/AdminQna";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route exact path="/mbtydetail" element={<MbtyDetail />} />
           <Route exact path="/mbtmiDetail" element={<MBTmiDetail />} />
           <Route exact path="/mbtmiForm" element={<MBTmiForm />} />
+          <Route exact path="/adminQna" element={<AdminQna />} />
         </Routes>
         <Footer />
       </BrowserRouter>

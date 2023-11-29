@@ -13,11 +13,11 @@ const Notice = () => {
 
                 <div className={style.boardTitle} >공지사항</div>
 
-                <div className={style.row1st}>
-                    <h5>총 101건 현재1/11페이지</h5>
+                <div className={style.aboveTable}>
+                    <h5>총 101건 현재 1/11페이지</h5>
                     <div className={style.searchBar}>
                         <input type="text"/>
-                        <img src={"/searchIcon.png" } alt="검색" className={style.searchBtn} />
+                        <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} />
                     </div>
                 </div>
 
@@ -27,61 +27,61 @@ const Notice = () => {
                             <td>[공지]</td>
                             <td>MBT-WHY(Q&A) 게시판 이용수칙 안내</td>
                             <td>2023-11-16</td>
-                            <td>17</td>
+                            <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>17</td>
                         </tr>
                         <tr>
                             <td>[공지]</td>
                             <td>MB-TMI(자유) 게시판 이용수칙 안내</td>
                             <td>2023-11-16</td>
-                            <td>17</td>
+                            <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>17</td>
                         </tr>
                         <tr>
                             <td>[공지]</td>
                             <td>M-Battle-TI(밸런스게임) 게시판 이용수칙 안내</td>
                             <td>2023-11-16</td>
-                            <td>17</td>
+                            <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>17</td>
                         </tr>
                         <tr>
                             <td>[공지]</td>
                             <td>신고제와 신고된 게시물, 회원의 제재처리 안내</td>
                             <td>2023-11-16</td>
-                            <td>17</td>
+                            <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>17</td>
                         </tr>
                         <tr>
                             <td>[공지]</td>
                             <td>신고제와 신고된 게시물, 회원의 제재처리 안내</td>
                             <td>2023-11-16</td>
-                            <td>17</td>
+                            <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>17</td>
                         </tr>
                         <tr>
                             <td>[공지]</td>
                             <td>MBT-WHY(Q&A) 게시판 이용수칙 안내</td>
                             <td>2023-11-16</td>
-                            <td>17</td>
+                            <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>17</td>
                         </tr>
                         <tr>
                             <td>[공지]</td>
                             <td>MB-TMI(자유) 게시판 이용수칙 안내</td>
                             <td>2023-11-16</td>
-                            <td>17</td>
+                            <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>17</td>
                         </tr>
                         <tr>
                             <td>[공지]</td>
                             <td>M-Battle-TI(밸런스게임) 게시판 이용수칙 안내</td>
                             <td>2023-11-16</td>
-                            <td>17</td>
+                            <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>17</td>
                         </tr>
                         <tr>
                             <td>[공지]</td>
                             <td>신고제와 신고된 게시물, 회원의 제재처리 안내</td>
                             <td>2023-11-16</td>
-                            <td>17</td>
+                            <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>123</td>
                         </tr>
                         <tr>
                             <td>[공지]</td>
                             <td>신고제와 신고된 게시물, 회원의 제재처리 안내</td>
                             <td>2023-11-16</td>
-                            <td>17</td>
+                            <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>17</td>
                         </tr>
                     </tbody>
                 </Table>

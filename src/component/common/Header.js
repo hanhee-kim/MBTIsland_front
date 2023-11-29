@@ -27,10 +27,10 @@ const Header = () => {
                 </div>
                 <div style={{marginRight: '120px'}}>
                     <li className={style.navItem}>
-                        <Link to={"/login"}><Button>로그인</Button></Link>
+                        <Link to={"/login"}><Button color="light">로그인</Button></Link>
                     </li>
                     <li className={style.navItem}>
-                        <Link to={"/join"}><Button>회원가입</Button></Link>
+                        <Link to={"/join"}><Button color="dark">회원가입</Button></Link>
                     </li>
                 </div>
             </ul>

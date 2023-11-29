@@ -8,6 +8,9 @@
     border-bottom: 1px solid #999999;
 
 }
+.siteTitle {
+    margin-left: 100px;
+}
 .siteTitle,
 .siteTitle:link, 
 .siteTitle:visited, 

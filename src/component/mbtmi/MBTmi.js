@@ -132,7 +132,7 @@ const MBTmi = () => {
                     </span>
                     <div className={style.searchBar}>
                         <input type="text"/>
-                        <img src={"/searchIcon.png" } alt="검색" className={style.searchBtn} />
+                        <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} />
                     </div>
                 </div>
                 <table className={style.mbtmiTable}>

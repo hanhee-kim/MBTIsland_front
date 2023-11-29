@@ -19,7 +19,8 @@ const Footer = () => {
                         <Link to={"/termOfService"}>서비스 이용약관</Link>
                     </li>
                     <li className={style.navItem}>
-                        <Link to={"/xxx"}>이메일 문의 emailadress@email.com</Link>
+                        <Link to={'/mailto:emailadress@email.com'}>이메일 문의 emailadress@email.com</Link>
+                        {/* <a href='/emailadress@email.com'>이메일 문의 emailadress@email.com</a> */}
                     </li>
                 </div>
                 <div>
