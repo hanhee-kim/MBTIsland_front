@@ -19,6 +19,7 @@ import Header from "./component/common/Header";
 import Footer from "./component/common/Footer";
 import MbtyDetail from "./component/mbty/MbtyDetail";
 import MBTmiDetail from "./component/mbtmi/MBTmiDetail";
+import MBTmiForm from "./component/mbtmi/MBTmiForm";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           <Route exact path="/addjoin" element={<AddJoin />} />
           <Route exact path="/mbtydetail" element={<MbtyDetail />} />
           <Route exact path="/mbtmiDetail" element={<MBTmiDetail />} />
+          <Route exact path="/mbtmiForm" element={<MBTmiForm />} />
         </Routes>
         <Footer />
       </BrowserRouter>

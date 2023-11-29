@@ -2,7 +2,6 @@ import { Popover, PopoverBody, Table } from "reactstrap";
 
 import style from "../../css/mbtmi/MBTmi.module.css";
 import React, { useEffect, useRef, useState } from "react";
-import {Link} from "react-router-dom";
 
 const MBTmiDetail = () => {
 
@@ -38,8 +37,8 @@ const MBTmiDetail = () => {
         { index: 3, author: "User3", createdDate: "2023-11-27", content: "1차댓글2", parentIndex: null },
         { index: 4, author: "User4", createdDate: "2023-11-28", content: "2차댓글2", parentIndex: 1 },
         { index: 5, author: "User4", createdDate: "2023-11-29", content: "2차댓글3", parentIndex: 1 },
-        { index: 6, author: "User4", createdDate: "2023-11-30", content: "2차댓글4", parentIndex: 2 },
-        { index: 7, author: "User4", createdDate: "2023-11-31", content: "2차댓글5", parentIndex: 2 },
+        { index: 6, author: "User4", createdDate: "2023-11-30", content: "2차댓글4", parentIndex: 3 },
+        { index: 7, author: "User4", createdDate: "2023-11-31", content: "2차댓글5", parentIndex: 3 },
         { index: 8, author: "User4", createdDate: "2023-11-31", content: "1차댓글3", parentIndex: null }
     ];
 

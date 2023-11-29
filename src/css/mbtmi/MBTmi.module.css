@@ -238,7 +238,7 @@
 .postArea {
     width: 100%;
     min-height: 50%; /* 게시글이 짧더라도 최소 높이 확보 */
-    /* background: seashell;  */
+    background: seashell; 
     border: 1px solid #E6E6E6;
     padding: 50px;
 }
@@ -321,7 +321,6 @@
 /* 댓글 영역 */
 .commentArea {
     width: 100%;
-    /* background: aliceblue; */
 }
 .commentArea>h6 {
     padding: 10px 0 10px 0;
