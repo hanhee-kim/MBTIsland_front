@@ -4,13 +4,11 @@ import style from "../../css/common/Footer.module.css";
 
 const Footer = () => {
 
-    const style = {backgroundColor:'white', width:'100%', left:0, top:0, zIndex:10, borderTop: '1px solid #999999' };
-
     return(
-        <div style={style}>
+        <div className={style.footer}>
             <ul className={style.navItems}>
                 <div>
-                    <label style={{marginLeft: '100px', fontSize:'30px', fontWeight: '600', marginRight:'40px'}}>MBTIsland</label>
+                    <label className={style.siteTitle}>MBTIsland</label>
                     <li className={style.navItem}>
                         <Link to={"/notice"}>공지사항</Link>
                     </li>
@@ -24,7 +22,7 @@ const Footer = () => {
                         <Link to={"/xxx"}>이메일 문의 emailadress@email.com</Link>
                     </li>
                 </div>
-                <div style={{marginLeft: '210px', fontSize:'18px', marginBottom:'30px'}}>
+                <div>
                     ⓒ2023 MBTIsland All rights reserved.
                 </div>
             </ul>

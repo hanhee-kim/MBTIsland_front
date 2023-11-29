@@ -8,9 +8,12 @@ const Header = () => {
     return(
         <div className={style.header}>
             <ul className={style.navItems}>
-                <div style={{marginLeft: '100px'}}>
-                    <li className='nav-item'>
-                    <Link to={"/"} id="logo">MBTIsland<img src={"/desert-island.png"} alt='로고' width='30px' style={{marginLeft: '15px'}}/></Link>
+                <div>
+                    <li className={style.navItem}>
+                        <Link to={"/"} className={style.siteTitle}>
+                            MBTIsland
+                            <img src={"/desert-island.png"} alt='로고이미지' width='30px' className={style.logoIcon}/>
+                        </Link>
                     </li>
                     <li className={style.navItem}>
                         <Link to={"/mbtWhy"}>MBT-WHY</Link>
