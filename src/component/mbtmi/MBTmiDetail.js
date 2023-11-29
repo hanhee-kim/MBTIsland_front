@@ -6,8 +6,13 @@ import {Link} from "react-router-dom";
 
 const MBTmiDetail = () => {
 
-    const [openPopover1,setOpenPopover1]=useState(false);
-    const [openPopover2,setOpenPopover2]=useState(false);
+    // const [openPopover1,setOpenPopover1]=useState(false);
+    // const [openPopover2,setOpenPopover2]=useState(false);
+
+    const [popoverStates, setPopoverStates] = useState({popover1:false, popover2:false});
+    const togglePopover = (popoverKey) => {
+        setPopoverStates((prevState) => ({...prevState, [popoverKey]:!prevState[popoverKey]}));
+    };
 
     return (
         <>
@@ -23,8 +28,8 @@ const MBTmiDetail = () => {
                 <span className={style.currnetCategory}>잡담 &gt;</span>
                 <div className={style.postArea}>
                     <div>
-                        <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpenPopover1(!openPopover1)} id="popover1"/>
-                        <Popover  className={style.popover} placement="bottom" isOpen={openPopover1} target="popover1" toggle={()=>setOpenPopover1(!openPopover1)}>
+                        <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>togglePopover("popover1")} id="popover1"/>
+                        <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover1} target="popover1" toggle={()=>togglePopover("popover1")}>
                             <PopoverBody className={style.popoverItem}>수정</PopoverBody>
                             <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
                         </Popover><br/><br/><br/>
@@ -66,10 +71,10 @@ const MBTmiDetail = () => {
                                         <span>작성자</span>
                                         <small>6분 전</small>
                                         <span>
-                                            <img src={"/popover-icon.png" } alt="..." className={style.commentPopoverIcon} onClick={()=>setOpenPopover2(!openPopover2)} id="popover2"/>
-                                            <Popover className={style.popover} placement="bottom" isOpen={openPopover2} target="popover2" toggle={()=>setOpenPopover2(!openPopover2)}>
-                                                <PopoverBody className={style.popoverItem}>수정</PopoverBody>
-                                                <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
+                                            <img src={"/popover-icon.png" } alt="..." className={style.commentPopoverIcon} onClick={()=>togglePopover("popover2")} id="popover2"/>
+                                            <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover2} target="popover2" toggle={()=>togglePopover("popover2")}>
+                                                    <PopoverBody className={style.popoverItem}>수정</PopoverBody>
+                                                    <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
                                             </Popover>
                                         </span>
                                     </div>
