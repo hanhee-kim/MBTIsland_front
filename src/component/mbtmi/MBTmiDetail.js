@@ -30,6 +30,19 @@ const MBTmiDetail = () => {
 
     }, []);
 
+
+    // 댓글테이블 데이터 가정
+    const commentsData = [
+        { index: 1, author: "User1", createdDate: "2023-11-25", content: "1차댓글1", parentIndex: null },
+        { index: 2, author: "User2", createdDate: "2023-11-26", content: "2차댓글1", parentIndex: 1 },
+        { index: 3, author: "User3", createdDate: "2023-11-27", content: "1차댓글2", parentIndex: null },
+        { index: 4, author: "User4", createdDate: "2023-11-28", content: "2차댓글2", parentIndex: 1 },
+        { index: 5, author: "User4", createdDate: "2023-11-29", content: "2차댓글3", parentIndex: 1 },
+        { index: 6, author: "User4", createdDate: "2023-11-30", content: "2차댓글4", parentIndex: 2 },
+        { index: 7, author: "User4", createdDate: "2023-11-31", content: "2차댓글5", parentIndex: 2 },
+        { index: 8, author: "User4", createdDate: "2023-11-31", content: "1차댓글3", parentIndex: null }
+    ];
+
     return (
         <>
         <div className={style.container}>
@@ -149,8 +162,56 @@ const MBTmiDetail = () => {
 
                         </tbody>
                     </table>
+
+
+                    
+                    
+
+
                 </div>
-                
+
+                <hr style={{border: '3px solid lightgray'}}/>
+                <table style={{border:'1px solid gray', textAlign:'center'}}>
+                    <thead>
+                        <tr style={{border:'1px solid gray', textAlign:'center'}}>
+                            <td style={{border:'1px solid gray', textAlign:'center'}}>인덱스</td>
+                            <td style={{border:'1px solid gray', textAlign:'center'}}>작성자</td>
+                            <td style={{border:'1px solid gray', textAlign:'center'}}>작성일</td>
+                            <td style={{border:'1px solid gray', textAlign:'center'}}>내용</td>
+                            <td style={{border:'1px solid gray', textAlign:'center'}}>상위댓글인덱스</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {commentsData
+                            .filter(comment => comment.parentIndex === null)
+                            // 부모댓글
+                            .map(parentComment => (
+                                <React.Fragment key={parentComment.index}>
+                                    <tr>
+                                        <td style={{border:'1px solid gray', textAlign:'center'}}>{parentComment.index}</td>
+                                        <td style={{border:'1px solid gray', textAlign:'center'}}>{parentComment.author}</td>
+                                        <td style={{border:'1px solid gray', textAlign:'center'}}>{parentComment.createdDate}</td>
+                                        <td style={{border:'1px solid gray', textAlign:'center'}}>{parentComment.content}</td>
+                                        <td style={{border:'1px solid gray', textAlign:'center'}}>{parentComment.parentIndex}</td>
+                                    </tr>
+
+                                    {/* 자식댓글 */}
+                                    {commentsData
+                                        .filter(childComment => childComment.parentIndex === parentComment.index)
+                                        .map(childComment => (
+                                            <tr key={childComment.index}>
+                                                <td style={{border:'1px solid gray', textAlign:'center'}}>{childComment.index}</td>
+                                                <td style={{border:'1px solid gray', textAlign:'center'}}>{childComment.author}</td>
+                                                <td style={{border:'1px solid gray', textAlign:'center'}}>{childComment.createdDate}</td>
+                                                <td style={{border:'1px solid gray', textAlign:'center'}}>{childComment.content}</td>
+                                                <td style={{border:'1px solid gray', textAlign:'center'}}>{childComment.parentIndex}</td>
+                                            </tr>
+                                        ))}
+                                </React.Fragment>
+                        ))}
+                    </tbody>
+                </table>
+
             </section>
         </div>
         </>
