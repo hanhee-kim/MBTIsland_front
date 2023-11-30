@@ -2,7 +2,7 @@
     margin-top: 53px;
 }
 
-.sectionPageHeader {
+.sectionCenter {
     width: 800px;
     margin: 0 auto;
 }
@@ -71,17 +71,17 @@
     margin-bottom: 30px;
 }
 
-.boardLower {
+.boardLow {
     display: flex;
     color: #C5C5C5;
     font-size: 20px;
 }
 
-.boardLower > div {
+.boardLow > div {
     display: flex;
 }
 
-.boardLower > div > img {
+.boardLow > div > img {
     height: 30px;
 }
 
@@ -119,6 +119,18 @@
 
 .commentCountDiv > div {
     font-weight: bold;
+}
+
+.sectionDeletedComment {
+    min-height: 120px;
+    padding: 15px 25px 15px 25px;
+    border-bottom: solid #C5C5C5 2px;
+    color: #C5C5C5;
+    font-size: larger;
+    font-weight: bold;
+    text-align: center;
+    align-items: center;
+    line-height: 120px;
 }
 
 .pagingLabel {

@@ -13,15 +13,17 @@ import NoticeDetail from "./component/notice/NoticeDeatil";
 import AdminNotice from "./component/admin/AdminNotice";
 import AdminNoticeForm from './component/admin/AdminNoticeForm';
 import Join from './component/user/Join';
-import MbtyMain from './component/mbty/MbtyMain';
-import Mbty from './component/mbty/Mbty';
+import MbtwhyMain from './component/mbtwhy/MbtwhyMain';
+import Mbtwhy from './component/mbtwhy/Mbtwhy';
 import Header from "./component/common/Header";
 import Footer from "./component/common/Footer";
-import MbtyDetail from "./component/mbty/MbtyDetail";
+import MbtwhyDetail from "./component/mbtwhy/MbtwhyDetail";
 import Mypage from "./component/user/Mypage";
 import DefaultMypage from "./component/user/DefaultMypage";
-import MbtyWrite from "./component/mbty/MbtyWrite";
-import MbtyModify from "./component/mbty/MbtyModify";
+import MbtwhyWrite from "./component/mbtwhy/MbtwhyWrite";
+import MbtwhyModify from "./component/mbtwhy/MbtwhyModify";
+import MBattle from "./component/mbattle/MBattle";
+import MBattleWrite from "./component/mbattle/MBattleWrite";
 
 function App() {
   return (
@@ -39,13 +41,15 @@ function App() {
           <Route exact path="/" element={<Main />} />
           <Route exact path="/join" element={<Join />} />
           <Route exact path="/login" element={<Login />} />
-          <Route exect path="/mbtymain" element={<MbtyMain/>}/>
-          <Route exect path="/mbty" element={<Mbty/>}/>
+          <Route exect path="/mbtwhymain" element={<MbtwhyMain/>}/>
+          <Route exect path="/mbtwhy" element={<Mbtwhy/>}/>
           <Route exact path="/addjoin" element={<AddJoin />} />
-          <Route exact path="/mbtydetail" element={<MbtyDetail />} /> 
+          <Route exact path="/mbtwhydetail" element={<MbtwhyDetail />} /> 
           <Route exact path="/mypage" element={<Mypage/>} />
-          <Route exact path="/mbtywrite" element={<MbtyWrite />} /> 
-          <Route exact path="/mbtymodify" element={<MbtyModify />} /> 
+          <Route exact path="/mbtwhywrite" element={<MbtwhyWrite />} /> 
+          <Route exact path="/mbtwhymodify" element={<MbtwhyModify />} /> 
+          <Route exact path="/mbattle" element={<MBattle />} />
+          <Route exact path="/mbattlewrite" element={<MBattleWrite />} />
         </Routes>
         <Footer />
       </BrowserRouter>
