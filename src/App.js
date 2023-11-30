@@ -32,9 +32,9 @@ function App() {
         <Header />
         <Routes>
           <Route exact path="/notice" element={<Notice />} />
-          <Route exact path="/noticeDetail" element={<NoticeDetail />} />
-          <Route exact path="/adminNotice" element={<AdminNotice />} />
-          <Route exact path="/adminNoticeForm" element={<AdminNoticeForm />} />
+          <Route exact path="/noticedetail" element={<NoticeDetail />} />
+          <Route exact path="/adminnotice" element={<AdminNotice />} />
+          <Route exact path="/adminnoticeform" element={<AdminNoticeForm />} />
           <Route exact path="/mbtmi" element={<MBTmi />} />
           <Route exact path="/" element={<Main />} />
           <Route exact path="/join" element={<Join />} />
@@ -43,9 +43,9 @@ function App() {
           <Route exect path="/mbty" element={<Mbty/>}/>
           <Route exact path="/addjoin" element={<AddJoin />} />
           <Route exact path="/mbtydetail" element={<MbtyDetail />} />
-          <Route exact path="/mbtmiDetail" element={<MBTmiDetail />} />
-          <Route exact path="/mbtmiForm" element={<MBTmiForm />} />
-          <Route exact path="/adminQna" element={<AdminQna />} />
+          <Route exact path="/mbtmidetail" element={<MBTmiDetail />} />
+          <Route exact path="/mbtmiform" element={<MBTmiForm />} />
+          <Route exact path="/adminqna" element={<AdminQna />} />
         </Routes>
         <Footer />
       </BrowserRouter>

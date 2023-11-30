@@ -13,10 +13,10 @@ const Footer = () => {
                         <Link to={"/notice"}>공지사항</Link>
                     </li>
                     <li className={style.navItem}>
-                        <Link to={"/privacyPolicy"}>개인정보 처리방침</Link>
+                        <Link to={"/privacypolicy"}>개인정보 처리방침</Link>
                     </li>
                     <li className={style.navItem}>
-                        <Link to={"/termOfService"}>서비스 이용약관</Link>
+                        <Link to={"/termofservice"}>서비스 이용약관</Link>
                     </li>
                     <li className={style.navItem}>
                         <Link to={'/mailto:emailadress@email.com'}>이메일 문의 emailadress@email.com</Link>

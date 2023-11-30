@@ -16,13 +16,13 @@ const Header = () => {
                         </Link>
                     </li>
                     <li className={style.navItem}>
-                        <Link to={"/mbtWhy"}>MBT-WHY</Link>
+                        <Link to={"/mbtwhymain"}>MBT-WHY</Link>
                     </li>
                     <li className={style.navItem}>
-                        <Link to={"/mBattle"}>M-BATTLE</Link>
+                        <Link to={"/mbattle"}>M-BATTLE</Link>
                     </li>
                     <li className={style.navItem}>
-                        <Link to={"/mbTmi"}>MB-TMI</Link>
+                        <Link to={"/mbtmi"}>MB-TMI</Link>
                     </li>
                 </div>
                 <div style={{marginRight: '120px'}}>
