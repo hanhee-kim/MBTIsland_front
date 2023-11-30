@@ -7,23 +7,29 @@
     display: flex;
     justify-content: flex-start;
 
-    padding-top: 80px;
+    padding-top: 80px; /* 바로 위에 위치한 .adminPage 요소와의 간격 */
 
-    border: 1px solid blue;
-
-    
-    /* 너비와 높이에 padding과, border가 포함되도록 함 */
-    /* box-sizing: border-box;  */
+    /* border: 1px solid blue; */
 }
+
+.sectionLeftArea,
+.sectionRightArea,
+.section {
+    flex: 1;
+}
+/* .sectionLeftArea,
+.sectionRightArea {
+    background: aliceblue;
+} */
 
 .section {
     position:relative;
-    right: 100px;
+    /* right: 50px; */
     min-height: 900px; /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
     width: 100%;
     font-size: 20px;
     
-    border: 1px solid red;
+    /* border: 1px solid red; */
     display: flex;
     justify-content: center;   
 }
@@ -54,7 +60,7 @@
     padding-left: 300px;
     font-size: 25px;
     font-weight: 700;
-    margin-top: 66px;
+    margin-top: 65px; /* fixed된 헤더 영역 확보 */
     
     position: relative;
     overflow: hidden; /* 오버레이 */
@@ -65,4 +71,22 @@
     right: 100px !important;
     width: 500px;
     /* object-fit: none; 이미지 자체의 크기 유지 */
+    overflow: hidden;
+}
+
+
+/* 플로팅 버튼 */
+.sectionRightArea {
+    display: flex;
+    flex-direction: column-reverse;
+}
+.sectionRightArea>div {
+    /* border: dashed red 3px; */
+    padding-right: 100px;
+}
+.movetopIcon {
+    float: right;
+    width: 50px;
+    position: sticky;
+    cursor: pointer;
 }

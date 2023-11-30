@@ -18,9 +18,12 @@ const AdminFrame = () => {
         <div className={styleFrame.adminPage}>관리자 페이지
             <img src={"/gear_adminPage.png" } alt="" className={styleFrame.adminPageImg}/>
         </div>
+
         <div className={styleFrame.container}>
-            <section className={styleFrame.section}>
+            <section className={styleFrame.sectionLeftArea}>
                 <AdminNav/>
+            </section>
+            <section className={styleFrame.section}>
                 {uri==='/adminnoticeform'? <AdminNoticeForm/>:
                     uri==='/adminnotice'? <AdminNotice/>:
                     uri==='/adminqna'? <AdminQna/>:
@@ -28,6 +31,14 @@ const AdminFrame = () => {
                     <Main/>
                 }
             </section>
+            <section className={styleFrame.sectionRightArea}>
+                <div>
+                    <img src={"/movetopIcon.png" } alt="top" className={styleFrame.movetopIcon}/>
+                </div>
+            </section>
+            {/* <span className={styleFrame.sectionRightArea}>
+                <img src={"/movetopIcon.png" } alt="top" className={styleFrame.movetopIcon}/>
+            </span> */}
         </div>
         </>
     );

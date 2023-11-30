@@ -8,6 +8,8 @@ const MBTmiForm = () => {
     return (
         <>
         <div className={style.container}>
+            
+            <section className={style.sectionLeftArea}></section>
             <section className={style.section}>
 
                 <div className={style.boardTitleB}>
@@ -28,6 +30,11 @@ const MBTmiForm = () => {
                     </div>
                 </form>    
 
+            </section>
+            <section className={style.sectionRightArea}>
+                <div>
+                    <img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/>
+                </div>
             </section>
         </div>
         </>

@@ -9,6 +9,7 @@ const Notice = () => {
         <>
         <div className={style.container}>
 
+            <section className={style.sectionLeftArea}></section>
             <section className={style.section}>
 
                 <div className={style.boardTitle} >공지사항</div>
@@ -98,6 +99,11 @@ const Notice = () => {
                     <span>9</span>
                     <span>10</span>
                     <span>&gt;</span>
+                </div>
+            </section>
+            <section className={style.sectionRightArea}>
+                <div>
+                    <img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/>
                 </div>
             </section>
 

@@ -48,7 +48,6 @@ function App() {
           <Route exact path="/adminnotice" element={<AdminFrame />} />
           <Route exact path="/adminnoticeform" element={<AdminFrame />} />
           <Route exact path="/adminqna" element={<AdminFrame />} />
-          <Route exact path="/adminframe" element={<AdminFrame />} />
           <Route exect path="/mbtymain" element={<MbtyMain/>}/>
           <Route exect path="/mbty" element={<Mbty/>}/>
           <Route exact path="/mbtydetail" element={<MbtyDetail />} />
