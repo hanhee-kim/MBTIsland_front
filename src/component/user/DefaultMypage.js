@@ -1,19 +1,20 @@
-import React, { useState } from "react";
-import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
+import React, { useState } from 'react';
+import style from "../../css/user/Mypage.module.css";
+import { Button, Col, Form, FormGroup, Input, Label } from 'reactstrap';
 
-const Join = () => {
+const DefaultMypage = (props) => {
   //---css
-  const joinFormStyle = {
+  const formStyle = {
     border: "1px solid black",
     borderRadius: "15px",
     width: "750px",
-    height: "600px",
-    padding: "15px",
+    height: "auto",
+    padding: "25px",
     margin: "0 auto",
     boxShadow: "5px 5px lightGray",
     fontSize: "20px",
     fontWeight: "500",
-    marginTop: "200px",
+    marginTop: "40px",
   };
   const mbtiCheckBoxStyle = {
     border: "1px solid gray",
@@ -43,42 +44,19 @@ const Join = () => {
     borderColor: "gray",
   };
   //css---
-  //---state
-  const [user, setUser] = useState({
-    username: "",
-    userPassword: "",
-    userNickname: "",
-    userMbti: "",
-    userEmail: "",
-  });
 
+  //state
+  const user = props.user;
   const [mbtiCheckEI, setMbtiCheckEI] = useState("E");
   const [mbtiCheckNS, setMbtiCheckNS] = useState("N");
   const [mbtiCheckTF, setMbtiCheckTF] = useState("T");
   const [mbtiCheckPJ, setMbtiCheckPJ] = useState("P");
+  const today = new Date();
+  // var yy = today.getFullYear;
+  // var mon = today.getMonth;
+  // var day = today.getDate;
 
-  // const [mbti, setMbti] = useState("");
-  const [arrMbti, setArrMbti] = useState([]);
-  //state---
-  //---function
-  const change = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: [e.target.value],
-      // userMbti: arrMbti.join(""),
-    });
-    console.log("input:" + e.target.value);
-    console.log("user" + user);
-    console.log("username:" + user.username + "  " + user.userPassword);
-  };
-  const submit = (e) => {
-    e.preventDefault();
-    let sendUser = {
-      ...user,
-      muserMbti: mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ,
-    };
-  };
-
+  //function
   const mbtiEIClick = (e, ei) => {
     e.stopPropagation();
     setMbtiCheckEI(ei);
@@ -98,12 +76,29 @@ const Join = () => {
     e.stopPropagation();
     setMbtiCheckPJ(pj);
   };
-  //function---
   return (
-    <div>
-      <Form style={joinFormStyle}>
+    <div style={{fontFamily:"GangwonEdu_OTFBoldA"}}>
+      {/* <div style={{width:"800px",height:"2000px",backgroundColor:"pink"}}></div> */}
+      <div className={style.title}>
+        프로필
+      </div>
+      <div className={style.sectionGr}>
+        <div className={style.section}>
+          <div className={style.sectionTitle}>방문</div>
+          <div className={style.sectionCnt}>{user.visitCnt} 회</div>
+        </div>
+        <div className={style.section}>
+          <div className={style.sectionTitle}>가입한지</div>
+          <div className={style.sectionCnt}>{user.joinDate} 일</div>
+        </div>
+        <div className={style.section}>
+          <div className={style.sectionTitle}>작성글수</div>
+          <div className={style.sectionCnt}>몇 개</div>
+        </div>
+      </div>
+      <Form style={formStyle}>
         <FormGroup row style={{ justifyContent: "center" }}>
-          <h3 style={{ fontSize: "40px" }}>JOIN</h3>
+          <h3 style={{ fontSize: "40px" }}>프로필</h3>
         </FormGroup>
         <FormGroup row>
           <Label for="username" sm={3}>
@@ -114,19 +109,12 @@ const Join = () => {
               type="text"
               name="username"
               id="username"
-              placeholder="ID를 입력하세요."
-              onChange={change}
+              readOnly
+              value={user.username}
             />
           </Col>
-          <Col sm={2}>
-            <Button
-              color="white"
-              style={{ border: "1px solid black", fontWeight: "600" }}
-            >
-              중복확인
-            </Button>
-          </Col>
         </FormGroup>
+        {user.provider === "nomal" &&<>
         <FormGroup row>
           <Label for="userPassword" sm={3}>
             비밀번호
@@ -136,9 +124,8 @@ const Join = () => {
               type="password"
               name="userPassword"
               id="userPassword"
-              placeholder="PASSWORD를 입력하세요."
-              onChange={change}
-            />
+              // onChange={change}
+              />
           </Col>
         </FormGroup>
         <FormGroup row>
@@ -151,12 +138,15 @@ const Join = () => {
               name="user_password_check"
               id="user_password_check"
               placeholder="PASSWORD를 한번더 입력하세요."
-              onChange={change}
-            />
+              // onChange={change}
+              />
           </Col>
         </FormGroup>
+              </>
+            }
+
         <FormGroup row>
-          <Label for="userNickname" sm={3}>
+          <Label for="userNickname" sm={3} style={{ display: "flex"}}>
             닉네임
           </Label>
           <Col sm={7}>
@@ -164,12 +154,11 @@ const Join = () => {
               type="text"
               name="userNickname"
               id="userNickname"
-              placeholder="NICKNAME 입력하세요."
-              onChange={change}
+              value={user.userNickname}
+              // onChange={change}
             />
           </Col>
         </FormGroup>
-
         <FormGroup tag="fieldset" style={{ display: "flex", gap: "10px" }}>
           <Label for="mbti" sm={3}>
             MBTI
@@ -268,11 +257,11 @@ const Join = () => {
               type="text"
               name="userEmail"
               id="userEmail"
-              placeholder="Email 입력하세요."
-              onChange={change}
+              value={user.userEmail}
+              // onChange={change}
             />
           </Col>
-          <Col sm={2}>
+          {/* <Col sm={2}>
             <Button
               color="white"
               style={{ border: "1px solid black", fontWeight: "600" }}
@@ -291,7 +280,7 @@ const Join = () => {
               name="join_code"
               id="join_code"
               placeholder="인증코드를 입력하세요."
-              onChange={change}
+              // onChange={change}
             />
           </Col>
           <Col sm={2}>
@@ -301,7 +290,7 @@ const Join = () => {
             >
               인증
             </Button>
-          </Col>
+          </Col> */}
         </FormGroup>
         <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
           <Button
@@ -315,14 +304,15 @@ const Join = () => {
             }}
             type="submit"
             name="submit"
-            onClick={submit}
+            // onClick={}
           >
-            가입
+            수정
           </Button>
         </FormGroup>
       </Form>
+      
     </div>
   );
 };
 
-export default Join;
+export default DefaultMypage; 

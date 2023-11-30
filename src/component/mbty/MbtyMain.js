@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Table, Button, Form, FormGroup, Label, Col, Input } from "reactstrap";
 import { Link } from 'react-router-dom';
-import Swal from "sweetalert2";
 
 import style from "../../css/mbty/MbtyMain.module.css"
 
@@ -18,17 +17,8 @@ function MbtyMain() {
         color:"black",
     };
 
-    const changeInput=(e)=> {
-
-    }
-
-    const submit=(e)=> {
-
-        e.preventDefault();
-    }
-
     return (
-        <div>
+        <div className={style.container}>
             <div className={style.pageHeader}>
                 <h1>MBT-Why</h1>
                 <div>
