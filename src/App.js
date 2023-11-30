@@ -25,6 +25,7 @@ import Mypage from "./component/user/Mypage";
 import DefaultMypage from "./component/user/DefaultMypage";
 import MbtyWrite from "./component/mbty/MbtyWrite";
 import MbtyModify from "./component/mbty/MbtyModify";
+import AdminFrame from "./component/admin/AdminFrame";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route exact path="/adminnotice" element={<AdminNotice />} />
           <Route exact path="/adminnoticeform" element={<AdminNoticeForm />} />
           <Route exact path="/adminqna" element={<AdminQna />} />
+          <Route exact path="/adminframe" element={<AdminFrame />} />
           <Route exect path="/mbtymain" element={<MbtyMain/>}/>
           <Route exect path="/mbty" element={<Mbty/>}/>
           <Route exact path="/mbtydetail" element={<MbtyDetail />} />

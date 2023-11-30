@@ -3,6 +3,7 @@ import { Nav, NavItem, NavLink, Table, Input } from "reactstrap";
 import style from "../../css/admin/AdminNotice.module.css";
 import React from "react";
 import {Link} from "react-router-dom";
+import AdminNav from "./AdminNav";
 
 const AdminNoticeForm = () => {
     return (
@@ -13,26 +14,7 @@ const AdminNoticeForm = () => {
         <div className={style.container}>
             <section className={style.section}>
 
-                <Nav className={style.adminNav}>
-                    <div>
-                        <NavItem>
-                            <NavLink tag={Link} to="/adminNotice" className={style.navLink}>공지사항 목록</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink tag={Link} to="/adminNoticeForm" className={`${style.navLink} ${style.navActive}`}>공지 등록/수정</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink tag={Link} to="/menu3" className={style.navLink}>신고 게시글</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink tag={Link} to="/menu4" className={style.navLink}>정지 회원</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink tag={Link} to="/adminQna" className={style.navLink}>문의 답변</NavLink>
-                        </NavItem>
-                    </div>
-                </Nav>
-
+                <AdminNav/>
                 <div>
                     <div className={style.sectionTitle}>공지사항 등록</div>
                     <div className={style.sectionContents}>
