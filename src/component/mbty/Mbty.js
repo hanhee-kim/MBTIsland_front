@@ -12,7 +12,6 @@ import {
     Col,
     Input,
     Button } from "reactstrap";
-import Swal from "sweetalert2";
 import axios from 'axios';
 
 import style from "../../css/mbty/Mbty.module.css";
@@ -23,6 +22,7 @@ function Mbty() {
         {
             num:1,
             mbti:"INTP",
+            color:"#9BB7D4",
             writer:"마춤뻡파괴왕",
             date:"1일전",
             content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
@@ -33,6 +33,7 @@ function Mbty() {
         {
             num:2,
             mbti:"INTP",
+            color:"#9BB7D4",
             writer:"마춤뻡파괴왕",
             date:"1일전",
             content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
@@ -43,6 +44,7 @@ function Mbty() {
         {
             num:3,
             mbti:"INTP",
+            color:"#9BB7D4",
             writer:"마춤뻡파괴왕",
             date:"1일전",
             content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
@@ -53,6 +55,7 @@ function Mbty() {
         {
             num:4,
             mbti:"INTP",
+            color:"#9BB7D4",
             writer:"마춤뻡파괴왕",
             date:"1일전",
             content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
@@ -63,6 +66,7 @@ function Mbty() {
         {
             num:5,
             mbti:"INTP",
+            color:"#9BB7D4",
             writer:"마춤뻡파괴왕",
             date:"1일전",
             content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
@@ -76,6 +80,7 @@ function Mbty() {
         {
             num:1,
             mbti:"INTP",
+            color:"#9BB7D4",
             writer:"마춤뻡파괴왕",
             date:"1일전",
             content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
@@ -85,6 +90,7 @@ function Mbty() {
         }
     );
 
+    // 페이징 상태 값
     const [pageBtn, setPageBtn] = useState([]);
     const [pageInfo, setPageInfo] = useState({});
 
@@ -179,11 +185,6 @@ function Mbty() {
         });
     };
 
-    const submit=(e)=> {
-
-        e.preventDefault();
-    };
-
     const sortStyle = {
         margin:"0 auto",
         border:"none",
@@ -232,7 +233,7 @@ function Mbty() {
                             &#128293;HOT
                         </div>
                         <div className={style.boardWriter}>
-                            <div style={{backgroundColor:"#9BB7D4"}}> </div>&nbsp;&nbsp;&nbsp;
+                            <div style={{backgroundColor:`${hotBoard.color}`}}> </div>&nbsp;&nbsp;&nbsp;
                             {hotBoard.mbti}&nbsp;&nbsp;&nbsp;
                             {hotBoard.writer}
                         </div>
@@ -266,7 +267,7 @@ function Mbty() {
                             <div key={board.num} className={style.sectionBoard}>
                                 <Link to={"/detailform/only-detail/" + board.num}></Link>
                                 <div className={style.boardWriter}>
-                                <div style={{backgroundColor:"#9BB7D4"}}> </div>&nbsp;&nbsp;&nbsp;
+                                <div style={{backgroundColor:`${board.color}`}}> </div>&nbsp;&nbsp;&nbsp;
                                     {board.mbti}&nbsp;&nbsp;&nbsp;
                                     {board.writer}
                                 </div>

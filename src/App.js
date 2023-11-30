@@ -20,6 +20,8 @@ import Footer from "./component/common/Footer";
 import MbtyDetail from "./component/mbty/MbtyDetail";
 import Mypage from "./component/user/Mypage";
 import DefaultMypage from "./component/user/DefaultMypage";
+import MbtyWrite from "./component/mbty/MbtyWrite";
+import MbtyModify from "./component/mbty/MbtyModify";
 
 function App() {
   return (
@@ -42,6 +44,8 @@ function App() {
           <Route exact path="/addjoin" element={<AddJoin />} />
           <Route exact path="/mbtydetail" element={<MbtyDetail />} /> 
           <Route exact path="/mypage" element={<Mypage/>} />
+          <Route exact path="/mbtywrite" element={<MbtyWrite />} /> 
+          <Route exact path="/mbtymodify" element={<MbtyModify />} /> 
         </Routes>
         <Footer />
       </BrowserRouter>

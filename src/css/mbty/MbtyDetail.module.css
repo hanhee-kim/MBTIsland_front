@@ -12,7 +12,7 @@
     border-bottom: solid #4D6879 3px;
 }
 
-/* .popOverStyle {
+/* .dropDownStyle {
     margin: 0 auto;
     border: none;
     box-shadow: none;
@@ -25,8 +25,8 @@
     text-align: left;
 }
 
-.popOverImg {
-    width: 40px;
+.dropDownImg {
+    width: 30px;
     margin-right: 10px;
 }
 
@@ -39,9 +39,14 @@
 .boardWriter {
     display: flex;
     margin-bottom: 10px;
+    justify-content: space-between;
 }
 
 .boardWriter > div {
+    display: flex;
+}
+
+.circleDiv {
     width: 23px;
     height: 23px;
     border-radius: 50%;
@@ -99,7 +104,7 @@
 }
 
 .sectionComment {
-    padding: 15px 0 15px 25px;
+    padding: 15px 25px 15px 25px;
     border-bottom: solid #C5C5C5 2px;
 }
 
@@ -107,11 +112,31 @@
     font-weight: bold;
 }
 
-.sectionComments {
-    padding: 15px 0 15px 25px;
+.commentCountDiv {
+    padding: 15px 25px 15px 25px;
     border-bottom: solid #C5C5C5 2px;
 }
 
-.sectionComments > div {
+.commentCountDiv > div {
     font-weight: bold;
+}
+
+.pagingLabel {
+    margin: 0 auto;
+    width: 600px;
+}
+
+.postCommentDiv {
+    padding: 15px;
+    text-align: right;
+}
+
+.replySection {
+    display: flex;
+    justify-content: space-between;
+}
+
+.replyArrowImg {
+    height: 30px;
+    margin-right: 10px;
 }

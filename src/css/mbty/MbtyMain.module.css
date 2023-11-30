@@ -1,3 +1,8 @@
+.container {
+    text-align: center;
+    margin-top: 80px;
+}
+
 .pageHeader {
     display: inline-block;
     width: 800px;
@@ -27,6 +32,8 @@
 .mbtyTable {
     width: 800px;
     margin: 50px auto;
+    display: flex;
+    justify-content: space-evenly;
 }
 
 .mbtyTable > tbody > tr {
