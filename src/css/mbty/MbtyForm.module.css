@@ -1,0 +1,36 @@
+.container {
+    margin-top: 100px;
+}
+
+.sectionPageHeader {
+    width: 800px;
+    margin: 0 auto;
+}
+
+.pageHeader {
+    display: flex;
+}
+
+.sectionSelectMbti {
+    display: flex;
+    padding: 15px;
+}
+
+.selectDiv {
+    width: 90px;
+}
+
+.formTitleDiv {
+    display: flex;
+    align-items: center;
+    margin-left: 270px;
+}
+
+.formTitleDiv > h5 {
+    font-weight: bold;
+}
+
+.postContentDiv {
+    padding: 15px;
+    text-align: right;
+}

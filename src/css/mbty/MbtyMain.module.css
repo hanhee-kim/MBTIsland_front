@@ -1,0 +1,54 @@
+.container {
+    text-align: center;
+    margin-top: 80px;
+}
+
+.pageHeader {
+    display: inline-block;
+    width: 800px;
+    border-bottom: solid #C5C5C5 3px;
+}
+
+.pageHeader > h1 {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.pageHeader > div {
+    display: flex;
+}
+
+.pageHeaderContent {
+    width: 90%;
+    text-align: left;
+    color: #C5C5C5;
+}
+
+.pageHeaderWriteBtn {
+    width: 10%;
+    cursor: pointer;
+}
+
+.mbtyTable {
+    width: 800px;
+    margin: 50px auto;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.mbtyTable > tbody > tr {
+    display: flex;
+    margin: 20px;
+}
+
+.cardStyle {
+    display: flex;
+    width: 170px;
+    height: 125px;
+    margin: auto;
+    border: solid #C5C5C5 2px;
+    border-radius: 20px;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+}

@@ -8,10 +8,22 @@
     border-bottom: 1px solid #999999;
 
 }
-#logo {
+.siteTitle {
+    margin-left: 100px;
+}
+.siteTitle,
+.siteTitle:link, 
+.siteTitle:visited, 
+.siteTitle:hover, 
+.siteTitle:active {
     font-size: 30px;
     color: black;
-    margin-right: 50px;
+    text-decoration: none;
+}
+.logoIcon {
+    margin-left: 15px;
+    margin-right: 40px;
+    width: 30px;
 }
 
 .navItems {
@@ -27,7 +39,6 @@
     padding: 0 10px;
     text-align: center;
     min-width: 60px;
-    /* margin: 0 10px; */
     line-height: 60px;
 }
 

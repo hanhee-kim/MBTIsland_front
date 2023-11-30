@@ -9,6 +9,8 @@
     display: flex;
     justify-content: flex-start;
 
+    padding-top: 80px;
+
     /* border: 1px solid blue; */
 
     
@@ -40,7 +42,7 @@
     margin-bottom: 50px;
     font-size: 40px;
     font-weight: 500;
-    border-bottom: 3px solid black;
+    border-bottom: 4px solid black;
     padding-bottom: 2px;
 }
 
@@ -48,9 +50,9 @@
 .adminPage {
     background-color: #F3F3F3;
     width: 100%;
-    height: 274px;
-    line-height: 274px;
-    padding-left: 270px;
+    height: 240px;
+    line-height: 240px;
+    padding-left: 300px;
     font-size: 25px;
     font-weight: 700;
     margin-top: 28px;
@@ -58,26 +60,33 @@
     position: relative;
     overflow: hidden; /* 오버레이 */
 }
-
 .adminPageImg {
     position: absolute;
-    top: -275px;
-    right: 0;
-
-    width: 900px;
-    object-fit: none; /* 이미지 자체의 크기 유지 */
+    top: -110px;
+    right: 100px !important;
+    width: 500px;
+    /* object-fit: none; 이미지 자체의 크기 유지 */
 }
 
 .adminNav {
-    width: 250px;
+    width: 230px;
     height: 500px;
     background-color: #F3F3F3;
-    padding-bottom: 150px;
-    padding-top: 40px;
+    padding: 60px 10px 40px 0;
     margin-right: 100px;
+}
+.adminNav>div {
+    width: 100%;
+}
+.adminNav>div>* {
+    /* border: 1px solid salmon; */
+    padding: 5px 0 5px 0;
 }
 .navLink {
     color: #767676 !important;
+    display: flex;
+    justify-content: flex-end;
+    
 }
 .navActive {
     color: black !important;
@@ -87,17 +96,24 @@
 .table {
     width: 900px;
     margin-bottom: 40px;
+    border-bottom: black 1px solid;
+    border-top: black 1px solid;
 }
 .table>tbody>tr>td {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 15px 20px;
 }
-.table>tbody>tr:last-child {
-    border-bottom: #dee2e6 1px solid;
+.table>tbody>tr:not(:first-child) {
+    border-top: #d9d9d9 1px solid;
 }
+.openEye,
+.closedEye {
+    width: 22px;
+}
+
 .paging {
     display: flex;
     justify-content: center;
+    margin-top: 33px;
 }
 .paging>span {
     display: inline-block;
@@ -137,34 +153,57 @@
     margin-right: 15px;
 }
 .filterActive {
-    border-bottom: black solid 3px;
+    border-bottom: black solid 4px;
 }
 
 
 .searchBar {
     display: inline-block;
+    position: relative;
 }
 .searchBar>input {
+    border: 1px solid #767676;
     border-radius: 25px;
     height: 40px;
-    position: relative;
-    padding: 3px;
+    padding: 3px 42px 3px 13px;
+    width: 220px;
+    font-size: 18px;
 }
-
-.searchBtn {
+.searchBtnIcon {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 20px;
+    top: 8px;
+    right: 14px;
+    width: 23px;
+    z-index: 1;
+    cursor: pointer;
 }
 
 .checkboxAndButtons {
     width: 100%;
     display: flex; 
     justify-content: space-between;
-    padding-left: 20px;
+    padding-left: 19px;
     padding-right: 20px;
+    margin-bottom: 15px;
 }
+.checkboxAndButtons>span:first-child {
+    position: relative;
+    top: 8px;
+}
+.checkboxAndButtons>span>input[type=checkbox]+span {
+    font-size: 18px;
+}
+.checkboxAndButtons>span:nth-child(2)>input {
+    background-color: white;
+    border: 1px solid #d9d9d9;
+    padding: 4px 20px 4px 20px;
+    font-size: 18px;
+    border-radius: 4px;
+}
+.checkboxAndButtons>span:nth-child(2)>input:first-child {
+    margin-right: 15px;
+}
+
 
 
 /* 관리자페이지 공지사항 폼 */
@@ -179,13 +218,28 @@
     width: 100%;
     height: 50px;
     border-radius: 8px;
-    margin-bottom: 30px;
+    margin-bottom: 16px;
     border: 0.5px solid gray;
 }
 .formContent {
     width: 100%;
     margin-bottom: 30px;
+    border-radius: 8px;
 }
 .formBtns {
     float: right;
+}
+.formBtns>input {
+    font-size: 17px;
+    padding: 4px 28px 4px 28px;
+    border-radius: 4px;
+    background: black;
+    border: 1px solid black;
+    color: white;
+}
+.formBtns>input:first-child {
+    margin-right: 12px;
+    background: white;
+    border: 1px solid #B8B8B8;
+    color: black;
 }
