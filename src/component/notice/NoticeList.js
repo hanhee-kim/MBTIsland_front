@@ -22,7 +22,7 @@ const Notice = () => {
                     </div>
                 </div>
 
-                <Table className={style.table}>
+                <table className={style.table}>
                     <tbody>
                         <tr>
                             <td>[공지]</td>
@@ -85,7 +85,7 @@ const Notice = () => {
                             <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>17</td>
                         </tr>
                     </tbody>
-                </Table>
+                </table>
                 <div className={style.paging}>
                     <span>&lt;</span>
                     <span className={style.activePage}>1</span>

@@ -89,7 +89,7 @@ const AdminNotice = () => {
                         </tr>
                         <tr>
                             <td><input type="checkbox" className={style.checkbox}/></td>
-                            <td>신고제와 신고된 게시물, 회원의 제재처리 안내</td>
+                            <td>신고제와 신고된 게시물, 회원의 제재처리 안내신고제와 신고된 게시물, 회원의 제재처리 안내</td>
                             <td>2023-11-16</td>
                             <td><img src={"/closedEyeIcon.png" } alt="" className={style.closedEye}/></td>
                         </tr>

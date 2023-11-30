@@ -49,11 +49,37 @@
     padding-top: 15px;
     padding-bottom: 15px;
 }
-.table>tbody>tr:last-child {
+/* .table>tbody>tr:last-child {
     border-bottom: #dee2e6 1px solid;
-}
+} */
+
+
 .table>tbody>tr>td:not(:nth-child(2)) {
     color:#8F8F8F;
+}
+.table {
+    width: 900px;
+    margin-bottom: 40px;
+    border-bottom: black 1px solid;
+    border-top: black 1px solid;
+}
+.table>tbody>tr>td {
+    padding: 15px 20px;
+}
+.table>tbody>tr:not(:first-child) {
+    border-top: #d9d9d9 1px solid;
+}
+
+
+.table>tbody>tr>td:nth-child(2){
+    /* 줄바꿈을 막고 생략기호 표시 */
+    display: block;
+    width: 524.65px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 auto;
+    /* background: ghostwhite; */
 }
 
 .paging {

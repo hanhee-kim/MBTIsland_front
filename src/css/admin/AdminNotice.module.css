@@ -12,6 +12,16 @@
 .table>tbody>tr:not(:first-child) {
     border-top: #d9d9d9 1px solid;
 }
+.table>tbody>tr>td:nth-child(2) {
+    /* 줄바꿈을 막고 생략기호 표시 */
+    display: block;
+    width: 568.24px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 auto;
+    /* background: ghostwhite; */
+}
 .openEye,
 .closedEye {
     width: 22px;
