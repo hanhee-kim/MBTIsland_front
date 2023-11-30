@@ -18,6 +18,8 @@ import Mbty from './component/mbty/Mbty';
 import Header from "./component/common/Header";
 import Footer from "./component/common/Footer";
 import MbtyDetail from "./component/mbty/MbtyDetail";
+import Mypage from "./component/user/Mypage";
+import DefaultMypage from "./component/user/DefaultMypage";
 
 function App() {
   return (
@@ -25,7 +27,6 @@ function App() {
       {/* <Provider store={store}> */}
       {/* <PersistGate persistor={persister}> */}
       <BrowserRouter>
-        <Main />
         <Header />
         <Routes>
           <Route exact path="/notice" element={<Notice />} />
@@ -40,6 +41,7 @@ function App() {
           <Route exect path="/mbty" element={<Mbty/>}/>
           <Route exact path="/addjoin" element={<AddJoin />} />
           <Route exact path="/mbtydetail" element={<MbtyDetail />} /> 
+          <Route exact path="/mypage" element={<Mypage/>} />
         </Routes>
         <Footer />
       </BrowserRouter>

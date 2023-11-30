@@ -1,0 +1,148 @@
+/* Orbit */
+@font-face {
+  font-family: 'Orbit-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/Orbit-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+/* 소요단풍체 */
+@font-face {
+  font-family: 'SOYOMapleBoldTTF';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/SOYOMapleBoldTTF.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+/* 스위트 */
+@font-face {
+  font-family: 'SUITE-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+/* Intel one mono */
+@font-face {
+  font-family: 'intelone-mono-font-family-regular';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/intelone-mono-font-family-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+/* 강원교육모두체 */
+@font-face {
+  font-family: 'GangwonEdu_OTFBoldA';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.myPageContainer{
+  margin-top: 90px;
+    display: grid;
+    width: 100%;
+    grid-template-columns: 300px auto;
+}
+.sideBar{
+  /* display: flex; */
+  width: 300px;
+  height: 100%;
+  font-weight: 400;
+  font-family: 'GangwonEdu_OTFBoldA';
+}
+.sideMenus{
+  text-decoration: none;
+  list-style: none;
+  padding-left: 0;
+}
+.sideMenus li{
+  list-style: none;
+  text-align: center;
+  line-height: 60px;
+  font-size: 30px;
+}
+.myMbti{
+  font-size: 40px;
+  stroke: #818181;
+  text-shadow: 3px 2px 8px #6d6d6d;
+  text-indent: 45px;
+}
+.myNick{
+  font-size: 30px;
+  text-align: center;
+}
+/* defaultPage */
+.title{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  font-size: 40px;
+
+}
+.sectionGr{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 80px;
+}
+.section{
+  display: flex;
+  flex-direction: column;
+}
+.sectionTitle{
+  font-size: 20px;
+  text-align: center;
+}
+
+.sectionCnt{
+  display: flex;
+  width: 100px;
+  justify-content: center;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  background-color: lightgrey;
+}
+
+/* MBT-Why Page */
+.myMbtwhyContainer{
+  font-family: 'GangwonEdu_OTFBoldA';
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.myMbtwhyTitle{
+  display: flex;
+  justify-content: center;
+  font-size: 40px;
+  border-radius: 10px;
+  background-color: #dee2e6;
+  width: 800px;
+}
+/* .page-item.active, .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #000000;
+  border-color: #000000;
+} */
+.pageNav{
+  background-color: #000000;
+  border-color: #dee2e6;
+}
+.page-link {
+  color: #000; 
+  background-color: #fff;
+  border: 1px solid #ccc; 
+}
+
+.pageItem.active .page-link {
+ z-index: 1;
+ color: #555;
+ font-weight:bold;
+ background-color: #f1f1f1;
+ border-color: #ccc;
+ 
+}
+
+.page-link:focus, .page-link:hover {
+  color: #000;
+  background-color: #fafafa; 
+  border-color: #ccc;
+}

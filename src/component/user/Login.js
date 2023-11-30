@@ -51,10 +51,13 @@ const Login = () => {
   };
 
   //state,effect,navigate...
-  const [findIdModal, setFindIdModal] = useState(false);
-  const idToggle = () => {
-    setFindIdModal(!findIdModal);
+  const [findModal, setFindModal] = useState(false);
+  const [modalType, setModalType] = useState('');
+  const toggle = () => {
+    //서버에 userEmail과 modalType을 전송하고 보내줌.
+    setFindModal(!findModal);
   };
+  
   const [userEmail, setUserEmail] = useState("");
   const [user, setUser] = useState({
     username: "",
@@ -69,9 +72,10 @@ const Login = () => {
   const submit = (e) => {
     e.preventDefault();
   };
-  const openIdFind = (e) => {
+  const openFind = (e,type) => {
     e.preventDefault();
-    idToggle();
+    setModalType(type);
+    toggle();
   };
   // const goJoin = () => {
   //   navigate("/join");
@@ -130,10 +134,10 @@ const Login = () => {
           </Button>
         </FormGroup>
         <div style={BtnGroupStyle}>
-          <button sm={4} onClick={(e) => openIdFind(e)} style={aTagStyle}>
+          <button sm={4} onClick={(e) => openFind(e,"ID")} style={aTagStyle}>
             아이디 찾기
           </button>
-          <button sm={4} onClick={idToggle} style={aTagStyle}>
+          <button sm={4} onClick={(e) => openFind(e,"PASSWORD")} style={aTagStyle}>
             비밀번호 찾기
           </button>
           <a sm={4} href="/join" style={aTagStyle}>
@@ -160,12 +164,12 @@ const Login = () => {
           />
         </div>
       </Form>
-
-      <Modal isOpen={findIdModal}>
-        <ModalHeader>아이디 찾기</ModalHeader>
+      {/* 모달 */}
+      <Modal isOpen={findModal}>
+        <ModalHeader>{modalType} 찾기</ModalHeader>
         <ModalBody>
           <div row>
-            <Label for="userEmail">이메일</Label>
+            <Label for="userEmail">E-Mail</Label>
             <Input
               type="text"
               name="userEmail"
@@ -173,10 +177,12 @@ const Login = () => {
                 setUserEmail(e.target.value);
               }}
             />
+            <div style={{display:"flex",fontSize:"12px",textAlign:"center",justifyContent:"center"}}>* 가입하신 이메일을 입력해주세요. 이메일로 정보를 전송해드립니다. *</div>
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="dark" onClick={idToggle}>
+
+          <Button color="dark" onClick={toggle}>
             보내기
           </Button>{" "}
         </ModalFooter>
