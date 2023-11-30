@@ -45,9 +45,9 @@ function App() {
           <Route exact path="/mbtmiform" element={<MBTmiForm />} />
           <Route exact path="/notice" element={<Notice />} />
           <Route exact path="/noticedetail" element={<NoticeDetail />} />
-          <Route exact path="/adminnotice" element={<AdminNotice />} />
-          <Route exact path="/adminnoticeform" element={<AdminNoticeForm />} />
-          <Route exact path="/adminqna" element={<AdminQna />} />
+          <Route exact path="/adminnotice" element={<AdminFrame />} />
+          <Route exact path="/adminnoticeform" element={<AdminFrame />} />
+          <Route exact path="/adminqna" element={<AdminFrame />} />
           <Route exact path="/adminframe" element={<AdminFrame />} />
           <Route exect path="/mbtymain" element={<MbtyMain/>}/>
           <Route exect path="/mbty" element={<Mbty/>}/>

@@ -1,37 +1,32 @@
 import { Nav, NavItem, NavLink, Table } from "reactstrap";
 
-import style from "../../css/admin/AdminNotice.module.css";
-import React, { useEffect } from "react";
-import {Link, useLocation} from "react-router-dom";
+import styleFrame from "../../css/admin/AdminFrame.module.css";
 import AdminNav from "./AdminNav";
+import AdminNoticeForm from "./AdminNoticeForm";
+import { useLocation } from "react-router";
+import { useEffect } from "react";
+import AdminNotice from "./AdminNotice";
+import AdminQna from './AdminQna';
+import Main from './../Main';
 
 const AdminFrame = () => {
 
+    const uri = useLocation().pathname;
+
     return (
         <>
-        <div className={style.adminPage}>관리자 페이지
-            <img src={"/gear_adminPage.png" } alt="" className={style.adminPageImg}/>
+        <div className={styleFrame.adminPage}>관리자 페이지
+            <img src={"/gear_adminPage.png" } alt="" className={styleFrame.adminPageImg}/>
         </div>
-        <div className={style.container}>
-            <section className={style.section}>
-
+        <div className={styleFrame.container}>
+            <section className={styleFrame.section}>
                 <AdminNav/>
-                <div>
-                    <div className={style.sectionTitle}>공지사항 등록</div>
-                    <div className={style.sectionContents}>
-                        <form className={style.noticeForm}>
-                            <li>제목</li>
-                            <input type="text" className={style.formtitle}/>
-                            <li>본문</li>
-                            <textarea className={style.formContent} rows="18"/>
-                            <div className={style.formBtns}>
-                            <input type="button" value="취소"/>
-                            <input type="submit" value="저장"/>
-                            </div>
-                        </form>    
-                    </div>
-                </div>
-                
+                {uri==='/adminnoticeform'? <AdminNoticeForm/>:
+                    uri==='/adminnotice'? <AdminNotice/>:
+                    uri==='/adminqna'? <AdminQna/>:
+                    uri==='/menu3'? <Main/>:
+                    <Main/>
+                }
             </section>
         </div>
         </>
