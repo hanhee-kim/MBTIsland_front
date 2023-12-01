@@ -1,0 +1,109 @@
+.container{
+    padding-top: 62px; /* 배너를 헤더 바로 아래로 붙이기 위함 */
+    border: 3px solid blue;
+	height: auto;
+    min-height: 100%;
+    padding-bottom: 60px; /* 푸터 높이만큼 확보해둠 */
+    
+}
+
+.container>div {
+    display: flex;
+}
+
+.sectionLeftArea,
+.sectionRightArea,
+.section {
+    flex: 1;
+}
+/* .sectionLeftArea,
+.sectionRightArea {
+    background: aliceblue;
+} */
+
+.section {
+    border: 1px solid red;
+    min-height: 900px; /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
+    width: 883px;
+    font-size: 20px;
+}
+
+.boardTitleB {
+    background-color:#F3F3F3;
+    width:883px; 
+    height:110px;
+    border: 1px solid #A6A6A6;
+    border-radius: 10px;
+    padding-left: 35px;
+    padding-top: 20px;
+}
+.boardTitleB>span>p:first-child {
+    font-size: 25px;
+    margin-bottom: 0px;
+} 
+.boardTitleB>span>p+p {
+    font-size: 15px;
+    font-weight: 600;
+} 
+
+/* 플로팅 버튼 */
+.sectionRightArea {
+    display: flex;
+    flex-direction: column-reverse;
+}
+.sectionRightArea>div {
+    /* border: dashed red 3px; */
+    padding-right: 100px;
+}
+.movetopIcon {
+    float: right;
+    width: 50px;
+    position: sticky;
+    cursor: pointer;
+}
+
+/* 배너 */
+.bannerArea {
+    background: moccasin;
+    height: 200px;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+/* 게시판별 최신글 목록 */
+.newlyPosts {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 30px;
+    padding-right: 30px;
+    width: 883px;
+    height: 230px;
+    font-size: 16px;
+    /* background: honeydew; */
+}
+.table {
+    width: 100%;
+}
+.table>tbody>tr:not(:first-child) {
+    border-top: 1px solid #9B9B9B;
+}
+.table>tbody>tr>td {
+    padding: 5px;
+}
+.table>tbody>tr>td:nth-child(2)>small {
+    color: #6e6e6e;
+}
+.profileColor {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #F0A4AB;
+    background: #F0A4AB;
+    border-radius: 50%;
+}
+
+
+
+
+
+

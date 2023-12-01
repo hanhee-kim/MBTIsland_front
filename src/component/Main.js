@@ -1,38 +1,190 @@
-const Main = () => {
-  return (
-    <>
-      <h2>-</h2>
-      <div style={{width:'300px', minHeight:'800px', border: '3px dashed gold', marginTop: '65px', marginLeft: '100px'}}>
-        <li>
-          <a href="/notice">공지사항 리스트</a>
-        </li>
-        <li>
-          <a href="/noticedetail">공지사항 글상세</a>
-        </li>
-        <li>
-          <a href="/adminnotice">관리자페이지 공지사항 리스트</a>
-        </li>
-        <li>
-          <a href="/adminnoticeform">관리자페이지 공지사항 작성폼</a>
-        </li>
-        <li>
-          <a href="/adminqna">관리자페이지 문의 리스트</a>
-        </li>
-        <li>
-          <a href="/adminqnaform">관리자페이지 문의 답변하기</a>
-        </li>
-        <li>
-          <a href="/mbtmi">mbtmi 리스트</a>
-        </li>
-        <li>
-          <a href="/mbtmidetail">mbtmi 글상세</a>
-        </li>
-        <li>
-          <a href="/mbtmiform">mbtmi 작성폼</a>
-        </li>
-      </div>
-    </> 
-  );
-};
+import { Table } from "reactstrap";
 
+// import style from "../css/mbtmi/MBTmi.module.css";
+import style from "../css/Main.module.css";
+import React from "react";
+import {Link} from "react-router-dom";
+
+const Main = () => {
+    return (
+        <>
+        <div className={style.container}>
+            <div className={style.bannerArea}>배너영역</div>
+            
+            <div>
+            <section className={style.sectionLeftArea}></section>
+            <section className={style.section}>
+
+
+                <div className={style.boardTitleB}>
+                        <span>
+                            <p>MB-TMI</p>
+                            <p>유형별로 모여 자유롭게  이야기를 나눌 수 있는 공간</p>
+                        </span>
+                </div>
+                <div className={style.newlyPosts}>
+                  <table className={style.table}>
+                    <tbody>
+                      <tr>
+                        <td>게시글제목&nbsp;&nbsp;
+                            <span>[1]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>1분 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>게시글 긴제목&nbsp;&nbsp;
+                            <span>[10]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>2분 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>게시글 짧은제목 게시글 짧은제목   게시글 짧은제목 &nbsp;&nbsp;
+                            <span>[0]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>20일 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>게시글 짧은제목 게시글 짧은제목   게시글 짧은제목 &nbsp;&nbsp;
+                            <span>[0]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>2달 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>게시글 짧은제목 게시글 짧은제목   게시글 짧은제목 &nbsp;&nbsp;
+                            <span>[0]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>2년 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className={style.boardTitleB}>
+                        <span>
+                            <p>MB-TMI</p>
+                            <p>유형별로 모여 자유롭게  이야기를 나눌 수 있는 공간</p>
+                        </span>
+                </div>
+                <div className={style.newlyPosts}>
+                  <table className={style.table}>
+                    <tbody>
+                      <tr>
+                        <td>게시글제목&nbsp;&nbsp;
+                            <span>[1]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>1분 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>게시글 긴제목&nbsp;&nbsp;
+                            <span>[10]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>2분 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>게시글 짧은제목 게시글 짧은제목   게시글 짧은제목 &nbsp;&nbsp;
+                            <span>[0]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>20일 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>게시글 짧은제목 게시글 짧은제목   게시글 짧은제목 &nbsp;&nbsp;
+                            <span>[0]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>2달 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>게시글 짧은제목 게시글 짧은제목   게시글 짧은제목 &nbsp;&nbsp;
+                            <span>[0]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>2년 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className={style.boardTitleB}>
+                        <span>
+                            <p>MB-TMI</p>
+                            <p>유형별로 모여 자유롭게  이야기를 나눌 수 있는 공간</p>
+                        </span>
+                </div>
+                <div className={style.newlyPosts}>
+                  <table className={style.table}>
+                    <tbody>
+                      <tr>
+                        <td>게시글제목&nbsp;&nbsp;
+                            <span>[1]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>1분 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>게시글 긴제목&nbsp;&nbsp;
+                            <span>[10]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>2분 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>게시글 짧은제목 게시글 짧은제목   게시글 짧은제목 &nbsp;&nbsp;
+                            <span>[0]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>20일 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>게시글 짧은제목 게시글 짧은제목   게시글 짧은제목 &nbsp;&nbsp;
+                            <span>[0]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>2달 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>게시글 짧은제목 게시글 짧은제목   게시글 짧은제목 &nbsp;&nbsp;
+                            <span>[0]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <small>2년 전</small>
+                            <div className={style.profileColor}/>&nbsp;
+                            <span>ESFP 포로리</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+
+            </section>
+            <section className={style.sectionRightArea}>
+                <div>
+                    <img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/>
+                </div>
+            </section>
+            </div>
+        </div>
+        </>
+    );
+}
 export default Main;

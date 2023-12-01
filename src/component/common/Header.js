@@ -37,7 +37,11 @@ const Header = () => {
         const clickOutsidePopover = (event) => {
             const popoverElements = document.querySelectorAll(".popover");
             // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
-            if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
+            if (
+                Array.from(popoverElements).every(
+                    (popover) => !popover.contains(event.target)
+                )
+            ) {
                 setPopoverStates({popoverUser: false, popoverBell:false, popoverMessage:false});
             } 
         };
@@ -46,8 +50,13 @@ const Header = () => {
         return () => {
             document.removeEventListener("mousedown", clickOutsidePopover);
         };
-
     }, []);
+
+    // 팝오버 내부 Link클릭하여 uri가 변경되면 팝오버 닫기
+    useEffect(() => {
+        setPopoverStates({popoverUser: false, popoverBell:false, popoverMessage:false});
+    }, [uri]);
+
 
 
     // 읽지않은 쪽지리스트
