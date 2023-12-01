@@ -24,6 +24,7 @@ import MbtwhyWrite from "./component/mbtwhy/MbtwhyWrite";
 import MbtwhyModify from "./component/mbtwhy/MbtwhyModify";
 import MBattle from "./component/mbattle/MBattle";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
+import MBattleDetail from "./component/mbattle/MBattleDetail";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
           <Route exact path="/mbtwhymodify" element={<MbtwhyModify />} /> 
           <Route exact path="/mbattle" element={<MBattle />} />
           <Route exact path="/mbattlewrite" element={<MBattleWrite />} />
+          <Route exact path="/mbattledetail" element={<MBattleDetail />} />
         </Routes>
         <Footer />
       </BrowserRouter>
