@@ -1,97 +1,103 @@
 /* Orbit */
 @font-face {
-  font-family: 'Orbit-Regular';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/Orbit-Regular.woff2') format('woff2');
+  font-family: "Orbit-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/Orbit-Regular.woff2")
+    format("woff2");
   font-weight: normal;
   font-style: normal;
 }
 /* 소요단풍체 */
 @font-face {
-  font-family: 'SOYOMapleBoldTTF';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/SOYOMapleBoldTTF.woff2') format('woff2');
+  font-family: "SOYOMapleBoldTTF";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/SOYOMapleBoldTTF.woff2")
+    format("woff2");
   font-weight: 700;
   font-style: normal;
 }
 /* 스위트 */
 @font-face {
-  font-family: 'SUITE-Regular';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2') format('woff2');
+  font-family: "SUITE-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2")
+    format("woff2");
   font-weight: 400;
   font-style: normal;
 }
 /* Intel one mono */
 @font-face {
-  font-family: 'intelone-mono-font-family-regular';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/intelone-mono-font-family-regular.woff2') format('woff2');
+  font-family: "intelone-mono-font-family-regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/intelone-mono-font-family-regular.woff2")
+    format("woff2");
   font-weight: 400;
   font-style: normal;
 }
 /* 강원교육모두체 */
 @font-face {
-  font-family: 'GangwonEdu_OTFBoldA';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+  font-family: "GangwonEdu_OTFBoldA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff")
+    format("woff");
   font-weight: normal;
   font-style: normal;
 }
 
-.myPageContainer{
-  margin-top: 90px;
-    display: grid;
-    width: 100%;
-    grid-template-columns: 300px auto;
+.myPageContainer {
+  margin-top: 64px;
+  display: grid;
+  width: 100%;
+  grid-template-columns: 300px auto;
+  min-height: 800px;
 }
-.sideBar{
-  /* display: flex; */
+.sideBar {
+  display: flex;
+  flex-direction: column;
   width: 300px;
   height: 100%;
   font-weight: 400;
-  font-family: 'GangwonEdu_OTFBoldA';
+  font-family: "GangwonEdu_OTFBoldA";
 }
-.sideMenus{
+.sideMenus {
   text-decoration: none;
   list-style: none;
   padding-left: 0;
 }
-.sideMenus li{
+.sideMenus li {
   list-style: none;
   text-align: center;
   line-height: 60px;
   font-size: 30px;
 }
-.myMbti{
+.myMbti {
   font-size: 40px;
   stroke: #818181;
   text-shadow: 3px 2px 8px #6d6d6d;
   text-indent: 45px;
 }
-.myNick{
+.myNick {
   font-size: 30px;
   text-align: center;
 }
 /* defaultPage */
-.title{
+.title {
   display: flex;
   text-align: center;
   justify-content: center;
   font-size: 40px;
-
 }
-.sectionGr{
+.sectionGr {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 80px;
 }
-.section{
+.section {
   display: flex;
   flex-direction: column;
 }
-.sectionTitle{
+.sectionTitle {
   font-size: 20px;
   text-align: center;
 }
 
-.sectionCnt{
+.sectionCnt {
   display: flex;
   width: 100px;
   justify-content: center;
@@ -99,16 +105,32 @@
   border-radius: 10px;
   background-color: lightgrey;
 }
+/* profile */
+.myProfileContainer {
+  font-family: GangwonEdu_OTFBoldA;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 40px;
+}
 
 /* MBT-Why Page */
-.myMbtwhyContainer{
-  font-family: 'GangwonEdu_OTFBoldA';
+/* MbtmiPage */
+/* qna Page */
+
+.myMbtwhyContainer,
+.myMbtmiContainer,
+.myQnaContainer {
+  font-family: "GangwonEdu_OTFBoldA";
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
 }
-.myMbtwhyTitle{
+.myMbtwhyTitle,
+.myMbtmiTitle,
+.myQnaTitle {
   display: flex;
   justify-content: center;
   font-size: 40px;
@@ -116,33 +138,39 @@
   background-color: #dee2e6;
   width: 800px;
 }
+
+/* pagination */
 /* .page-item.active, .page-link {
   z-index: 3;
   color: #fff;
   background-color: #000000;
   border-color: #000000;
 } */
-.pageNav{
-  background-color: #000000;
-  border-color: #dee2e6;
+.paging {
+  display: flex;
+  justify-content: center;
+  margin-top: 35px;
 }
-.page-link {
-  color: #000; 
-  background-color: #fff;
-  border: 1px solid #ccc; 
+.paging > span {
+  display: inline-block;
+  margin: 5px;
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  border: 0px solid white;
+  text-align: center;
+  line-height: 32px;
+}
+.activePage {
+  border: 1px solid #a3a3a3 !important;
 }
 
-.pageItem.active .page-link {
- z-index: 1;
- color: #555;
- font-weight:bold;
- background-color: #f1f1f1;
- border-color: #ccc;
- 
+/* qnaModal */
+.qnaModal {
+  height: 700px;
 }
-
-.page-link:focus, .page-link:hover {
-  color: #000;
-  background-color: #fafafa; 
-  border-color: #ccc;
+.qnaModalContent {
+  width: 100%;
+  height: 550px;
+  resize: none;
 }
