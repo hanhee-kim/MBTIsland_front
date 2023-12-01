@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import style from "../../css/user/Mypage.module.css";
 import { Button, Table } from "reactstrap";
+import { useSelector } from "react-redux";
 
 const MyMbtmi = (props) => {
-  const user = props.user;
+  // const user = useSelector((state) => state.persistedReducer.user.user);
   //더미데이터
   const [tmiList, setTmiList] = useState([
     {
@@ -179,8 +180,8 @@ const MyMbtmi = (props) => {
   ]);
   return (
     <div className={style.myMbtmiContainer}>
-      <div className={style.myMbtmiTitle}>* {user.userNickname}의 MB-TmI *</div>
-      <div style={{ padding: "20px", marginTop: "60px" }}>
+      <div className={style.myMbtmiTitle}>* MB-TmI *</div>
+      <div style={{ padding: "20px", marginTop: "10px" }}>
         <Button color="dark" style={{ margin: "10px" }}>
           삭제
         </Button>

@@ -132,11 +132,13 @@
 .myMbtmiTitle,
 .myQnaTitle {
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   font-size: 40px;
-  border-radius: 10px;
-  background-color: #dee2e6;
+  /* border-radius: 10px; */
+  /* background-color: #dee2e6; */
+  border-bottom: 2px solid black;
   width: 800px;
+  margin-top: 20px;
 }
 
 /* pagination */

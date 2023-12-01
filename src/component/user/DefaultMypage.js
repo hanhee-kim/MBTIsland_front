@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import style from "../../css/user/Mypage.module.css";
 import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
+import { useSelector } from "react-redux";
 
 const DefaultMypage = (props) => {
   //---css
@@ -46,7 +47,7 @@ const DefaultMypage = (props) => {
   //css---
 
   //state
-  const user = props.user;
+  const user = useSelector((state) => state.persistedReducer.user.user);
   const today = new Date();
   const joinDate = new Date(user.joinDate);
   const mbtiChangeDate = new Date(user.userMbtiChangeDate);

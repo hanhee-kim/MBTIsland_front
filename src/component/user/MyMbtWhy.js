@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import style from "../../css/user/Mypage.module.css";
 import { Button, Table } from "reactstrap";
+import { useSelector } from "react-redux";
 
 const MyMbtWhy = (props) => {
+  // const user = useSelector((state) => state.persistedReducer.user.user);
   //더미데이터
   const [whyList, setWhyList] = useState([
     {
@@ -136,13 +138,10 @@ const MyMbtWhy = (props) => {
       isBlocked: false,
     },
   ]);
-  const user = props.user;
   return (
     <div className={style.myMbtwhyContainer}>
-      <div className={style.myMbtwhyTitle}>
-        * {user.userNickname}의 MBT-WHY *
-      </div>
-      <div style={{ padding: "20px", marginTop: "60px" }}>
+      <div className={style.myMbtwhyTitle}>* MBT-WHY *</div>
+      <div style={{ padding: "20px", marginTop: "10px" }}>
         <Button color="dark" style={{ margin: "10px" }}>
           삭제
         </Button>

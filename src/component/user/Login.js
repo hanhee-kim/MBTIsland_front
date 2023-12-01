@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 import {
   Button,
   Col,
@@ -52,27 +55,37 @@ const Login = () => {
 
   //state,effect,navigate...
   const [findModal, setFindModal] = useState(false);
-  const [modalType, setModalType] = useState('');
+  const [modalType, setModalType] = useState("");
   const toggle = () => {
     //서버에 userEmail과 modalType을 전송하고 보내줌.
     setFindModal(!findModal);
   };
-  
+
   const [userEmail, setUserEmail] = useState("");
   const [user, setUser] = useState({
     username: "",
     userPassword: "",
   });
-  // const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   //function
   const change = (e) => {
     setUser({ ...user, [e.target.name]: [e.target.value] });
-    console.log("user:" + user.username + "  " + user.password);
+    // console.log("user:" + user.username + "  " + user.password);
   };
-  const submit = (e) => {
+  const login = (e) => {
     e.preventDefault();
+    // axios.post("http://localhost:8090/login", user)
+    //         .then(res=> {
+    //             console.log(res.headers.authorization);
+    //             dispatch({type:"token", payload:res.headers.authorization});
+    //             navigate("/user");
+    //         })
+    //         .catch(err=> {
+    //             console.log(err);
+    //         })
   };
-  const openFind = (e,type) => {
+  const openFind = (e, type) => {
     e.preventDefault();
     setModalType(type);
     toggle();
@@ -80,7 +93,9 @@ const Login = () => {
   // const goJoin = () => {
   //   navigate("/join");
   // };
-  const goKakaoLogin = () => {};
+  const goKakaoLogin = () => {
+    Location.href = "http://www.naver.com";
+  };
   const goNaverLogin = () => {};
 
   return (
@@ -128,16 +143,20 @@ const Login = () => {
             }}
             type="button"
             name="submit"
-            onClick={submit}
+            onClick={login}
           >
             로그인
           </Button>
         </FormGroup>
         <div style={BtnGroupStyle}>
-          <button sm={4} onClick={(e) => openFind(e,"ID")} style={aTagStyle}>
+          <button sm={4} onClick={(e) => openFind(e, "ID")} style={aTagStyle}>
             아이디 찾기
           </button>
-          <button sm={4} onClick={(e) => openFind(e,"PASSWORD")} style={aTagStyle}>
+          <button
+            sm={4}
+            onClick={(e) => openFind(e, "PASSWORD")}
+            style={aTagStyle}
+          >
             비밀번호 찾기
           </button>
           <a sm={4} href="/join" style={aTagStyle}>
@@ -148,20 +167,29 @@ const Login = () => {
           <div style={{ width: "440px", border: "1px solid gray" }}></div>
         </div>
         <div style={socialBtnStyle}>
-          <img
-            className=""
-            src={"../kakao_login.png"}
-            style={{ width: "183px", height: "45px" }}
-            onClick={goKakaoLogin}
-            alt="kakaoLogin"
-          />
-          <img
-            className=""
-            src={"../naver_Login.png"}
-            style={{ width: "183px", height: "45px" }}
-            onClick={goNaverLogin}
-            alt="naverLogin"
-          />
+          <a href="http://www.kakao.com" target="_blank">
+            {/* <a
+            href="http://localhost:8090/oauth2/authorization/kakao"
+            target="_blank"
+          > */}
+            <img
+              className=""
+              src={"../kakao_login.png"}
+              style={{ width: "183px", height: "45px" }}
+              onClick={goKakaoLogin}
+              alt="kakaoLogin"
+            />
+          </a>
+          <a href="http://www.naver.com" target="_blank">
+            {/* <a href="http://localhost:8090/oauth2/authorization/naver" target="_blank"> */}
+            <img
+              className=""
+              src={"../naver_Login.png"}
+              style={{ width: "183px", height: "45px" }}
+              onClick={goNaverLogin}
+              alt="naverLogin"
+            />
+          </a>
         </div>
       </Form>
       {/* 모달 */}
@@ -177,11 +205,20 @@ const Login = () => {
                 setUserEmail(e.target.value);
               }}
             />
-            <div style={{display:"flex",fontSize:"12px",textAlign:"center",justifyContent:"center"}}>* 가입하신 이메일을 입력해주세요. 이메일로 정보를 전송해드립니다. *</div>
+            <div
+              style={{
+                display: "flex",
+                fontSize: "12px",
+                textAlign: "center",
+                justifyContent: "center",
+              }}
+            >
+              * 가입하신 이메일을 입력해주세요. 이메일로 정보를 전송해드립니다.
+              *
+            </div>
           </div>
         </ModalBody>
         <ModalFooter>
-
           <Button color="dark" onClick={toggle}>
             보내기
           </Button>{" "}
