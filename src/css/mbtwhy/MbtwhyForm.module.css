@@ -2,14 +2,14 @@
     margin-top: 100px;
 }
 
-.sectionPageHeader {
+.sectionCenter {
     width: 800px;
     margin: 0 auto;
 }
 
-.pageHeader {
+/* .pageHeader {
     display: flex;
-}
+} */
 
 .sectionSelectMbti {
     display: flex;
@@ -30,7 +30,11 @@
     font-weight: bold;
 }
 
-.postContentDiv {
+.contentDiv {
     padding: 15px;
+}
+
+.postContentDiv {
+    margin: 15px 0 15px 0;
     text-align: right;
 }

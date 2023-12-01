@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import style from "../../css/user/Mypage.module.css";
-import { Button, Col, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
 
 const DefaultMypage = (props) => {
   //---css
@@ -47,11 +47,22 @@ const DefaultMypage = (props) => {
 
   //state
   const user = props.user;
-  const [mbtiCheckEI, setMbtiCheckEI] = useState("E");
-  const [mbtiCheckNS, setMbtiCheckNS] = useState("N");
-  const [mbtiCheckTF, setMbtiCheckTF] = useState("T");
-  const [mbtiCheckPJ, setMbtiCheckPJ] = useState("P");
   const today = new Date();
+  const joinDate = new Date(user.joinDate);
+  const mbtiChangeDate = new Date(user.userMbtiChangeDate);
+  const modifyMbtiDay = Math.floor(
+    (today - mbtiChangeDate) / (1000 * 60 * 60 * 24)
+  );
+  const joinDay = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24));
+
+  const mbti = user.userMbti;
+  const [arrMbti, setArrMbti] = useState([...mbti]);
+
+  const [mbtiCheckEI, setMbtiCheckEI] = useState(arrMbti[0]);
+  const [mbtiCheckNS, setMbtiCheckNS] = useState(arrMbti[1]);
+  const [mbtiCheckTF, setMbtiCheckTF] = useState(arrMbti[2]);
+  const [mbtiCheckPJ, setMbtiCheckPJ] = useState(arrMbti[3]);
+
   // var yy = today.getFullYear;
   // var mon = today.getMonth;
   // var day = today.getDate;
@@ -77,11 +88,11 @@ const DefaultMypage = (props) => {
     setMbtiCheckPJ(pj);
   };
   return (
-    <div style={{fontFamily:"GangwonEdu_OTFBoldA"}}>
+    <div className={style.myProfileContainer}>
       {/* <div style={{width:"800px",height:"2000px",backgroundColor:"pink"}}></div> */}
-      <div className={style.title}>
-        프로필
-      </div>
+      {/* <div className={style.title}>프로필</div> */}
+      {/* {console.log(arrMbti)} */}
+      {modifyMbtiDay}
       <div className={style.sectionGr}>
         <div className={style.section}>
           <div className={style.sectionTitle}>방문</div>
@@ -89,7 +100,7 @@ const DefaultMypage = (props) => {
         </div>
         <div className={style.section}>
           <div className={style.sectionTitle}>가입한지</div>
-          <div className={style.sectionCnt}>{user.joinDate} 일</div>
+          <div className={style.sectionCnt}>{joinDay} 일</div>
         </div>
         <div className={style.section}>
           <div className={style.sectionTitle}>작성글수</div>
@@ -114,39 +125,40 @@ const DefaultMypage = (props) => {
             />
           </Col>
         </FormGroup>
-        {user.provider === "nomal" &&<>
-        <FormGroup row>
-          <Label for="userPassword" sm={3}>
-            비밀번호
-          </Label>
-          <Col sm={7}>
-            <Input
-              type="password"
-              name="userPassword"
-              id="userPassword"
-              // onChange={change}
-              />
-          </Col>
-        </FormGroup>
-        <FormGroup row>
-          <Label for="user_password_check" sm={3}>
-            비밀번호 확인
-          </Label>
-          <Col sm={7}>
-            <Input
-              type="password"
-              name="user_password_check"
-              id="user_password_check"
-              placeholder="PASSWORD를 한번더 입력하세요."
-              // onChange={change}
-              />
-          </Col>
-        </FormGroup>
-              </>
-            }
+        {user.provider === "nomal" && (
+          <>
+            <FormGroup row>
+              <Label for="userPassword" sm={3}>
+                비밀번호
+              </Label>
+              <Col sm={7}>
+                <Input
+                  type="password"
+                  name="userPassword"
+                  id="userPassword"
+                  // onChange={change}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row>
+              <Label for="user_password_check" sm={3}>
+                비밀번호 확인
+              </Label>
+              <Col sm={7}>
+                <Input
+                  type="password"
+                  name="user_password_check"
+                  id="user_password_check"
+                  placeholder="PASSWORD를 한번더 입력하세요."
+                  // onChange={change}
+                />
+              </Col>
+            </FormGroup>
+          </>
+        )}
 
         <FormGroup row>
-          <Label for="userNickname" sm={3} style={{ display: "flex"}}>
+          <Label for="userNickname" sm={3}>
             닉네임
           </Label>
           <Col sm={7}>
@@ -159,94 +171,94 @@ const DefaultMypage = (props) => {
             />
           </Col>
         </FormGroup>
-        <FormGroup tag="fieldset" style={{ display: "flex", gap: "10px" }}>
-          <Label for="mbti" sm={3}>
-            MBTI
-          </Label>
-          <div style={mbtiCheckBox}>
-            <FormGroup>
-              <Label
-                style={mbtiCheckEI === "E" ? btnSelStyle : btnOrgStyle}
-                check
-                onClick={(e) => mbtiEIClick(e, "E")}
-              >
-                E
-              </Label>
-            </FormGroup>
+        <FormGroup row style={{ display: "flex" }}>
+          <Label sm={3}>MBTI</Label>
+          <Col style={{ display: "flex" }} sm={7}>
+            <div style={mbtiCheckBox}>
+              <FormGroup>
+                <Label
+                  style={mbtiCheckEI === "E" ? btnSelStyle : btnOrgStyle}
+                  check
+                  onClick={(e) => mbtiEIClick(e, "E")}
+                >
+                  E
+                </Label>
+              </FormGroup>
 
-            <FormGroup>
-              <Label
-                style={mbtiCheckEI === "I" ? btnSelStyle : btnOrgStyle}
-                check
-                onClick={(e) => mbtiEIClick(e, "I")}
-              >
-                {""}I
-              </Label>
-            </FormGroup>
-          </div>
-          <div style={{ textAlign: "center", width: "20px" }}>+</div>
-          <div style={mbtiCheckBox}>
-            <FormGroup>
-              <Label
-                style={mbtiCheckNS === "N" ? btnSelStyle : btnOrgStyle}
-                check
-                onClick={(e) => mbtiNSClick(e, "N")}
-              >
-                {""}N
-              </Label>
-            </FormGroup>
-            <FormGroup>
-              <Label
-                style={mbtiCheckNS === "S" ? btnSelStyle : btnOrgStyle}
-                check
-                onClick={(e) => mbtiNSClick(e, "S")}
-              >
-                {""}S
-              </Label>
-            </FormGroup>
-          </div>
-          <div style={{ textAlign: "center", width: "20px" }}>+</div>
-          <div style={mbtiCheckBox}>
-            <FormGroup>
-              <Label
-                style={mbtiCheckTF === "T" ? btnSelStyle : btnOrgStyle}
-                check
-                onClick={(e) => mbtiTFClick(e, "T")}
-              >
-                {""}T
-              </Label>
-            </FormGroup>
-            <FormGroup>
-              <Label
-                style={mbtiCheckTF === "F" ? btnSelStyle : btnOrgStyle}
-                check
-                onClick={(e) => mbtiTFClick(e, "F")}
-              >
-                {""}F
-              </Label>
-            </FormGroup>
-          </div>
-          <div style={{ textAlign: "center", width: "20px" }}>+</div>
-          <div style={mbtiCheckBox}>
-            <FormGroup>
-              <Label
-                style={mbtiCheckPJ === "P" ? btnSelStyle : btnOrgStyle}
-                check
-                onClick={(e) => mbtiPJClick(e, "P")}
-              >
-                {""}P
-              </Label>
-            </FormGroup>
-            <FormGroup>
-              <Label
-                style={mbtiCheckPJ === "J" ? btnSelStyle : btnOrgStyle}
-                check
-                onClick={(e) => mbtiPJClick(e, "J")}
-              >
-                {""}J
-              </Label>
-            </FormGroup>
-          </div>
+              <FormGroup>
+                <Label
+                  style={mbtiCheckEI === "I" ? btnSelStyle : btnOrgStyle}
+                  check
+                  onClick={(e) => mbtiEIClick(e, "I")}
+                >
+                  {""}I
+                </Label>
+              </FormGroup>
+            </div>
+            <div style={{ textAlign: "center", width: "20px" }}>+</div>
+            <div style={mbtiCheckBox}>
+              <FormGroup>
+                <Label
+                  style={mbtiCheckNS === "N" ? btnSelStyle : btnOrgStyle}
+                  check
+                  onClick={(e) => mbtiNSClick(e, "N")}
+                >
+                  {""}N
+                </Label>
+              </FormGroup>
+              <FormGroup>
+                <Label
+                  style={mbtiCheckNS === "S" ? btnSelStyle : btnOrgStyle}
+                  check
+                  onClick={(e) => mbtiNSClick(e, "S")}
+                >
+                  {""}S
+                </Label>
+              </FormGroup>
+            </div>
+            <div style={{ textAlign: "center", width: "20px" }}>+</div>
+            <div style={mbtiCheckBox}>
+              <FormGroup>
+                <Label
+                  style={mbtiCheckTF === "T" ? btnSelStyle : btnOrgStyle}
+                  check
+                  onClick={(e) => mbtiTFClick(e, "T")}
+                >
+                  {""}T
+                </Label>
+              </FormGroup>
+              <FormGroup>
+                <Label
+                  style={mbtiCheckTF === "F" ? btnSelStyle : btnOrgStyle}
+                  check
+                  onClick={(e) => mbtiTFClick(e, "F")}
+                >
+                  {""}F
+                </Label>
+              </FormGroup>
+            </div>
+            <div style={{ textAlign: "center", width: "20px" }}>+</div>
+            <div style={mbtiCheckBox}>
+              <FormGroup>
+                <Label
+                  style={mbtiCheckPJ === "P" ? btnSelStyle : btnOrgStyle}
+                  check
+                  onClick={(e) => mbtiPJClick(e, "P")}
+                >
+                  {""}P
+                </Label>
+              </FormGroup>
+              <FormGroup>
+                <Label
+                  style={mbtiCheckPJ === "J" ? btnSelStyle : btnOrgStyle}
+                  check
+                  onClick={(e) => mbtiPJClick(e, "J")}
+                >
+                  {""}J
+                </Label>
+              </FormGroup>
+            </div>
+          </Col>
         </FormGroup>
         <FormGroup row>
           <Label for="userEmail" sm={3}>
@@ -310,9 +322,8 @@ const DefaultMypage = (props) => {
           </Button>
         </FormGroup>
       </Form>
-      
     </div>
   );
 };
 
-export default DefaultMypage; 
+export default DefaultMypage;

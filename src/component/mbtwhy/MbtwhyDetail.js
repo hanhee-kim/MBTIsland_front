@@ -13,9 +13,9 @@ import {
 } from "reactstrap";
 import axios from 'axios';
 
-import style from "../../css/mbty/MbtyDetail.module.css";
+import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
 
-function MbtyDetail() {
+function MbtwhyDetail() {
     const [board, setBoard] = useState(
         {
             num:1,
@@ -91,7 +91,7 @@ function MbtyDetail() {
     // url에 파라미터로 줄 변수 repage
     const reqBoardList = (repage) => {
         // if(!repage) repage = 1;
-        axios.get(`http://localhost:8090/mbty/${repage}`)
+        axios.get(`http://localhost:8090/mbtwhydetail/${repage}`)
         .then(res=> {
             console.log(res);
             let pageInfo = res.data.pageInfo;
@@ -154,14 +154,15 @@ function MbtyDetail() {
     return (
         <div className={style.container}>
             {/* 중앙 영역 */}
-            <div className={style.sectionPageHeader}>
+            <div className={style.sectionCenter}>
                 {/* 게시판 헤더 영역 */}
                 <div className={style.pageHeader}>
                     <h1>ISTP</h1>
                 </div>
 
+                {/* 수직 중간 영역 */}
                 <div>
-                    {/* 게시글 영역 */}
+                {/* 게시글 영역 */}
                     <div key={board.num} className={style.sectionBoard}>
                         <Link to={"/detailform/only-detail/" + board.num}></Link>
                         <div className={style.boardWriter}>
@@ -172,10 +173,10 @@ function MbtyDetail() {
                             </div>
                             {/* <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
                                 <DropdownToggle style={dropDownStyle}>
-                                    <img className={style.dropDownImg} src="/popover-icon.png"></img>
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem>수정</DropdownItem>
+                                <img className={style.dropDownImg} src="/popover-icon.png"></img>
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                <DropdownItem>수정</DropdownItem>
                                     <DropdownItem>삭제</DropdownItem>
                                 </DropdownMenu>
                             </ButtonDropdown> */}
@@ -196,7 +197,7 @@ function MbtyDetail() {
                         <div className={style.boardContent}>
                             {board.content}
                         </div>
-                        <div className={style.boardLower}>
+                        <div className={style.boardLow}>
                             <div className={style.bookmarkDiv}>
                                 <img src="/bookmark.png"></img>&nbsp;
                             </div>
@@ -216,89 +217,116 @@ function MbtyDetail() {
                             {board.commentCount}
                         </div>
                     </div>
-
-                    
-                    {/* 댓글 영역 */}
-                    <div>
-                        {/* 댓글 목록 */}
-                        {comments.length !== 0 && comments.map(comment => {
-                            return (
-                                <div key={comment.num} className={style.sectionComment}>
-                                    <Link to={"/detailform/only-detail/" + comment.num}></Link>
-                                    <div className={style.boardWriter}>
-                                        <div>
-                                            <div className={style.circleDiv} style={{backgroundColor:`${comment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
-                                            {comment.mbti}&nbsp;&nbsp;&nbsp;
-                                            {comment.writer}
-                                        </div>
-                                        
-                                        {/* <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                            <DropdownToggle style={dropDownStyle}>
-                                                <img className={style.dropDownImg} src="/popover-icon.png"></img>
-                                            </DropdownToggle>
-                                            <DropdownMenu>
-                                                <DropdownItem>삭제</DropdownItem>
-                                            </DropdownMenu>
-                                        </ButtonDropdown> */}
-                                        <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
+                </div>
+                {/* 게시글 영역 */}
+                
+                {/* 댓글 영역 */}
+                <div>
+                    {/* 댓글 목록 */}
+                    {comments.length !== 0 && comments.map(comment => {
+                        return (
+                            <div key={comment.num} className={style.sectionComment}>
+                                <Link to={"/detailform/only-detail/" + comment.num}></Link>
+                                <div className={style.boardWriter}>
+                                    <div>
+                                        <div className={style.circleDiv} style={{backgroundColor:`${comment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                        {comment.mbti}&nbsp;&nbsp;&nbsp;
+                                        {comment.writer}
+                                    </div>
+                                    
+                                    {/* <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
                                         <DropdownToggle style={dropDownStyle}>
-                                                <img className={style.dropDownImg} src="/popover-icon.png"></img>
-                                            </DropdownToggle>
-                                            <DropdownMenu>
+                                            <img className={style.dropDownImg} src="/popover-icon.png"></img>
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            <DropdownItem>삭제</DropdownItem>
+                                        </DropdownMenu>
+                                    </ButtonDropdown> */}
+                                    <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
+                                        <DropdownToggle style={dropDownStyle}>
+                                            <img className={style.dropDownImg} src="/popover-icon.png"></img>
+                                        </DropdownToggle>
+                                        <DropdownMenu>
                                                 <DropdownItem>답글</DropdownItem>
                                                 <DropdownItem>신고</DropdownItem>
-                                            </DropdownMenu>
-                                        </ButtonDropdown>
-                                    </div>
-                                    <div className={style.boardContent}>
-                                        {comment.content}
-                                    </div>
-                                    <div className={style.boardDate}>
-                                        {comment.date}
-                                    </div>
+                                        </DropdownMenu>
+                                    </ButtonDropdown>
                                 </div>
-                            )
-                        })}
+                                <div className={style.boardContent}>
+                                    {comment.content}
+                                </div>
+                                <div className={style.boardDate}>
+                                    {comment.date}
+                                </div>
+                            </div>
+                        )
+                    })}
 
-                        {/* 페이징 영역 */}
-                        <Pagination aria-label="Page navigation example" className={style.pagingLabel}>
-                            {
-                                pageInfo.curPage===1?
-                                <PaginationItem disabled>
-                                    <PaginationLink previous href="#" />
-                                </PaginationItem>:
-                                <PaginationItem>
-                                    {/* <PaginationLink previous href={"/list/" + (pageInfo.curPage - 1)} /> */}
-                                    <PaginationLink previous onClick={()=>pageChange(pageInfo.curPage-1)}/>
-                                </PaginationItem>
-                            }
+                    {/* 삭제된 댓글 */}
+                    <div className={style.sectionDeletedComment}>
+                        삭제된 댓글입니다.
+                    </div>
 
-                            {                   
-                                pageBtn.map(item=>{
-                                    return(
-                                        <PaginationItem key={item} className={item===pageInfo.curPage? 'active':''}>
-                                            {/* <PaginationLink href={"/list/" + item}> */}
-                                            {/* 고유한 id를 넘겨줌 */}
-                                            <PaginationLink onClick={() => pageChange(item)}>
-                                                {item}
-                                            </PaginationLink>
-                                        </PaginationItem>                            
-                                    )
-                                })
-                            }
+                    {/* 페이징 영역 */}
+                    <Pagination aria-label="Page navigation example" className={style.pagingLabel}>
+                        {
+                            pageInfo.curPage===1?
+                            <PaginationItem disabled>
+                                <PaginationLink previous href="#" />
+                            </PaginationItem>:
+                            <PaginationItem>
+                                {/* <PaginationLink previous href={"/list/" + (pageInfo.curPage - 1)} /> */}
+                                <PaginationLink previous onClick={()=>pageChange(pageInfo.curPage-1)}/>
+                            </PaginationItem>
+                        }
 
-                            {
-                                <PaginationItem disabled={pageInfo.curPage === pageInfo.endPage}>
-                                    {/* <PaginationLink next href={"/list/" + (pageInfo.curPage + 1)}/> */}
-                                    <PaginationLink next onClick={()=>pageChange(pageInfo.curPage+1)}/>
-                                </PaginationItem>
-                            }
-                        </Pagination>
+                        {                   
+                            pageBtn.map(item=>{
+                                return(
+                                    <PaginationItem key={item} className={item===pageInfo.curPage? 'active':''}>
+                                        {/* <PaginationLink href={"/list/" + item}> */}
+                                        {/* 고유한 id를 넘겨줌 */}
+                                        <PaginationLink onClick={() => pageChange(item)}>
+                                            {item}
+                                        </PaginationLink>
+                                    </PaginationItem>                            
+                                )
+                            })
+                        }
 
-                        {/* 댓글 달기 */}
-                        <div>
+                        {
+                            <PaginationItem disabled={pageInfo.curPage === pageInfo.endPage}>
+                                {/* <PaginationLink next href={"/list/" + (pageInfo.curPage + 1)}/> */}
+                                <PaginationLink next onClick={()=>pageChange(pageInfo.curPage+1)}/>
+                            </PaginationItem>
+                        }
+                    </Pagination>
+
+                    {/* 댓글 달기 */}
+                    <div>
+                        <Input
+                            style={inputComment}
+                            type="textarea"
+                            id="content"
+                            name="content"
+                            onChange={change}
+                            cols="40"
+                            rows="15"
+                            required="required"
+                            value={comment.content}
+                            placeholder="댓글을 입력해주세요."
+                        />
+                        <div className={style.postCommentDiv}>
+                            <Button style={buttonStyle}>등록</Button>
+                        </div>
+                    </div>
+
+                    {/* 답글 달기 */}
+                    <div>
+                        <div className={style.replySection}>
+                            <img className={style.replyArrowImg} src="/replyArrow.png"></img>
                             <Input
-                                style={inputComment}
+                                style={inputReply}
                                 type="textarea"
                                 id="content"
                                 name="content"
@@ -307,40 +335,19 @@ function MbtyDetail() {
                                 rows="15"
                                 required="required"
                                 value={comment.content}
-                                placeholder="댓글을 입력해주세요."
+                                placeholder="답글을 입력해주세요."
                             />
-                            <div className={style.postCommentDiv}>
-                                <Button style={buttonStyle}>등록</Button>
-                            </div>
                         </div>
-
-                        {/* 답글 달기 */}
-                        <div>
-                            <div className={style.replySection}>
-                                <img className={style.replyArrowImg} src="/replyArrow.png"></img>
-                                <Input
-                                    style={inputReply}
-                                    type="textarea"
-                                    id="content"
-                                    name="content"
-                                    onChange={change}
-                                    cols="40"
-                                    rows="15"
-                                    required="required"
-                                    value={comment.content}
-                                    placeholder="답글을 입력해주세요."
-                                />
-                            </div>
-                            <div className={style.postCommentDiv}>
-                                <Button style={buttonStyle}>등록</Button>
-                            </div>
+                        <div className={style.postCommentDiv}>
+                            <Button style={buttonStyle}>등록</Button>
                         </div>
                     </div>
-                </div>
-            </div>
 
+                </div>
+                {/* 댓글 영역 */}
+            </div>
         </div>
     );
 }
 
-export default MbtyDetail;
+export default MbtwhyDetail;

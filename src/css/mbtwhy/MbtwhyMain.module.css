@@ -1,6 +1,12 @@
 .container {
+    display: flex;
     text-align: center;
+    justify-content: center;
     margin-top: 80px;
+}
+
+.sectionCenter {
+    width: 800px;
 }
 
 .pageHeader {
@@ -27,21 +33,21 @@
 .pageHeaderWriteBtn {
     width: 10%;
     cursor: pointer;
+    font-weight: bold;
 }
 
-.mbtyTable {
+.mbtwhyTable {
     width: 800px;
     margin: 50px auto;
     display: flex;
     justify-content: space-evenly;
 }
 
-.mbtyTable > tbody > tr {
-    display: flex;
-    margin: 20px;
+.mbtwhyTable > tbody > tr {
+    display: flex;;
 }
 
-.cardStyle {
+/* .cardStyle {
     display: flex;
     width: 170px;
     height: 125px;
@@ -51,4 +57,4 @@
     justify-content: center;
     flex-direction: column;
     cursor: pointer;
-}
+} */
