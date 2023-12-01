@@ -49,9 +49,6 @@
     padding-top: 15px;
     padding-bottom: 15px;
 }
-/* .table>tbody>tr:last-child {
-    border-bottom: #dee2e6 1px solid;
-} */
 
 
 .table>tbody>tr>td:not(:nth-child(2)) {

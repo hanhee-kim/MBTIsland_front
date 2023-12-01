@@ -19,6 +19,9 @@ const Main = () => {
           <a href="/adminqna">관리자페이지 문의 리스트</a>
         </li>
         <li>
+          <a href="/adminqnaform">관리자페이지 문의 답변하기</a>
+        </li>
+        <li>
           <a href="/mbtmi">mbtmi 리스트</a>
         </li>
         <li>

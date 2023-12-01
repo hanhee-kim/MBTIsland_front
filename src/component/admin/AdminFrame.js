@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import AdminNotice from "./AdminNotice";
 import AdminQna from './AdminQna';
 import Main from './../Main';
+import AdminQnaForm from "./AdminQnaForm";
 
 const AdminFrame = () => {
 
@@ -27,6 +28,7 @@ const AdminFrame = () => {
                 {uri==='/adminnoticeform'? <AdminNoticeForm/>:
                     uri==='/adminnotice'? <AdminNotice/>:
                     uri==='/adminqna'? <AdminQna/>:
+                    uri==='/adminqnaform'? <AdminQnaForm/>:
                     uri==='/menu3'? <Main/>:
                     <Main/>
                 }
@@ -36,9 +38,6 @@ const AdminFrame = () => {
                     <img src={"/movetopIcon.png" } alt="top" className={styleFrame.movetopIcon}/>
                 </div>
             </section>
-            {/* <span className={styleFrame.sectionRightArea}>
-                <img src={"/movetopIcon.png" } alt="top" className={styleFrame.movetopIcon}/>
-            </span> */}
         </div>
         </>
     );
