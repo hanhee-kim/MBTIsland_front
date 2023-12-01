@@ -44,7 +44,7 @@
   display: grid;
   width: 100%;
   grid-template-columns: 300px auto;
-  min-height: 1000px;
+  min-height: 800px;
 }
 .sideBar {
   display: flex;
