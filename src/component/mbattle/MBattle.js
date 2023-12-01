@@ -184,7 +184,7 @@ function MBattle() {
                         <div className={style.pageHeaderWriteBtn}>글 작성</div>
                         <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
                             <DropdownToggle style={sortStyle}>
-                                <img className={style.sortImg} src="/sortIcon.png"></img>
+                                <img className={style.sortImg} src="/sortIcon.png" alt=""></img>
                                 {selectedOption}
                             </DropdownToggle>
                             <DropdownMenu>
@@ -205,10 +205,10 @@ function MBattle() {
                             <div key={hotBoard.num} className={style.sectionBoard}>
                                 <div className={style.boardImages}>
                                     <div>
-                                        <img src="/thumbIcon.png"></img>
+                                        <img src="/thumbIcon.png" alt=""></img>
                                     </div>
                                     <div>
-                                        <img src="/thumbIcon.png"></img>
+                                        <img src="/thumbIcon.png" alt=""></img>
                                     </div>
                                 </div>
                                 <div className={style.boardContents}>
@@ -241,10 +241,10 @@ function MBattle() {
                             <div key={board.num} className={style.sectionBoard}>
                                 <div className={style.boardImages}>
                                     <div>
-                                        <img src="/thumbIcon.png"></img>
+                                        <img src="/thumbIcon.png" alt=""></img>
                                     </div>
                                     <div>
-                                        <img src="/thumbIcon.png"></img>
+                                        <img src="/thumbIcon.png" alt=""></img>
                                     </div>
                                 </div>
                                 <div className={style.boardContents}>

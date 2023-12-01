@@ -182,7 +182,7 @@ function MbtwhyDetail() {
                             </ButtonDropdown> */}
                             <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
                                 <DropdownToggle style={dropDownStyle}>
-                                    <img className={style.dropDownImg} src="/popover-icon.png"></img>
+                                    <img className={style.dropDownImg} src="/popover-icon.png" alt=""></img>
                                 </DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem>신고</DropdownItem>
@@ -191,7 +191,7 @@ function MbtwhyDetail() {
                         </div>
                         <div className={style.boardDate}>
                             {board.date}
-                            <img className={style.viewIcon}src="/view-icon.png"></img>
+                            <img className={style.viewIcon}src="/view-icon.png" alt=""></img>
                             {board.viewCount}
                         </div>
                         <div className={style.boardContent}>
@@ -199,10 +199,10 @@ function MbtwhyDetail() {
                         </div>
                         <div className={style.boardLow}>
                             <div className={style.bookmarkDiv}>
-                                <img src="/bookmark.png"></img>&nbsp;
+                                <img src="/bookmark.png" alt=""></img>&nbsp;
                             </div>
                             <div className={style.thumbDiv}>
-                                <img src="/thumbIcon.png"></img>&nbsp;
+                                <img src="/thumbIcon.png" alt=""></img>&nbsp;
                                 추천&nbsp;
                                 {board.likeCount}
                             </div>
@@ -244,7 +244,7 @@ function MbtwhyDetail() {
                                     </ButtonDropdown> */}
                                     <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
                                         <DropdownToggle style={dropDownStyle}>
-                                            <img className={style.dropDownImg} src="/popover-icon.png"></img>
+                                            <img className={style.dropDownImg} src="/popover-icon.png" alt=""></img>
                                         </DropdownToggle>
                                         <DropdownMenu>
                                                 <DropdownItem>답글</DropdownItem>
@@ -323,8 +323,8 @@ function MbtwhyDetail() {
 
                     {/* 답글 달기 */}
                     <div>
-                        <div className={style.replySection}>
-                            <img className={style.replyArrowImg} src="/replyArrow.png"></img>
+                        <div className={style.sectionReply}>
+                            <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
                             <Input
                                 style={inputReply}
                                 type="textarea"

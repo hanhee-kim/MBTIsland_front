@@ -42,6 +42,11 @@
     justify-content: space-between;
 }
 
+.boardWriter {
+    display: flex;
+    margin-bottom: 10px;
+}
+
 .boardWriter > div {
     display: flex;
 }
@@ -53,7 +58,6 @@
 }
 
 .boardDate {
-    margin-bottom: 30px;
     color: #C5C5C5;
 }
 
@@ -63,12 +67,37 @@
     margin-right: 5px;
 }
 
-.boardContent {
+.sectionVote {
     display: flex;
-    overflow: hidden;
-    width: 700px;
-    text-align: left;
-    margin-bottom: 30px;
+    margin: 0 auto;
+    padding: 50px;
+    align-items: center;
+    justify-content: center;
+}
+
+.subject {
+    width: 300px;
+    position: relative;
+}
+
+.subject > img {
+    width: 300px;
+    height: 300px;
+    filter: brightness(0.4);
+}
+
+.subject > h4 {
+    text-align: center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+    transform: translate( -50%, -50% );
+    color: lightgray;
+}
+
+.voteButtonDiv {
+    display: flex;
+    justify-content: right;
 }
 
 .boardLow {
@@ -104,7 +133,7 @@
 }
 
 .sectionComment {
-    padding: 15px 25px 15px 25px;
+    padding: 25px;
     border-bottom: solid #C5C5C5 2px;
 }
 
@@ -141,14 +170,4 @@
 .postCommentDiv {
     padding: 15px;
     text-align: right;
-}
-
-.replySection {
-    display: flex;
-    justify-content: space-between;
-}
-
-.replyArrowImg {
-    height: 30px;
-    margin-right: 10px;
 }
