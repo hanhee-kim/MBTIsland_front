@@ -29,7 +29,7 @@ const NoticeDetail = () => {
                 <div className={style.boardTitle}>공지사항</div>
                 <div className={style.postArea}>
                     <div>
-                    <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="Popover1"/>
+                        <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="Popover1"/>
                         <Popover  className={style.popover} placement="bottom" isOpen={open} target="Popover1" toggle={()=>setOpen(!open)}>
                             <PopoverBody className={style.popoverItem}>숨김/해제</PopoverBody>
                             <PopoverBody className={style.popoverItem}>수정</PopoverBody>

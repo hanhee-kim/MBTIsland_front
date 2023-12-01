@@ -63,6 +63,10 @@
     word-break: keep-all; /* 줄바꿈시 단어 단위 유지 */
     margin-bottom: 25px;
 }
+.postTitle+span:hover {
+    cursor: pointer;
+    text-shadow: 0 0 1.5px rgba(0, 0, 0, 1);
+}
 .postTitle+span+span {
     color: #8F8F8F;
     margin-left: 30px;
