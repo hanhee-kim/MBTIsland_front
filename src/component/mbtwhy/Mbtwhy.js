@@ -14,9 +14,9 @@ import {
     Button } from "reactstrap";
 import axios from 'axios';
 
-import style from "../../css/mbty/Mbty.module.css";
+import style from "../../css/mbtwhy/Mbtwhy.module.css";
 
-function Mbty() {
+function Mbtwhy() {
 
     const [boards, setBoard] = useState([
         {
@@ -125,7 +125,7 @@ function Mbty() {
     // url에 파라미터로 줄 변수 repage
     const reqBoardList = (repage) => {
         // if(!repage) repage = 1;
-        axios.get(`http://localhost:8090/mbty/${repage}`)
+        axios.get(`http://localhost:8090/mbtwhy/${repage}`)
         .then(res=> {
             console.log(res);
             let pageInfo = res.data.pageInfo;
@@ -190,7 +190,8 @@ function Mbty() {
         border:"none",
         boxShadow:"none",
         backgroundColor:"white",
-        color:"black"
+        color:"black",
+        fontWeight:"bold"
     }
     
     const linkStyle = {
@@ -227,71 +228,73 @@ function Mbty() {
 
                 {/* 인기 게시글 영역 */}
                 <div className={style.sectionBoards}>
-                    <div key={hotBoard.num} className={style.sectionBoard}>
-                        <Link to={"/detailform/only-detail/" + hotBoard.num}></Link>
-                        <div className={style.hotTag}>
-                            &#128293;HOT
+                    <Link to={"/detailform/only-detail/" + hotBoard.num} style={{textDecoration:"none"}}>
+                        <div key={hotBoard.num} className={style.sectionBoard}>
+                            <div className={style.hotTag}>
+                                &#128293;HOT
+                            </div>
+                            <div className={style.boardWriter}>
+                                <div style={{backgroundColor:`${hotBoard.color}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                {hotBoard.mbti}&nbsp;&nbsp;&nbsp;
+                                {hotBoard.writer}
+                            </div>
+                            <div className={style.boardDate}>
+                                {hotBoard.date}
+                            </div>
+                            <div className={style.boardContent}>
+                                {hotBoard.content}
+                            </div>
+                            <div className={style.boardLow}>
+                                <div>
+                                    <img src="/commentIcon.png"></img>
+                                    {hotBoard.commentCount}
+                                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div>
+                                    <img src="/thumbIcon.png"></img>
+                                    {hotBoard.likeCount}
+                                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div>
+                                    <img src="/view-icon.png"></img>
+                                    {hotBoard.viewCount}
+                                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
                         </div>
-                        <div className={style.boardWriter}>
-                            <div style={{backgroundColor:`${hotBoard.color}`}}> </div>&nbsp;&nbsp;&nbsp;
-                            {hotBoard.mbti}&nbsp;&nbsp;&nbsp;
-                            {hotBoard.writer}
-                        </div>
-                        <div className={style.boardDate}>
-                            {hotBoard.date}
-                        </div>
-                        <div className={style.boardContent}>
-                            {hotBoard.content}
-                        </div>
-                        <div className={style.boardLower}>
-                            <div>
-                                <img src="/commentIcon.png"></img>
-                                {hotBoard.commentCount}
-                            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <div>
-                                <img src="/thumbIcon.png"></img>
-                                {hotBoard.likeCount}
-                            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <div>
-                                <img src="/view-icon.png"></img>
-                                {hotBoard.viewCount}
-                            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </div>
-                    </div>
+                    </Link>
                 </div>
 
                 {/* 게시글 영역 */}
                 <div className={style.sectionBoards}>
                     {boards.length !== 0 && boards.map(board => {
                         return (
-                            <div key={board.num} className={style.sectionBoard}>
-                                <Link to={"/detailform/only-detail/" + board.num}></Link>
-                                <div className={style.boardWriter}>
-                                <div style={{backgroundColor:`${board.color}`}}> </div>&nbsp;&nbsp;&nbsp;
-                                    {board.mbti}&nbsp;&nbsp;&nbsp;
-                                    {board.writer}
+                            <Link to={"/detailform/only-detail/" + board.num} style={{textDecoration:"none"}}>
+                                <div key={board.num} className={style.sectionBoard}>
+                                    <div className={style.boardWriter}>
+                                    <div style={{backgroundColor:`${board.color}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                        {board.mbti}&nbsp;&nbsp;&nbsp;
+                                        {board.writer}
+                                    </div>
+                                    <div className={style.boardDate}>
+                                        {board.date}
+                                    </div>
+                                    <div className={style.boardContent}>
+                                        {board.content}
+                                    </div>
+                                    <div className={style.boardLow}>
+                                        <div>
+                                            <img src="/commentIcon.png"></img>
+                                            {board.commentCount}
+                                        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <div>
+                                            <img src="/thumbIcon.png"></img>
+                                            {board.likeCount}
+                                        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <div>
+                                            <img src="/view-icon.png"></img>
+                                            {board.viewCount}
+                                        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </div>
                                 </div>
-                                <div className={style.boardDate}>
-                                    {board.date}
-                                </div>
-                                <div className={style.boardContent}>
-                                    {board.content}
-                                </div>
-                                <div className={style.boardLower}>
-                                    <div>
-                                        <img src="/commentIcon.png"></img>
-                                        {board.commentCount}
-                                    </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <div>
-                                        <img src="/thumbIcon.png"></img>
-                                        {board.likeCount}
-                                    </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <div>
-                                        <img src="/view-icon.png"></img>
-                                        {board.viewCount}
-                                    </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </div>
-                            </div>
+                            </Link>
                         )
                     })}
                 </div><br/><br/>
@@ -353,7 +356,7 @@ function Mbty() {
             {/* 우측 사이드 영역 */}
             <div className={style.container}>
                 <div className={style.sectionSide}>
-                    <div style={{backgroundColor:"#ADB1B0"}}><Link to="/mbty/istj" style={linkStyle}><h5>ISTJ</h5></Link></div>
+                    <div style={{backgroundColor:"#ADB1B0"}}><Link to="/mbtwhy/istj" style={linkStyle}><h5>ISTJ</h5></Link></div>
                     <div style={{backgroundColor:"#F2DCB3"}}><Link to="/isfj" style={linkStyle}><h5>ISFJ</h5></Link></div>
                     <div style={{backgroundColor:"#EAEFF9"}}><h5>INFJ</h5></div>
                     <div style={{backgroundColor:"#D8D4EA"}}><h5>INTJ</h5></div>
@@ -375,4 +378,4 @@ function Mbty() {
     );
 }
 
-export default Mbty;
+export default Mbtwhy;

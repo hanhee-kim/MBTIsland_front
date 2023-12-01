@@ -1,0 +1,27 @@
+.adminNav {
+    width: 230px;
+    height: 500px;
+    background-color: #F3F3F3;
+    padding: 60px 10px 40px 0;
+    margin-right: 100px;
+
+    float: right; /* sectionLeftArea 안에서 오른쪽정렬 */
+}
+.adminNav>div {
+    width: 100%;
+}
+.adminNav>div>* {
+    /* border: 1px solid salmon; */
+    padding: 5px 0 5px 0;
+}
+.navLink {
+    color: #767676 !important;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 20px;
+    
+}
+.navActive {
+    color: black !important;
+    font-weight: 700 !important;
+}

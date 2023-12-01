@@ -8,7 +8,7 @@ const MBTmi = () => {
     return (
         <>
         <div className={style.container}>
-
+            <section className={style.sectionLeftArea}></section>
             <section className={style.section}>
                 <div className={style.boardTitleB}>
                         <span>
@@ -300,21 +300,25 @@ const MBTmi = () => {
                     </tbody>
                 </table>
                 <div className={style.paging}>
-                            <span>&lt;</span>
-                            <span className={style.activePage} style={{background:'#f8f8f8'}}>1</span>
-                            <span>2</span>
-                            <span>3</span>
-                            <span>4</span>
-                            <span>5</span>
-                            <span>6</span>
-                            <span>7</span>
-                            <span>8</span>
-                            <span>9</span>
-                            <span>10</span>
-                            <span>&gt;</span>
-                        </div>
+                    <span>&lt;</span>
+                    <span className={style.activePage} style={{background:'#f8f8f8'}}>1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>5</span>
+                    <span>6</span>
+                    <span>7</span>
+                    <span>8</span>
+                    <span>9</span>
+                    <span>10</span>
+                    <span>&gt;</span>
+                </div>
             </section>
-
+            <section className={style.sectionRightArea}>
+                <div>
+                    <img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/>
+                </div>
+            </section>
         </div>
         </>
     );

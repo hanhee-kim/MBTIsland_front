@@ -1,13 +1,20 @@
+/* 드래그 스타일 */
+::selection {
+	background: black;
+	color: white;
+}
+
 .header {
     background-color: white;
     width: 100%;
     position: fixed;
+    /* position: sticky; */
     left:0;
     top:0;
     z-index:10;
     border-bottom: 1px solid #999999;
-
 }
+
 .siteTitle {
     margin-left: 100px;
 }
@@ -47,4 +54,42 @@
     font-weight: 600;
     text-decoration: none;
     color: black;
+}
+
+.currentBoard {
+    border-bottom: 3px solid #25B2A2;
+}
+
+.afterLogin {
+    background: seashell;
+    width: 300px;
+    height: 65px;
+    margin-right: 120px;
+    height: 100%;
+    margin-top: 20px;
+}
+.afterLogin>div {
+    float: right;
+}
+
+.userMbti {
+    display: inline-block;
+    background: #BDC9A6; /* mbti별 색 지정할것 */
+    border-radius: 5px;
+    padding: 1px 6px;
+    font-weight: 600;
+}
+.userNickname {
+    display: inline-block;
+    margin-left: 8px;
+    font-weight: 600;
+}
+
+.bellIcon {
+    width: 30px;
+    margin-right: 20px;
+}
+.messageIcon {
+    width: 35px;
+    
 }

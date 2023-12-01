@@ -1,12 +1,11 @@
 .footer {
     background-color: white;
-    width: 100%;
-    left:0;
-    top:0;
+    /* width: 100%; */
+    /* left:0;
+    top:0; */
     z-index:10;
     border-top: 1px solid #999999;
     padding: 10px 0 8px 0;
-
 }
 .siteTitle {
     margin-left: 100px;

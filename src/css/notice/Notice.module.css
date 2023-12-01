@@ -8,8 +8,17 @@
     padding-bottom: 60px; /* 푸터 높이만큼 확보해둠 */
     
     display: flex;
-    justify-content: center;
 }
+
+.sectionLeftArea,
+.sectionRightArea,
+.section {
+    flex: 1;
+}
+/* .sectionLeftArea,
+.sectionRightArea {
+    background: aliceblue;
+} */
 
 .section {
     /* border: 1px solid red; */
@@ -40,11 +49,34 @@
     padding-top: 15px;
     padding-bottom: 15px;
 }
-.table>tbody>tr:last-child {
-    border-bottom: #dee2e6 1px solid;
-}
+
+
 .table>tbody>tr>td:not(:nth-child(2)) {
     color:#8F8F8F;
+}
+.table {
+    width: 900px;
+    margin-bottom: 40px;
+    border-bottom: black 1px solid;
+    border-top: black 1px solid;
+}
+.table>tbody>tr>td {
+    padding: 15px 20px;
+}
+.table>tbody>tr:not(:first-child) {
+    border-top: #d9d9d9 1px solid;
+}
+
+
+.table>tbody>tr>td:nth-child(2){
+    /* 줄바꿈을 막고 생략기호 표시 */
+    display: block;
+    width: 524.65px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 auto;
+    /* background: ghostwhite; */
 }
 
 .paging {
@@ -90,29 +122,17 @@
 
 
 /* 상세 */
-.postBox {
-    /* width: 750px; */
+.postArea {
     width: 100%;
-    padding-left: 50px;
-    padding-right: 50px;
-    min-height: 350px;
-    /* background: pink; */
+    min-height: 80%; /* 게시글이 짧더라도 최소 높이 확보 */
+    /* background: seashell;  */
+    border: 1px solid #E6E6E6;
+    padding: 50px;
 }
-.postTitle {
-    font-size: 30px;
-    white-space: normal; /* 줄바꿈 */
+.postArea>div:first-child {
+    float: right;
+    padding-right: 20px;
 }
-.writeDate {
-    font-size: 16px;
-    color: #8F8F8F;
-}
-.viewIcon {
-    width: 18px;
-    margin-left: 18px;
-    margin-right: 6px;
-    color: #8F8F8F;
-}
-
 .popover {
     width: 100px;
     text-align: center;
@@ -120,14 +140,52 @@
 .popoverIcon {
     width: 20px;
     cursor: pointer;
-}
-.postTitleArea {
-    display: flex;
-    justify-content: space-between;
+
+    position: relative; /* 자신의 원래 위치를 기준으로 좌표 이동 */
+    top: -45px;
+    right: -50px;
 }
 .popoverItem {
     cursor: pointer;
     min-width: 60px;
     text-align: center;
 }
+.postTitle {
+    /* background:lightgoldenrodyellow; */
+    white-space: normal;
+    word-break: keep-all; /* 줄바꿈시 단어 단위 유지 */
+    margin-bottom: 25px;
+}
+.viewIcon {
+    max-width: 19px;
+    margin-left: 20px;
+}
+.postArea>h6 {
+    margin-top: 5px;
+    color: #8F8F8F;
+}
+.postContent {
+    /* background: lightblue; */
+    font-size: 18px;
+    width: 100%;
+    min-height: 300px; /* 게시글 내용이 적더라도 최소 높이 유지 */
+    padding: 60px 0  80px 0; /* top right bottom left */
+    white-space: normal;
+    word-break: keep-all; /* 줄바꿈시 단어 단위 유지 */
+}
 
+/* 플로팅 버튼 */
+.sectionRightArea {
+    display: flex;
+    flex-direction: column-reverse;
+}
+.sectionRightArea>div {
+    /* border: dashed red 3px; */
+    padding-right: 100px;
+}
+.movetopIcon {
+    float: right;
+    width: 50px;
+    position: sticky;
+    cursor: pointer;
+}
