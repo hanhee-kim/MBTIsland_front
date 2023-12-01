@@ -13,20 +13,29 @@ import NoticeDetail from "./component/notice/NoticeDeatil";
 import AdminNotice from "./component/admin/AdminNotice";
 import AdminNoticeForm from "./component/admin/AdminNoticeForm";
 import Join from "./component/user/Join";
-import MbtyMain from "./component/mbty/MbtyMain";
-import Mbty from "./component/mbty/Mbty";
 import Header from "./component/common/Header";
 import Footer from "./component/common/Footer";
-import MbtyDetail from "./component/mbty/MbtyDetail";
 import MBTmiDetail from "./component/mbtmi/MBTmiDetail";
 import MBTmiForm from "./component/mbtmi/MBTmiForm";
 import AdminQna from "./component/admin/AdminQna";
 import Mypage from "./component/user/Mypage";
 import DefaultMypage from "./component/user/DefaultMypage";
-import MbtyWrite from "./component/mbty/MbtyWrite";
-import MbtyModify from "./component/mbty/MbtyModify";
 import QnAWrite from "./component/user/QnAWrite";
 import { useState } from "react";
+import AdminNoticeForm from './component/admin/AdminNoticeForm';
+import Join from './component/user/Join';
+import MbtwhyMain from './component/mbtwhy/MbtwhyMain';
+import Mbtwhy from './component/mbtwhy/Mbtwhy';
+import Header from "./component/common/Header";
+import Footer from "./component/common/Footer";
+import MbtwhyDetail from "./component/mbtwhy/MbtwhyDetail";
+import Mypage from "./component/user/Mypage";
+import DefaultMypage from "./component/user/DefaultMypage";
+import MbtwhyWrite from "./component/mbtwhy/MbtwhyWrite";
+import MbtwhyModify from "./component/mbtwhy/MbtwhyModify";
+import MBattle from "./component/mbattle/MBattle";
+import MBattleWrite from "./component/mbattle/MBattleWrite";
+import MBattleDetail from "./component/mbattle/MBattleDetail";
 
 function App() {
   const [isPopup, setIsPopup] = useState(false);
@@ -60,11 +69,16 @@ function App() {
           <Route exact path="/adminqna" element={<AdminQna />} />
           <Route exect path="/mbtymain" element={<MbtyMain />} />
           {/* 인수 */}
-          <Route exect path="/mbty" element={<Mbty />} />
-          <Route exact path="/mbtydetail" element={<MbtyDetail />} />
-          <Route exact path="/mbtydetail" element={<MbtyDetail />} />
-          <Route exact path="/mbtywrite" element={<MbtyWrite />} />
-          <Route exact path="/mbtymodify" element={<MbtyModify />} />
+          <Route exect path="/mbtwhymain" element={<MbtwhyMain/>}/>
+          <Route exect path="/mbtwhy" element={<Mbtwhy/>}/>
+          <Route exact path="/addjoin" element={<AddJoin />} />
+          <Route exact path="/mbtwhydetail" element={<MbtwhyDetail />} /> 
+          <Route exact path="/mypage" element={<Mypage/>} />
+          <Route exact path="/mbtwhywrite" element={<MbtwhyWrite />} /> 
+          <Route exact path="/mbtwhymodify" element={<MbtwhyModify />} /> 
+          <Route exact path="/mbattle" element={<MBattle />} />
+          <Route exact path="/mbattlewrite" element={<MBattleWrite />} />
+          <Route exact path="/mbattledetail" element={<MBattleDetail />} />
         </Routes>
         {!isPopup && <Footer />}
       </BrowserRouter>

@@ -1,21 +1,13 @@
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+
 import {
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
     Button,
     Input
 } from "reactstrap";
-import axios from 'axios';
 
-import style from "../../css/mbty/MbtyForm.module.css";
+import style from "../../css/mbtwhy/MbtwhyForm.module.css";
 
-function MbtyWrite() {
+function MbtwhyWrite() {
 
     // 색상 코드
     const [color, setColor] = useState("#ADB1B0");
@@ -55,7 +47,7 @@ function MbtyWrite() {
     return (
         <div className={style.container}>
             {/* 중앙 영역 */}
-            <div className={style.sectionPageHeader}>
+            <div className={style.sectionCenter}>
                 {/* 게시판 헤더 영역 */}
                 <div style={{...pageHeader, borderColor:`${color}`}}>
                     <h1>MBT-Why</h1>
@@ -89,7 +81,7 @@ function MbtyWrite() {
                 </div>
 
                 {/* 작성 영역 */}
-                <div>
+                <div className={style.contentDiv}>
                     <Input
                         style={inputContent}
                         type="textarea"
@@ -111,4 +103,4 @@ function MbtyWrite() {
     );
 }
 
-export default MbtyWrite;
+export default MbtwhyWrite;

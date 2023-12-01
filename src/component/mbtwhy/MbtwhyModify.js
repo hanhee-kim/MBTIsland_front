@@ -1,21 +1,12 @@
 import { useState } from "react";
-import { Link } from 'react-router-dom';
 import {
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
     Button,
     Input
 } from "reactstrap";
-import axios from 'axios';
 
-import style from "../../css/mbty/MbtyForm.module.css";
+import style from "../../css/mbtwhy/MbtwhyForm.module.css";
 
-function MbtyModify() {
+function MbtwhyModify() {
 
     const [board, setBoard] = useState({content:"ㅋㅋㅋㅋㅋ", mbti:"ENTP", color:"#B6634A"});
 
@@ -50,7 +41,7 @@ function MbtyModify() {
     return (
         <div className={style.container}>
             {/* 중앙 영역 */}
-            <div className={style.sectionPageHeader}>
+            <div className={style.sectionCenter}>
                 {/* 게시판 헤더 영역 */}
                 <div style={{...pageHeader, borderColor:`${board.color}`}}>
                     <h1>MBT-Why</h1>
@@ -69,7 +60,7 @@ function MbtyModify() {
                 </div>
 
                 {/* 작성 영역 */}
-                <div>
+                <div className={style.contentDiv}>
                     <Input
                         style={inputContent}
                         type="textarea"
@@ -93,4 +84,4 @@ function MbtyModify() {
     );
 }
 
-export default MbtyModify;
+export default MbtwhyModify;
