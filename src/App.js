@@ -32,6 +32,13 @@ import MBattleDetail from "./component/mbattle/MBattleDetail";
 import AdminFrame from "./component/admin/AdminFrame";
 import persistStore from "redux-persist/es/persistStore";
 import store from "./persist-store";
+import NoteWrite from "./component/user/NoteWrite";
+import MyMbtWhy from "./component/user/MyMbtWhy";
+import MyMbtmi from "./component/user/MyMbtmi";
+import MyQnA from "./component/user/MyQnA";
+import MyBookmark from './component/user/MyBookmark';
+import MyAlarm from './component/user/MyAlarm';
+import MyNote from './component/user/MyNote';
 
 export const persistor = persistStore(store);
 function App() {
@@ -48,11 +55,24 @@ function App() {
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/join" element={<Join />} />
               <Route exact path="/addjoin" element={<AddJoin />} />
-              <Route exact path="/mypage" element={<Mypage />} />
+              <Route exact path="/mypage" element={<Mypage />} >
+                {/* <Route exact path=":profile" element={<DefaultMypage/>}/>
+                <Route exact path=":mbtwhy" element={<MyMbtWhy/>}/>
+                <Route exact path=":mbtmi" element={<MyMbtmi/>}/>
+                <Route exact path=":qna" element={<MyQnA/>}/>
+                <Route exact path=":bookmark" element={<MyBookmark/>}/>
+                <Route exact path=":alarm" element={<MyAlarm/>}/>
+                <Route exact path=":note" element={<MyNote/>}/> */}
+              </Route>
               <Route
                 exact
                 path="/qnaWrite"
                 element={<QnAWrite setIsPopup={setIsPopup} />}
+              />
+              <Route
+                exact
+                path="/noteWrite"
+                element={<NoteWrite setIsPopup={setIsPopup} />}
               />
               {/* 하영 */}
               <Route exact path="/" element={<Main />} />

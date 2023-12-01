@@ -88,7 +88,7 @@ const Aside = (props) => {
   return (
     <div
       className={style.sideBar}
-      style={{ backgroundColor: user.userMbtiColor, color: getSideColor(user) }}
+      style={{ border:"5px solid"+ user.userMbtiColor, color: getSideColor(user) }}
     >
       <div style={{ marginTop: "25px" }}>
         <div className={style.myMbti}>{user.userMbti}</div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import style from "../../css/user/Mypage.module.css";
 import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const DefaultMypage = (props) => {
   //---css
@@ -48,6 +48,7 @@ const DefaultMypage = (props) => {
 
   //state
   const user = useSelector((state) => state.persistedReducer.user.user);
+  const dispatch = useDispatch();
   const today = new Date();
   const joinDate = new Date(user.joinDate);
   const mbtiChangeDate = new Date(user.userMbtiChangeDate);
@@ -57,12 +58,13 @@ const DefaultMypage = (props) => {
   const joinDay = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24));
 
   const mbti = user.userMbti;
-  const [arrMbti, setArrMbti] = useState([...mbti]);
+  const arrMbti = [...mbti];
+  // const [arrMbti, setArrMbti] = useState([...mbti]);
 
-  const [mbtiCheckEI, setMbtiCheckEI] = useState(arrMbti[0]);
-  const [mbtiCheckNS, setMbtiCheckNS] = useState(arrMbti[1]);
-  const [mbtiCheckTF, setMbtiCheckTF] = useState(arrMbti[2]);
-  const [mbtiCheckPJ, setMbtiCheckPJ] = useState(arrMbti[3]);
+  const [mbtiCheckEI, setMbtiCheckEI] = useState(...arrMbti[0]);
+  const [mbtiCheckNS, setMbtiCheckNS] = useState(...arrMbti[1]);
+  const [mbtiCheckTF, setMbtiCheckTF] = useState(...arrMbti[2]);
+  const [mbtiCheckPJ, setMbtiCheckPJ] = useState(...arrMbti[3]);
 
   // var yy = today.getFullYear;
   // var mon = today.getMonth;
@@ -70,23 +72,43 @@ const DefaultMypage = (props) => {
 
   //function
   const mbtiEIClick = (e, ei) => {
-    e.stopPropagation();
-    setMbtiCheckEI(ei);
+    if(modifyMbtiDay>=90){
+      e.stopPropagation();
+      setMbtiCheckEI(ei);
+    }
   };
 
   const mbtiNSClick = (e, ns) => {
+    if(modifyMbtiDay>=90){
     e.stopPropagation();
     setMbtiCheckNS(ns);
+    }
   };
 
   const mbtiTFClick = (e, tf) => {
+    if(modifyMbtiDay>=90){
     e.stopPropagation();
     setMbtiCheckTF(tf);
+    }
   };
 
   const mbtiPJClick = (e, pj) => {
+    if(modifyMbtiDay>=90){
     e.stopPropagation();
     setMbtiCheckPJ(pj);
+    }
+  };
+  const change = (e) => {
+    // dispatch({type:'user',payload:{[e.target.name]: [e.target.value]}})
+  };
+  const submit = (e) => {
+    e.preventDefault();
+    //수정전 mbti도 가지고가서 비교하던지, 여기서 비교하고 수정날짜도 업데이트해서 넘길지
+    let sendUser = {
+      ...user,
+      userMbti: mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ,
+    };
+    
   };
   return (
     <div className={style.myProfileContainer}>
@@ -122,8 +144,8 @@ const DefaultMypage = (props) => {
               name="username"
               id="username"
               readOnly
-              value={user.username}
-            />
+              defaultValue={user.username}
+            ></Input>
           </Col>
         </FormGroup>
         {user.provider === "nomal" && (
@@ -167,9 +189,9 @@ const DefaultMypage = (props) => {
               type="text"
               name="userNickname"
               id="userNickname"
-              value={user.userNickname}
-              // onChange={change}
-            />
+              defaultValue={user.userNickname}
+              onChange={change}
+            ></Input>
           </Col>
         </FormGroup>
         <FormGroup row style={{ display: "flex" }}>
@@ -270,9 +292,9 @@ const DefaultMypage = (props) => {
               type="text"
               name="userEmail"
               id="userEmail"
-              value={user.userEmail}
-              // onChange={change}
-            />
+              defaultValue={user.userEmail}
+              onChange={change}
+            ></Input>
           </Col>
           {/* <Col sm={2}>
             <Button
@@ -312,7 +334,7 @@ const DefaultMypage = (props) => {
               borderRadius: "10px",
               marginRight: "40px",
               marginTop: "25px",
-              width: "100px",
+              width: "80px",
               fontSize: "20px",
             }}
             type="submit"

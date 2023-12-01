@@ -19,9 +19,10 @@ const Mypage = () => {
   return (
     <div className={style.myPageContainer}>
       {/* sidebar  유저정보 리덕스에? */}
+      <div></div>
       <Aside changePage={changePage} />
       {(currentPage === "/default" || currentPage === "") && (
-        <DefaultMypage user={user} />
+        <DefaultMypage />
       )}
       {currentPage === "/mbtwhy" && <MyMbtWhy />}
       {currentPage === "/mbtmi" && <MyMbtmi />}
@@ -29,6 +30,7 @@ const Mypage = () => {
       {currentPage === "/bookmark" && <></>}
       {currentPage === "/alarm" && <></>}
       {currentPage === "/note" && <></>}
+      <div></div>
     </div>
   );
 };

@@ -13,7 +13,6 @@ const Join = () => {
     boxShadow: "5px 5px lightGray",
     fontSize: "20px",
     fontWeight: "500",
-    marginTop: "200px",
   };
   const mbtiCheckBoxStyle = {
     border: "1px solid gray",
@@ -57,15 +56,12 @@ const Join = () => {
   const [mbtiCheckTF, setMbtiCheckTF] = useState("T");
   const [mbtiCheckPJ, setMbtiCheckPJ] = useState("P");
 
-  // const [mbti, setMbti] = useState("");
-  const [arrMbti, setArrMbti] = useState([]);
   //state---
   //---function
   const change = (e) => {
     setUser({
       ...user,
       [e.target.name]: [e.target.value],
-      // userMbti: arrMbti.join(""),
     });
     console.log("input:" + e.target.value);
     console.log("user" + user);
@@ -100,7 +96,11 @@ const Join = () => {
   };
   //function---
   return (
-    <div>
+    
+      <div style={{display: 'flex',
+    alignItems: 'center',
+    minHeight: '800px',
+    marginTop: '60px'}}>
       <Form style={joinFormStyle}>
         <FormGroup row style={{ justifyContent: "center" }}>
           <h3 style={{ fontSize: "40px" }}>JOIN</h3>
@@ -321,7 +321,8 @@ const Join = () => {
           </Button>
         </FormGroup>
       </Form>
-    </div>
+      </div>
+    
   );
 };
 

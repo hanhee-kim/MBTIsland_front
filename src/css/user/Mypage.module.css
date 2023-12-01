@@ -43,17 +43,21 @@
   margin-top: 64px;
   display: grid;
   width: 100%;
-  grid-template-columns: 300px auto;
+  grid-template-columns: 120px 260px auto 120px;
+  align-items: center;
   min-height: 800px;
 }
 .sideBar {
   display: flex;
   flex-direction: column;
-  width: 300px;
-  height: 100%;
+  width: 260px;
+  height: 640px;
   font-weight: 400;
   font-family: "GangwonEdu_OTFBoldA";
+  border-radius: 20px;
+  /* margin-top: 40px; */
 }
+
 .sideMenus {
   text-decoration: none;
   list-style: none;
@@ -112,7 +116,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 40px;
+  /* margin-top: 40px; */
 }
 
 /* MBT-Why Page */

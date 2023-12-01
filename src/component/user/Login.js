@@ -28,7 +28,6 @@ const Login = () => {
     borderRadius: "15px",
     fontSize: "20px",
     fontWeight: "500",
-    marginTop: "200px",
   };
   const socialBtnStyle = {
     display: "flex",
@@ -99,7 +98,10 @@ const Login = () => {
   const goNaverLogin = () => {};
 
   return (
-    <div>
+    <div style={{display: 'flex',
+    alignItems: 'center',
+    minHeight: '800px',
+    marginTop: '60px'}}>
       <Form style={loginFormStyle}>
         <FormGroup row style={{ justifyContent: "center" }}>
           <h3 style={{ fontSize: "40px" }}>LOGIN</h3>
