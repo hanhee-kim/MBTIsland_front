@@ -17,15 +17,14 @@ const Header = () => {
         userNickname: "낭만냥냥",
         userMbti: "INFP",
         userMbtiColor: "#BDC9A6",
-        userRole: "USER"
+        userRole: "USER",
+
+        // username: "admin01",
+        // userNickname: "관리자1",
+        // userMbti: "",
+        // userMbtiColor: "",
+        // userRole: "ADMIN",
     });
-    // const [loginuser, sestLoginuser] = useState({
-    //     username: "admin01",
-    //     userNickname: "관리자1",
-    //     userMbti: "",
-    //     userMbtiColor: "",
-    //     userRole: "ADMIN"
-    // });
 
 
     // 팝오버 여닫힘 상태
@@ -53,13 +52,13 @@ const Header = () => {
 
     // 읽지않은 쪽지리스트
     const [messagesNotRead, setMessagesNotRead] = useState([
-        {messageTitle: '읽지않은쪽지제목1', messageContent: '받은쪽지내용1', messageDate: '2023-11-30', isRead: 'N'},
-        {messageTitle: '읽지않은쪽지제목2읽지않은쪽지제목2읽지않은쪽지제목2읽지않은쪽지제목2', messageContent: '받은쪽지내용1', messageDate: '2023-11-29', isRead: 'N'},
-        {messageTitle: '읽지않은쪽지제목3', messageContent: '받은쪽지내용1', messageDate: '2023-11-28', isRead: 'N'},
-        {messageTitle: '읽지않은쪽지제목4', messageContent: '받은쪽지내용1', messageDate: '2023-11-27', isRead: 'N'},
-        {messageTitle: '읽지않은쪽지제목5', messageContent: '받은쪽지내용1', messageDate: '2023-11-27', isRead: 'N'},
-        {messageTitle: '읽지않은쪽지제목6', messageContent: '받은쪽지내용1', messageDate: '2023-11-27', isRead: 'N'},
-        {messageTitle: '읽지않은쪽지제목7', messageContent: '받은쪽지내용1', messageDate: '2023-11-27', isRead: 'N'},
+        // {messageTitle: '읽지않은쪽지제목1', messageContent: '받은쪽지내용1', messageDate: '2023-11-30', isRead: 'N'},
+        // {messageTitle: '읽지않은쪽지제목2읽지않은쪽지제목2읽지않은쪽지제목2읽지않은쪽지제목2', messageContent: '받은쪽지내용1', messageDate: '2023-11-29', isRead: 'N'},
+        // {messageTitle: '읽지않은쪽지제목3', messageContent: '받은쪽지내용1', messageDate: '2023-11-28', isRead: 'N'},
+        // {messageTitle: '읽지않은쪽지제목4', messageContent: '받은쪽지내용1', messageDate: '2023-11-27', isRead: 'N'},
+        // {messageTitle: '읽지않은쪽지제목5', messageContent: '받은쪽지내용1', messageDate: '2023-11-27', isRead: 'N'},
+        // {messageTitle: '읽지않은쪽지제목6', messageContent: '받은쪽지내용1', messageDate: '2023-11-27', isRead: 'N'},
+        // {messageTitle: '읽지않은쪽지제목7', messageContent: '받은쪽지내용1', messageDate: '2023-11-27', isRead: 'N'},
     ]);
 
     // 미확인 알림리스트
@@ -68,8 +67,8 @@ const Header = () => {
         {alertContent: '긴내게시글제목긴내게시글제목긴내게시글제목', alertType: '댓글', alertCnt: 20, isChecked: 'N'},
         {alertContent: '내댓글내용내댓글내용', alertType: '댓글', alertCnt: 9, isChecked: 'N'},
         {alertContent: '블라인드된내게시글제목', alertType: '경고', alertCnt: 0, isChecked: 'N'},
+        {alertContent: '내문의글제목내문의글제목', alertType: '답변', alertCnt: 0, isChecked: 'N'},
         {alertContent: '블라인드된내댓글내용', alertType: '경고', alertCnt: 0, isChecked: 'N'},
-        {alertContent: '내문의글제목', alertType: '경고', alertCnt: 0, isChecked: 'N'},
     ]);
 
 
@@ -97,23 +96,27 @@ const Header = () => {
                 </div>
 
                 {/* 우측 메뉴 */}
-                {!loginuser? (
-                    <div style={{ marginRight: '120px' }}>
+                {loginuser.userNickname==null? (
+                    <div style={{marginRight: '120px'}}>
                         <li className={style.navItem}>
-                            <Link to={"/logout"}>
-                                <Button color="light">로그아웃</Button>
-                            </Link>
+                            <Link to={"/login"}><Button color="light">로그인</Button></Link>
+                        </li>
+                        <li className={style.navItem}>
+                            <Link to={"/join"}><Button color="dark">회원가입</Button></Link>
                         </li>
                     </div>
                 ) : loginuser.userRole==='USER'? (
                     <div className={style.afterLogin}>
                         <div>
-
+                            {alertNotRead.length>0? (
+                            <img src={"/bell-full.png"} alt='알림' className={style.bellIcon} onClick={()=>togglePopover("popoverBell")} id="popoverBell"/>
+                            ) : (
                             <img src={"/bell.png"} alt='알림' className={style.bellIcon} onClick={()=>togglePopover("popoverBell")} id="popoverBell"/>
+                            )}
                             <Popover className={style.popoverBellOrMessage} placement="bottom" isOpen={popoverStates.popoverBell} target="popoverBell" toggle={()=>togglePopover("popoverBell")}>
                                 <PopoverBody className={style.popoverBellOrMessageItem}>
                                     {/* 미확인 알림 수 표시 */}
-                                    <Link to={"/mypage"} className={style.goToMessages}>
+                                    <Link to={"/mypage"} className={style.popoverLink}>
                                         <div className={style.popoverTopArea}>
                                             <span>새로운 알림 ({alertNotRead.length})</span>&nbsp;
                                             <span>&gt;</span>
@@ -125,8 +128,12 @@ const Header = () => {
                                     {alertNotRead.length>0? (
                                         alertNotRead.map((alert, index) => (
                                             index<5 && (
-                                            <div key={index}>
-                                                <div className={style.messageTitle}>{alert.alertContent}</div>
+                                            <div key={index} className={style.alertContentAndCnt}>
+                                                <div className={style.alertContent}>{alert.alertContent}</div>
+                                                <div>
+                                                    {`의 ${alert.alertType}`}
+                                                    {alert.alertType==='댓글' && `(${alert.alertCnt})`}
+                                                </div>
                                             </div>
                                             )
                                         ))
@@ -140,7 +147,7 @@ const Header = () => {
                                     )}
 
                                     {/* 모두확인 버튼 */}
-                                    {messagesNotRead.length>0 && (
+                                    {alertNotRead.length>0 && (
                                         <div className={style.popoverBtnArea}>
                                             <button className={style.readAllBtn}>모두 확인</button>
                                         </div>
@@ -148,12 +155,15 @@ const Header = () => {
                                 </PopoverBody>
                             </Popover>
                             
-                            
+                            {messagesNotRead.length>0? (
+                            <img src={"/messageIcon-full.png"} alt='쪽지' className={style.messageIcon} onClick={()=>togglePopover("popoverMessage")} id="popoverMessage"/>
+                            ) : (
                             <img src={"/messageIcon.png"} alt='쪽지' className={style.messageIcon} onClick={()=>togglePopover("popoverMessage")} id="popoverMessage"/>
+                            )}
                             <Popover className={style.popoverBellOrMessage} placement="bottom" isOpen={popoverStates.popoverMessage} target="popoverMessage" toggle={()=>togglePopover("popoverMessage")}>
                                 <PopoverBody className={style.popoverBellOrMessageItem}>
                                     {/* 읽지 않은 쪽지 수 표시 */}
-                                    <Link to={"/mypage"} className={style.goToMessages}>
+                                    <Link to={"/mypage"} className={style.popoverLink}>
                                         <div className={style.popoverTopArea}>
                                             <span>새로운 쪽지 ({messagesNotRead.length})</span>&nbsp;
                                             <span>&gt;</span>
@@ -194,14 +204,13 @@ const Header = () => {
                                 <span className={style.userNickname}>낭만냥냥</span>
                             </span>
                             <Popover className={style.popover} placement="bottom" isOpen={popoverStates.popoverUser} target="popoverUser" toggle={()=>togglePopover("popoverUser")}>
-                                <Link to={"/mypage"}>
+                                <Link to={"/mypage"} className={style.popoverLink}>
                                     <PopoverBody className={style.popoverItem}>마이페이지</PopoverBody>
                                 </Link>
-                                <Link to={"/logout"}>
+                                <Link to={"/logout"} className={style.popoverLink}>
                                     <PopoverBody className={style.popoverItem}>로그아웃</PopoverBody>
                                 </Link>
                             </Popover>
-
 
                         </div>
                     </div>)
@@ -209,11 +218,15 @@ const Header = () => {
                     (<div className={style.afterLogin}>
                         <div className={style.openPopover} onClick={()=>togglePopover("popoverUser")} id="popoverUser">
                             <span className={style.userNickname}>관리자 모드</span>
-                            <img src={"/spannerIcon.png"} alt="" className={style.spannerIcon}/>
+                            <img src={"/spannerIcon-full.png"} alt="" className={style.spannerIcon}/>
                         </div>
                         <Popover className={style.popover} placement="bottom" isOpen={popoverStates.popoverUser} target="popoverUser" toggle={()=>togglePopover("popoverUser")}>
-                            <PopoverBody className={style.popoverItem}>관리자페이지</PopoverBody>
-                            <PopoverBody className={style.popoverItem}>로그아웃</PopoverBody>
+                            <Link to="adminnotice" className={style.popoverLink}>
+                                <PopoverBody className={style.popoverItem}>관리자페이지</PopoverBody>
+                            </Link>
+                            <Link to={"/logout"} className={style.popoverLink}>
+                                <PopoverBody className={style.popoverItem}>로그아웃</PopoverBody>
+                            </Link>
                         </Popover>
                     </div>)
                 : null}

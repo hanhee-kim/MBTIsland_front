@@ -1,6 +1,6 @@
 /* 드래그 스타일 */
 ::selection {
-	background: black;
+	background: silver;
 	color: white;
 }
 
@@ -86,7 +86,7 @@
     display: inline-block;
     margin-left: 8px;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 17px;
 }
 .bellIcon, .messageIcon {
     margin-right: 20px;
@@ -123,12 +123,12 @@
     min-width: 180px;
 }
 .popoverBellOrMessageItem {
-    background-color: lemonchiffon;
+    /* background-color: lemonchiffon; */
     text-align: left;
     max-width: 220px;
 }
 .messageTitle {
-    background: ghostwhite;
+    /* background: ghostwhite; */
     padding: 2px 0;
 
     /* 줄바꿈을 막고 생략기호 표시 */
@@ -140,6 +140,28 @@
     margin: 0 auto;
     cursor: pointer;
 }
+.alertContentAndCnt {
+    /* border: 1px dashed green; */
+    display: flex;
+    justify-content: flex-start;
+    cursor: pointer;
+}
+.alertContent {
+    /* background: lavenderblush; */
+    padding: 2px 0;
+
+    /* 줄바꿈을 막고 생략기호 표시 */
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    max-width: 120px;
+}
+.alertContent+div {
+    padding: 2px 0;
+}
+
 .popoverTopArea, .popoverTopArea:hover {
     font-weight: bolder;
     cursor: pointer;
@@ -164,11 +186,12 @@
     font-size: small;
     cursor: pointer;
 }
-.goToMessages, 
-.goToMessages:link, 
-.goToMessages:visited, 
-.goToMessages:hover, 
-.goToMessages:active {
+
+.popoverLink
+.popoverLink:link,
+.popoverLink:visited,
+.popoverLink:hover,
+.popoverLink:active {
     text-decoration: none;
     color: black;
 }
