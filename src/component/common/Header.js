@@ -33,7 +33,6 @@ const Header = () => {
     const togglePopover = (popoverKey) => {
         setPopoverStates((prevState) => ({...prevState, [popoverKey]:!prevState[popoverKey]}));
     };
-
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
     useEffect(() => {
         const clickOutsidePopover = (event) => {
@@ -51,21 +50,34 @@ const Header = () => {
 
     }, []);
 
+
     // 읽지않은 쪽지리스트
     const [messagesNotRead, setMessagesNotRead] = useState([
         {messageTitle: '읽지않은쪽지제목1', messageContent: '받은쪽지내용1', messageDate: '2023-11-30', isRead: 'N'},
         {messageTitle: '읽지않은쪽지제목2읽지않은쪽지제목2읽지않은쪽지제목2읽지않은쪽지제목2', messageContent: '받은쪽지내용1', messageDate: '2023-11-29', isRead: 'N'},
-        {messageTitle: '읽지않은쪽지제목2', messageContent: '받은쪽지내용1', messageDate: '2023-11-28', isRead: 'N'},
+        {messageTitle: '읽지않은쪽지제목3', messageContent: '받은쪽지내용1', messageDate: '2023-11-28', isRead: 'N'},
         {messageTitle: '읽지않은쪽지제목4', messageContent: '받은쪽지내용1', messageDate: '2023-11-27', isRead: 'N'},
         {messageTitle: '읽지않은쪽지제목5', messageContent: '받은쪽지내용1', messageDate: '2023-11-27', isRead: 'N'},
         {messageTitle: '읽지않은쪽지제목6', messageContent: '받은쪽지내용1', messageDate: '2023-11-27', isRead: 'N'},
         {messageTitle: '읽지않은쪽지제목7', messageContent: '받은쪽지내용1', messageDate: '2023-11-27', isRead: 'N'},
     ]);
 
+    // 미확인 알림리스트
+    const [alertNotRead, setAlertNotRead] = useState([
+        {alertContent: '내게시글제목', alertType: '댓글', alertCnt: 5, isChecked: 'N'},
+        {alertContent: '긴내게시글제목긴내게시글제목긴내게시글제목', alertType: '댓글', alertCnt: 20, isChecked: 'N'},
+        {alertContent: '내댓글내용내댓글내용', alertType: '댓글', alertCnt: 9, isChecked: 'N'},
+        {alertContent: '블라인드된내게시글제목', alertType: '경고', alertCnt: 0, isChecked: 'N'},
+        {alertContent: '블라인드된내댓글내용', alertType: '경고', alertCnt: 0, isChecked: 'N'},
+        {alertContent: '내문의글제목', alertType: '경고', alertCnt: 0, isChecked: 'N'},
+    ]);
+
 
     return(
         <div className={style.header}>
             <ul className={style.navItems}>
+
+                {/* 좌측 메뉴 */}
                 <div>
                     <li className={style.navItem}>
                         <Link to={"/"} className={style.siteTitle}>
@@ -85,7 +97,6 @@ const Header = () => {
                 </div>
 
                 {/* 우측 메뉴 */}
-
                 {!loginuser? (
                     <div style={{ marginRight: '120px' }}>
                         <li className={style.navItem}>
@@ -99,39 +110,80 @@ const Header = () => {
                         <div>
 
                             <img src={"/bell.png"} alt='알림' className={style.bellIcon} onClick={()=>togglePopover("popoverBell")} id="popoverBell"/>
-                            <Popover className={style.popover} placement="bottom" isOpen={popoverStates.popoverBell} target="popoverBell" toggle={()=>togglePopover("popoverBell")}>
-                                <PopoverBody className={style.popoverItem}>알림창</PopoverBody>
+                            <Popover className={style.popoverBellOrMessage} placement="bottom" isOpen={popoverStates.popoverBell} target="popoverBell" toggle={()=>togglePopover("popoverBell")}>
+                                <PopoverBody className={style.popoverBellOrMessageItem}>
+                                    {/* 미확인 알림 수 표시 */}
+                                    <Link to={"/mypage"} className={style.goToMessages}>
+                                        <div className={style.popoverTopArea}>
+                                            <span>새로운 알림 ({alertNotRead.length})</span>&nbsp;
+                                            <span>&gt;</span>
+                                        </div>
+                                    </Link>
+                                    <hr className={style.separator} />
+                                
+                                    {/* 알림 내용 표시 */}
+                                    {alertNotRead.length>0? (
+                                        alertNotRead.map((alert, index) => (
+                                            index<5 && (
+                                            <div key={index}>
+                                                <div className={style.messageTitle}>{alert.alertContent}</div>
+                                            </div>
+                                            )
+                                        ))
+                                    ) : (
+                                    <div><br/>새로운 알림이 없습니다<br/><br/></div>
+                                    )}
+
+                                    {/* 생략된 알림이 있음을 알리는 표시 */}
+                                    {alertNotRead.length>5 && (
+                                        <div className={style.hasMoreMessages}><span>...</span></div>
+                                    )}
+
+                                    {/* 모두확인 버튼 */}
+                                    {messagesNotRead.length>0 && (
+                                        <div className={style.popoverBtnArea}>
+                                            <button className={style.readAllBtn}>모두 확인</button>
+                                        </div>
+                                    )}
+                                </PopoverBody>
                             </Popover>
                             
                             
                             <img src={"/messageIcon.png"} alt='쪽지' className={style.messageIcon} onClick={()=>togglePopover("popoverMessage")} id="popoverMessage"/>
                             <Popover className={style.popoverBellOrMessage} placement="bottom" isOpen={popoverStates.popoverMessage} target="popoverMessage" toggle={()=>togglePopover("popoverMessage")}>
                                 <PopoverBody className={style.popoverBellOrMessageItem}>
-                                    {/* 쪽지 수 표시 */}
-                                    <div className={style.popoverTopArea}>
-                                        <span>새로운 쪽지 ({messagesNotRead.length})</span>&nbsp;
-                                        <span>&gt;</span>
-                                    </div>
+                                    {/* 읽지 않은 쪽지 수 표시 */}
+                                    <Link to={"/mypage"} className={style.goToMessages}>
+                                        <div className={style.popoverTopArea}>
+                                            <span>새로운 쪽지 ({messagesNotRead.length})</span>&nbsp;
+                                            <span>&gt;</span>
+                                        </div>
+                                    </Link>
                                     <hr className={style.separator} />
 
-                                    {messagesNotRead.length>0 ? (
+                                    {/* 쪽지 제목 표시 */}
+                                    {messagesNotRead.length>0? (
                                         messagesNotRead.map((message, index) => (
                                             index<5 && (
                                             <div key={index}>
-                                                {/* 메시지 제목 표시 */}
                                                 <div className={style.messageTitle}>{message.messageTitle}</div>
-
-                                                {/* 버튼 ---------- */}
-                                                {index === messagesNotRead.length - 1 && (
-                                                    <div className={style.popoverBtnArea}>
-                                                        <button className={style.readAllBtn}>모두 확인</button>
-                                                    </div>
-                                                )}
                                             </div>
                                             )
                                         ))
                                     ) : (
-                                    <div>새로운 쪽지가 없습니다</div>
+                                    <div><br/>새로운 쪽지가 없습니다<br/><br/></div>
+                                    )}
+
+                                    {/* 생략된 쪽지가 있음을 알리는 표시 */}
+                                    {messagesNotRead.length>5 && (
+                                        <div className={style.hasMoreMessages}><span>...</span></div>
+                                    )}
+
+                                    {/* 모두확인 버튼 */}
+                                    {messagesNotRead.length>0 && (
+                                        <div className={style.popoverBtnArea}>
+                                            <button className={style.readAllBtn}>모두 확인</button>
+                                        </div>
                                     )}
                                 </PopoverBody>
                             </Popover>
@@ -142,8 +194,12 @@ const Header = () => {
                                 <span className={style.userNickname}>낭만냥냥</span>
                             </span>
                             <Popover className={style.popover} placement="bottom" isOpen={popoverStates.popoverUser} target="popoverUser" toggle={()=>togglePopover("popoverUser")}>
-                                <PopoverBody className={style.popoverItem}>마이페이지</PopoverBody>
-                                <PopoverBody className={style.popoverItem}>로그아웃</PopoverBody>
+                                <Link to={"/mypage"}>
+                                    <PopoverBody className={style.popoverItem}>마이페이지</PopoverBody>
+                                </Link>
+                                <Link to={"/logout"}>
+                                    <PopoverBody className={style.popoverItem}>로그아웃</PopoverBody>
+                                </Link>
                             </Popover>
 
 
