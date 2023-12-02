@@ -15,7 +15,7 @@ import Footer from "./component/common/Footer";
 import MBTmi from "./component/mbtmi/MBTmi";
 import MBTmiDetail from "./component/mbtmi/MBTmiDetail";
 import MBTmiForm from "./component/mbtmi/MBTmiForm";
-import Notice from "./component/notice/NoticeList";
+import Notice from "./component/notice/Notice";
 import NoticeDetail from "./component/notice/NoticeDeatil";
 import AdminFrame from './component/admin/AdminFrame';
 import MbtwhyMain from './component/mbtwhy/MbtwhyMain';

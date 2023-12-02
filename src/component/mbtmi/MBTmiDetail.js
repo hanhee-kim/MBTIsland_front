@@ -5,6 +5,21 @@ import React, { useEffect, useRef, useState } from "react";
 
 const MBTmiDetail = () => {
 
+    const [mbtmi, setMbtmi] = useState({
+        postNo: 33, 
+        writerId: 'userId0123',
+        writerMbti: 'ESFP',
+        writerNickname: '포로리',
+        writedate: '2023년 11월 18일 00:28',
+        viewCnt: 22,
+        recommentCnt: 8,
+        postTitle: '게시글 상세페이지 글제목',
+        postContent: 
+            '게시글 내용 텍스트!!<br/>게시글 내용 텍스트게시글 내용 텍스트<br/>게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트?<br/>게시글 내용 텍스트<br/><br/>게시글 내용 텍스트<br/>게시글 내용 텍스트게시글 내용 텍스트<br/><br/>게시글 내용 텍스트<br/><br/>게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트 줄바꿈처리줄바꿈처리줄바꿈처리<br/>',
+    });
+    const [isRecommended, setIsRecommended] = useState('Y');
+    const [isBookmarked, setIsBookmarked] = useState('Y');
+
     // 팝오버 여닫힘 상태, 함수
     const [popoverStates, setPopoverStates] = useState({popover1:false, popover2:false});
     const togglePopover = (popoverKey) => {
@@ -55,7 +70,11 @@ const MBTmiDetail = () => {
                         </span>
                 </div>
                 <span className={style.currnetCategory}>잡담 &gt;</span>
+                {isBookmarked==='N'? (
                 <img src={"/bookmarkIcon-white.png" } alt="책갈피" className={style.bookmarkIcon} />
+                ) : (
+                <img src={"/bookmarkIcon-red.png" } alt="책갈피" className={style.bookmarkIcon} />
+                )}
                 <div className={style.postArea}>
                     <div>
                         <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>togglePopover("popover1")} id="popover1"/>
@@ -64,25 +83,20 @@ const MBTmiDetail = () => {
                             <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
                         </Popover><br/><br/><br/>
                     </div>
-                    <h2 className={style.postTitle}>게시글 상세페이지 글제목은 크게 표시</h2>
+                    <h2 className={style.postTitle}>{mbtmi.postTitle}</h2>
                     <div className={style.profileColor}/>&nbsp;
-                    <span>ESFP 포로리</span>
-                    <h6>2023년 11월 18일  00:28 
-                        <span><img src={"/view-icon.png" } alt="조회" className={style.viewIcon} /> 22</span>
+                    <span>{mbtmi.writerMbti}&nbsp;{mbtmi.writerNickname}</span>
+                    <h6>{mbtmi.writedate}
+                        <span><img src={"/view-icon.png" } alt="조회" className={style.viewIcon} />&nbsp;{mbtmi.viewCnt}</span>
                     </h6>
-                    <div className={style.postContent}>
-                        게시글 내용 텍스트<br/>
-                        게시글 내용 텍스트게시글 내용 텍스트<br/>
-                        게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트?<br/>
-                        게시글 내용 텍스트<br/><br/>
-                        게시글 내용 텍스트<br/>
-                        게시글 내용 텍스트게시글 내용 텍스트<br/><br/>
-                        게시글 내용 텍스트<br/><br/>
-                        게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트 줄바꿈처리줄바꿈처리줄바꿈처리<br/>
-                    </div>
+                    <div className={style.postContent} dangerouslySetInnerHTML={{ __html: mbtmi.postContent }}></div>
                     <p>
+                        {isRecommended==='N'? (
                         <img src={"/thumbIcon.png" } alt="추천아이콘" className={style.thumbIconDetail} />
-                        <span>&nbsp;추천 8</span>
+                        ) : (
+                        <img src={"/thumbIcon-full.png" } alt="추천아이콘" className={style.thumbIconDetail} />
+                        )}
+                        <span>&nbsp;추천&nbsp;{mbtmi.recommentCnt}</span>
                     </p>
                     <div className={style.postBtns}>
                         <button>목록</button>

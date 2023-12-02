@@ -25,13 +25,15 @@
 .section {
     position:relative;
     /* right: 50px; */
-    min-height: 900px; /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
+    min-height: 600px; /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
     width: 100%;
     font-size: 20px;
     
     /* border: 1px solid red; */
     display: flex;
-    justify-content: center;   
+    justify-content: center;
+
+    padding-left: 130px;
 }
 .section>div {
     display: flex;
