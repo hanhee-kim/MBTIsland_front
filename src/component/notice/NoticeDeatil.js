@@ -22,7 +22,7 @@ const NoticeDetail = () => {
 
     return (
         <>
-        <div className={style.container}>
+        <div className={style.container} id="top">
 
             <section className={style.sectionLeftArea}></section>
             <section className={style.section} style={{minHeight: '990'}}>
@@ -50,7 +50,7 @@ const NoticeDetail = () => {
             </section>
             <section className={style.sectionRightArea}>
                 <div>
-                    <img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
                 </div>
             </section>
 

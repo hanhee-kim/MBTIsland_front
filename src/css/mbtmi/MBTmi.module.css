@@ -252,20 +252,28 @@
 
 /* 글상세 */
 .currnetCategory {
-    font-size: 18px;
+    font-size: 16px;
     border: 1px solid #E6E6E6;
     border-bottom: 3px solid white;
     background: white; 
     padding: 5px 10px 4px 10px;
     width:auto;
     margin-left: 28px;
+    cursor: pointer;
+}
+.bookmarkIcon {
+    width: 25px;
+    float: right;
+    position: relative;
+    top: 25px;
+    right: 100px;
+    cursor: pointer;
 }
 .postArea {
     width: 100%;
-    min-height: 50%; /* 게시글이 짧더라도 최소 높이 확보 */
-    background: seashell; 
+    /* background: seashell;  */
     border: 1px solid #E6E6E6;
-    padding: 50px;
+    padding: 50px 50px 20px 50px;
 }
 .postArea>div:first-child {
     float: right;
@@ -303,7 +311,7 @@
     color: #8F8F8F;
 }
 .postContent {
-    background: lightblue;
+    /* background: lightblue; */
     font-size: 18px;
     width: 100%;
     min-height: 300px; /* 게시글 내용이 적더라도 최소 높이 유지 */
@@ -317,12 +325,13 @@
     justify-content: center;
     font-size: 18px;
     color: #8F8F8F;
+    cursor: pointer;
 }
 .thumbIconDetail{
     width: 30px;
 }
 .postBtns {
-    /* border: 5px ins et lavender; */
+    /* background-color:lavender; */
     font-size: 16px;
     display: flex;
     justify-content: space-between;
@@ -460,11 +469,14 @@
 }
 .sectionRightArea>div {
     /* border: dashed red 3px; */
-    padding-right: 100px;
+    /* padding-right: 100px; */
+    /* position: sticky; */
+    position:fixed;
+    right: 100px;
+    bottom: 40px;
 }
 .movetopIcon {
     float: right;
     width: 50px;
-    position: sticky;
     cursor: pointer;
 }

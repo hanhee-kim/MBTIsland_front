@@ -82,11 +82,14 @@
 }
 .sectionRightArea>div {
     /* border: dashed red 3px; */
-    padding-right: 100px;
+    /* padding-right: 100px; */
+    /* position: sticky; */
+    position:fixed;
+    right: 100px;
+    bottom: 40px;
 }
 .movetopIcon {
     float: right;
     width: 50px;
-    position: sticky;
     cursor: pointer;
 }

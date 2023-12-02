@@ -1,26 +1,23 @@
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.css";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import { useState } from "react";
-import Main from "./component/Main";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
 import Login from "./component/user/Login";
-import AddJoin from "./component/user/AddJoin";
-import MBTmi from "./component/mbtmi/MBTmi";
-import Notice from "./component/notice/NoticeList";
-import NoticeDetail from "./component/notice/NoticeDeatil";
-import AdminNotice from "./component/admin/AdminNotice";
-import AdminNoticeForm from "./component/admin/AdminNoticeForm";
 import Join from "./component/user/Join";
+import AddJoin from "./component/user/AddJoin";
+import Mypage from "./component/user/Mypage";
+import QnAWrite from "./component/user/QnAWrite";
+import Main from "./component/Main";
 import Header from "./component/common/Header";
 import Footer from "./component/common/Footer";
+import MBTmi from "./component/mbtmi/MBTmi";
 import MBTmiDetail from "./component/mbtmi/MBTmiDetail";
 import MBTmiForm from "./component/mbtmi/MBTmiForm";
-import AdminQna from "./component/admin/AdminQna";
-import Mypage from "./component/user/Mypage";
-import DefaultMypage from "./component/user/DefaultMypage";
-import QnAWrite from "./component/user/QnAWrite";
+import Notice from "./component/notice/NoticeList";
+import NoticeDetail from "./component/notice/NoticeDeatil";
+import AdminFrame from './component/admin/AdminFrame';
 import MbtwhyMain from './component/mbtwhy/MbtwhyMain';
 import Mbtwhy from './component/mbtwhy/Mbtwhy';
 import MbtwhyDetail from "./component/mbtwhy/MbtwhyDetail";
@@ -29,9 +26,11 @@ import MbtwhyModify from "./component/mbtwhy/MbtwhyModify";
 import MBattle from "./component/mbattle/MBattle";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import MBattleDetail from "./component/mbattle/MBattleDetail";
-import AdminFrame from './component/admin/AdminFrame';
+import ScrollReset from "./component/common/ScrollReset";
+
 
 function App() {
+
   const [isPopup, setIsPopup] = useState(false);
 
   return (
@@ -39,6 +38,9 @@ function App() {
       {/* <Provider store={store}> */}
       {/* <PersistGate persistor={persister}> */}
       <BrowserRouter>
+
+        <ScrollReset/>
+
         {!isPopup && <Header />}
         <Routes>
           {/* 한희 */}

@@ -44,7 +44,7 @@ const MBTmiDetail = () => {
 
     return (
         <>
-        <div className={style.container}>
+        <div className={style.container} id="top">
 
             <section className={style.sectionLeftArea}></section>
             <section className={style.section}>
@@ -55,6 +55,7 @@ const MBTmiDetail = () => {
                         </span>
                 </div>
                 <span className={style.currnetCategory}>잡담 &gt;</span>
+                <img src={"/bookmarkIcon-white.png" } alt="책갈피" className={style.bookmarkIcon} />
                 <div className={style.postArea}>
                     <div>
                         <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>togglePopover("popover1")} id="popover1"/>
@@ -215,7 +216,7 @@ const MBTmiDetail = () => {
             </section>
             <section className={style.sectionRightArea}>
                 <div>
-                    <img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
                 </div>
             </section>
         </div>

@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 const MBTmiForm = () => {
     return (
         <>
-        <div className={style.container}>
+        <div className={style.container} id="top">
             
             <section className={style.sectionLeftArea}></section>
             <section className={style.section}>
@@ -33,7 +33,7 @@ const MBTmiForm = () => {
             </section>
             <section className={style.sectionRightArea}>
                 <div>
-                    <img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
                 </div>
             </section>
         </div>
