@@ -51,7 +51,7 @@
   display: flex;
   flex-direction: column;
   width: 260px;
-  height: 640px;
+  /* height: 640px; */
   font-weight: 400;
   font-family: "GangwonEdu_OTFBoldA";
   border-radius: 20px;
@@ -63,11 +63,15 @@
   list-style: none;
   padding-left: 0;
 }
-.sideMenus li {
+.myMenu {
   list-style: none;
   text-align: center;
   line-height: 60px;
   font-size: 30px;
+}
+.myMenu:hover{
+  cursor: pointer;
+  margin-left: -10px;
 }
 .myMbti {
   font-size: 40px;
@@ -125,16 +129,21 @@
 
 .myMbtwhyContainer,
 .myMbtmiContainer,
-.myQnaContainer {
+.myQnaContainer ,
+.bookmarkContainer
+{
   font-family: "GangwonEdu_OTFBoldA";
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
+  /* height: 787px; */
   flex-direction: column;
   align-items: center;
 }
 .myMbtwhyTitle,
 .myMbtmiTitle,
-.myQnaTitle {
+.myQnaTitle ,
+.bookmarkTitle
+{
   display: flex;
   /* justify-content: center; */
   font-size: 40px;
@@ -143,6 +152,10 @@
   border-bottom: 2px solid black;
   width: 800px;
   margin-top: 20px;
+}
+.tableDiv{
+  min-width: 770px;
+  min-height: 550px; /* 데이터 10개일떄 */
 }
 
 /* pagination */

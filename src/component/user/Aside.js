@@ -12,7 +12,7 @@ const Aside = (props) => {
   const menus = [
     { name: "프로필", path: "/default" },
     { name: "MBTWHY", path: "/mbtwhy" },
-    { name: "MBTmI", path: "/mbtmi" },
+    { name: "MBTMI", path: "/mbtmi" },
     { name: "문의함", path: "/qna" },
     { name: "찜목록", path: "/bookmark" },
     { name: "알림함", path: "/alarm" },
@@ -99,7 +99,7 @@ const Aside = (props) => {
         <ul className={style.sideMenus}>
           {menus.map((menu, index) => {
             return (
-              <li key={index} onClick={(e) => changePath(e, menu.path)}>
+              <li className={style.myMenu} key={index} onClick={(e) => changePath(e, menu.path)}>
                 {menu.name}
               </li>
             );

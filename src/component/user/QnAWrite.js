@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import style from "../../css/common/common.css";
 import { Form, Button, FormGroup, Input, Label } from "reactstrap";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 const QnAWrite = (props) => {
+  const user = useSelector((state) => state.persistedReducer.user.user);
   useEffect(() => {
     props.setIsPopup(true);
     // props.setCurLocation("qnawrite");
@@ -11,7 +13,7 @@ const QnAWrite = (props) => {
   const [qna, setQna] = useState({
     title: "",
     content: "",
-    // writerId: "",
+    writerId: user.username,
     isAnswered: "N",
   });
   const changeQna = (e) => {

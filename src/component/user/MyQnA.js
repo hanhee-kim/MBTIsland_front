@@ -10,7 +10,6 @@ import {
   ModalHeader,
   Table,
 } from "reactstrap";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const MyQnA = (props) => {
@@ -121,6 +120,7 @@ const MyQnA = (props) => {
             문의하기
           </Link>
         </Button> */}
+        <div className={style.tableDiv}>
         <Table className="table-hover" style={{ minWidth: "770px" }}>
           <thead>
             <tr row className="text-center">
@@ -168,6 +168,7 @@ const MyQnA = (props) => {
             })}
           </tbody>
         </Table>
+        </div>
         <div className={style.paging}>
           <span>&lt;</span>
           <span className={style.activePage} style={{ background: "#f8f8f8" }}>

@@ -6,6 +6,9 @@ import MyMbtWhy from "./MyMbtWhy";
 import MyMbtmi from "./MyMbtmi";
 import MyQnA from "./MyQnA";
 import { useSelector } from "react-redux";
+import MyBookmark from "./MyBookmark";
+import MyAlarm from './MyAlarm';
+import MyNote from './MyNote';
 
 const Mypage = () => {
   const token = useSelector((state) => state.persistedReducer.user.token);
@@ -27,9 +30,9 @@ const Mypage = () => {
       {currentPage === "/mbtwhy" && <MyMbtWhy />}
       {currentPage === "/mbtmi" && <MyMbtmi />}
       {currentPage === "/qna" && <MyQnA />}
-      {currentPage === "/bookmark" && <></>}
-      {currentPage === "/alarm" && <></>}
-      {currentPage === "/note" && <></>}
+      {currentPage === "/bookmark" && <MyBookmark/>}
+      {currentPage === "/alarm" && <MyAlarm/>}
+      {currentPage === "/note" && <MyNote/>}
       <div></div>
     </div>
   );

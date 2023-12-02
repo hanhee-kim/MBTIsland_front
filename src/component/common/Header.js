@@ -63,7 +63,9 @@ const Header = () => {
                             <img src={"/bell.png"} alt='알림' className={style.bellIcon}/>
                             <img src={"/messageIcon.png"} alt='알림' className={style.messageIcon}/>
                             <span className={style.userMbti}>INFP</span>
+                            <Link to={'/mypage'}>
                             <span className={style.userNickname}>낭만냥냥</span>
+                            </Link>
                         </div>
                     </div>)}
 
