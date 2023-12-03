@@ -115,7 +115,7 @@ function MBattle() {
 
     const searchSubmit = () => {
         reqBoardSearch(1);
-    }
+    };
 
     // 페이지 별 검색
     const reqBoardSearch = (repage) => {

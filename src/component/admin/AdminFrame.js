@@ -9,6 +9,10 @@ import AdminNotice from "./AdminNotice";
 import AdminQna from './AdminQna';
 import Main from './../Main';
 import AdminQnaForm from "./AdminQnaForm";
+import AdminReport from "./AdminReport";
+import AdminReportDetail from "./AdminReportDetail";
+import AdminBan from "./AdminBan";
+import AdminBanDetail from "./AdminBanDetail";
 
 const AdminFrame = () => {
 
@@ -29,6 +33,11 @@ const AdminFrame = () => {
                     uri==='/adminnotice'? <AdminNotice/>:
                     uri==='/adminqna'? <AdminQna/>:
                     uri==='/adminqnaform'? <AdminQnaForm/>:
+                    uri==='/adminreport'? <AdminReport/>:
+                    uri==='/adminreportdetail'? <AdminReportDetail/>:
+                    uri==='/adminban'? <AdminBan/>:
+                    uri==='/adminbandetail'? <AdminBanDetail/>:
+                    
                     uri==='/menu3'? <Main/>:
                     <Main/>
                 }

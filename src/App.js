@@ -73,6 +73,10 @@ function App() {
           <Route exact path="/mbattle" element={<MBattle />} />
           <Route exact path="/mbattlewrite" element={<MBattleWrite />} />
           <Route exact path="/mbattledetail" element={<MBattleDetail />} />
+          <Route exact path="/adminreport" element={<AdminFrame />} />
+          <Route exact path="/adminreportdetail" element={<AdminFrame />} />
+          <Route exact path="/adminban" element={<AdminFrame />} />
+          <Route exact path="/adminbandetail" element={<AdminFrame />} />
         </Routes>
         {!isPopup && <Footer />}
       </BrowserRouter>
