@@ -5,28 +5,14 @@ import Aside from "./Aside";
 import MyMbtWhy from "./MyMbtWhy";
 import MyMbtmi from "./MyMbtmi";
 import MyQnA from "./MyQnA";
+import { useSelector } from "react-redux";
+import MyBookmark from "./MyBookmark";
+import MyAlarm from './MyAlarm';
+import MyNote from './MyNote';
 
 const Mypage = () => {
-  //더미데이터
-  const [user, setUser] = useState({
-    username: "gksl914",
-    userPasswoard: "1234",
-    userNickname: "부리부리눈알뜨기",
-    userMbti: "ENFP",
-    userMbtiColor: "#FFD966",
-    userMbtiChangeDate: "2023-08-29T00:00:00",
-    userEmail: "123@123.com",
-    userRole: "",
-    userWarningCnt: 1,
-    userBanCnt: 1,
-    isLeave: false,
-    isBanned: false,
-    joinDate: "2023-11-29T00:00:00",
-    leaveDate: "",
-    provider: "kakao",
-    providerId: "kakaoId",
-    visitCnt: 2, //방문횟수
-  });
+  const token = useSelector((state) => state.persistedReducer.user.token);
+  const user = useSelector((state) => state.persistedReducer.user.user);
   //function
   const [currentPage, setCurrentPage] = useState("");
   const changePage = (e) => {
@@ -36,16 +22,18 @@ const Mypage = () => {
   return (
     <div className={style.myPageContainer}>
       {/* sidebar  유저정보 리덕스에? */}
+      <div></div>
       <Aside changePage={changePage} />
       {(currentPage === "/default" || currentPage === "") && (
-        <DefaultMypage user={user} />
+        <DefaultMypage />
       )}
-      {currentPage === "/mbtwhy" && <MyMbtWhy user={user} />}
-      {currentPage === "/mbtmi" && <MyMbtmi user={user} />}
-      {currentPage === "/qna" && <MyQnA user={user} />}
-      {currentPage === "/bookmark" && <></>}
-      {currentPage === "/alarm" && <></>}
-      {currentPage === "/note" && <></>}
+      {currentPage === "/mbtwhy" && <MyMbtWhy />}
+      {currentPage === "/mbtmi" && <MyMbtmi />}
+      {currentPage === "/qna" && <MyQnA />}
+      {currentPage === "/bookmark" && <MyBookmark/>}
+      {currentPage === "/alarm" && <MyAlarm/>}
+      {currentPage === "/note" && <MyNote/>}
+      <div></div>
     </div>
   );
 };
