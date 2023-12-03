@@ -10,9 +10,10 @@ import {
   ModalHeader,
   Table,
 } from "reactstrap";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const MyQnA = (props) => {
+  const user = useSelector((state) => state.persistedReducer.user.user);
   //더미데이터
   const [qnaList, setQnaList] = useState([
     {
@@ -96,7 +97,7 @@ const MyQnA = (props) => {
       isAnswered: "N",
     },
   ]);
-  const user = props.user;
+
   const openQnaWrite = () => {
     const url = "/qnawrite";
     window.open(
@@ -109,10 +110,8 @@ const MyQnA = (props) => {
 
   return (
     <div className={style.myQnaContainer}>
-      <div className={style.myQnaTitle}>
-        * {user.userNickname}의 문의 내역 *
-      </div>
-      <div style={{ padding: "20px", marginTop: "60px" }}>
+      <div className={style.myQnaTitle}>* 문의 내역 *</div>
+      <div style={{ padding: "20px", marginTop: "10px" }}>
         <Button color="light" style={{ margin: "10px" }} onClick={openQnaWrite}>
           문의하기
         </Button>
@@ -121,6 +120,7 @@ const MyQnA = (props) => {
             문의하기
           </Link>
         </Button> */}
+        <div className={style.tableDiv}>
         <Table className="table-hover" style={{ minWidth: "770px" }}>
           <thead>
             <tr row className="text-center">
@@ -168,6 +168,7 @@ const MyQnA = (props) => {
             })}
           </tbody>
         </Table>
+        </div>
         <div className={style.paging}>
           <span>&lt;</span>
           <span className={style.activePage} style={{ background: "#f8f8f8" }}>
