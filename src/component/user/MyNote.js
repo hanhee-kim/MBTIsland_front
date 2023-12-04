@@ -1,36 +1,70 @@
 import React, { useState } from 'react';
 import style from "../../css/user/Mypage.module.css";
-import { Table } from 'reactstrap';
+import { Button, Table } from 'reactstrap';
+// import { Link } from 'react-router-dom';
+import NoteDetail from './NoteDetail';
 
 const MyNote = () => {
   //더미데이터
-  const [noteList] = useState([
+  const [noteList,setNoteList] = useState([
     {
       noteNo:1,
-      sentUsername:'',
-      noteContent: '',
-      receiveUsername:'',
+      sentUsername:'158432AE25',
+      sentUserNick:'보노보노',
+      noteContent: '노트 내용',
+      receiveUsername:'123456AA7891011',
+      receiveUserNick:'나',
+      sentDate:'0000-00-00T00:00:00',
+      noteIsRead:'N',
+    }, 
+    {
+      noteNo:2,
+      sentUsername:'158432AE25',
+      sentUserNick:'보노보노',
+      noteContent: '노트 내용',
+      receiveUsername:'123456AA7891011',
+      receiveUserNick:'나',
       sentDate:'0000-00-00T00:00:00',
       noteIsRead:'N',
     }, 
   ]);
 
-  // const openNoteWrite = (sent_username) => {
-  //   const url = "/notewrite";
-  //   window.open(
-  //     url,
-  //     "_blank",
-  //     "width=650,height=700,location=no,status=no,scrollbars=yes"
-  //   );
-  //   // , "noopener, noreferrer"
-  // };
+  const NoteDetail = (e,note) => {
+    const url = "/notedetail/:"+note.noteNo;
+    window.open(
+      url,
+      "_blank",
+      "width=650,height=700,location=no,status=no,scrollbars=yes"
+    );
+  }
+  const [isRead,setIsRead] = useState(false);
+  //보낸쪽지 눌렀을떄
+  const sentNote = () => {
 
+  }
+  //받은쪽지 눌렀을때
+  const receiveNote = () => {
+
+  }
+  const readFilter = (e,read) => {
+    setIsRead(!isRead);
+    console.log(read);
+    // setNoteList({...noteList}); //읽음 처리or안읽음 된 List 다시 가져오기
+  }
 
   return (
-    <div className={style.myQnaContainer}>
-      <div className={style.myQnaTitle}>* 문의 내역 *</div>
+    <div className={style.myNoteContainer}>
+      <div className={style.myNoteTitle}>* 쪽지 목록 *</div>
       <div style={{ padding: "20px", marginTop: "10px" }}>
-      <div style={{height:'25px'}}></div>
+      <div style={{marginBottom:'15px'}}>
+        <div style={{display:'flex',flexDirection: 'row',gap:'10px',}}>
+          <Button color='dark' onClick={sentNote}>보낸쪽지</Button>
+          <Button color='light' onClick={receiveNote}>받은쪽지</Button>
+        </div>
+        <div>
+          
+        </div>
+      </div>
         <div className={style.tableDiv}>
         <Table className="table-hover" style={{ minWidth: "770px" }}>
           <thead>
@@ -38,41 +72,48 @@ const MyNote = () => {
               <th scope="col" sm={1}>
                 번호
               </th>
-              <th scope="col" sm={5}>
+              <th scope="col" sm={1}>
+                보낸이
+              </th>
+              <th scope="col" sm={4}>
                 내용
               </th>
               <th scope="col" sm={3}>
                 작성일자
               </th>
               <th scope="col" sm={3}>
-                보낸이
+              {isRead?<span onClick={(e)=>readFilter(e,'notRead')} >안 읽음</span>:<span onClick={(e)=>readFilter(e,'read')}>읽음</span>}
+
               </th>
             </tr>
           </thead>
           <tbody>
-            {noteList.map((qna, index) => {
+            {noteList.map((note, index) => {
               return (
-                <tr key={index}>
+                <tr key={index}  onClick={(e)=>{NoteDetail(e,note)}}>
                   <td sm={1} className="text-center">
-                    {qna.no}
+                    {note.noteNo}
+                  </td>
+                  <td sm={1} className="text-center">
+                    {note.sentUserNick}
                   </td>
                   <td
-                    sm={6}
+                    sm={4}
                     className="text-truncate"
                     style={{ maxWidth: "600px" }}
+                   
                   >
-                    {qna.content}
+                    {note.noteContent}
                   </td>
                   <td
                     sm={3}
                     className="text-center"
                     style={{ minWidth: "105px" }}
                   >
-                    {/* {qna.writedDate} */}
-                    {qna.writedDate.split("T")[0]}
+                    {note.sentDate.split("T")[0]}
                   </td>
-                  <td sm={2} className="text-center">
-                    {qna.isAnswered === "N" ? "처리중" : "답변완료"}
+                  <td sm={3} className="text-center">
+                    {note.noteIsRead === "N" ? "안 읽음" : "읽음"}
                   </td>
                 </tr>
               );

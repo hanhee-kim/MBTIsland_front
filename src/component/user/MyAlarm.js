@@ -1,21 +1,25 @@
 // import React, { useState } from 'react';
+import { useState } from "react";
 import style from "../../css/user/Mypage.module.css";
+import { Button, Table } from "reactstrap";
 // import { Button, Table } from 'reactstrap';
 
 const MyAlarm = () => {
-  //더미데이터
-  // const [alarmList] = useState([
-  //   {
-  //     no:1,
-  //     username:'test',
-  //     alarmType:'', //댓글 , 대댓글 , 신고 , 경고 , 블라인드처리 
-  //     alarmTargetNo:10,
-  //     alarmTargetFrom:'MBTMI_COMMENT',
-  //     alarmIsRead:'N',
-  //     alarmUpdateDate:'2029-03-06T12:12:00',
-  //   },
-  // ]);
-/*
+  // 더미데이터
+  const [alarmList] = useState([
+    {
+      alarmNo:1,
+      username:'test',
+      alarmType:'댓글', //댓글 , 대댓글 , 경고 , 블라인드처리 
+      alarmTargetNo:10,
+      alarmTargetFrom:'MBTMI_COMMENT',
+      isRead:'N',
+      readDate:'2029-03-06T12:12:00',
+      updateDate:'2029-03-06T12:12:00',
+      alarmContent:'alarmTargetFrom에 대한 alarmType이 있습니다.',
+    },
+  ]);
+
    // 체크된 아이템을 담을 배열
    const [checkItems, setCheckItems] = useState([]);
 
@@ -43,42 +47,52 @@ const MyAlarm = () => {
        setCheckItems([]);
      }
    }
-   const delAlarm = () => {
+   const readAlarm = () => {
      //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
-     알람삭제 ? 읽음처리 ?
+    //  알람삭제 ? 읽음처리 ?
    }
-   */
+   const allRaed = () => {
+
+   }
+
   return (
     <div className={style.myMbtwhyContainer}>
-      <div className={style.myMbtwhyTitle}>* MBT-WHY *</div>
+      <div className={style.myMbtwhyTitle}>* 알림 목록 *</div>
       <div style={{ padding: "20px", marginTop: "10px" }}>
-        {/* <Button color="dark" style={{ margin: "10px" }}>
-          삭제
-        </Button> */}
+        <div style={{display:'flex',gap:'600px'}}>
+          <div>
+            <Button color="light" style={{ margin: "10px" }} onClick={readAlarm}>
+              읽음
+            </Button>
+          </div>
+          <div>
+            <Button color="dark" style={{ margin: "10px" }} onClick={allRaed}>
+              모두 읽음
+            </Button>
+          </div>
+
+        </div>
         <div className={style.tableDiv}>
-        {/* <Table className="table-hover" style={{ minWidth: "770px" }}>
+        <Table className="table-hover" style={{ minWidth: "770px" }}>
           <thead>
             <tr className="text-center">
               <th scope="col" sm={1}>
                 <input type="checkbox" name='select-all'
-              // onChange={(e) => handleAllCheck(e.target.checked)}
+              onChange={(e) => handleAllCheck(e.target.checked)}
               // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
               checked={checkItems.length === alarmList.length ? true : false} />
               </th>
-              <th scope="col" sm={1}>
-                번호
-              </th>
               <th scope="col" sm={2}>
-                받는 MBTI
+                타입
               </th>
-              <th scope="col" sm={4}>
+              <th scope="col" sm={5}>
                 내용
               </th>
               <th scope="col" sm={3}>
-                작성일
+                알림 일시
               </th>
               <th scope="col" sm={1}>
-                댓글수
+                확인
               </th>
             </tr>
           </thead>
@@ -92,34 +106,31 @@ const MyAlarm = () => {
                 // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
                 checked={checkItems.includes(alarm.no) ? true : false} />
                   </td>
-                  <td sm={1} className="text-center">
-                    {alarm.no}
-                  </td>
                   <td sm={2} className="text-center">
-                    {alarm.mbtiType}
+                    [ {alarm.alarmType} ]
                   </td>
                   <td
-                    sm={4}
+                    sm={5}
                     className="text-truncate"
                     style={{ maxWidth: "600px" }}
                   >
-                    {alarm.content}
+                    {alarm.alarmContent}
                   </td>
                   <td
                     sm={3}
                     className="text-center"
                     style={{ minWidth: "105px" }}
                   >
-                    {alarm.writeDate}
+                    {alarm.updateDate.split("T")[0]}
                   </td>
                   <td sm={1} className="text-center">
-                    {alarm.recommendCnt}
+                    {alarm.isRead === 'N' ? "안 읽음":"읽음"}
                   </td>
                 </tr>
               );
             })}
           </tbody>
-        </Table> */}
+        </Table>
         </div>
         <div className={style.paging}>
           <span>&lt;</span>

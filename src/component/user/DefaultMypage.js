@@ -48,6 +48,7 @@ const DefaultMypage = (props) => {
 
   //state
   const user = useSelector((state) => state.persistedReducer.user.user);
+  const [changeUser,setChangeUser] = useState(user);
   const dispatch = useDispatch();
   const today = new Date();
   const joinDate = new Date(user.joinDate);
@@ -55,10 +56,12 @@ const DefaultMypage = (props) => {
   const modifyMbtiDay = Math.floor(
     (today - mbtiChangeDate) / (1000 * 60 * 60 * 24)
   );
+  const changeDay = 90 - modifyMbtiDay;
   const joinDay = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24));
 
   const mbti = user.userMbti;
   const arrMbti = [...mbti];
+  const [isChangeEmail,setISChageEmail] = useState(false);
   // const [arrMbti, setArrMbti] = useState([...mbti]);
 
   const [mbtiCheckEI, setMbtiCheckEI] = useState(...arrMbti[0]);
@@ -98,24 +101,45 @@ const DefaultMypage = (props) => {
     setMbtiCheckPJ(pj);
     }
   };
+
+const sendCode = (e) => {
+  
+  //email code전송하기.
+}
+
   const change = (e) => {
-    // dispatch({type:'user',payload:{[e.target.name]: [e.target.value]}})
+    // dispatch({
+    //   type: 'user',
+    //   payload: {
+    //     [e.target.name]: [e.target.value],
+    //   },
+    // });
+    setChangeUser(
+      {...user,
+      [e.target.name]: [e.target.value]}
+    )
+    console.log(e.target.name);
+    console.log(e.target.value);
   };
   const submit = (e) => {
     e.preventDefault();
     //수정전 mbti도 가지고가서 비교하던지, 여기서 비교하고 수정날짜도 업데이트해서 넘길지
     let sendUser = {
-      ...user,
+      ...changeUser,
       userMbti: mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ,
     };
-    
+    dispatch({
+      type: 'user',
+      payload: {
+        changeUser,
+      },
+    });
   };
   return (
     <div className={style.myProfileContainer}>
       {/* <div style={{width:"800px",height:"2000px",backgroundColor:"pink"}}></div> */}
       {/* <div className={style.title}>프로필</div> */}
       {/* {console.log(arrMbti)} */}
-      {modifyMbtiDay}
       <div className={style.sectionGr}>
         <div className={style.section}>
           <div className={style.sectionTitle}>방문</div>
@@ -159,7 +183,7 @@ const DefaultMypage = (props) => {
                   type="password"
                   name="userPassword"
                   id="userPassword"
-                  // onChange={change}
+                  onChange={change}
                 />
               </Col>
             </FormGroup>
@@ -173,9 +197,10 @@ const DefaultMypage = (props) => {
                   name="user_password_check"
                   id="user_password_check"
                   placeholder="PASSWORD를 한번더 입력하세요."
-                  // onChange={change}
+                  // onChange={checkPassword}
                 />
               </Col>
+              {/* <span>{isSamePassword?"비밀번호가 일치합니다.":"비밀번호가 일치하지 않습니다."}</span> */}
             </FormGroup>
           </>
         )}
@@ -284,6 +309,15 @@ const DefaultMypage = (props) => {
           </Col>
         </FormGroup>
         <FormGroup row>
+          <Label sm={3}>
+
+          </Label>
+          <Col sm={7}>
+          <span> * MBTI는 90일에 한번 수정가능합니다. * </span>
+          <span> - {changeDay} 일 </span>
+          </Col>
+        </FormGroup>
+        <FormGroup row>
           <Label for="userEmail" sm={3}>
             이메일
           </Label>
@@ -296,15 +330,19 @@ const DefaultMypage = (props) => {
               onChange={change}
             ></Input>
           </Col>
-          {/* <Col sm={2}>
+          
+           <Col sm={2}>
             <Button
               color="white"
               style={{ border: "1px solid black", fontWeight: "600" }}
+              onClick={(e)=>sendCode}
             >
               보내기
             </Button>
           </Col>
         </FormGroup>
+          {isChangeEmail &&
+          <>
         <FormGroup row>
           <Label for="join_code" sm={3}>
             인증코드
@@ -325,8 +363,10 @@ const DefaultMypage = (props) => {
             >
               인증
             </Button>
-          </Col> */}
+          </Col>
         </FormGroup>
+          </>
+        }
         <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
           <Button
             color="dark"
