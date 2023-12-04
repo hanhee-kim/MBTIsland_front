@@ -1,13 +1,51 @@
-import { Table } from "reactstrap";
+import { Popover, PopoverBody, Table } from "reactstrap";
 
 import style from "../../css/mbtmi/MBTmi.module.css";
-import React from "react";
-import {Link} from "react-router-dom";
+import React, { useState } from "react";
+import {Link, useLocation} from "react-router-dom";
+import { useEffect } from "react";
 
 const MBTmi = () => {
+
+    const [weeklyHotPosts, setWeeklyHotPosts] = useState([
+        {postNo: 22, category: '잡담', title: '잡담 게시판의 인기 게시글 제목', commentCnt: 103, writedate: '2일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 112},
+        {postNo: 44, category: '연애', title: '연애 게시판의 인기 게시글 제목', commentCnt: 99, writedate: '3일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 55},
+        {postNo: 66, category: '회사', title: '회사 게시판의 인기 게시글 제목', commentCnt: 88, writedate: '1일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 22},
+        {postNo: 88, category: '학교', title: '학교 게시판의 인기 게시글 제목', commentCnt: 77, writedate: '4일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 33},
+        {postNo: 110, category: '취미', title: '취미 게시판의 인기 게시글 제목취미 게시판의 인기 게시글 제목취미 게시판의 인기 게시글 제목', commentCnt: 111, writedate: '6일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 44},
+    ]);
+    const [mbtmiListByPaging, setMbtmiListByPaging] = useState([
+        {postNo: 222, category: '연애', title: '연애 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '1분 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 0},
+        {postNo: 221, category: '회사', title: '회사 게시판의 최신 게시글 제목회사 게시판의 최신 게시글 제목회사 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '1분 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 0},
+        {postNo: 220, category: '잡담', title: '잡담 게시판의 최신 게시글 제목', commentCnt: 2, writedate: '1시간 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 2},
+        {postNo: 199, category: '잡담', title: '잡담 게시판의 최신 게시글 제목', commentCnt: 4, writedate: '2일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 0},
+        {postNo: 198, category: '취미', title: '취미 게시판의 최신 게시글 제목', commentCnt: 6, writedate: '3주 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 3},
+        {postNo: 197, category: '학교', title: '학교 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '3달 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 1},
+        {postNo: 196, category: '회사', title: '회사 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '11달 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 5},
+        {postNo: 195, category: '잡담', title: '잡담 게시판의 최신 게시글 제목', commentCnt: 12, writedate: '2년 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 30},
+        {postNo: 194, category: '잡담', title: '잡담 게시판의 최신 게시글 제목', commentCnt: 8, writedate: '12년 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 40},
+        {postNo: 193, category: '취미', title: '취미 게시판의 최신 게시글 제목취미 게시판의 최신 게시글 제목취미 게시판의 최신 게시글 제목', commentCnt: 9, writedate: '13년 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 100},
+    ]);
+
+    const [open,setOpen]=useState(false);
+    // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
+    useEffect(() => {
+        const clickOutsidePopover = (event) => {
+            const popoverElements = document.querySelectorAll(".popover");
+            // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
+            if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
+                setOpen(false);
+            } 
+        };
+        document.addEventListener("mousedown", clickOutsidePopover);
+        return () => {
+            document.removeEventListener("mousedown", clickOutsidePopover);
+        };
+    }, []);
+
     return (
         <>
-        <div className={style.container}>
+        <div className={style.container} id="top">
             <section className={style.sectionLeftArea}></section>
             <section className={style.section}>
                 <div className={style.boardTitleB}>
@@ -20,82 +58,26 @@ const MBTmi = () => {
                 <div className={style.weeklyHotPosts}>
                     <table className={style.weeklyPostsTable}>
                         <tbody>
-                            <tr>
-                                <td>[잡담]</td>
-                                <td>잡담 게시판의 인기 게시글 제목 표시&nbsp;&nbsp;
-                                    <span>[103]</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <small>2일 전</small>
+                        {weeklyHotPosts.length>0 && weeklyHotPosts.map(post => {
+                            return (
+                            <tr key={post.postNo}>
+                                <td>[{post.category}]</td>
+                                <td>
+                                    <span className={style.overflow}>{post.title}</span>&nbsp;&nbsp;
+                                    <span>[{post.commentCnt}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <small>{post.writedate}</small>
                                 </td>
                                 <td>
                                     <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
+                                    <span>{post.writerMbti}&nbsp;{post.writerNickname}</span>
                                 </td>
                                 <td>
                                     <img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;
-                                    <small>117</small>
+                                    <small>{post.recommentCnt}</small>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>[잡담]</td>
-                                <td>잡담 게시판의 인기 게시글 제목 표시&nbsp;&nbsp;
-                                    <span>[103]</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <small>2일 전</small>
-                                </td>
-                                <td>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                </td>
-                                <td>
-                                    <img src={"/thumbIcon.png" } alt="검색" className={style.thumbIcon} />&nbsp;
-                                    <small>117</small>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>[잡담]</td>
-                                <td>잡담 게시판의 인기 게시글 제목 표시&nbsp;&nbsp;
-                                    <span>[103]</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <small>2일 전</small>
-                                </td>
-                                <td>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                </td>
-                                <td>
-                                    <img src={"/thumbIcon.png" } alt="검색" className={style.thumbIcon} />&nbsp;
-                                    <small>117</small>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>[잡담]</td>
-                                <td>잡담 게시판의 인기 게시글 제목 표시&nbsp;&nbsp;
-                                    <span>[103]</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <small>2일 전</small>
-                                </td>
-                                <td>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                </td>
-                                <td>
-                                    <img src={"/thumbIcon.png" } alt="검색" className={style.thumbIcon} />&nbsp;
-                                    <small>117</small>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>[잡담]</td>
-                                <td>잡담 게시판의 인기 게시글 제목 표시&nbsp;&nbsp;
-                                    <span>[103]</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <small>2일 전</small>
-                                </td>
-                                <td>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                </td>
-                                <td>
-                                    <img src={"/thumbIcon.png" } alt="검색" className={style.thumbIcon} />&nbsp;
-                                    <small>117</small>
-                                </td>
-                            </tr>
-                            
+                            )
+                        })}
                         </tbody>
                     </table>
                 </div>
@@ -127,7 +109,12 @@ const MBTmi = () => {
 
                 <div className={style.aboveTable}>
                     <span>
-                        <button><img src={"/sortIcon.png" } alt="" className={style.sortIcon} />최신순</button>
+                        <button onClick={()=>setOpen(!open)} id="Popover1"><img src={"/sortIcon.png" } alt="" className={style.sortIcon} />최신순</button>
+                        <Popover className={style.popover} placement="bottom" isOpen={open} target="Popover1" toggle={()=>setOpen(!open)}>
+                            <PopoverBody className={style.popoverItem}>최신순</PopoverBody>
+                            <PopoverBody className={style.popoverItem}>조회수</PopoverBody>
+                            <PopoverBody className={style.popoverItem}>댓글수</PopoverBody>
+                        </Popover>
                         <button><img src={"/writebtnIcon.png" } alt="" className={style.writebtnIcon} />작성하기</button>
                     </span>
                     <div className={style.searchBar}>
@@ -137,166 +124,26 @@ const MBTmi = () => {
                 </div>
                 <table className={style.mbtmiTable}>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div className={style.td1row}>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                    <small>22분 전</small>
-                                </div>
-                                <div className={style.td2row}>
-                                    <span>잡담 게시판의 최신 게시글 제목 표시</span>
-                                    <span>
-                                        <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;12</small>
-                                        <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;33</small>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div className={style.td1row}>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                    <small>22분 전</small>
-                                </div>
-                                <div className={style.td2row}>
-                                    <span>잡담 게시판의 최신 게시글 제목 표시</span>
-                                    <span>
-                                        <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;12</small>
-                                        <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;33</small>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div className={style.td1row}>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                    <small>22분 전</small>
-                                </div>
-                                <div className={style.td2row}>
-                                    <span>잡담 게시판의 최신 게시글 제목 표시</span>
-                                    <span>
-                                        <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;12</small>
-                                        <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;33</small>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div className={style.td1row}>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                    <small>22분 전</small>
-                                </div>
-                                <div className={style.td2row}>
-                                    <span>잡담 게시판의 최신 게시글 제목 표시</span>
-                                    <span>
-                                        <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;12</small>
-                                        <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;33</small>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div className={style.td1row}>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                    <small>22분 전</small>
-                                </div>
-                                <div className={style.td2row}>
-                                    <span>잡담 게시판의 최신 게시글 제목 표시</span>
-                                    <span>
-                                        <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;12</small>
-                                        <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;33</small>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div className={style.td1row}>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                    <small>22분 전</small>
-                                </div>
-                                <div className={style.td2row}>
-                                    <span>잡담 게시판의 최신 게시글 제목 표시</span>
-                                    <span>
-                                        <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;12</small>
-                                        <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;33</small>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div className={style.td1row}>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                    <small>22분 전</small>
-                                </div>
-                                <div className={style.td2row}>
-                                    <span>잡담 게시판의 최신 게시글 제목 표시</span>
-                                    <span>
-                                        <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;12</small>
-                                        <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;33</small>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div className={style.td1row}>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                    <small>22분 전</small>
-                                </div>
-                                <div className={style.td2row}>
-                                    <span>잡담 게시판의 최신 게시글 제목 표시</span>
-                                    <span>
-                                        <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;12</small>
-                                        <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;33</small>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div className={style.td1row}>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                    <small>22분 전</small>
-                                </div>
-                                <div className={style.td2row}>
-                                    <span>잡담 게시판의 최신 게시글 제목 표시</span>
-                                    <span>
-                                        <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;12</small>
-                                        <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;33</small>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div className={style.td1row}>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>ESFP 포로리</span>
-                                    <small>22분 전</small>
-                                </div>
-                                <div className={style.td2row}>
-                                    <span>잡담 게시판의 최신 게시글 제목 표시</span>
-                                    <span>
-                                        <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;12</small>
-                                        <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;33</small>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
+                        {mbtmiListByPaging.length>0 && mbtmiListByPaging.map(post => {
+                            return(
+                            <tr>
+                                <td>
+                                    <div className={style.td1row}>
+                                        <div className={style.profileColor}/>&nbsp;
+                                        <span>{post.writerMbti}&nbsp;{post.writerNickname}</span>
+                                        <small>{post.writedate}</small>
+                                    </div>
+                                    <div className={style.td2row}>
+                                        <span className={style.overflowLong}>{post.title}</span>
+                                        <span>
+                                            <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;{post.recommentCnt}</small>
+                                            <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;{post.commentCnt}</small>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            )
+                        })}
                     </tbody>
                 </table>
                 <div className={style.paging}>
@@ -316,7 +163,7 @@ const MBTmi = () => {
             </section>
             <section className={style.sectionRightArea}>
                 <div>
-                    <img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
                 </div>
             </section>
         </div>

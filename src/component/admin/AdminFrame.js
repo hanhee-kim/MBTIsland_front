@@ -20,7 +20,7 @@ const AdminFrame = () => {
             <img src={"/gear_adminPage.png" } alt="" className={styleFrame.adminPageImg}/>
         </div>
 
-        <div className={styleFrame.container}>
+        <div className={styleFrame.container} id="top">
             <section className={styleFrame.sectionLeftArea}>
                 <AdminNav/>
             </section>
@@ -35,7 +35,7 @@ const AdminFrame = () => {
             </section>
             <section className={styleFrame.sectionRightArea}>
                 <div>
-                    <img src={"/movetopIcon.png" } alt="top" className={styleFrame.movetopIcon}/>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={styleFrame.movetopIcon}/></a>
                 </div>
             </section>
         </div>

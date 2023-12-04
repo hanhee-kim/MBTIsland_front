@@ -9,6 +9,21 @@ import {Link} from "react-router-dom";
 import AdminNav from "./AdminNav";
 
 const AdminQna = () => {
+
+    const [pageInfo, setPageInfo] = useState({dataTotalCnt: 101, finishedCnt: 96, unFinishedCnt: 3});
+    const [qnaListByPaging, setQnaListByPaging] = useState([
+        {postNo: 130, title: '회원문의글제목', writedate: '2023-11-16', writerId: 'userId0123', isFinished: 'N'},
+        {postNo: 129, title: '긴 회원문의글제목긴 회원문의글제목긴 회원문의글제목', writedate: '2023-11-16', writerId: 'userId0123', isFinished: 'Y'},
+        {postNo: 128, title: '회원문의글제목', writedate: '2023-11-16', writerId: 'userId0123', isFinished: 'N'},
+        {postNo: 127, title: '회원문의글제목', writedate: '2023-11-16', writerId: 'userId0123', isFinished: 'N'},
+        {postNo: 126, title: '긴 회원문의글제목긴 회원문의글제목긴 회원문의글제목', writedate: '2023-11-16', writerId: 'userId0123', isFinished: 'Y'},
+        {postNo: 125, title: '회원문의글제목', writedate: '2023-11-15', writerId: 'userId0123', isFinished: 'Y'},
+        {postNo: 124, title: '긴 회원문의글제목긴 회원문의글제목긴 회원문의글제목', writedate: '2023-11-15', writerId: 'userId0123', isFinished: 'Y'},
+        {postNo: 123, title: '회원문의글제목', writedate: '2023-11-15', writerId: 'userId0123', isFinished: 'Y'},
+        {postNo: 122, title: '회원문의글제목', writedate: '2023-11-15', writerId: 'userId0123', isFinished: 'Y'},
+        {postNo: 121, title: '회원문의글제목', writedate: '2023-11-15', writerId: 'userId0123', isFinished: 'Y'},
+    ]);
+
     const [open,setOpen]=useState(false);
 
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
@@ -33,9 +48,9 @@ const AdminQna = () => {
             <div className={styleFrame.sectionContents}>
                 <div className={style.filterBtns}>
                     <div>
-                        <span className={`${style.filterBtn} ${style.filterActive}`}>전체 : 101</span>
-                        <span className={style.filterBtn}>처리완료 : 96</span>
-                        <span className={style.filterBtn}>미처리 : 3</span>
+                        <span className={`${style.filterBtn} ${style.filterActive}`}>전체 : {pageInfo.dataTotalCnt}</span>
+                        <span className={style.filterBtn}>처리완료 : {pageInfo.finishedCnt}</span>
+                        <span className={style.filterBtn}>미처리 : {pageInfo.unFinishedCnt}</span>
                     </div>
                     <div className={style.searchBar}>
                         <input type="text"/>
@@ -53,79 +68,20 @@ const AdminQna = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>208</td>
-                            <td>2023-11-16</td>
-                            <td>문의글제목 문의글제목 문의글제목</td>
-                            <td onClick={()=>setOpen(!open)} id="Popover1">userid0123</td>
-                            <Popover className={styleQna.popover} placement="bottom" isOpen={open} target="Popover1" toggle={()=>setOpen(!open)}>
-                                <PopoverBody className={styleQna.popoverItem}>문의글 모아보기</PopoverBody>
-                            </Popover>
-                            <td>미처리</td>
-                        </tr>
-                        <tr>
-                            <td>207</td>
-                            <td>2023-11-16</td>
-                            <td>문의글제목 문의글제목 문의글제목문의글제목 문의글제목 문의글제목문의글제목 문의글제목 문의글제목문의글제목 문의글제목 문의글제목</td>
-                            <td>userid0123</td>
-                            <td>미처리</td>
-                        </tr>
-                        <tr className={styleQna.completedQna}>
-                            <td>206</td>
-                            <td>2023-11-16</td>
-                            <td>문의글제목 문의글제목 문의글제목</td>
-                            <td>userid0123</td>
-                            <td>완료</td>
-                        </tr>
-                        <tr className={styleQna.completedQna}>
-                            <td>205</td>
-                            <td>2023-11-16</td>
-                            <td>문의글제목 문의글제목 문의글제목</td>
-                            <td>userid0123</td>
-                            <td>완료</td>
-                        </tr>
-                        <tr className={styleQna.completedQna}>
-                            <td>204</td>
-                            <td>2023-11-16</td>
-                            <td>문의글제목 문의글제목 문의글제목</td>
-                            <td>userid0123</td>
-                            <td>완료</td>
-                        </tr>
-                        <tr className={styleQna.completedQna}>
-                            <td>203</td>
-                            <td>2023-11-16</td>
-                            <td>문의글제목 문의글제목 문의글제목</td>
-                            <td>userid0123</td>
-                            <td>완료</td>
-                        </tr>
-                        <tr className={styleQna.completedQna}>
-                            <td>202</td>
-                            <td>2023-11-16</td>
-                            <td>문의글제목 문의글제목 문의글제목</td>
-                            <td>userid0123</td>
-                            <td>완료</td>
-                        </tr>
-                        <tr className={styleQna.completedQna}>
-                            <td>201</td>
-                            <td>2023-11-16</td>
-                            <td>문의글제목 문의글제목 문의글제목</td>
-                            <td>userid0123</td>
-                            <td>완료</td>
-                        </tr>
-                        <tr className={styleQna.completedQna}>
-                            <td>199</td>
-                            <td>2023-11-16</td>
-                            <td>문의글제목 문의글제목 문의글제목</td>
-                            <td>userid0123</td>
-                            <td>완료</td>
-                        </tr>
-                        <tr className={styleQna.completedQna}>
-                            <td>197</td>
-                            <td>2023-11-16</td>
-                            <td>문의글제목 문의글제목 문의글제목</td>
-                            <td>userid0123</td>
-                            <td>완료</td>
-                        </tr>
+                        {qnaListByPaging.length>0 && qnaListByPaging.map(post => {
+                            return (
+                            <tr className={post.isFinished==='Y'? styleQna.completedQna : ''}>
+                                <td>{post.postNo}</td>
+                                <td>{post.writedate}</td>
+                                <td>{post.title}</td>
+                                <td onClick={()=>setOpen(!open)} id="Popover1">{post.writerId}</td>
+                                <Popover className={styleQna.popover} placement="bottom" isOpen={open} target="Popover1" toggle={()=>setOpen(!open)}>
+                                    <PopoverBody className={styleQna.popoverItem}>문의글 모아보기</PopoverBody>
+                                </Popover>
+                                <td>{post.isFinished==='N'? ('미처리') : ('처리')}</td>
+                            </tr>
+                            )
+                        })}
                     </tbody>
                 </table>
                 

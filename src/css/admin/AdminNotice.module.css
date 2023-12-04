@@ -68,6 +68,7 @@
     padding-right: 8px;
     padding-bottom: 3px;
     margin-right: 15px;
+    cursor: pointer;
 }
 .filterActive {
     border-bottom: black solid 4px;

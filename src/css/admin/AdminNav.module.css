@@ -3,7 +3,8 @@
     height: 500px;
     background-color: #F3F3F3;
     padding: 60px 10px 40px 0;
-    margin-right: 100px;
+    /* margin-right: 100px; */ /* 대신 section에 padding-left: 130px; 적용 */
+    margin-left: 100px;
 
     float: right; /* sectionLeftArea 안에서 오른쪽정렬 */
 }

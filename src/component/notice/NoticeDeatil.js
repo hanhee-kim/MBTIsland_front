@@ -22,14 +22,14 @@ const NoticeDetail = () => {
 
     return (
         <>
-        <div className={style.container}>
+        <div className={style.container} id="top">
 
             <section className={style.sectionLeftArea}></section>
             <section className={style.section} style={{minHeight: '990'}}>
                 <div className={style.boardTitle}>공지사항</div>
                 <div className={style.postArea}>
                     <div>
-                    <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="Popover1"/>
+                        <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="Popover1"/>
                         <Popover  className={style.popover} placement="bottom" isOpen={open} target="Popover1" toggle={()=>setOpen(!open)}>
                             <PopoverBody className={style.popoverItem}>숨김/해제</PopoverBody>
                             <PopoverBody className={style.popoverItem}>수정</PopoverBody>
@@ -50,7 +50,7 @@ const NoticeDetail = () => {
             </section>
             <section className={style.sectionRightArea}>
                 <div>
-                    <img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
                 </div>
             </section>
 
