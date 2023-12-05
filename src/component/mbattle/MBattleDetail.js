@@ -199,9 +199,17 @@ function MBattleDetail() {
     }
 
     const buttonStyle = {
-        background:"white",
+        background:"none",
         color:"black",
-        border:"1px solid lightgray",
+        border:"1px solid #C5C5C5"
+    }
+
+    const replyButtonStyle = {
+        background:"none",
+        color:"#C5C5C5",
+        fontWeight:"bold",
+        border:"none",
+        padding:"0px"
     }
 
     const inputComment = {
@@ -253,14 +261,14 @@ function MBattleDetail() {
                             </ButtonDropdown> */}
                             
                         </div>
-                        <div className={style.boardWriter}>
+                        <div className={style.writerDiv}>
                             <div className={style.circleDiv} style={{backgroundColor:`${board.color}`}}> </div>&nbsp;&nbsp;&nbsp;
                             {board.mbti}&nbsp;&nbsp;&nbsp;
                             {board.writer}
                         </div>
-                        <div className={style.boardDate}>
+                        <div style={{color:"#C5C5C5"}}>
                             {board.date}
-                            <img className={style.viewIcon} src="/view-icon.png" alt=""></img>
+                            <img className={style.viewIcon} src="/viewIcon-bold.png" alt=""></img>
                             {board.viewCount}
                         </div>
 
@@ -288,20 +296,16 @@ function MBattleDetail() {
                             </div>
                         </div>
 
-
-
                         {/* 통계 영역 */}
-                        <div>
+                        <div style={{width:"600px", height:"400px"}}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart
-                                    width={500}
-                                    height={300}
                                     data={data}
                                     margin={{
                                         top: 5,
                                         right: 30,
                                         left: 20,
-                                        bottom: 5,
+                                        bottom: 5
                                     }}
                                 >
                                 <CartesianGrid strokeDasharray="3 3" />
@@ -309,16 +313,42 @@ function MBattleDetail() {
                                 <YAxis />
                                 <Tooltip />
                                 <Legend />
-                                <Bar dataKey="pv" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
-                                <Bar dataKey="uv" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
+                                <Bar dataKey="uv" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+                                <Bar dataKey="pv" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
                                 </BarChart>
                             </ResponsiveContainer>
-
+                        </div>
+                        <div style={{width:"600px", height:"400px"}}>
+                            <ResponsiveContainer>
+                                <BarChart data={data} layout="vertical">
+                                    <YAxis type="name"/>
+                                    <XAxis type="number" orientation="top" stroke="#285A64"/>
+                                    <Bar dataKey="uv" fill="#8884d8" background={{ fill: '#eee' }} barSize={{height:"10px"}}/>
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div style={{width:"600px", height:"400px"}}>
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart width={150} height={40} data={data}>
-                                <Bar dataKey="uv" fill="#8884d8" />
+                                <BarChart width={150} height={40} data={data} layout="vertical">
+                                    <YAxis/>
+                                    <Bar dataKey="uv" fill="#8884d8" background={{ fill: '#eee' }}/>
                                 </BarChart>
                             </ResponsiveContainer>
+                        </div>
+
+                        <div>
+                        <BarChart
+                            width={430}
+                            height={170}
+                            data={data}
+                            layout="vertical">
+                            <XAxis type="number" orientation="top"/>
+                            <YAxis type="category" dataKey="currency" axisLine={false} dx={-5} tickLine={false} 
+                                style={{ fill: "#285A64" }} />
+                            <Bar background dataKey="uv" fill="#285A64" barSize={{ height: 300 }}>
+                                
+                            </Bar>
+                        </BarChart>
                         </div>
 
 
@@ -353,36 +383,21 @@ function MBattleDetail() {
                     {comments.length !== 0 && comments.map(comment => {
                         return (
                             <div key={comment.num} className={style.sectionComment}>
-                                <Link to={"/detailform/only-detail/" + comment.num}></Link>
-                                <div className={style.boardWriter}>
+                                <div className={style.writerDiv}>
                                     <div>
                                         <div className={style.circleDiv} style={{backgroundColor:`${comment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
                                         {comment.mbti}&nbsp;&nbsp;&nbsp;
                                         {comment.writer}
                                     </div>
-                                    
-                                    {/* <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                        <DropdownToggle style={dropDownStyle}>
-                                            <img className={style.dropDownImg} src="/popover-icon.png"></img>
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            <DropdownItem>삭제</DropdownItem>
-                                        </DropdownMenu>
-                                    </ButtonDropdown> */}
-                                    <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                        <DropdownToggle style={dropDownStyle}>
-                                            <img className={style.dropDownImg} src="/popover-icon.png" alt=""></img>
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                                <DropdownItem>신고</DropdownItem>
-                                        </DropdownMenu>
-                                    </ButtonDropdown>
                                 </div>
                                 <div className={style.boardContent}>
                                     {comment.content}
                                 </div>
-                                <div className={style.boardDate}>
-                                    {comment.date}
+                                <div className={style.commentLowDiv}>
+                                    <div>
+                                        {comment.date}
+                                    </div>
+                                    <Button style={replyButtonStyle}>신고</Button>
                                 </div>
                             </div>
                         )

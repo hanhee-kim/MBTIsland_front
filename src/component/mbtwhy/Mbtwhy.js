@@ -254,7 +254,7 @@ function Mbtwhy() {
                                     {hotBoard.likeCount}
                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <div>
-                                    <img src="/view-icon.png" alt=""></img>
+                                    <img src="/viewIcon.png" alt=""></img>
                                     {hotBoard.viewCount}
                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </div>
@@ -289,7 +289,7 @@ function Mbtwhy() {
                                             {board.likeCount}
                                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <div>
-                                            <img src="/view-icon.png" alt=""></img>
+                                            <img src="/viewIcon.png" alt=""></img>
                                             {board.viewCount}
                                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     </div>

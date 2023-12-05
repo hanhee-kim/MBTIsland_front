@@ -42,12 +42,12 @@
     justify-content: space-between;
 }
 
-.boardWriter {
+.writerDiv {
     display: flex;
     margin-bottom: 10px;
 }
 
-.boardWriter > div {
+.writerDiv > div {
     display: flex;
 }
 
@@ -57,8 +57,10 @@
     border-radius: 50%;
 }
 
-.boardDate {
+.commentLowDiv {
+    display: flex;
     color: #C5C5C5;
+    justify-content: space-between;
 }
 
 .viewIcon {
@@ -100,6 +102,14 @@
     justify-content: right;
 }
 
+.boardContent {
+    display: flex;
+    overflow: hidden;
+    width: 700px;
+    text-align: left;
+    margin-bottom: 30px;
+}
+
 .boardLow {
     display: flex;
     color: #C5C5C5;
@@ -134,10 +144,10 @@
 
 .sectionComment {
     padding: 25px;
-    border-bottom: solid #C5C5C5 2px;
+    border-bottom: solid #C5C5C5 1px;
 }
 
-.sectionComment > div{
+.sectionComment > div {
     font-weight: bold;
 }
 

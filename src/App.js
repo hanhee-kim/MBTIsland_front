@@ -21,8 +21,8 @@ import AdminQna from "./component/admin/AdminQna";
 import Mypage from "./component/user/Mypage";
 import DefaultMypage from "./component/user/DefaultMypage";
 import QnAWrite from "./component/user/QnAWrite";
-import MbtwhyMain from './component/mbtwhy/MbtwhyMain';
-import Mbtwhy from './component/mbtwhy/Mbtwhy';
+import MbtwhyMain from "./component/mbtwhy/MbtwhyMain";
+import Mbtwhy from "./component/mbtwhy/Mbtwhy";
 import MbtwhyDetail from "./component/mbtwhy/MbtwhyDetail";
 import MbtwhyWrite from "./component/mbtwhy/MbtwhyWrite";
 import MbtwhyModify from "./component/mbtwhy/MbtwhyModify";
@@ -30,6 +30,7 @@ import MBattle from "./component/mbattle/MBattle";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import MBattleDetail from "./component/mbattle/MBattleDetail";
 import AdminFrame from './component/admin/AdminFrame';
+import ReportWrite from "./component/user/ReportWrite"
 
 function App() {
   const [isPopup, setIsPopup] = useState(false);
@@ -77,6 +78,11 @@ function App() {
           <Route exact path="/adminreportdetail" element={<AdminFrame />} />
           <Route exact path="/adminban" element={<AdminFrame />} />
           <Route exact path="/adminbandetail" element={<AdminFrame />} />
+          <Route
+            exact
+            path="/reportwrite"
+            element={<ReportWrite setIsPopup={setIsPopup} />}
+          />
         </Routes>
         {!isPopup && <Footer />}
       </BrowserRouter>

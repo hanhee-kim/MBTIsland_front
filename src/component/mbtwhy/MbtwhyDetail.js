@@ -72,6 +72,17 @@ function MbtwhyDetail() {
             content:"옥지얌"
         }
     ]);
+
+    const [replyComment, setReplryComment] = useState(
+        {
+            num:1,
+            mbti:"ISTP",
+            color:"#4D6879",
+            writer:"마춤뻡파괴왕",
+            date:"1일전",
+            content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
+        }
+    );
     
     // 페이징 상태 값
     const [pageBtn, setPageBtn] = useState([]);
@@ -122,8 +133,17 @@ function MbtwhyDetail() {
         setOpen(!open);
     };
 
-    const submit=(e)=> {
+    const openReportWrite = () => {
+        const url = "/reportwrite";
+        window.open(
+          url,
+          "_blank",
+          "width=650,height=700,location=no,status=no,scrollbars=yes"
+        );
+        // , "noopener, noreferrer"
+      };
 
+    const submit=(e)=> {
         e.preventDefault();
     };
 
@@ -135,9 +155,18 @@ function MbtwhyDetail() {
     }
 
     const buttonStyle = {
-        background:"white",
+        background:"none",
         color:"black",
-        border:"1px solid lightgray",
+        border:"1px solid #C5C5C5",
+        marginLeft:"10px"
+    }
+    
+    const replyButtonStyle = {
+        background:"none",
+        color:"#C5C5C5",
+        fontWeight:"bold",
+        border:"none",
+        padding:"0px"
     }
 
     const inputComment = {
@@ -165,7 +194,7 @@ function MbtwhyDetail() {
                 {/* 게시글 영역 */}
                     <div key={board.num} className={style.sectionBoard}>
                         <Link to={"/detailform/only-detail/" + board.num}></Link>
-                        <div className={style.boardWriter}>
+                        <div className={style.writerDiv}>
                             <div>
                                 <div className={style.circleDiv} style={{backgroundColor:`${board.color}`}}> </div>&nbsp;&nbsp;&nbsp;
                                 {board.mbti}&nbsp;&nbsp;&nbsp;
@@ -185,13 +214,13 @@ function MbtwhyDetail() {
                                     <img className={style.dropDownImg} src="/popover-icon.png" alt=""></img>
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem>신고</DropdownItem>
+                                    <DropdownItem onClick={openReportWrite}>신고</DropdownItem>
                                 </DropdownMenu>
                             </ButtonDropdown>
                         </div>
-                        <div className={style.boardDate}>
+                        <div style={{color:"#C5C5C5"}}>
                             {board.date}
-                            <img className={style.viewIcon}src="/view-icon.png" alt=""></img>
+                            <img className={style.viewIcon} src="/viewIcon-bold.png" alt=""></img>
                             {board.viewCount}
                         </div>
                         <div className={style.boardContent}>
@@ -226,41 +255,74 @@ function MbtwhyDetail() {
                     {comments.length !== 0 && comments.map(comment => {
                         return (
                             <div key={comment.num} className={style.sectionComment}>
-                                <Link to={"/detailform/only-detail/" + comment.num}></Link>
-                                <div className={style.boardWriter}>
+                                <div className={style.writerDiv}>
                                     <div>
                                         <div className={style.circleDiv} style={{backgroundColor:`${comment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
                                         {comment.mbti}&nbsp;&nbsp;&nbsp;
                                         {comment.writer}
                                     </div>
-                                    
-                                    {/* <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                        <DropdownToggle style={dropDownStyle}>
-                                            <img className={style.dropDownImg} src="/popover-icon.png"></img>
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            <DropdownItem>삭제</DropdownItem>
-                                        </DropdownMenu>
-                                    </ButtonDropdown> */}
-                                    <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                        <DropdownToggle style={dropDownStyle}>
-                                            <img className={style.dropDownImg} src="/popover-icon.png" alt=""></img>
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                                <DropdownItem>답글</DropdownItem>
-                                                <DropdownItem>신고</DropdownItem>
-                                        </DropdownMenu>
-                                    </ButtonDropdown>
                                 </div>
                                 <div className={style.boardContent}>
                                     {comment.content}
                                 </div>
-                                <div className={style.boardDate}>
-                                    {comment.date}
+                                <div className={style.commentLowDiv}>
+                                    <div>
+                                        {comment.date}&nbsp;&nbsp;&nbsp;
+                                        <Button style={replyButtonStyle}>답글</Button>
+                                    </div>
+                                    <Button style={replyButtonStyle}>신고</Button>
                                 </div>
                             </div>
                         )
                     })}
+
+                    {/* 대댓글 */}
+                    <div key={replyComment.num} className={style.sectionReply} style={{display:"flex"}}>
+                        <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
+                        <div>
+                            <div className={style.writerDiv}>
+                                <div>
+                                    <div className={style.circleDiv} style={{backgroundColor:`${replyComment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                    {replyComment.mbti}&nbsp;&nbsp;&nbsp;
+                                    {replyComment.writer}
+                                </div>
+                            </div>
+                            <div className={style.boardContent}>
+                                {replyComment.content}
+                            </div>
+                            <div className={style.commentLowDiv}>
+                                <div>
+                                    {replyComment.date}
+                                </div>
+                                <Button style={replyButtonStyle}>신고</Button>
+                            </div>
+                        </div>
+                    </div>
+                    {/* 대댓글 */}
+
+                    {/* 본인 댓글 */}
+                    <div key={replyComment.num} className={style.sectionComment} style={{backgroundColor:"#F8F8F8"}}>
+                        <div>
+                            <div className={style.writerDiv}>
+                                <div>
+                                    <div className={style.circleDiv} style={{backgroundColor:`${replyComment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                    {replyComment.mbti}&nbsp;&nbsp;&nbsp;
+                                    {replyComment.writer}
+                                </div>
+                            </div>
+                            <div className={style.boardContent}>
+                                {replyComment.content}
+                            </div>
+                            <div className={style.commentLowDiv}>
+                                <div>
+                                    {replyComment.date}&nbsp;&nbsp;&nbsp;
+                                    <Button style={replyButtonStyle}>답글</Button>
+                                </div>
+                                <Button style={replyButtonStyle}>삭제</Button>
+                            </div>
+                        </div>
+                    </div>
+                    {/* 대댓글 */}
 
                     {/* 삭제된 댓글 */}
                     <div className={style.sectionDeletedComment}>
@@ -323,7 +385,7 @@ function MbtwhyDetail() {
 
                     {/* 답글 달기 */}
                     <div>
-                        <div className={style.sectionReply}>
+                        <div className={style.sectionPostReply}>
                             <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
                             <Input
                                 style={inputReply}
@@ -340,6 +402,7 @@ function MbtwhyDetail() {
                         </div>
                         <div className={style.postCommentDiv}>
                             <Button style={buttonStyle}>등록</Button>
+                            <Button style={buttonStyle}>취소</Button>
                         </div>
                     </div>
 
