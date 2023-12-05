@@ -15,6 +15,7 @@ import AddJoin from "./component/user/AddJoin";
 import Mypage from "./component/user/Mypage";
 import QnAWrite from "./component/user/QnAWrite";
 import NoteWrite from './component/user/NoteWrite';
+import NoteDetail from "./component/user/NoteDetail";
 
 // 하영
 import ScrollReset from "./component/common/ScrollReset";
@@ -27,6 +28,7 @@ import MBTmiForm from "./component/mbtmi/MBTmiForm";
 import Notice from "./component/notice/Notice";
 import NoticeDetail from "./component/notice/NoticeDeatil";
 import AdminFrame from './component/admin/AdminFrame';
+import DefaultMypage from "./component/user/DefaultMypage";
 
 // 인수
 import MbtwhyMain from './component/mbtwhy/MbtwhyMain';
@@ -35,12 +37,9 @@ import MbtwhyDetail from "./component/mbtwhy/MbtwhyDetail";
 import MbtwhyWrite from "./component/mbtwhy/MbtwhyWrite";
 import MbtwhyModify from "./component/mbtwhy/MbtwhyModify";
 import MBattle from "./component/mbattle/MBattle";
-import MBattleWrite from "./component/mbattle/MBattleWrite";
 import MBattleDetail from "./component/mbattle/MBattleDetail";
-import NoteDetail from "./component/user/NoteDetail";
-
-
-
+import MBattleWrite from "./component/mbattle/MBattleWrite";
+import ReportWrite from "./component/user/ReportWrite"
 
 export const persistor = persistStore(store);
 function App() {
@@ -94,22 +93,31 @@ function App() {
               <Route exact path="/adminnoticeform" element={<AdminFrame />} />
               <Route exact path="/adminqna" element={<AdminFrame />} />
               <Route exact path="/adminqnaform" element={<AdminFrame />} />
+
               {/* 인수 */}
               <Route exect path="/mbtwhymain" element={<MbtwhyMain />} />
               <Route exect path="/mbtwhy" element={<Mbtwhy />} />
-              <Route exact path="/addjoin" element={<AddJoin />} />
               <Route exact path="/mbtwhydetail" element={<MbtwhyDetail />} />
-              <Route exact path="/mypage" element={<Mypage />} />
               <Route exact path="/mbtwhywrite" element={<MbtwhyWrite />} />
               <Route exact path="/mbtwhymodify" element={<MbtwhyModify />} />
               <Route exact path="/mbattle" element={<MBattle />} />
               <Route exact path="/mbattlewrite" element={<MBattleWrite />} />
               <Route exact path="/mbattledetail" element={<MBattleDetail />} />
+              <Route exact path="/adminreport" element={<AdminFrame />} />
+              <Route exact path="/adminreportdetail" element={<AdminFrame />} />
+              <Route exact path="/adminban" element={<AdminFrame />} />
+              <Route exact path="/adminbandetail" element={<AdminFrame />} />
+              <Route
+                exact
+                path="/reportwrite/:reportedId"
+                element={<ReportWrite setIsPopup={setIsPopup} />}
+              />
             </Routes>
             {!isPopup && <Footer />}
           </BrowserRouter>
         </PersistGate>
       </Provider>
+
     </div>
   );
 }

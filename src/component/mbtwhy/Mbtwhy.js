@@ -215,7 +215,7 @@ function Mbtwhy() {
                     <h6>글 작성</h6>
                     <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
                         <DropdownToggle style={sortStyle}>
-                            <img className={style.sortImg} src="/sortIcon.png"></img>
+                            <img className={style.sortImg} src="/sortIcon.png" alt=""></img>
                             {selectedOption}
                         </DropdownToggle>
                         <DropdownMenu>
@@ -246,15 +246,15 @@ function Mbtwhy() {
                             </div>
                             <div className={style.boardLow}>
                                 <div>
-                                    <img src="/commentIcon.png"></img>
+                                    <img src="/commentIcon.png" alt=""></img>
                                     {hotBoard.commentCount}
                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <div>
-                                    <img src="/thumbIcon.png"></img>
+                                    <img src="/thumbIcon.png" alt=""></img>
                                     {hotBoard.likeCount}
                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <div>
-                                    <img src="/view-icon.png"></img>
+                                    <img src="/viewIcon.png" alt=""></img>
                                     {hotBoard.viewCount}
                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </div>
@@ -281,15 +281,15 @@ function Mbtwhy() {
                                     </div>
                                     <div className={style.boardLow}>
                                         <div>
-                                            <img src="/commentIcon.png"></img>
+                                            <img src="/commentIcon.png" alt=""></img>
                                             {board.commentCount}
                                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <div>
-                                            <img src="/thumbIcon.png"></img>
+                                            <img src="/thumbIcon.png" alt=""></img>
                                             {board.likeCount}
                                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <div>
-                                            <img src="/view-icon.png"></img>
+                                            <img src="/viewIcon.png" alt=""></img>
                                             {board.viewCount}
                                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     </div>

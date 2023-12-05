@@ -36,13 +36,13 @@
     font-weight: bold;
 }
 
-.boardWriter {
+.writerDiv {
     display: flex;
     margin-bottom: 10px;
     justify-content: space-between;
 }
 
-.boardWriter > div {
+.writerDiv > div {
     display: flex;
 }
 
@@ -52,9 +52,10 @@
     border-radius: 50%;
 }
 
-.boardDate {
-    margin-bottom: 30px;
+.commentLowDiv {
+    display: flex;
     color: #C5C5C5;
+    justify-content: space-between;
 }
 
 .viewIcon {
@@ -104,8 +105,8 @@
 }
 
 .sectionComment {
-    padding: 15px 25px 15px 25px;
-    border-bottom: solid #C5C5C5 2px;
+    padding: 25px;
+    border-bottom: solid #C5C5C5 1px;
 }
 
 .sectionComment > div{
@@ -143,9 +144,20 @@
     text-align: right;
 }
 
-.replySection {
+.sectionPostReply {
     display: flex;
     justify-content: space-between;
+}
+
+.sectionReply {
+    display: flex;
+    justify-content: space-between;
+    padding: 25px;
+    border-bottom: solid #C5C5C5 2px;
+}
+
+.sectionReply > div {
+    font-weight: bold;
 }
 
 .replyArrowImg {
