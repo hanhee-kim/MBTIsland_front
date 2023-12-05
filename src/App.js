@@ -33,8 +33,6 @@ import DefaultMypage from "./component/user/DefaultMypage";
 // 인수
 import MbtwhyMain from './component/mbtwhy/MbtwhyMain';
 import Mbtwhy from './component/mbtwhy/Mbtwhy';
-import MbtwhyMain from "./component/mbtwhy/MbtwhyMain";
-import Mbtwhy from "./component/mbtwhy/Mbtwhy";
 import MbtwhyDetail from "./component/mbtwhy/MbtwhyDetail";
 import MbtwhyWrite from "./component/mbtwhy/MbtwhyWrite";
 import MbtwhyModify from "./component/mbtwhy/MbtwhyModify";
@@ -111,7 +109,7 @@ function App() {
               <Route exact path="/adminbandetail" element={<AdminFrame />} />
               <Route
                 exact
-                path="/reportwrite"
+                path="/reportwrite/:reportedId"
                 element={<ReportWrite setIsPopup={setIsPopup} />}
               />
             </Routes>
