@@ -10,7 +10,8 @@ import style from "../../css/mbattle/MBattleForm.module.css";
 
 function MBattleWrite() {
     const [board, setBoard] = useState({title:'',subject1:'',subject2:'',file1:'',file2:''});
-    const imgBoxRef = useRef();
+    const imgBoxRef1 = useRef();
+    const imgBoxRef2 = useRef();
     const navigate = useNavigate();
 
     const change = (e) => {
@@ -33,8 +34,19 @@ function MBattleWrite() {
     
         // 기존 img 태그 영역의 이미지를 변경하는 코드
         // 파라미터 e에서 file 경로를 가져옴
-        // const imageSrc = URL.createObjectURL(e.target.files[0]);            // img 태그에서 가리키는 imgBoxRef에 file 경로 설정
-        // imgBoxRef.current.src = imageSrc;
+        if(e.target.files!==null) {
+            const imageSrc = URL.createObjectURL(e.target.files[0]); // img 태그에서 가리키는 imgBoxRef에 file 경로 설정
+            if(name==="file1") {
+                imgBoxRef1.current.src = imageSrc;
+                imgBoxRef1.current.width = 290;
+                imgBoxRef1.current.height = 290;
+            } else if(name==="file2") {
+                imgBoxRef2.current.src = imageSrc;
+                imgBoxRef2.current.width = 300;
+                imgBoxRef2.current.height = 300;
+            }
+        }
+
     }
     const submit = (e) => {
         e.preventDefault();
@@ -110,7 +122,7 @@ function MBattleWrite() {
                     <div className={style.sectionSubject}>
                         <div>
                             <div className={style.inputFileDiv} onClick={()=>document.getElementById("file1").click()} >
-                                <img src="/attachIcon.png" alt=""  ref={imgBoxRef}/>
+                                <img src="/attachIcon.png" alt="" ref={imgBoxRef1} width="200px" height="200px"/>
                                     <Input type="file" id="file1" name="file1" accept="image/*" onChange={fileChange} hidden/>
                             </div>
                             항목1
@@ -129,7 +141,7 @@ function MBattleWrite() {
                         </div>
                         <div>
                             <div className={style.inputFileDiv} onClick={()=>document.getElementById("file2").click()}>
-                                <img src="/attachIcon.png" alt=""  ref={imgBoxRef}/>
+                                <img src="/attachIcon.png" alt="" ref={imgBoxRef2} width="200px" height="200px"/>
                                     <Input type="file" id="file2" name="file2" accept="image/*" onChange={fileChange} hidden/>
                             </div>
                             항목1

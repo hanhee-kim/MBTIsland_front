@@ -11,6 +11,17 @@ import {
     Button,
     Input
 } from "reactstrap";
+import {
+    BarChart,
+    Bar,
+    Rectangle,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    ResponsiveContainer
+} from 'recharts';
 import axios from 'axios';
 
 import style from "../../css/mbattle/MBattleDetail.module.css";
@@ -19,12 +30,15 @@ function MBattleDetail() {
     const [board, setBoard] = useState(
         {
             num:1,
-            title:"똥맛 카레 vs 카레맛 똥",
             mbti:"INTP",
             color:"#9BB7D4",
             writer:"마춤뻡파괴왕",
             date:"1일전",
-            content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
+            title:"똥맛 카레 vs 카레맛 똥",
+            subject1:"똥맛 카레",
+            subject2:"카레맛 똥",
+            file1:"",
+            file2:"",
             commentCount:2,
             likeCount:1,
             viewCount:23
@@ -38,7 +52,7 @@ function MBattleDetail() {
             color:"#4D6879",
             writer:"마춤뻡파괴왕",
             date:"1일전",
-            content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
+            content:"머요",
         },
         {
             num:2,
@@ -73,6 +87,51 @@ function MBattleDetail() {
             content:"옥지얌"
         }
     ]);
+
+    const data = [
+        {
+            name: 'Page A',
+            uv: 4000,
+            pv: 2400,
+            amt: 2400,
+        },
+        {
+            name: 'Page B',
+            uv: 3000,
+            pv: 1398,
+            amt: 2210,
+        },
+        {
+            name: 'Page C',
+            uv: 2000,
+            pv: 9800,
+            amt: 2290,
+        },
+        {
+            name: 'Page D',
+            uv: 2780,
+            pv: 3908,
+            amt: 2000,
+        },
+        {
+            name: 'Page E',
+            uv: 1890,
+            pv: 4800,
+            amt: 2181,
+        },
+        {
+            name: 'Page F',
+            uv: 2390,
+            pv: 3800,
+            amt: 2500,
+        },
+        {
+            name: 'Page G',
+            uv: 3490,
+            pv: 4300,
+            amt: 2100,
+        },
+    ];
     
     // 페이징 상태 값
     const [pageBtn, setPageBtn] = useState([]);
@@ -140,9 +199,17 @@ function MBattleDetail() {
     }
 
     const buttonStyle = {
-        background:"white",
+        background:"none",
         color:"black",
-        border:"1px solid lightgray",
+        border:"1px solid #C5C5C5"
+    }
+
+    const replyButtonStyle = {
+        background:"none",
+        color:"#C5C5C5",
+        fontWeight:"bold",
+        border:"none",
+        padding:"0px"
     }
 
     const inputComment = {
@@ -150,10 +217,11 @@ function MBattleDetail() {
         resize:"none"
     }
 
-    const inputReply = {
-        height:"100px",
-        width:"750px",
-        resize:"none"
+    const boardVoteButton = {
+        fontWeight:"bold",
+        fontSize:"small",
+        backgroundColor:"#1FAB70",
+        lineHeight:"10px"
     }
 
     return (
@@ -172,39 +240,126 @@ function MBattleDetail() {
                         <Link to={"/detailform/only-detail/" + board.num}></Link>
                         <div className={style.boardTitle}>
                             <h1>{board.title}</h1>
-                            <img src="/randomIcon.png" alt="" onClick={random}/>
-                            {/* <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                <DropdownToggle style={dropDownStyle}>
-                                <img className={style.dropDownImg} src="/popover-icon.png"></img>
+                            <div> 
+                                <img src="/randomIcon.png" height="30px" alt="" onClick={random} />
+                                <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
+                                    <DropdownToggle style={dropDownStyle}>
+                                        <img className={style.dropDownImg} src="/popover-icon.png" alt=""></img>
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                <DropdownItem>수정</DropdownItem>
-                                    <DropdownItem>삭제</DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown> */}
-                            <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
+                                        <DropdownItem>신고</DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            </div>
+                            {/* <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
                                 <DropdownToggle style={dropDownStyle}>
                                     <img className={style.dropDownImg} src="/popover-icon.png"></img>
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem>신고</DropdownItem>
+                                    <DropdownItem>삭제</DropdownItem>
                                 </DropdownMenu>
-                            </ButtonDropdown>
+                            </ButtonDropdown> */}
+                            
                         </div>
-                        <div className={style.boardDate}>
+                        <div className={style.writerDiv}>
+                            <div className={style.circleDiv} style={{backgroundColor:`${board.color}`}}> </div>&nbsp;&nbsp;&nbsp;
+                            {board.mbti}&nbsp;&nbsp;&nbsp;
+                            {board.writer}
+                        </div>
+                        <div style={{color:"#C5C5C5"}}>
                             {board.date}
-                            <img className={style.viewIcon}src="/view-icon.png"></img>
+                            <img className={style.viewIcon} src="/viewIcon-bold.png" alt=""></img>
                             {board.viewCount}
                         </div>
-                        <div className={style.boardContent}>
-                            {board.content}
+
+                        {/* 투표 영역 */}
+                        <div className={style.sectionVote}>
+                            <div>
+                                <div className={style.subject}>
+                                    <img src="/vsIcon.png" alt=""/>
+                                    <h4>ㅋㅋㅋㅋㅋㅋㅋㅋzzzzzㅋㅋㅋㅋㅋㅋ</h4>
+                                </div>
+                                <div className={style.voteButtonDiv}>
+                                    <Button style={boardVoteButton}>투표하기</Button>
+                                </div>
+                            </div>
+                            <div style={{margin:"30px"}}>
+                                <img src="/vsIcon.png" alt=""/>
+                            </div>
+                            <div>
+                                <div className={style.subject}>
+                                    <img src="/vsIcon.png" alt=""/>
+                                </div>
+                                <div className={style.voteButtonDiv}>
+                                    <Button style={boardVoteButton}>투표하기</Button>
+                                </div>
+                            </div>
                         </div>
+
+                        {/* 통계 영역 */}
+                        <div style={{width:"600px", height:"400px"}}>
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart
+                                    data={data}
+                                    margin={{
+                                        top: 5,
+                                        right: 30,
+                                        left: 20,
+                                        bottom: 5
+                                    }}
+                                >
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="name" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="uv" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+                                <Bar dataKey="pv" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div style={{width:"600px", height:"400px"}}>
+                            <ResponsiveContainer>
+                                <BarChart data={data} layout="vertical">
+                                    <YAxis type="name"/>
+                                    <XAxis type="number" orientation="top" stroke="#285A64"/>
+                                    <Bar dataKey="uv" fill="#8884d8" background={{ fill: '#eee' }} barSize={{height:"10px"}}/>
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div style={{width:"600px", height:"400px"}}>
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart width={150} height={40} data={data} layout="vertical">
+                                    <YAxis/>
+                                    <Bar dataKey="uv" fill="#8884d8" background={{ fill: '#eee' }}/>
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+
+                        <div>
+                        <BarChart
+                            width={430}
+                            height={170}
+                            data={data}
+                            layout="vertical">
+                            <XAxis type="number" orientation="top"/>
+                            <YAxis type="category" dataKey="currency" axisLine={false} dx={-5} tickLine={false} 
+                                style={{ fill: "#285A64" }} />
+                            <Bar background dataKey="uv" fill="#285A64" barSize={{ height: 300 }}>
+                                
+                            </Bar>
+                        </BarChart>
+                        </div>
+
+
+
                         <div className={style.boardLow}>
                             <div className={style.bookmarkDiv}>
-                                <img src="/bookmark.png"></img>&nbsp;
+                                <img src="/bookmark.png" alt=""></img>&nbsp;
+                                
                             </div>
                             <div className={style.thumbDiv}>
-                                <img src="/thumbIcon.png"></img>&nbsp;
+                                <img src="/thumbIcon.png" alt=""></img>&nbsp;
                                 추천&nbsp;
                                 {board.likeCount}
                             </div>
@@ -228,37 +383,21 @@ function MBattleDetail() {
                     {comments.length !== 0 && comments.map(comment => {
                         return (
                             <div key={comment.num} className={style.sectionComment}>
-                                <Link to={"/detailform/only-detail/" + comment.num}></Link>
-                                <div className={style.boardWriter}>
+                                <div className={style.writerDiv}>
                                     <div>
                                         <div className={style.circleDiv} style={{backgroundColor:`${comment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
                                         {comment.mbti}&nbsp;&nbsp;&nbsp;
                                         {comment.writer}
                                     </div>
-                                    
-                                    {/* <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                        <DropdownToggle style={dropDownStyle}>
-                                            <img className={style.dropDownImg} src="/popover-icon.png"></img>
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            <DropdownItem>삭제</DropdownItem>
-                                        </DropdownMenu>
-                                    </ButtonDropdown> */}
-                                    <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                        <DropdownToggle style={dropDownStyle}>
-                                            <img className={style.dropDownImg} src="/popover-icon.png"></img>
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                                <DropdownItem>답글</DropdownItem>
-                                                <DropdownItem>신고</DropdownItem>
-                                        </DropdownMenu>
-                                    </ButtonDropdown>
                                 </div>
                                 <div className={style.boardContent}>
                                     {comment.content}
                                 </div>
-                                <div className={style.boardDate}>
-                                    {comment.date}
+                                <div className={style.commentLowDiv}>
+                                    <div>
+                                        {comment.date}
+                                    </div>
+                                    <Button style={replyButtonStyle}>신고</Button>
                                 </div>
                             </div>
                         )
@@ -318,28 +457,6 @@ function MBattleDetail() {
                             value={comment.content}
                             placeholder="댓글을 입력해주세요."
                         />
-                        <div className={style.postCommentDiv}>
-                            <Button style={buttonStyle}>등록</Button>
-                        </div>
-                    </div>
-
-                    {/* 답글 달기 */}
-                    <div>
-                        <div className={style.replySection}>
-                            <img className={style.replyArrowImg} src="/replyArrow.png"></img>
-                            <Input
-                                style={inputReply}
-                                type="textarea"
-                                id="content"
-                                name="content"
-                                onChange={change}
-                                cols="40"
-                                rows="15"
-                                required="required"
-                                value={comment.content}
-                                placeholder="답글을 입력해주세요."
-                            />
-                        </div>
                         <div className={style.postCommentDiv}>
                             <Button style={buttonStyle}>등록</Button>
                         </div>
