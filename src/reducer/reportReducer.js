@@ -26,5 +26,7 @@ export const reportReducer = (currentState, action) => {
 
     const newState = {...currentState};
 
+    switch(action)
+
     return newState;
 };
