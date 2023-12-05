@@ -9,7 +9,7 @@ const initState = {
     userNickname: "부리부리눈알뜨기",
     userMbti: "ESFJ",
     userMbtiColor: "#35598f",
-    userMbtiChangeDate: "2023-08-29T00:00:00",
+    userMbtiChangeDate: "2023-10-29T00:00:00",
     userEmail: "123@123.com",
     userRole: "",
     userWarningCnt: 1,
@@ -18,7 +18,7 @@ const initState = {
     isBanned: false,
     joinDate: "2023-11-29T00:00:00",
     leaveDate: "",
-    provider: "",
+    provider: "nomal",
     providerId: "kakaoId",
     visitCnt: 2, //방문횟수
   },

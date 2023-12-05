@@ -37,6 +37,7 @@ import MbtwhyModify from "./component/mbtwhy/MbtwhyModify";
 import MBattle from "./component/mbattle/MBattle";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import MBattleDetail from "./component/mbattle/MBattleDetail";
+import NoteDetail from "./component/user/NoteDetail";
 
 
 
@@ -69,12 +70,17 @@ function App() {
               </Route>
               <Route
                 exact
-                path="/qnaWrite"
+                path="/qnawrite"
                 element={<QnAWrite setIsPopup={setIsPopup} />}
               />
               <Route
                 exact
-                path="/noteWrite"
+                path="/notedetail/:noteNo"
+                element={<NoteDetail setIsPopup={setIsPopup} />}
+              />
+              <Route
+                exact
+                path="/notewrite/:receiveName/:receiveNick"
                 element={<NoteWrite setIsPopup={setIsPopup} />}
               />
               {/* 하영 */}

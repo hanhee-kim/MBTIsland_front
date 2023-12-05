@@ -130,7 +130,8 @@
 .myMbtwhyContainer,
 .myMbtmiContainer,
 .myQnaContainer ,
-.bookmarkContainer
+.bookmarkContainer,
+.myNoteContainer
 {
   font-family: "GangwonEdu_OTFBoldA";
   display: flex;
@@ -142,7 +143,8 @@
 .myMbtwhyTitle,
 .myMbtmiTitle,
 .myQnaTitle ,
-.bookmarkTitle
+.bookmarkTitle,
+.myNoteTitle
 {
   display: flex;
   /* justify-content: center; */
