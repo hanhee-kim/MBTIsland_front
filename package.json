@@ -21,7 +21,8 @@
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "sweetalert2": "^11.7.32",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "proxy":"http://localhost:8090"
   },
   "scripts": {
     "start": "react-scripts start",
