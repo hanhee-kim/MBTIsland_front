@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useReducer } from "react";
+import { reportReducer, initState } from "../../reducer/reportReducer";
 import { useSelector } from "react-redux";
+
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Button } from 'reactstrap';
 import { FormGroup } from 'reactstrap';
@@ -9,23 +12,18 @@ import { Form } from 'reactstrap';
 import Swal from "sweetalert2";
 
 const ReportWrite = (props) => {
-  const user = useSelector((state) => state.persistedReducer.user.user);
-  const {receiveName,receiveNick} = useParams();
-  const formatReceiveName = receiveName.startsWith(':') ? receiveName.substring(1) : receiveName;
-  const formatReceiveNick = receiveNick.startsWith(':') ? receiveNick.substring(1) : receiveNick;
+  const {reportedId, reportedTable} = useParams();
+  const formatReportedId = reportedId.startsWith(':') ? reportedId.substring(1) : reportedId;
+  const formatReportedITable = reportedTable.startsWith(':') ? reportedTable.substring(1) : reportedTable;
 
-  const [note,setNote] = useState({
-    sentUsername:user.username,
-    sentUserNick:user.userNickname,
-    noteContent: '',
-    receiveUsername:formatReceiveName,
-    receiveUserNick:formatReceiveNick,
-    sentDate:new Date(),
-    noteIsRead:'N'
-})
+  const [report,setReport] = useState({
+    reportedId:formatReportedId,
+    reportedTable:formatReportedITable,
+    reportType:""
+  });
+  
   useEffect(() => {
     props.setIsPopup(true);
-    
   }, []);
 
   const close = (e) => {
@@ -35,14 +33,15 @@ const ReportWrite = (props) => {
   
   const send = (e) => {
     e.preventDefault();
-    //note 보내기
+    
+    // report send
     Swal.fire({
-      title: "쪽지를 성공적으로 보냈습니다.",
+      title: "신고 완료",
       icon: "success",
     }).then(function () {
       window.close();
     });
-  }
+  };
 
   return (
   <div>
@@ -57,24 +56,30 @@ const ReportWrite = (props) => {
           }}
         >
           <FormGroup row style={{ justifyContent: "center" }}>
-            <h3 style={{ fontSize: "40px" }}>쪽지 보내기</h3>
+            <h3 style={{ fontSize: "40px" }}>신고</h3>
           </FormGroup>
-          <FormGroup style={{ justifyContent: "center" }}>
+          <FormGroup style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
             <Label for="sentUserNick" sm={3}>
-              받는 이
+              작성자
             </Label>
-            <Input type="text" name="sentUserNick" defaultValue={note.receiveUserNick} readOnly ></Input>
+            <Input type="text" name="reportedId" value={report.reportedId} readOnly style={{ width: "150px"}}></Input>
           </FormGroup>
-          <FormGroup>
-            <Label for="noteContent" sm={3}>
-              내용
+          <FormGroup style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
+            <Label for="reportType" sm={3}>
+              신고 사유
             </Label>
             <Input
-              type="textarea"
-              name="noteContent"
-              onChange={(e)=>setNote({...note,noteContent:e.target.value})}
-              style={{ minHeight: "250px", resize: "none" }}
-            ></Input>
+              sm={5}
+              type="select"
+              name="reportType"
+              onChange={(e)=>setReport({...report,reportType:e.target.value})}
+              style={{ width: "150px"}}
+            >
+              <option>광고</option>
+              <option>도배</option>
+              <option>욕설</option>
+            </Input>
+
           </FormGroup>
           <FormGroup
             style={{
@@ -88,13 +93,13 @@ const ReportWrite = (props) => {
               취소
             </Button>
             <Button color="dark" onClick={send}>
-              보내기
+              신고
             </Button>
           </FormGroup>
         </Form>
       </div>
   </div>
   );
-};
+}
 
 export default ReportWrite;

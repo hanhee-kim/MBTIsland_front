@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from 'react-router-dom';
+import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
 import {
     Pagination,
     PaginationItem,
@@ -13,7 +14,6 @@ import {
 } from "reactstrap";
 import axios from 'axios';
 
-import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
 
 function MbtwhyDetail() {
     const [board, setBoard] = useState(
@@ -21,6 +21,7 @@ function MbtwhyDetail() {
             num:1,
             mbti:"INTP",
             color:"#9BB7D4",
+            writerId:"user01",
             writer:"마춤뻡파괴왕",
             date:"1일전",
             content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
@@ -35,6 +36,7 @@ function MbtwhyDetail() {
             num:1,
             mbti:"ISTP",
             color:"#4D6879",
+            writerId:"user01",
             writer:"마춤뻡파괴왕",
             date:"1일전",
             content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
@@ -43,6 +45,7 @@ function MbtwhyDetail() {
             num:2,
             mbti:"ISTP",
             color:"#4D6879",
+            writerId:"user02",
             writer:"난앓아요",
             date:"1일전",
             content:"방귀뿡뿡"
@@ -51,6 +54,7 @@ function MbtwhyDetail() {
             num:3,
             mbti:"ISTP",
             color:"#4D6879",
+            writerId:"user03",
             writer:"면발이억수로부드럽네",
             date:"1일전",
             content:"쌀국수 뚝배기!면발이 억수로 부드럽네 한 뚝배기 하실래예?"
@@ -59,6 +63,7 @@ function MbtwhyDetail() {
             num:4,
             mbti:"ISTP",
             color:"#4D6879",
+            writerId:"user04",
             writer:"억장이문어찜",
             date:"1일전",
             content:"내공냠냠"
@@ -67,13 +72,14 @@ function MbtwhyDetail() {
             num:5,
             mbti:"ISTP",
             color:"#4D6879",
+            writerId:"user05",
             writer:"빵빵이",
             date:"1일전",
             content:"옥지얌"
         }
     ]);
 
-    const [replyComment, setReplryComment] = useState(
+    const [replyComment, setReplyComment] = useState(
         {
             num:1,
             mbti:"ISTP",
@@ -133,12 +139,12 @@ function MbtwhyDetail() {
         setOpen(!open);
     };
 
-    const openReportWrite = () => {
-        const url = "/reportwrite";
+    const openReportWrite = (e, report) => {
+        const url = "/reportwrite/:" + report.writerId + '/:' + e.target.name;
         window.open(
           url,
           "_blank",
-          "width=650,height=700,location=no,status=no,scrollbars=yes"
+          "width=650,height=450,location=no,status=no,scrollbars=yes"
         );
         // , "noopener, noreferrer"
       };
@@ -214,7 +220,7 @@ function MbtwhyDetail() {
                                     <img className={style.dropDownImg} src="/popover-icon.png" alt=""></img>
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem onClick={openReportWrite}>신고</DropdownItem>
+                                    <DropdownItem name="mbtwhydetail" onClick={(e)=>{openReportWrite(e, board)}}>신고</DropdownItem>
                                 </DropdownMenu>
                             </ButtonDropdown>
                         </div>
@@ -270,7 +276,7 @@ function MbtwhyDetail() {
                                         {comment.date}&nbsp;&nbsp;&nbsp;
                                         <Button style={replyButtonStyle}>답글</Button>
                                     </div>
-                                    <Button style={replyButtonStyle}>신고</Button>
+                                    <Button style={replyButtonStyle} name="mbtwhycomment" onClick={(e)=>{openReportWrite(e, comment)}}>신고</Button>
                                 </div>
                             </div>
                         )
@@ -294,7 +300,7 @@ function MbtwhyDetail() {
                                 <div>
                                     {replyComment.date}
                                 </div>
-                                <Button style={replyButtonStyle}>신고</Button>
+                                <Button style={replyButtonStyle} name="mbtwhycomment" onClick={(e)=>{openReportWrite(e, replyComment)}}>신고</Button>
                             </div>
                         </div>
                     </div>
