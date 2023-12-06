@@ -74,15 +74,16 @@ const Login = () => {
   };
   const login = (e) => {
     e.preventDefault();
-    // axios.post("http://localhost:8090/login", user)
-    //         .then(res=> {
-    //             console.log(res.headers.authorization);
-    //             dispatch({type:"token", payload:res.headers.authorization});
-    //             navigate("/user");
-    //         })
-    //         .catch(err=> {
-    //             console.log(err);
-    //         })
+    // axios
+    //   .post("http://localhost:8090/login", user)
+    //   .then((res) => {
+    //     console.log(res.headers.authorization);
+    //     dispatch({ type: "token", payload: res.headers.authorization });
+    //     navigate("/user");
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
   const openFind = (e, type) => {
     e.preventDefault();
@@ -98,10 +99,14 @@ const Login = () => {
   const goNaverLogin = () => {};
 
   return (
-    <div style={{display: 'flex',
-    alignItems: 'center',
-    minHeight: '800px',
-    marginTop: '60px'}}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        minHeight: "800px",
+        marginTop: "60px",
+      }}
+    >
       <Form style={loginFormStyle}>
         <FormGroup row style={{ justifyContent: "center" }}>
           <h3 style={{ fontSize: "40px" }}>LOGIN</h3>
