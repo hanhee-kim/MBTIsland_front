@@ -1,5 +1,7 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
+import Swal from "sweetalert2";
 
 const Join = () => {
   //---css
@@ -50,46 +52,133 @@ const Join = () => {
     userMbti: "",
     userEmail: "",
   });
-
+  //비밀번호확인값
+  const [passwordCheckValue,setPasswordCheckValue] = useState('');
+  
   const [mbtiCheckEI, setMbtiCheckEI] = useState("E");
   const [mbtiCheckNS, setMbtiCheckNS] = useState("N");
   const [mbtiCheckTF, setMbtiCheckTF] = useState("T");
   const [mbtiCheckPJ, setMbtiCheckPJ] = useState("P");
+  //Id중복체크
+  const [isIdDuplicateCheck,setIsIdDuplicateCheck] = useState(false);
+  //비밀번호 일치하는지
+  const [isSamePassword,setIsSamePassword] = useState(false);
+  //이메일인증했는지 여부
+  const [isEmailCheck,setIsEmailCheck] = useState(false);
 
   //state---
-  //---function
+  //id의 유효성조건
+  const validateUsername = () => {
+    var idRegExp = /^[a-zA-Z0-9]{4,8}$/;
+    return idRegExp.test(user.username);
+  };
+  //Nick의 유효성조건
+  const validateUserNick = () => {
+    var nickRegExp = /^[a-zA-Z0-9가-힣]{2,8}$/;
+    return nickRegExp.test(user.userNickname);
+  };
+  //Input값이 변경될때
   const change = (e) => {
     setUser({
       ...user,
       [e.target.name]: [e.target.value],
     });
+    if(isSamePassword){
+      if(e.target.name === 'userPassword'){
+        setIsSamePassword(false);
+      }
+    }
+    if(e.target.name === 'userPassword'){
+      if(e.target.value == passwordCheckValue){
+        setIsSamePassword(true);
+      }
+    }
     console.log("input:" + e.target.value);
-    console.log("user" + user);
-    console.log("username:" + user.username + "  " + user.userPassword);
+    // console.log("user" + user);
+    // console.log("username:" + user.username + "  " + user.userPassword);
   };
+  //비밀번호 확인란 입력할 때
+  const passwordCheck = (e) => {
+    setPasswordCheckValue(e.target.value);
+    const checkPassword = e.target.value; //set사용해서 바로 값이 랜더링되지않을 수 있으므로 다른 변수에 담아 비교
+    if(user.userPassword == checkPassword){
+      setIsSamePassword(true);
+    }else{
+      setIsSamePassword(false);
+    }
+    
+  }
+  //가입버튼 눌렀을 때
   const submit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); //기본 제출 막기
+    const isIdValid = validateUsername(); //id 유효성 통과하는지
+    const isNickValid = validateUserNick(); //닉네임 유효성 통과하는지
+    //id중복체크했는지
+    if(!isIdDuplicateCheck){
+
+    }
+    //email 인증했는지
+    if(!isEmailCheck){
+
+    }
+    //비밀번호 길이 4자 이하인지
+    if(user.userPassword.length<4){
+      Swal.fire({
+
+      })
+    }
+    // console.log(isIdValid);
+    
+
+
     let sendUser = {
       ...user,
       muserMbti: mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ,
     };
-  };
 
+
+  };
+  //중복체크 버튼 눌렀을때
+  const duplicateCheck = (e) => {
+    e.preventDefault();
+    axios
+            .get(`http://localhost:8090/duplicate/${user.username}`)
+            .then((res) => {
+                console.log(res);
+                // Swal.fire(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+                // Swal.fire(err.response.data);
+            });
+  }
+  //email작성후 보내기버튼 눌렀을때(이때 이메일 중복여부도 확인해주어야함.)
+  const sendCode = (e) =>{
+    e.preventDefault();
+  }
+  //email 코드입력후 인증버튼 눌렀을때
+  const emailConform = (e) => {
+    e.preventDefault();
+  }
+  //E I 라벨 눌렀을때
   const mbtiEIClick = (e, ei) => {
     e.stopPropagation();
     setMbtiCheckEI(ei);
   };
-
+  
+  //N S 라벨 눌렀을때
   const mbtiNSClick = (e, ns) => {
     e.stopPropagation();
     setMbtiCheckNS(ns);
   };
-
+  
+  //T F 라벨 눌렀을때
   const mbtiTFClick = (e, tf) => {
     e.stopPropagation();
     setMbtiCheckTF(tf);
   };
-
+  
+  //P J 라벨 눌렀을때
   const mbtiPJClick = (e, pj) => {
     e.stopPropagation();
     setMbtiCheckPJ(pj);
@@ -114,6 +203,7 @@ const Join = () => {
               type="text"
               name="username"
               id="username"
+              maxLength={8}
               placeholder="ID를 입력하세요."
               onChange={change}
             />
@@ -122,6 +212,7 @@ const Join = () => {
             <Button
               color="white"
               style={{ border: "1px solid black", fontWeight: "600" }}
+              onClick={(e)=>duplicateCheck(e)}
             >
               중복확인
             </Button>
@@ -137,6 +228,8 @@ const Join = () => {
               name="userPassword"
               id="userPassword"
               placeholder="PASSWORD를 입력하세요."
+              minLength={4}
+              maxLength={12}
               onChange={change}
             />
           </Col>
@@ -151,9 +244,12 @@ const Join = () => {
               name="user_password_check"
               id="user_password_check"
               placeholder="PASSWORD를 한번더 입력하세요."
-              onChange={change}
+              minLength={4}
+              maxLength={12}
+              onChange={(e)=>passwordCheck(e)}
             />
           </Col>
+        {isSamePassword?<span style={{fontSize:'12px',color:'green',marginLeft:'450px'}}>비밀번호가 일치합니다</span>:<span style={{fontSize:'12px',color:'red',marginLeft:'420px'}}>비밀번호가 일치하지 않습니다.</span>}
         </FormGroup>
         <FormGroup row>
           <Label for="userNickname" sm={3}>
@@ -165,6 +261,7 @@ const Join = () => {
               name="userNickname"
               id="userNickname"
               placeholder="NICKNAME 입력하세요."
+              maxLength={8}
               onChange={change}
             />
           </Col>
@@ -276,6 +373,7 @@ const Join = () => {
             <Button
               color="white"
               style={{ border: "1px solid black", fontWeight: "600" }}
+              onClick={(e)=>sendCode(e)}
             >
               보내기
             </Button>
@@ -298,6 +396,7 @@ const Join = () => {
             <Button
               color="white"
               style={{ border: "1px solid black", fontWeight: "600" }}
+              onClick={(e)=>emailConform(e)}
             >
               인증
             </Button>
@@ -309,7 +408,7 @@ const Join = () => {
             style={{
               borderRadius: "10px",
               marginRight: "40px",
-              marginTop: "25px",
+              // marginTop: "25px",
               width: "100px",
               fontSize: "20px",
             }}
