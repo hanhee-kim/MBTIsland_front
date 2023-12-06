@@ -144,7 +144,7 @@ function MbtwhyDetail() {
         window.open(
           url,
           "_blank",
-          "width=650,height=700,location=no,status=no,scrollbars=yes"
+          "width=650,height=450,location=no,status=no,scrollbars=yes"
         );
         // , "noopener, noreferrer"
       };
@@ -220,7 +220,7 @@ function MbtwhyDetail() {
                                     <img className={style.dropDownImg} src="/popover-icon.png" alt=""></img>
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem name="mbtwhyComment" onClick={(e)=>{openReportWrite(e, board)}}>신고</DropdownItem>
+                                    <DropdownItem name="mbtwhydetail" onClick={(e)=>{openReportWrite(e, board)}}>신고</DropdownItem>
                                 </DropdownMenu>
                             </ButtonDropdown>
                         </div>
@@ -276,7 +276,7 @@ function MbtwhyDetail() {
                                         {comment.date}&nbsp;&nbsp;&nbsp;
                                         <Button style={replyButtonStyle}>답글</Button>
                                     </div>
-                                    <Button style={replyButtonStyle}>신고</Button>
+                                    <Button style={replyButtonStyle} name="mbtwhycomment" onClick={(e)=>{openReportWrite(e, comment)}}>신고</Button>
                                 </div>
                             </div>
                         )
@@ -300,7 +300,7 @@ function MbtwhyDetail() {
                                 <div>
                                     {replyComment.date}
                                 </div>
-                                <Button style={replyButtonStyle}>신고</Button>
+                                <Button style={replyButtonStyle} name="mbtwhycomment" onClick={(e)=>{openReportWrite(e, replyComment)}}>신고</Button>
                             </div>
                         </div>
                     </div>

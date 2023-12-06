@@ -109,7 +109,7 @@ function App() {
               <Route exact path="/adminbandetail" element={<AdminFrame />} />
               <Route
                 exact
-                path="/reportwrite/:reportedId/:reportedT"
+                path="/reportwrite/:reportedId/:reportedTable"
                 element={<ReportWrite setIsPopup={setIsPopup} />}
               />
             </Routes>
