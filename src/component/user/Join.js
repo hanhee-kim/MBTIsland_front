@@ -131,75 +131,7 @@ const Join = () => {
     }
     
   }
-  //가입버튼 눌렀을 때
-  const submit = (e) => {
-    e.preventDefault(); //기본 제출 막기
-    const isIdValid = validateUsername(); //id 유효성 통과하는지
-    const isNickValid = validateUserNick(); //닉네임 유효성 통과하는지
-  if(isIdValid){  //id유효성
-    if(isNickValid){  //닉네임 유효성
-      if(isIdDuplicateCheck){ //id 중복체크
-        if(!user.userPassword.length<4){ // 비밀번호 길이 4자 이하인지
-          if(isSamePassword){
-            if(isEmailCheck){
-              let sendUser = {
-                ...user,
-                muserMbti: mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ,
-              };
-              axios
-                .post('http://localhost:8090/join',sendUser)
-                .then((res)=>{
-                  console.log(res);
-                  window.location.href('/login');
-                })
-                .catch((err)=>{
-                  console.log(err);
-                })
-              
-            }else{
-              Swal.fire({
-                title:'이메일 인증을 해주세요.',
-                icon:'warning',
-              })
-            }
-          }else{
-            Swal.fire({
-              title:'비밀번호가 일치하지 않습니다.',
-              icon:'warning',
-            })
-          }
-        }else{
-          Swal.fire({
-            title:'비밀번호를 확인해주세요.',
-            text:'비밀번호는 4자이상작성해주세요.',
-            icon:'warning',
-          })
-        }
-      }else{
-        Swal.fire({
-          title:'ID가 중복됩니다.',
-          icon:'warning',
-        })
-      }
 
-    }else{
-      Swal.fire({
-        title:'닉네임을 확인해주세요.',
-        text:'닉네임은 특수문자 제외 이루어진 2~8자입니다.',
-        icon:'warning',
-      })
-    }
-  }else{
-    Swal.fire({
-      title:'ID를 확인해주세요.',
-      text:'ID는 영문 숫자로 이루어진 4~8자입니다.',
-      icon:'warning',
-    })
-  }
-    
-
-
-  };
   //중복체크 버튼 눌렀을때
   const duplicateCheck = (e) => {
     e.preventDefault();
@@ -261,6 +193,15 @@ const Join = () => {
     if(serverEmailCode === emailCode){
       console.log('code일치!');
       setIsEmailCheck(true);
+      Swal.fire({
+        title:'CODE가 일치합니다!',
+        icon:'success'
+      })
+    }else{
+      Swal.fire({
+        title:'CODE가 일치하지 않습니다.',
+        icon:'error'
+      })
     }
   }
   //E I 라벨 눌렀을때
@@ -286,6 +227,74 @@ const Join = () => {
     e.stopPropagation();
     setMbtiCheckPJ(pj);
   };
+    //가입버튼 눌렀을 때
+    const submit = (e) => {
+      e.preventDefault(); //기본 제출 막기
+      const isIdValid = validateUsername(); //id 유효성 통과하는지
+      const isNickValid = validateUserNick(); //닉네임 유효성 통과하는지
+
+    if(isIdValid){  //id유효성
+      if(isNickValid){  //닉네임 유효성
+        if(isIdDuplicateCheck){ //id 중복체크
+          if(!user.userPassword.length<4){ // 비밀번호 길이 4자 이하인지
+            if(isSamePassword){
+              if(isEmailCheck){
+                let sendUser = {
+                  ...user,
+                  muserMbti: mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ,
+                };
+                axios
+                  .post('http://localhost:8090/join',sendUser)
+                  .then((res)=>{
+                    console.log(res);
+                    // window.location.href('/login');
+                  })
+                  .catch((err)=>{
+                    console.log(err);
+                  })
+                
+              }else{
+                Swal.fire({
+                  title:'이메일 인증을 해주세요.',
+                  icon:'warning',
+                })
+              }
+            }else{
+              Swal.fire({
+                title:'비밀번호가 일치하지 않습니다.',
+                icon:'warning',
+              })
+            }
+          }else{
+            Swal.fire({
+              title:'비밀번호를 확인해주세요.',
+              text:'비밀번호는 4자이상작성해주세요.',
+              icon:'warning',
+            })
+          }
+        }else{
+          Swal.fire({
+            title:'ID가 중복됩니다.',
+            icon:'warning',
+          })
+        }
+  
+      }else{
+        Swal.fire({
+          title:'닉네임을 확인해주세요.',
+          text:'닉네임은 특수문자 제외 이루어진 2~8자입니다.',
+          icon:'warning',
+        })
+      }
+    }else{
+      Swal.fire({
+        title:'ID를 확인해주세요.',
+        text:'ID는 영문 숫자로 이루어진 4~8자입니다.',
+        icon:'warning',
+      })
+    }
+      
+    };
   //function---
   return (
     
