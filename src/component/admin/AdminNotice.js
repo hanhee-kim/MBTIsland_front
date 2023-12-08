@@ -11,7 +11,7 @@ const AdminNotice = () => {
     // const { page } = useParams(); // URL에서 현재페이지 파라미터 추출
     const [page, setPage] = useState(1);
     const [noticeList, setNoticeList] = useState([]); // 페이지당 게시글목록 
-    const [noticeCnts, setNoticeCnts] = useState({}); // 표시할 게시글수들
+    const [noticeCnts, setNoticeCnts] = useState({'totalCnt':0, 'displayCnt':0, 'hiddenCnt':0}); // 표시할 게시글수들
     const [pageInfo, setPageInfo] = useState({}); // 페이지 정보(전체페이지, 현재페이지, 시작페이지번호, 끝페이지번호)
     const [tmpSearch, setTmpSearch] = useState(null); // 임시 검색어
     const [search, setSearch] = useState(null); // 검색어
@@ -29,15 +29,12 @@ const AdminNotice = () => {
 
     useEffect(() => {
         getNoticeList(search, hidden, page);
-    }, [search, hidden, page]);
+    }, []); // 의존성배열을 비우면 useEffect는 컴포넌트가 처음 렌더링될때에만 실행되고 state를 넣으면 state값이 업데이트될때마다 실행됨
 
     const getNoticeList = (search, hidden, page) => {
     // const getNoticeList = async (search, hidden, page) => {
 
         let defaultUrl = 'http://localhost:8090/noticelist';
-        // if (search !== null) defaultUrl += `/${search}`;
-        // if (hidden !== null) defaultUrl += `/${hidden}`;
-        // if (page !== null) defaultUrl += `/${page}`;
 
         if (search !== null) defaultUrl += `?search=${search}`;
         if (hidden !== null) defaultUrl += `${search !== null ? '&' : '?'}hidden=${hidden}`;
@@ -59,21 +56,27 @@ const AdminNotice = () => {
                 if(err.response && err.response.data) {
                     console.log('err.response.data: ' + err.response.data);
                     setErrorMsg(err.response.data);
+                    setNoticeCnts({'totalCnt':0, 'displayCnt':0, 'hiddenCnt':0});
                 }
             })
+
         // try {
         //     const res = await axios.get(defaultUrl);
         //     console.log(res);
     
         //     let pageInfo = res.data.pageInfo;
-        //     let list = res.data.noticelist;
+        //     let list = res.data.noticeList;
         //     let noticeCnts = res.data.noticeCnts;
-    
         //     setNoticeList([...list]);
         //     setPageInfo({...pageInfo});
         //     setNoticeCnts({...noticeCnts});
+        //     setErrorMsg(null); // errorMsg를 null로 비워줘야 에러 발생 이후 새로운 요청이 성공했을때에 예외처리(errorMsg에 값이 있을때 랜더링되도록하는)if문에 걸리지 않는다
         // } catch (err) {
         //     console.log(err);
+        //     if(err.response && err.response.data) {
+        //         console.log('err.response.data: ' + err.response.data);
+        //         setErrorMsg(err.response.data);
+        //     }
         // }
     }
 
@@ -91,11 +94,11 @@ const AdminNotice = () => {
         setTmpSearch(searchTerm);
     };
     const handleSearch = () => {
-        console.log('검색수행');
+        console.log('검색 수행');
         setSearch(tmpSearch);
         setHidden(null);
         setActiveFilter(null);
-        getNoticeList(search, hidden, 1); // 검색수행시 페이지와 필터 리셋해야함
+        getNoticeList(tmpSearch, hidden, 1); // 검색수행시 페이지와 필터 리셋해야함
     };
 
     // axios 요청 전 state업데이트 보장하도록 getNoticeList를 동기요청함수로 변경해둠
@@ -103,7 +106,8 @@ const AdminNotice = () => {
     //     console.log('검색 수행');
     //     setSearch(tmpSearch);
     //     setHidden(null);
-    //     await getNoticeList(tmpSearch, null, 1);
+    //     setActiveFilter(null);
+    //     await getNoticeList(tmpSearch, hidden, 1); // 검색수행시 페이지와 필터 리셋해야함
     // };
 
     return (
