@@ -8,10 +8,12 @@ import axios from "axios";
 
 const AdminNotice = () => {
 
-    const { page } = useParams(); // URL에서 현재페이지 파라미터 추출
+    // const { page } = useParams(); // URL에서 현재페이지 파라미터 추출
+    const [page, setPage] = useState(1);
     const [noticeList, setNoticeList] = useState([]); // 페이지당 게시글목록 
     const [noticeCnts, setNoticeCnts] = useState({}); // 표시할 게시글수들
     const [pageInfo, setPageInfo] = useState({}); // 페이지 정보(전체페이지, 현재페이지, 시작페이지번호, 끝페이지번호)
+    const [tmpSearch, setTmpSearch] = useState(null); // 임시 검색어
     const [search, setSearch] = useState(null); // 검색어
     const [hidden, setHidden] = useState(null); // 필터
     const [activeFilter, setActiveFilter] = useState(null); // 현재 적용된 필터
@@ -25,14 +27,19 @@ const AdminNotice = () => {
     };
 
     useEffect(() => {
-        getNoticeList(page, search, hidden);
-    }, [page, search, hidden]);
+        getNoticeList(search, hidden, page);
+    }, [search, hidden, page]);
 
-    const getNoticeList = (page, search, hidden) => {
+    const getNoticeList = (search, hidden, page) => {
 
         let defaultUrl = 'http://localhost:8090/noticelist';
-        if (search !== null) defaultUrl += `/${search}`;
-        if (hidden !== null) defaultUrl += `/${hidden}`;
+        // if (search !== null) defaultUrl += `/${search}`;
+        // if (hidden !== null) defaultUrl += `/${hidden}`;
+        // if (page !== null) defaultUrl += `/${page}`;
+
+        if (search !== null) defaultUrl += `?search=${search}`;
+        if (hidden !== null) defaultUrl += `${search !== null ? '&' : '?'}hidden=${hidden}`;
+        if (hidden !== null) defaultUrl += `${page !== null ? '&' : '?'}page=${page}`;
 
         axios.get(defaultUrl)
             .then(res=> {
@@ -50,17 +57,22 @@ const AdminNotice = () => {
     }
 
     const handlePageChange = (pageNum) => {
-        navigate(`/noticelist/${pageNum}`);
-        getNoticeList(pageNum, search, false);
+        setPage(pageNum);
+        navigate(`/noticelist/${page}`);
+        getNoticeList(search, hidden, page);
     };
-
-    const handleSearch = () => {
-        getNoticeList(1, search, false); // 검색수행시 페이지와 필터 리셋해야함
-    };
-
     const handleFilterChange = (hidden) => {
-        getNoticeList(1, search, hidden); // 필터변경시 페이지 리셋, 검색어는 유지해야함
+        getNoticeList(search, hidden, 1); // 필터변경시 페이지 리셋, 검색어는 유지해야함
         setActiveFilter(hidden);
+    };
+    const handleSearchChange = (event) => {
+        const searchTerm = event.target.value;
+        setTmpSearch(searchTerm);
+    };
+    const handleSearch = () => {
+        console.log('검색버튼눌림');
+        setSearch(tmpSearch);
+        getNoticeList(search, hidden, 1); // 검색수행시 페이지와 필터 리셋해야함
     };
 
     return (
@@ -75,7 +87,7 @@ const AdminNotice = () => {
                         <span className={`${style.filterBtn} ${activeFilter==='Y'? style.filterActive :''}`} onClick={() => handleFilterChange("Y")}>숨김 : {noticeCnts.hiddenCnt}</span>
                     </div>
                     <div className={style.searchBar}>
-                        <input type="text"/>
+                        <input type="text" onChange={handleSearchChange}/>
                         <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} onClick={handleSearch}/>
                     </div>
                 </div>
@@ -95,7 +107,6 @@ const AdminNotice = () => {
                             <tr key={post.no}>
                                 <td><input type="checkbox" className={style.checkbox}/></td>
                                 <td>{post.title}</td>
-                                {/* <td>{post.writeDate}</td> */}
                                 <td>{formatDate(post.writeDate)}</td>
                                 <td>
                                     {post.isHided==='N'? (
