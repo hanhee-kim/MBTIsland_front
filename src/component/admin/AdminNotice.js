@@ -17,6 +17,7 @@ const AdminNotice = () => {
     const [search, setSearch] = useState(null); // 검색어
     const [hidden, setHidden] = useState(null); // 필터
     const [activeFilter, setActiveFilter] = useState(null); // 현재 적용된 필터
+    const [errorMsg, setErrorMsg] = useState(null);
     const navigate = useNavigate();
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -46,14 +47,19 @@ const AdminNotice = () => {
             .then(res=> {
                 console.log(res);
                 let pageInfo = res.data.pageInfo;
-                let list = res.data.noticelist;
+                let list = res.data.noticeList;
                 let noticeCnts = res.data.noticeCnts;
                 setNoticeList([...list]);
                 setPageInfo({...pageInfo});
                 setNoticeCnts({...noticeCnts});
+                setErrorMsg(null); // errorMsg를 null로 비워줘야 에러 발생 이후 새로운 요청이 성공했을때에 예외처리(errorMsg에 값이 있을때 랜더링되도록하는)if문에 걸리지 않는다
             })
             .catch(err=> {
                 console.log(err);
+                if(err.response && err.response.data) {
+                    console.log('err.response.data: ' + err.response.data);
+                    setErrorMsg(err.response.data);
+                }
             })
         // try {
         //     const res = await axios.get(defaultUrl);
@@ -125,26 +131,33 @@ const AdminNotice = () => {
                         <input type="button" value="삭제"/>
                     </span>
                 </div>
+
                 <table className={style.table}>
                     <tbody>
-                        {noticeList.length>0 && noticeList.map(post => {
-                            return (
-                            <tr key={post.no}>
-                                <td><input type="checkbox" className={style.checkbox}/></td>
-                                <td>{post.title}</td>
-                                <td>{formatDate(post.writeDate)}</td>
-                                <td>
-                                    {post.isHided==='N'? (
-                                    <img src={"/viewIcon-bold.png" } alt="" className={style.openEye}/>
-                                    ) : (
-                                    <img src={"/closedEyeIcon.png" } alt="" className={style.closedEye}/>
-                                    )}
-                                </td>
-                            </tr>
-                            )
-                        })}
+                        {errorMsg? (
+                            <tr><td colSpan="4" className={style.errMsg}>{errorMsg}</td></tr>
+                        ) : (
+                            noticeList.length>0 && noticeList.map(post => {
+                                return (
+                                <tr key={post.no}>
+                                    <td><input type="checkbox" className={style.checkbox}/></td>
+                                    <td>{post.title}</td>
+                                    <td>{formatDate(post.writeDate)}</td>
+                                    <td>
+                                        {post.isHided==='N'? (
+                                        <img src={"/viewIcon-bold.png" } alt="" className={style.openEye}/>
+                                        ) : (
+                                        <img src={"/closedEyeIcon.png" } alt="" className={style.closedEye}/>
+                                        )}
+                                    </td>
+                                </tr>
+                                )
+                            })
+                        )}
                     </tbody>
                 </table>
+
+
                 {/* <div className={style.paging}>
                     <span>&lt;</span>
                     <span className={style.activePage} style={{background:'#f8f8f8'}}>1</span>
