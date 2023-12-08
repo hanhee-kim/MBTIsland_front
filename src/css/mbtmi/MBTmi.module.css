@@ -388,6 +388,7 @@
 /* 댓글 영역 */
 .commentArea {
     width: 100%;
+    margin-top: 15px;
 }
 .commentArea>h6 {
     padding: 10px 0 10px 0;

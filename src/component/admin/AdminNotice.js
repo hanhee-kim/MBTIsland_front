@@ -1,25 +1,67 @@
 import { Nav, NavItem, NavLink, Table, Input } from "reactstrap";
 import styleFrame from "../../css/admin/AdminFrame.module.css";
 import style from "../../css/admin/AdminNotice.module.css";
-import React, { useState } from "react";
-import {Link} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import AdminNav from "./AdminNav";
+import axios from "axios";
 
 const AdminNotice = () => {
 
-    const [pageInfo, setPageInfo] = useState({dataTotalCnt: 101, displayCnt: 95, hidedCnt: 6});
-    const [noticeListByPaging, setNoticeListByPaging] = useState([
-        {postNo: 33, title: 'MBT-WHY(Q&A) 게시판 이용수칙 안내', writedate: '2023-12-03', viewCnt: 22, isHided: 'N'},
-        {postNo: 32, title: 'MB-TMI(자유) 게시판 이용수칙 안내', writedate: '2023-12-02', viewCnt: 33, isHided: 'N'},
-        {postNo: 31, title: 'M-BATTLE(밸런스게임) 게시판 이용수칙 안내', writedate: '2023-12-01', viewCnt: 44, isHided: 'N'},
-        {postNo: 30, title: '신고제와 신고된 게시물, 회원의 제재처리 안내', writedate: '2023-11-30', viewCnt: 22, isHided: 'Y'},
-        {postNo: 29, title: '신고제와 신고된 게시물, 회원의 제재처리 안내신고제와 신고된 게시물, 회원의 제재처리 안내', writedate: '2023-11-29', viewCnt: 22, isHided: 'N'},
-        {postNo: 28, title: 'MBT-WHY(Q&A) 게시판 이용수칙 안내', writedate: '2023-11-28', viewCnt: 33, isHided: 'Y'},
-        {postNo: 27, title: 'MB-TMI(자유) 게시판 이용수칙 안내', writedate: '2023-11-27', viewCnt: 111, isHided: 'N'},
-        {postNo: 26, title: 'M-BATTLE(밸런스게임) 게시판 이용수칙 안내', writedate: '2023-11-26', viewCnt: 222, isHided: 'N'},
-        {postNo: 25, title: '신고제와 신고된 게시물, 회원의 제재처리 안내', writedate: '2023-11-25', viewCnt: 333, isHided: 'Y'},
-        {postNo: 24, title: '신고제와 신고된 게시물, 회원의 제재처리 안내', writedate: '2023-11-25', viewCnt: 333, isHided: 'N'},
-    ]);
+    const { page } = useParams(); // URL에서 현재페이지 파라미터 추출
+    const [noticeList, setNoticeList] = useState([]); // 페이지당 게시글목록 
+    const [noticeCnts, setNoticeCnts] = useState({}); // 표시할 게시글수들
+    const [pageInfo, setPageInfo] = useState({}); // 페이지 정보(전체페이지, 현재페이지, 시작페이지번호, 끝페이지번호)
+    const [search, setSearch] = useState(null); // 검색어
+    const [hidden, setHidden] = useState(null); // 필터
+    const [activeFilter, setActiveFilter] = useState(null); // 현재 적용된 필터
+    const navigate = useNavigate();
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    useEffect(() => {
+        getNoticeList(page, search, hidden);
+    }, [page, search, hidden]);
+
+    const getNoticeList = (page, search, hidden) => {
+
+        let defaultUrl = 'http://localhost:8090/noticelist';
+        if (search !== null) defaultUrl += `/${search}`;
+        if (hidden !== null) defaultUrl += `/${hidden}`;
+
+        axios.get(defaultUrl)
+            .then(res=> {
+                console.log(res);
+                let pageInfo = res.data.pageInfo;
+                let list = res.data.noticelist;
+                let noticeCnts = res.data.noticeCnts;
+                setNoticeList([...list]);
+                setPageInfo({...pageInfo});
+                setNoticeCnts({...noticeCnts});
+            })
+            .catch(err=> {
+                console.log(err);
+            })
+    }
+
+    const handlePageChange = (pageNum) => {
+        navigate(`/noticelist/${pageNum}`);
+        getNoticeList(pageNum, search, false);
+    };
+
+    const handleSearch = () => {
+        getNoticeList(1, search, false); // 검색수행시 페이지와 필터 리셋해야함
+    };
+
+    const handleFilterChange = (hidden) => {
+        getNoticeList(1, search, hidden); // 필터변경시 페이지 리셋, 검색어는 유지해야함
+        setActiveFilter(hidden);
+    };
 
     return (
         <>
@@ -28,13 +70,13 @@ const AdminNotice = () => {
             <div className={styleFrame.sectionContents}>
                 <div className={style.filterBtns}>
                     <div>
-                        <span className={`${style.filterBtn} ${style.filterActive}`}>전체 : {pageInfo.dataTotalCnt}</span>
-                        <span className={style.filterBtn}>표시 : {pageInfo.displayCnt}</span>
-                        <span className={style.filterBtn}>숨김 : {pageInfo.hidedCnt}</span>
+                        <span className={`${style.filterBtn} ${activeFilter===null? style.filterActive :''}`} onClick={() => handleFilterChange(null)}>전체 : {noticeCnts.totalCnt}</span>
+                        <span className={`${style.filterBtn} ${activeFilter==='N'? style.filterActive :''}`} onClick={() => handleFilterChange("N")}>표시 : {noticeCnts.displayCnt}</span>
+                        <span className={`${style.filterBtn} ${activeFilter==='Y'? style.filterActive :''}`} onClick={() => handleFilterChange("Y")}>숨김 : {noticeCnts.hiddenCnt}</span>
                     </div>
                     <div className={style.searchBar}>
                         <input type="text"/>
-                        <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} />
+                        <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} onClick={handleSearch}/>
                     </div>
                 </div>
                 <div className={style.checkboxAndButtons}>
@@ -48,12 +90,13 @@ const AdminNotice = () => {
                 </div>
                 <table className={style.table}>
                     <tbody>
-                        {noticeListByPaging.length>0 && noticeListByPaging.map(post => {
+                        {noticeList.length>0 && noticeList.map(post => {
                             return (
-                            <tr>
+                            <tr key={post.no}>
                                 <td><input type="checkbox" className={style.checkbox}/></td>
                                 <td>{post.title}</td>
-                                <td>{post.writedate}</td>
+                                {/* <td>{post.writeDate}</td> */}
+                                <td>{formatDate(post.writeDate)}</td>
                                 <td>
                                     {post.isHided==='N'? (
                                     <img src={"/viewIcon-bold.png" } alt="" className={style.openEye}/>
@@ -66,7 +109,7 @@ const AdminNotice = () => {
                         })}
                     </tbody>
                 </table>
-                <div className={style.paging}>
+                {/* <div className={style.paging}>
                     <span>&lt;</span>
                     <span className={style.activePage} style={{background:'#f8f8f8'}}>1</span>
                     <span>2</span>
@@ -79,6 +122,13 @@ const AdminNotice = () => {
                     <span>9</span>
                     <span>10</span>
                     <span>&gt;</span>
+                </div> */}
+                <div className={style.paging}>
+                    {Array.from({ length: pageInfo.totalPages }, (_, index) => (
+                    <span key={index + 1} className={page === index + 1 ? style.activePage : ""} onClick={() => handlePageChange(index + 1)}>
+                        {index + 1}
+                    </span>
+                    ))}
                 </div>
             </div>
         </div>

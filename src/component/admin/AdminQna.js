@@ -9,7 +9,7 @@ import {Link} from "react-router-dom";
 import AdminNav from "./AdminNav";
 
 const AdminQna = () => {
-
+ 
     const [pageInfo, setPageInfo] = useState({dataTotalCnt: 101, finishedCnt: 96, unFinishedCnt: 3});
     const [qnaListByPaging, setQnaListByPaging] = useState([
         {postNo: 130, title: '회원문의글제목', writedate: '2023-11-16', writerId: 'userId0123', isFinished: 'N'},
