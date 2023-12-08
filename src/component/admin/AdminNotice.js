@@ -31,6 +31,7 @@ const AdminNotice = () => {
     }, [search, hidden, page]);
 
     const getNoticeList = (search, hidden, page) => {
+    // const getNoticeList = async (search, hidden, page) => {
 
         let defaultUrl = 'http://localhost:8090/noticelist';
         // if (search !== null) defaultUrl += `/${search}`;
@@ -54,6 +55,20 @@ const AdminNotice = () => {
             .catch(err=> {
                 console.log(err);
             })
+        // try {
+        //     const res = await axios.get(defaultUrl);
+        //     console.log(res);
+    
+        //     let pageInfo = res.data.pageInfo;
+        //     let list = res.data.noticelist;
+        //     let noticeCnts = res.data.noticeCnts;
+    
+        //     setNoticeList([...list]);
+        //     setPageInfo({...pageInfo});
+        //     setNoticeCnts({...noticeCnts});
+        // } catch (err) {
+        //     console.log(err);
+        // }
     }
 
     const handlePageChange = (pageNum) => {
@@ -70,10 +85,20 @@ const AdminNotice = () => {
         setTmpSearch(searchTerm);
     };
     const handleSearch = () => {
-        console.log('검색버튼눌림');
+        console.log('검색수행');
         setSearch(tmpSearch);
+        setHidden(null);
+        setActiveFilter(null);
         getNoticeList(search, hidden, 1); // 검색수행시 페이지와 필터 리셋해야함
     };
+
+    // axios 요청 전 state업데이트 보장하도록 getNoticeList를 동기요청함수로 변경해둠
+    // const handleSearch = async () => { 
+    //     console.log('검색 수행');
+    //     setSearch(tmpSearch);
+    //     setHidden(null);
+    //     await getNoticeList(tmpSearch, null, 1);
+    // };
 
     return (
         <>
