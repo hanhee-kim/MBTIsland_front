@@ -9,17 +9,17 @@ import axios from "axios";
 const AdminNotice = () => {
 
     // const { page } = useParams(); // URL에서 현재페이지 파라미터 추출
-    const [page, setPage] = useState(1);
     const [noticeList, setNoticeList] = useState([]); // 페이지당 게시글목록 
     const [noticeCnts, setNoticeCnts] = useState({'totalCnt':0, 'displayCnt':0, 'hiddenCnt':0}); // 표시할 게시글수들
-    const [pageInfo, setPageInfo] = useState({}); // 페이지 정보(전체페이지, 현재페이지, 시작페이지번호, 끝페이지번호)
-    const [tmpSearch, setTmpSearch] = useState(null);
     const [search, setSearch] = useState(null); // 검색어
     const [hidden, setHidden] = useState(null); // 필터
+    const [page, setPage] = useState(1); // 페이지 이동번호
+    const [pageInfo, setPageInfo] = useState({}); // 페이지 정보(전체페이지, 현재페이지, 시작페이지번호, 끝페이지번호)
+    const [tmpSearch, setTmpSearch] = useState(null);
     const [activeFilter, setActiveFilter] = useState(null); // 현재 적용된 필터
     const [errorMsg, setErrorMsg] = useState(null);
     const [afterDelOrHide, setAfterDelOrHide] = useState(false);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -39,7 +39,9 @@ const AdminNotice = () => {
 
         if (search !== null) defaultUrl += `?search=${search}`;
         if (hidden !== null) defaultUrl += `${search !== null ? '&' : '?'}hidden=${hidden}`;
-        if (hidden !== null) defaultUrl += `${page !== null ? '&' : '?'}page=${page}`;
+        if (page !== null) defaultUrl += `${search !== null || hidden !== null ? '&' : '?'}page=${page}`;
+
+        console.log('요청url:' + defaultUrl);
 
         axios.get(defaultUrl)
         .then(res=> {
@@ -65,9 +67,9 @@ const AdminNotice = () => {
         })
     }
 
-    const handlePageChange = (pageNum) => {
-        setPage(pageNum);
-        navigate(`/noticelist/${page}`);
+    const handlePageNo = (pageNo) => {
+        setPage(pageNo);
+        console.log('***page state변경:' + page);
         getNoticeList(search, hidden, page); // 페이지변경시 필터 유지, 검색어 유지해야함
     };
     const handleFilterChange = (hidden) => {
@@ -122,6 +124,19 @@ const AdminNotice = () => {
         })
     }
 
+    // 일괄 삭제처리
+    const deleteNotice = () => {
+        console.log('체크된 항목:' + checkItems);
+        axios.delete(`http://localhost:8090/deletenotice/${checkItems}`)
+        .then(res => {
+            setCheckItems([]);
+            setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
     return (
         <>
         <div>
@@ -148,7 +163,7 @@ const AdminNotice = () => {
                     <span>
                         <input type="button" value="숨김" onClick={hideNotice}/>
                         <input type="button" value="숨김해제" onClick={hideNotice}/>
-                        <input type="button" value="삭제"/>
+                        <input type="button" value="삭제" onClick={deleteNotice}/>
                     </span>
                 </div>
 
@@ -182,7 +197,7 @@ const AdminNotice = () => {
                 </table>
 
 
-                {/* <div className={style.paging}>
+                <div className={style.paging}>
                     <span>&lt;</span>
                     <span className={style.activePage} style={{background:'#f8f8f8'}}>1</span>
                     <span>2</span>
@@ -195,13 +210,6 @@ const AdminNotice = () => {
                     <span>9</span>
                     <span>10</span>
                     <span>&gt;</span>
-                </div> */}
-                <div className={style.paging}>
-                    {Array.from({ length: pageInfo.totalPages }, (_, index) => (
-                    <span key={index + 1} className={page === index + 1 ? style.activePage : ""} onClick={() => handlePageChange(index + 1)}>
-                        {index + 1}
-                    </span>
-                    ))}
                 </div>
             </div>
         </div>
