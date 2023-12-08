@@ -1,10 +1,37 @@
 import { Table, UncontrolledCarousel } from "reactstrap";
 
 import style from "../css/Main.module.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {Link, useLocation} from "react-router-dom";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
 const Main = () => {
+  const token = useSelector((state) => state.persistedReducer.token.token);
+  const user = useSelector((state) => state.persistedReducer.user.user);
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    console.log("token???:"+token);
+    // user 정보
+    axios
+        .get("http://localhost:8090/user",{
+        headers : {
+            Authorization : token,
+        }
+        })
+        .then(res=> {            
+            console.log(res);
+            console.log("data:");
+            // setUser(res.data);
+            dispatch({type:"user",payload:res.data});
+        })
+        .catch(err=> {
+            console.log("user가져오기 에러");
+            console.log(err);
+        })
+  },[])
+  
 
   const items = [
       {
@@ -34,7 +61,6 @@ const Main = () => {
             <div className={style.bannerArea}>
               <UncontrolledCarousel items={items} className={style.bannerImage}/>
             </div>
-
             <div>
               <section className={style.sectionLeftArea}></section>
               <section className={style.section}>

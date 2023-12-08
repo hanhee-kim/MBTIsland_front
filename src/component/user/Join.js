@@ -258,7 +258,7 @@ const Join = () => {
                 console.log("아무거나");
                 console.log(sendUser);
                 axios
-                  .post("http://localhost:8090/123", sendUser)
+                  .post("http://localhost:8090/join", sendUser)
                   .then((res) => {
                     console.log(res);
                     navigate("/login");

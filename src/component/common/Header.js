@@ -2,14 +2,19 @@ import React, { useEffect, useState } from "react";
 import {Link, useLocation} from "react-router-dom";
 import style from "../../css/common/Header.module.css";
 import { Button, Popover, PopoverBody } from "reactstrap";
+import  axios  from 'axios';
+import { useSelector } from "react-redux";
 
 const Header = () => {
+
 
     const uri = useLocation().pathname;
     useEffect(() => {
         console.log(uri);
     }, [uri]);
 
+    
+    
 
     // 로그인 유저
     const [loginuser, sestLoginuser] = useState({
@@ -32,8 +37,12 @@ const Header = () => {
     const togglePopover = (popoverKey) => {
         setPopoverStates((prevState) => ({...prevState, [popoverKey]:!prevState[popoverKey]}));
     };
+    
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
     useEffect(() => {
+        
+
+        //
         const clickOutsidePopover = (event) => {
             const popoverElements = document.querySelectorAll(".popover");
             // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
