@@ -53,9 +53,10 @@ const AdminNotice = () => {
             setPageInfo({...pageInfo});
             setNoticeCnts({...noticeCnts});
             setErrorMsg(null); 
-            setAfterDelOrHide(false); 
             // errorMsg를 null로 비워줘야 에러 발생 이후 새로운 요청이 성공했을때에 
             // 예외처리(errorMsg에 값이 있을때 랜더링되도록하는)if문에 걸리지 않는다
+            setAfterDelOrHide(false); // 일괄삭제 혹은 일괄숨김처리 후 목록을 새로 받아 재렌더링하게함
+            setHidden(hidden); // 필터적용된 상태에서 페이지이동시 필터유지되게함
         })
         .catch(err=> {
             console.log(err);
@@ -69,8 +70,11 @@ const AdminNotice = () => {
 
     const handlePageNo = (pageNo) => {
         setPage(pageNo);
-        console.log('***page state변경:' + page);
-        getNoticeList(search, hidden, page); // 페이지변경시 필터 유지, 검색어 유지해야함
+        console.log('***클릭된 pageNo:' + pageNo);
+        console.log('***변경된 state page값:' + page); // state는 ui보다 한박자 늦다
+        console.log('현재 적용되는 필터값: ' + hidden);
+        console.log('현재 적용되는 검색어: ' + search);
+        getNoticeList(search, hidden, pageNo); // 페이지변경시 필터 유지, 검색어 유지해야함
     };
     const handleFilterChange = (hidden) => {
         getNoticeList(search, hidden, 1); // 필터변경시 페이지 리셋, 검색어는 유지해야함
@@ -137,6 +141,34 @@ const AdminNotice = () => {
         })
     }
 
+    // 페이지네이션
+    const PaginationInside = () => {
+        if(errorMsg) return null;
+        const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
+        for(let i=pageInfo.startPage; i<=pageInfo.endPage; i++) {
+            pageGroup.push(
+                <span key={i} className={`${page===i? style.activePage: ''}`} onClick={()=>handlePageNo(i)}>{i}</span>
+            )
+        }
+        return (
+            <div className={style.paging}>
+                {!(pageInfo.startPage===1) && (
+                    <>
+                        <span onClick={()=>handlePageNo(1)}>≪</span>
+                        <span onClick={()=>handlePageNo(pageInfo.startPage-10)}>&lt;</span>
+                    </>
+                )}
+                {pageGroup}
+                {!(pageInfo.endPage===pageInfo.allPage) && (
+                    <>
+                        <span onClick={()=>handlePageNo(pageInfo.endPage+1)}>&gt;</span>
+                        <span onClick={()=>handlePageNo(pageInfo.allPage)}>≫</span>
+                    </>
+                )}
+            </div>
+        );
+    }
+
     return (
         <>
         <div>
@@ -161,8 +193,9 @@ const AdminNotice = () => {
                         <span>&nbsp;선택</span>
                     </span>
                     <span>
-                        <input type="button" value="숨김" onClick={hideNotice}/>
-                        <input type="button" value="숨김해제" onClick={hideNotice}/>
+                        {hidden===null && <input type="button" value="상태변경" onClick={hideNotice}/>}
+                        {hidden==='N' && <input type="button" value="숨김" onClick={hideNotice}/>}
+                        {hidden==='Y' && <input type="button" value="숨김해제" onClick={hideNotice}/>}
                         <input type="button" value="삭제" onClick={deleteNotice}/>
                     </span>
                 </div>
@@ -196,21 +229,8 @@ const AdminNotice = () => {
                     </tbody>
                 </table>
 
+                {PaginationInside()}
 
-                <div className={style.paging}>
-                    <span>&lt;</span>
-                    <span className={style.activePage} style={{background:'#f8f8f8'}}>1</span>
-                    <span>2</span>
-                    <span>3</span>
-                    <span>4</span>
-                    <span>5</span>
-                    <span>6</span>
-                    <span>7</span>
-                    <span>8</span>
-                    <span>9</span>
-                    <span>10</span>
-                    <span>&gt;</span>
-                </div>
             </div>
         </div>
         </>
