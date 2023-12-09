@@ -259,6 +259,14 @@
 
     margin-left: -3px;
 }
+
+.mbtmiTable>tbody>tr>td.errMsg {
+    text-align: center;
+    padding: 100px 0;
+    color: black;
+}
+
+
 .commentIcon {
     width: 23px;
     margin-left: 20px; 
@@ -278,6 +286,7 @@
     border: 0px solid white;
     text-align: center;
     line-height: 32px;
+    cursor: pointer;
 }
 .activePage {
     border: 1px solid #A3A3A3 !important;

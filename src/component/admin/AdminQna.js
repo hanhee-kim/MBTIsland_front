@@ -89,9 +89,6 @@ const AdminQna = () => {
         getQuestionList(tmpSearch, null, 1);
     };
 
-    // 선택한 회원아이디
-    // const [selectedUserId, setSelectedUserId] = useState('');
-
     // 팝오버 오픈 상태
     const [openList, setOpenList] = useState([]);
 
