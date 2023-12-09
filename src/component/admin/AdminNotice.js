@@ -183,7 +183,7 @@ const AdminNotice = () => {
                                     <td>{post.title}</td>
                                     <td>{formatDate(post.writeDate)}</td>
                                     <td>
-                                        {post.isHided==='N'? (
+                                        {post.isHidden==='N'? (
                                         <img src={"/viewIcon-bold.png" } alt="" className={style.openEye}/>
                                         ) : (
                                         <img src={"/closedEyeIcon.png" } alt="" className={style.closedEye}/>
