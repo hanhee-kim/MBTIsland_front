@@ -4,16 +4,48 @@ import style from "../../css/mbtmi/MBTmi.module.css";
 import React, { useState } from "react";
 import {Link, useLocation} from "react-router-dom";
 import { useEffect } from "react";
+import axios from "axios";
 
 const MBTmi = () => {
 
-    const [weeklyHotPosts, setWeeklyHotPosts] = useState([
-        {postNo: 22, category: '잡담', title: '잡담 게시판의 인기 게시글 제목', commentCnt: 103, writedate: '2일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 112},
-        {postNo: 44, category: '연애', title: '연애 게시판의 인기 게시글 제목', commentCnt: 99, writedate: '3일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 55},
-        {postNo: 66, category: '회사', title: '회사 게시판의 인기 게시글 제목', commentCnt: 88, writedate: '1일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 22},
-        {postNo: 88, category: '학교', title: '학교 게시판의 인기 게시글 제목', commentCnt: 77, writedate: '4일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 33},
-        {postNo: 110, category: '취미', title: '취미 게시판의 인기 게시글 제목취미 게시판의 인기 게시글 제목취미 게시판의 인기 게시글 제목', commentCnt: 111, writedate: '6일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 44},
-    ]);
+    const [weeklyHotList, setWeeklyHotList] = useState([]);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    useEffect(() => {
+        getWeeklyHotList();
+    }, []);
+
+    const getWeeklyHotList = () => {
+        axios.get(`http://localhost:8090/weeklyhotmbtmi`)
+        .then(res=> {
+            console.log(res);
+            let list = res.data;
+            setWeeklyHotList([...list]);
+            setErrorMsg(null);
+        })
+        .catch(err=> {
+            console.log(err);
+            if(err.response && err.response.data) {
+                console.log('err.response.data: ' + err.response.data);
+                setErrorMsg(err.response.data);
+            }
+        })
+    }
+
+    // const [weeklyHotPosts, setWeeklyHotPosts] = useState([
+    //     {postNo: 22, category: '잡담', title: '잡담 게시판의 인기 게시글 제목', commentCnt: 103, writedate: '2일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 112},
+    //     {postNo: 44, category: '연애', title: '연애 게시판의 인기 게시글 제목', commentCnt: 99, writedate: '3일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 55},
+    //     {postNo: 66, category: '회사', title: '회사 게시판의 인기 게시글 제목', commentCnt: 88, writedate: '1일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 22},
+    //     {postNo: 88, category: '학교', title: '학교 게시판의 인기 게시글 제목', commentCnt: 77, writedate: '4일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 33},
+    //     {postNo: 110, category: '취미', title: '취미 게시판의 인기 게시글 제목취미 게시판의 인기 게시글 제목취미 게시판의 인기 게시글 제목', commentCnt: 111, writedate: '6일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 44},
+    // ]);
     const [mbtmiListByPaging, setMbtmiListByPaging] = useState([
         {postNo: 222, category: '연애', title: '연애 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '1분 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 0},
         {postNo: 221, category: '회사', title: '회사 게시판의 최신 게시글 제목회사 게시판의 최신 게시글 제목회사 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '1분 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 0},
@@ -58,26 +90,30 @@ const MBTmi = () => {
                 <div className={style.weeklyHotPosts}>
                     <table className={style.weeklyPostsTable}>
                         <tbody>
-                        {weeklyHotPosts.length>0 && weeklyHotPosts.map(post => {
-                            return (
-                            <tr key={post.postNo}>
-                                <td>[{post.category}]</td>
-                                <td>
-                                    <span className={style.overflow}>{post.title}</span>&nbsp;&nbsp;
-                                    <span>[{post.commentCnt}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <small>{post.writedate}</small>
-                                </td>
-                                <td>
-                                    <div className={style.profileColor}/>&nbsp;
-                                    <span>{post.writerMbti}&nbsp;{post.writerNickname}</span>
-                                </td>
-                                <td>
-                                    <img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;
-                                    <small>{post.recommentCnt}</small>
-                                </td>
-                            </tr>
-                            )
-                        })}
+                            {errorMsg? (
+                                <tr><td colSpan="4" className={style.errMsg}>{errorMsg}</td></tr>
+                            ) : (
+                                weeklyHotList.length>0 && weeklyHotList.map(post => {
+                                    return (
+                                    <tr key={post.postNo}>
+                                        <td>[{post.category}]</td>
+                                        <td>
+                                            <span className={style.overflow}>{post.title}</span>&nbsp;&nbsp;
+                                            <span>[{post.commentCnt}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <small>{formatDate(post.writeDate)}</small>
+                                        </td>
+                                        <td>
+                                            <div className={style.profileColor}/>&nbsp;
+                                            <span>{post.writerMbti}&nbsp;{post.writerNickname}</span>
+                                        </td>
+                                        <td>
+                                            <img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;
+                                            <small>{post.recommendCnt}</small>
+                                        </td>
+                                    </tr>
+                                    )
+                                })
+                            )}
                         </tbody>
                     </table>
                 </div>

@@ -10,21 +10,21 @@ const Main = () => {
   const items = [
       {
           src:'https://picsum.photos/seed/picsum/1440/300',
-          altText:'하트',
-          caption:'heart caption',
-          header:'heart header',
+          altText:'배너이미지1',
+          caption:'caption1',
+          header:'header1',
       },
       {
         src:'https://picsum.photos/seed/picsum/1440/300',
-          altText:'로고192',
-          caption:'logo192 caption',
-          header:'logo192 header'
+          altText:'배너이미지2',
+          caption:'caption2',
+          header:'header2'
       },
       {
-        src:'https://picsum.photos/seed/picsum/1440/400',
-          altText:'로고512',
-          caption:'logo512 caption',
-          header:'logo512 header'
+        src:'https://picsum.photos/seed/picsum/1440/300',
+          altText:'배너이미지3',
+          caption:'caption3',
+          header:'header3'
       }
   ];
 

@@ -8,7 +8,6 @@ import axios from "axios";
 
 const AdminNotice = () => {
 
-    // const { page } = useParams(); // URL에서 현재페이지 파라미터 추출
     const [noticeList, setNoticeList] = useState([]); // 페이지당 게시글목록 
     const [noticeCnts, setNoticeCnts] = useState({'totalCnt':0, 'displayCnt':0, 'hiddenCnt':0}); // 표시할 게시글수들
     const [search, setSearch] = useState(null); // 검색어
@@ -19,7 +18,6 @@ const AdminNotice = () => {
     const [activeFilter, setActiveFilter] = useState(null); // 현재 적용된 필터
     const [errorMsg, setErrorMsg] = useState(null);
     const [afterDelOrHide, setAfterDelOrHide] = useState(false);
-    // const navigate = useNavigate();
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -34,7 +32,6 @@ const AdminNotice = () => {
     }, [afterDelOrHide]); // 의존성배열을 비우면 useEffect는 컴포넌트가 처음 렌더링될때에만 실행되고 state를 넣으면 state값이 업데이트될때마다 실행됨
 
     const getNoticeList = (search, hidden, page) => {
-
         let defaultUrl = 'http://localhost:8090/noticelist';
 
         if (search !== null) defaultUrl += `?search=${search}`;
