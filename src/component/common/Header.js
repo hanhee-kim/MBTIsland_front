@@ -6,8 +6,8 @@ import  axios  from 'axios';
 import { useSelector } from "react-redux";
 
 const Header = () => {
-
-
+    const token = useSelector((state) => state.persistedReducer.token.token);
+    const user = useSelector((state) => state.persistedReducer.user.user);
     const uri = useLocation().pathname;
     useEffect(() => {
         console.log(uri);
@@ -16,20 +16,20 @@ const Header = () => {
     
     
 
-    // 로그인 유저
-    const [loginuser, sestLoginuser] = useState({
-        username: "userid0123",
-        userNickname: "낭만냥냥",
-        userMbti: "INFP",
-        userMbtiColor: "#BDC9A6",
-        userRole: "USER",
+    // // 로그인 유저
+    // const [loginuser, sestLoginuser] = useState({
+    //     username: "userid0123",
+    //     userNickname: "낭만냥냥",
+    //     userMbti: "INFP",
+    //     userMbtiColor: "#BDC9A6",
+    //     userRole: "USER",
 
-        // username: "admin01",
-        // userNickname: "관리자1",
-        // userMbti: "",
-        // userMbtiColor: "",
-        // userRole: "ADMIN",
-    });
+    //     // username: "admin01",
+    //     // userNickname: "관리자1",
+    //     // userMbti: "",
+    //     // userMbtiColor: "",
+    //     // userRole: "ADMIN",
+    // });
 
 
     // 팝오버 여닫힘 상태
@@ -114,7 +114,7 @@ const Header = () => {
                 </div>
 
                 {/* 우측 메뉴 */}
-                {loginuser.userNickname==null? (
+                {(user.userNickname==null || user.userNickname ==='')? (
                     <div style={{marginRight: '120px'}}>
                         <li className={style.navItem}>
                             <Link to={"/login"}><Button color="light">로그인</Button></Link>
@@ -123,7 +123,7 @@ const Header = () => {
                             <Link to={"/join"}><Button color="dark">회원가입</Button></Link>
                         </li>
                     </div>
-                ) : loginuser.userRole==='USER'? (
+                ) : user.userRole==='ROLE_USER'? (
                     <div className={style.afterLogin}>
                         <div>
                             {alertNotRead.length>0? (
@@ -218,8 +218,8 @@ const Header = () => {
                             
                             
                             <span className={style.openPopover} onClick={()=>togglePopover("popoverUser")} id="popoverUser">
-                                <span className={style.userMbti}>INFP</span>
-                                <span className={style.userNickname}>낭만냥냥</span>
+                                <span className={style.userMbti} style={{backgroundColor:user.userMbtiColor}}>{user.userMbti}</span>
+                                <span className={style.userNickname}>{user.userNickname}</span>
                             </span>
                             <Popover className={style.popover} placement="bottom" isOpen={popoverStates.popoverUser} target="popoverUser" toggle={()=>togglePopover("popoverUser")}>
                                 <Link to={"/mypage"} className={style.popoverLink}>
@@ -232,7 +232,7 @@ const Header = () => {
 
                         </div>
                     </div>)
-                : loginuser.userRole==='ADMIN'?
+                : user.userRole==='ADMIN'?
                     (<div className={style.afterLogin}>
                         <div className={style.openPopover} onClick={()=>togglePopover("popoverUser")} id="popoverUser">
                             <span className={style.userNickname}>관리자 모드</span>

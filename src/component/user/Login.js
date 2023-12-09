@@ -86,10 +86,19 @@ const Login = () => {
       .then((res) => {
         console.log(res.headers.authorization);
         dispatch({ type: "token", payload: res.headers.authorization });
-        navigate("/"); //main으로 이동
+        Swal.fire({
+          title:'로그인되었습니다.',
+          icon:'success',
+        }).then(function(){
+          navigate("/"); //main으로 이동
+        })
       })
       .catch((err) => {
         console.log(err);
+        Swal.fire({
+          title:'회원정보가 일치하지 않습니다.',
+          icon:'error',
+        })
       });
   };
   const openFind = (e, type) => {
@@ -227,7 +236,7 @@ const Login = () => {
         <div style={socialBtnStyle}>
             <a
             href="http://localhost:8090/oauth2/authorization/kakao"
-            target="_blank"
+            // target="_blank"
           >
             <img
               className=""
@@ -237,7 +246,9 @@ const Login = () => {
               alt="kakaoLogin"
             />
           </a>
-            <a href="http://localhost:8090/oauth2/authorization/naver" target="_blank">
+            <a href="http://localhost:8090/oauth2/authorization/naver" 
+            // target="_blank"
+            >
             <img
               className=""
               src={"../naver_Login.png"}

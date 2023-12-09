@@ -64,10 +64,10 @@ const DefaultMypage = (props) => {
   const [isChangeEmail,setISChageEmail] = useState(false);
   // const [arrMbti, setArrMbti] = useState([...mbti]);
 
-  const [mbtiCheckEI, setMbtiCheckEI] = useState(...arrMbti[0]);
-  const [mbtiCheckNS, setMbtiCheckNS] = useState(...arrMbti[1]);
-  const [mbtiCheckTF, setMbtiCheckTF] = useState(...arrMbti[2]);
-  const [mbtiCheckPJ, setMbtiCheckPJ] = useState(...arrMbti[3]);
+  const [mbtiCheckEI, setMbtiCheckEI] = useState(arrMbti[0]);
+  const [mbtiCheckNS, setMbtiCheckNS] = useState(arrMbti[1]);
+  const [mbtiCheckTF, setMbtiCheckTF] = useState(arrMbti[2]);
+  const [mbtiCheckPJ, setMbtiCheckPJ] = useState(arrMbti[3]);
 
   // var yy = today.getFullYear;
   // var mon = today.getMonth;
@@ -103,7 +103,7 @@ const DefaultMypage = (props) => {
   };
 
 const sendCode = (e) => {
-  
+  setISChageEmail(true);
   //email code전송하기.
 }
 

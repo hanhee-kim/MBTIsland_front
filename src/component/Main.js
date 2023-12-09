@@ -7,10 +7,11 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 
 const Main = () => {
+  //token정보 
   const token = useSelector((state) => state.persistedReducer.token.token);
   const user = useSelector((state) => state.persistedReducer.user.user);
   const dispatch = useDispatch();
-  
+  //토큰보내서 유저 store에 올림
   useEffect(() => {
     console.log("token???:"+token);
     if(token == null || token == ''){

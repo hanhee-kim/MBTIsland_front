@@ -75,7 +75,7 @@
 
 .userMbti {
     display: inline-block;
-    background: #BDC9A6; /* mbti별 색 지정할것 */
+    /* background: #BDC9A6; mbti별 색 지정할것 */
     border-radius: 5px;
     padding: 1px 6px;
     font-weight: 600;
