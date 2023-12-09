@@ -13,23 +13,27 @@ const Main = () => {
   
   useEffect(() => {
     console.log("token???:"+token);
-    // user 정보
-    axios
-        .get("http://localhost:8090/user",{
+    if(token == null || token == ''){
+      console.log("token없음");
+    }else{
+      // user 정보
+      axios
+      .get("http://localhost:8090/user",{
         headers : {
-            Authorization : token,
+          Authorization : token,
         }
-        })
-        .then(res=> {            
-            console.log(res);
-            console.log("data:");
-            // setUser(res.data);
-            dispatch({type:"user",payload:res.data});
-        })
-        .catch(err=> {
-            console.log("user가져오기 에러");
-            console.log(err);
-        })
+      })
+      .then(res=> {            
+        console.log(res);
+        console.log("data:");
+        // setUser(res.data);
+        dispatch({type:"user",payload:res.data});
+      })
+      .catch(err=> {
+        console.log("user가져오기 에러");
+        console.log(err);
+      })
+    }
   },[])
   
 

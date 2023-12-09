@@ -40,6 +40,7 @@ import MBattle from "./component/mbattle/MBattle";
 import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
+import OAuth2User from "./component/user/OAuth2User";
 
 export const persistor = persistStore(store);
 function App() {
@@ -86,6 +87,7 @@ function App() {
                 path="/notewrite/:receiveName/:receiveNick"
                 element={<NoteWrite setIsPopup={setIsPopup} />}
               />
+              <Route exect path="/oauth/redirect/:token" element={<OAuth2User />} />
               {/* 하영 */}
               <Route exact path="/" element={<Main />} />
               <Route exact path="/mbtmi" element={<MBTmi />} />

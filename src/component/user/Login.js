@@ -110,10 +110,30 @@ const Login = () => {
       axios
           .post("http://localhost:8090/find",sendFindForm)
           .then((res)=>{
-    
+            console.log(res);
+            if(res.data === "해당 Email 존재하지 않음."){
+              Swal.fire({
+                title:res.data,
+                icon:'warning'
+              })
+            }else if(res.data === "ID전송완료"){
+              Swal.fire({
+                title:res.data,
+                text:'전송이 완료되었습니다. Email을 확인해주세요!',
+                icon:'success',
+              })
+              .then(toggle())
+            }else if(res.data === "PW전송완료"){
+              Swal.fire({
+                title:res.data,
+                text:'전송이 완료되었습니다. Email을 확인해주세요!',
+                icon:'success',
+              })
+              .then(toggle())
+            }
           })
           .catch((err)=>{
-    
+            console.log(err);
           })
     } else{
       Swal.fire({
