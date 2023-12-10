@@ -6,6 +6,8 @@
     z-index:10;
     border-top: 1px solid #999999;
     padding: 10px 0 8px 0;
+
+    min-width: 1300px;
 }
 .siteTitle {
     margin-left: 100px;

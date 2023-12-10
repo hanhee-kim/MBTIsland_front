@@ -36,6 +36,11 @@
     cursor: pointer;
     text-shadow: 0 0 1.5px rgba(0, 0, 0, 1);
 }
+.table>tbody>tr>td.errMsg {
+    text-align: center;
+    padding: 100px 0;
+}
+
 .completedQna>td:last-child {
     color: #a5a5a5;
 }

@@ -1,6 +1,6 @@
 .container{
     padding-top: 80px;
-    border: 3px solid blue;
+    /* border: 3px solid blue; */
 	height: auto;
     min-height: 100%;
     padding-bottom: 60px; /* 푸터 높이만큼 확보해둠 */
@@ -19,7 +19,7 @@
 } */
 
 .section {
-    border: 1px solid red;
+    /* border: 1px solid red; */
     min-height: 900px; /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
     width: 883px;
     font-size: 20px;
@@ -259,6 +259,14 @@
 
     margin-left: -3px;
 }
+
+.mbtmiTable>tbody>tr>td.errMsg {
+    text-align: center;
+    padding: 100px 0;
+    color: black;
+}
+
+
 .commentIcon {
     width: 23px;
     margin-left: 20px; 
@@ -278,6 +286,7 @@
     border: 0px solid white;
     text-align: center;
     line-height: 32px;
+    cursor: pointer;
 }
 .activePage {
     border: 1px solid #A3A3A3 !important;
@@ -388,6 +397,7 @@
 /* 댓글 영역 */
 .commentArea {
     width: 100%;
+    margin-top: 15px;
 }
 .commentArea>h6 {
     padding: 10px 0 10px 0;

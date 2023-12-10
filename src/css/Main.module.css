@@ -67,12 +67,14 @@
 
 /* 배너 */
 .bannerArea {
-    border: 5px dashed orange;
+    /* border: 5px dashed orange; */
     box-sizing: border-box;
     height: 300px;
     width: 100%;
     margin-bottom: 25px;
     overflow: hidden;
+
+    object-fit: cover;
 
     /* position: relative; */
 }
@@ -86,6 +88,9 @@
     top: 50%; 
     left: 50%;
     transform: translate(-50%, -50%); */
+
+    min-width:  1300px;
+    min-height: 280px;
 }
 
 
@@ -121,11 +126,25 @@
     margin-right: 5px;
 }
 
-.table>tbody>tr>td>span:first-child {
+.table>tbody>tr>td>span:nth-child(2) {
     margin-left: 5px;
 }
 .table>tbody>tr>td>small {
     margin: 0 25px;
+}
+
+
+.overflowLong {
+    /* 줄바꿈을 막고 생략기호 표시 */
+    display: inline-block;
+    max-width: 540px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* margin: 0 auto; */
+    /* background: ghostwhite; */
+
+    line-height: 100%;
 }
 
 
