@@ -25,6 +25,7 @@
 .pageHeader > h1 {
     width: 70%;
     text-align: left;
+    text-transform: uppercase;
 }
 
 .pageHeader > h6 {
