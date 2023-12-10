@@ -77,7 +77,7 @@
 
 .userMbti {
     display: inline-block;
-    background: #BDC9A6; /* mbti별 색 지정할것 */
+    /* background: #BDC9A6; mbti별 색 지정할것 */
     border-radius: 5px;
     padding: 1px 6px;
     font-weight: 600;
@@ -89,6 +89,12 @@
     margin-left: 8px;
     font-weight: 600;
     font-size: 17px;
+}
+/* 추가정보 버튼 */
+.addJoin{
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
 }
 .bellIcon, .messageIcon {
     margin-right: 20px;

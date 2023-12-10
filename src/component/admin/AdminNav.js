@@ -22,10 +22,10 @@ const AdminNav = () => {
                     <NavLink tag={Link} to="/adminnoticeform" className={uri==="/adminnoticeform"? `${style.navLink} ${style.navActive}` :style.navLink}>공지 등록/수정</NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink tag={Link} to="/menu3" className={uri==="/menu3"? `${style.navLink} ${style.navActive}` :style.navLink}>신고 게시글</NavLink>
+                    <NavLink tag={Link} to="/adminreport" className={uri==="/adminreport"? `${style.navLink} ${style.navActive}` :style.navLink}>신고 게시글</NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink tag={Link} to="/menu4" className={uri==="/menu4"? `${style.navLink} ${style.navActive}` :style.navLink}>정지 회원</NavLink>
+                    <NavLink tag={Link} to="/adminban" className={uri==="/adminban"? `${style.navLink} ${style.navActive}` :style.navLink}>정지 회원</NavLink>
                 </NavItem>
                 <NavItem>
                     <NavLink tag={Link} to="/adminqna" className={uri==="/adminqna"? `${style.navLink} ${style.navActive}` :style.navLink}>문의 답변</NavLink>

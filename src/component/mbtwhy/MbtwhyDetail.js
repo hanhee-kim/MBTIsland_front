@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from 'react-router-dom';
+import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
 import {
     Pagination,
     PaginationItem,
@@ -13,7 +14,6 @@ import {
 } from "reactstrap";
 import axios from 'axios';
 
-import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
 
 function MbtwhyDetail() {
     const [board, setBoard] = useState(
@@ -21,6 +21,7 @@ function MbtwhyDetail() {
             num:1,
             mbti:"INTP",
             color:"#9BB7D4",
+            writerId:"user01",
             writer:"마춤뻡파괴왕",
             date:"1일전",
             content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
@@ -35,6 +36,7 @@ function MbtwhyDetail() {
             num:1,
             mbti:"ISTP",
             color:"#4D6879",
+            writerId:"user01",
             writer:"마춤뻡파괴왕",
             date:"1일전",
             content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
@@ -43,6 +45,7 @@ function MbtwhyDetail() {
             num:2,
             mbti:"ISTP",
             color:"#4D6879",
+            writerId:"user02",
             writer:"난앓아요",
             date:"1일전",
             content:"방귀뿡뿡"
@@ -51,6 +54,7 @@ function MbtwhyDetail() {
             num:3,
             mbti:"ISTP",
             color:"#4D6879",
+            writerId:"user03",
             writer:"면발이억수로부드럽네",
             date:"1일전",
             content:"쌀국수 뚝배기!면발이 억수로 부드럽네 한 뚝배기 하실래예?"
@@ -59,6 +63,7 @@ function MbtwhyDetail() {
             num:4,
             mbti:"ISTP",
             color:"#4D6879",
+            writerId:"user04",
             writer:"억장이문어찜",
             date:"1일전",
             content:"내공냠냠"
@@ -67,11 +72,23 @@ function MbtwhyDetail() {
             num:5,
             mbti:"ISTP",
             color:"#4D6879",
+            writerId:"user05",
             writer:"빵빵이",
             date:"1일전",
             content:"옥지얌"
         }
     ]);
+
+    const [replyComment, setReplyComment] = useState(
+        {
+            num:1,
+            mbti:"ISTP",
+            color:"#4D6879",
+            writer:"마춤뻡파괴왕",
+            date:"1일전",
+            content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
+        }
+    );
     
     // 페이징 상태 값
     const [pageBtn, setPageBtn] = useState([]);
@@ -122,8 +139,17 @@ function MbtwhyDetail() {
         setOpen(!open);
     };
 
-    const submit=(e)=> {
+    const openReportWrite = (e, report) => {
+        const url = "/reportwrite/:" + report.writerId + '/:' + e.target.name;
+        window.open(
+          url,
+          "_blank",
+          "width=650,height=450,location=no,status=no,scrollbars=yes"
+        );
+        // , "noopener, noreferrer"
+      };
 
+    const submit=(e)=> {
         e.preventDefault();
     };
 
@@ -135,9 +161,18 @@ function MbtwhyDetail() {
     }
 
     const buttonStyle = {
-        background:"white",
+        background:"none",
         color:"black",
-        border:"1px solid lightgray",
+        border:"1px solid #C5C5C5",
+        marginLeft:"10px"
+    }
+    
+    const replyButtonStyle = {
+        background:"none",
+        color:"#C5C5C5",
+        fontWeight:"bold",
+        border:"none",
+        padding:"0px"
     }
 
     const inputComment = {
@@ -165,7 +200,7 @@ function MbtwhyDetail() {
                 {/* 게시글 영역 */}
                     <div key={board.num} className={style.sectionBoard}>
                         <Link to={"/detailform/only-detail/" + board.num}></Link>
-                        <div className={style.boardWriter}>
+                        <div className={style.writerDiv}>
                             <div>
                                 <div className={style.circleDiv} style={{backgroundColor:`${board.color}`}}> </div>&nbsp;&nbsp;&nbsp;
                                 {board.mbti}&nbsp;&nbsp;&nbsp;
@@ -182,16 +217,16 @@ function MbtwhyDetail() {
                             </ButtonDropdown> */}
                             <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
                                 <DropdownToggle style={dropDownStyle}>
-                                    <img className={style.dropDownImg} src="/popover-icon.png"></img>
+                                    <img className={style.dropDownImg} src="/popover-icon.png" alt=""></img>
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem>신고</DropdownItem>
+                                    <DropdownItem name="mbtwhydetail" onClick={(e)=>{openReportWrite(e, board)}}>신고</DropdownItem>
                                 </DropdownMenu>
                             </ButtonDropdown>
                         </div>
-                        <div className={style.boardDate}>
+                        <div style={{color:"#C5C5C5"}}>
                             {board.date}
-                            <img className={style.viewIcon}src="/view-icon.png"></img>
+                            <img className={style.viewIcon} src="/viewIcon-bold.png" alt=""></img>
                             {board.viewCount}
                         </div>
                         <div className={style.boardContent}>
@@ -199,10 +234,10 @@ function MbtwhyDetail() {
                         </div>
                         <div className={style.boardLow}>
                             <div className={style.bookmarkDiv}>
-                                <img src="/bookmark.png"></img>&nbsp;
+                                <img src="/bookmark.png" alt=""></img>&nbsp;
                             </div>
                             <div className={style.thumbDiv}>
-                                <img src="/thumbIcon.png"></img>&nbsp;
+                                <img src="/thumbIcon.png" alt=""></img>&nbsp;
                                 추천&nbsp;
                                 {board.likeCount}
                             </div>
@@ -226,41 +261,74 @@ function MbtwhyDetail() {
                     {comments.length !== 0 && comments.map(comment => {
                         return (
                             <div key={comment.num} className={style.sectionComment}>
-                                <Link to={"/detailform/only-detail/" + comment.num}></Link>
-                                <div className={style.boardWriter}>
+                                <div className={style.writerDiv}>
                                     <div>
                                         <div className={style.circleDiv} style={{backgroundColor:`${comment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
                                         {comment.mbti}&nbsp;&nbsp;&nbsp;
                                         {comment.writer}
                                     </div>
-                                    
-                                    {/* <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                        <DropdownToggle style={dropDownStyle}>
-                                            <img className={style.dropDownImg} src="/popover-icon.png"></img>
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            <DropdownItem>삭제</DropdownItem>
-                                        </DropdownMenu>
-                                    </ButtonDropdown> */}
-                                    <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                        <DropdownToggle style={dropDownStyle}>
-                                            <img className={style.dropDownImg} src="/popover-icon.png"></img>
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                                <DropdownItem>답글</DropdownItem>
-                                                <DropdownItem>신고</DropdownItem>
-                                        </DropdownMenu>
-                                    </ButtonDropdown>
                                 </div>
                                 <div className={style.boardContent}>
                                     {comment.content}
                                 </div>
-                                <div className={style.boardDate}>
-                                    {comment.date}
+                                <div className={style.commentLowDiv}>
+                                    <div>
+                                        {comment.date}&nbsp;&nbsp;&nbsp;
+                                        <Button style={replyButtonStyle}>답글</Button>
+                                    </div>
+                                    <Button style={replyButtonStyle} name="mbtwhycomment" onClick={(e)=>{openReportWrite(e, comment)}}>신고</Button>
                                 </div>
                             </div>
                         )
                     })}
+
+                    {/* 대댓글 */}
+                    <div key={replyComment.num} className={style.sectionReply} style={{display:"flex"}}>
+                        <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
+                        <div>
+                            <div className={style.writerDiv}>
+                                <div>
+                                    <div className={style.circleDiv} style={{backgroundColor:`${replyComment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                    {replyComment.mbti}&nbsp;&nbsp;&nbsp;
+                                    {replyComment.writer}
+                                </div>
+                            </div>
+                            <div className={style.boardContent}>
+                                {replyComment.content}
+                            </div>
+                            <div className={style.commentLowDiv}>
+                                <div>
+                                    {replyComment.date}
+                                </div>
+                                <Button style={replyButtonStyle} name="mbtwhycomment" onClick={(e)=>{openReportWrite(e, replyComment)}}>신고</Button>
+                            </div>
+                        </div>
+                    </div>
+                    {/* 대댓글 */}
+
+                    {/* 본인 댓글 */}
+                    <div key={replyComment.num} className={style.sectionComment} style={{backgroundColor:"#F8F8F8"}}>
+                        <div>
+                            <div className={style.writerDiv}>
+                                <div>
+                                    <div className={style.circleDiv} style={{backgroundColor:`${replyComment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                    {replyComment.mbti}&nbsp;&nbsp;&nbsp;
+                                    {replyComment.writer}
+                                </div>
+                            </div>
+                            <div className={style.boardContent}>
+                                {replyComment.content}
+                            </div>
+                            <div className={style.commentLowDiv}>
+                                <div>
+                                    {replyComment.date}&nbsp;&nbsp;&nbsp;
+                                    <Button style={replyButtonStyle}>답글</Button>
+                                </div>
+                                <Button style={replyButtonStyle}>삭제</Button>
+                            </div>
+                        </div>
+                    </div>
+                    {/* 대댓글 */}
 
                     {/* 삭제된 댓글 */}
                     <div className={style.sectionDeletedComment}>
@@ -323,8 +391,8 @@ function MbtwhyDetail() {
 
                     {/* 답글 달기 */}
                     <div>
-                        <div className={style.replySection}>
-                            <img className={style.replyArrowImg} src="/replyArrow.png"></img>
+                        <div className={style.sectionPostReply}>
+                            <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
                             <Input
                                 style={inputReply}
                                 type="textarea"
@@ -340,6 +408,7 @@ function MbtwhyDetail() {
                         </div>
                         <div className={style.postCommentDiv}>
                             <Button style={buttonStyle}>등록</Button>
+                            <Button style={buttonStyle}>취소</Button>
                         </div>
                     </div>
 

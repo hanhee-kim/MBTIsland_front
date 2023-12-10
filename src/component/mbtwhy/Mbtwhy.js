@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import {
     Pagination,
@@ -18,65 +18,7 @@ import style from "../../css/mbtwhy/Mbtwhy.module.css";
 
 function Mbtwhy() {
 
-    const [boards, setBoard] = useState([
-        {
-            num:1,
-            mbti:"INTP",
-            color:"#9BB7D4",
-            writer:"마춤뻡파괴왕",
-            date:"1일전",
-            content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
-            commentCount:2,
-            likeCount:1,
-            viewCount:23
-        },
-        {
-            num:2,
-            mbti:"INTP",
-            color:"#9BB7D4",
-            writer:"마춤뻡파괴왕",
-            date:"1일전",
-            content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
-            commentCount:2,
-            likeCount:1,
-            viewCount:23
-        },
-        {
-            num:3,
-            mbti:"INTP",
-            color:"#9BB7D4",
-            writer:"마춤뻡파괴왕",
-            date:"1일전",
-            content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
-            commentCount:2,
-            likeCount:1,
-            viewCount:23
-        },
-        {
-            num:4,
-            mbti:"INTP",
-            color:"#9BB7D4",
-            writer:"마춤뻡파괴왕",
-            date:"1일전",
-            content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
-            commentCount:2,
-            likeCount:1,
-            viewCount:23
-        },
-        {
-            num:5,
-            mbti:"INTP",
-            color:"#9BB7D4",
-            writer:"마춤뻡파괴왕",
-            date:"1일전",
-            content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
-            commentCount:2,
-            likeCount:1,
-            viewCount:23
-        }
-    ]);
-
-    const [hotBoard, setHotBoard] = useState(
+    const [hotMbtwhy, setHotMbtwhy] = useState(
         {
             num:1,
             mbti:"INTP",
@@ -90,20 +32,35 @@ function Mbtwhy() {
         }
     );
 
+    useEffect(() => {
+        getMbtwhyList(1, search)
+    }, []);
+
+    // Mbtwhy 게시글 목록
+    const [mbtwhyList, setMbtwhyList] = useState([]);
+
+    // Mbtwhy 게시글 수
+    const [mbtwhyCnt, setMbtwhyCnt] = useState(0);
+
+    // mbti 유형
+    const [mbti, setMbti] = useState('istj');
+    
     // 페이징 상태 값
-    const [pageBtn, setPageBtn] = useState([]);
+    const [page, setPage] = useState([1]);
     const [pageInfo, setPageInfo] = useState({});
+
+    // 검색 값
+    const [search, setSearch] = useState(null);
+
+    // 임시 검색 값
+    const [tmpSearch, setTmpSearch] = useState(null);
+
+    // 정렬 값
+    const [sort, setSort] = useState(null);
 
     // 정렬 드롭다운 open 여부
     const [open, setOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState('최신순'); // 기본 선택값
-
-    // 검색이 되었는지 여부
-    // 검색되면 true로
-    const [isSearch, setIsSearch] = useState(false);
-
-    const [type, setType] = useState('');
-    const [keyword, setKeyword] = useState('');
 
     const handleToggle = () => {
         setOpen(!open);
@@ -113,36 +70,32 @@ function Mbtwhy() {
         setSelectedOption(option);
         setOpen(false);
     };
-
-    // pageChange 함수를 호출한 페이징 영역에서 페이징 항목(1, 2, 3...)들을 인자로 받아옴
-    const pageChange = (repage) => {
-        // 검색되었다면 (isSearch가 true인 경우)
-        if(isSearch) reqBoardSearch(repage);
-        // 검색되지 않았다면 (isSearch가 false인 경우)
-        else reqBoardList(repage);
-    };
     
     // url에 파라미터로 줄 변수 repage
-    const reqBoardList = (repage) => {
-        // if(!repage) repage = 1;
-        axios.get(`http://localhost:8090/mbtwhy/${repage}`)
+    const getMbtwhyList = (page, search) => {
+        let defaultUrl = `http://localhost:8090/mbtwhy?mbti=${mbti}`;
+        if(page !== null) defaultUrl += `&page=${page}`;
+        if(search !== null) defaultUrl += `&search=${search}`;
+        if(sort !== null) defaultUrl += `&sort=${sort}`;
+
+        axios.get(defaultUrl)
         .then(res=> {
             console.log(res);
             let pageInfo = res.data.pageInfo;
-            let list = res.data.boardList;
+            let list = res.data.mbtwhyList;
+            let mbtwhyCnt = res.data.mbtwhyCnt;
 
-            setBoard([...list]);
+            console.log(list);
+            setMbtwhyList([...list]);
+            setPageInfo({...pageInfo});
+            setMbtwhyCnt(mbtwhyCnt);
             
             let btn = [];
             for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
                 btn.push(i)
             }
-            setPageBtn(btn);
+            setPage(btn);
             setPageInfo({...pageInfo});
-
-            // 검색이 아닌, 페이징된 상태이므로
-            // 검색 여부를 위한 isSearch 변수를 false로
-            setIsSearch(false);
         })
         .catch(err=> {
             console.log(err);
@@ -150,40 +103,53 @@ function Mbtwhy() {
     };
 
     const searchSubmit = () => {
-        reqBoardSearch(1);
+        getMbtwhyList(1, search);
     }
 
-    // 페이지 별 검색
-    const reqBoardSearch = (repage) => {
-        if(type==='') {
-            alert('검색 타입을 선택하세요.');
-            return;
-        }
-
-        axios.get(`http://localhost:8090/boardsearch/${repage}/${type}/${keyword}`)
-        .then(res=> {
-            console.log(res);
-
-            let pageInfo = res.data.pageInfo;
-            let list = res.data.boardList;
-
-            setBoard([...list]);
-            
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
-            }
-            setPageBtn(btn);
-            setPageInfo({...pageInfo});
-
-            // 검색이 아닌, 페이징된 상태이므로
-            // 검색 여부를 위한 isSearch 변수를 false로
-            setIsSearch(true);
-        })
-        .catch(err=> {
-            console.log(err);
-        });
+    const handleSearchChange = (event) => {
+        const searchTerm = event.target.value;
+        setTmpSearch(searchTerm);
     };
+
+    const handleSearch = () => {
+        setSearch(tmpSearch);
+        console.log(tmpSearch);
+        getMbtwhyList(1, tmpSearch);
+    }
+
+    const handlePageNo = (pageNo) => {
+        setPage(pageNo);
+        console.log('현재 적용되는 검색어: ' + search);
+        getMbtwhyList(pageNo, search); // setPage(pageNo)는 업데이트가 지연되기 때문에, state인 page가 아니라 전달인자 pageNo로 요청해야함
+    };
+
+    // 페이지네이션
+    const PaginationInside = () => {
+        // if(errorMsg) return null;
+        const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
+        for(let i=pageInfo.startPage; i<=pageInfo.endPage; i++) {
+            pageGroup.push(
+                <span key={i} className={`${page===i? style.activePage: ''}`} onClick={()=>handlePageNo(i)}>{i}</span>
+            )
+        }
+        return (
+            <div className={style.paging}>
+                {!(pageInfo.startPage===1) && (
+                    <>
+                        <span onClick={()=>handlePageNo(1)}>≪</span>
+                        <span onClick={()=>handlePageNo(pageInfo.startPage-10)}>&lt;</span>
+                    </>
+                )}
+                {pageGroup}
+                {!(pageInfo.endPage===pageInfo.allPage) && (
+                    <>
+                        <span onClick={()=>handlePageNo(pageInfo.endPage+1)}>&gt;</span>
+                        <span onClick={()=>handlePageNo(pageInfo.allPage)}>≫</span>
+                    </>
+                )}
+            </div>
+        );
+    }
 
     const sortStyle = {
         margin:"0 auto",
@@ -215,7 +181,7 @@ function Mbtwhy() {
                     <h6>글 작성</h6>
                     <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
                         <DropdownToggle style={sortStyle}>
-                            <img className={style.sortImg} src="/sortIcon.png"></img>
+                            <img className={style.sortImg} src="/sortIcon.png" alt=""></img>
                             {selectedOption}
                         </DropdownToggle>
                         <DropdownMenu>
@@ -228,34 +194,34 @@ function Mbtwhy() {
 
                 {/* 인기 게시글 영역 */}
                 <div className={style.sectionBoards}>
-                    <Link to={"/detailform/only-detail/" + hotBoard.num} style={{textDecoration:"none"}}>
-                        <div key={hotBoard.num} className={style.sectionBoard}>
+                    <Link to={"/detailform/only-detail/" + hotMbtwhy.num} style={{textDecoration:"none"}}>
+                        <div key={hotMbtwhy.num} className={style.sectionBoard}>
                             <div className={style.hotTag}>
                                 &#128293;HOT
                             </div>
                             <div className={style.boardWriter}>
-                                <div style={{backgroundColor:`${hotBoard.color}`}}> </div>&nbsp;&nbsp;&nbsp;
-                                {hotBoard.mbti}&nbsp;&nbsp;&nbsp;
-                                {hotBoard.writer}
+                                <div style={{backgroundColor:`${hotMbtwhy.color}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                {hotMbtwhy.mbti}&nbsp;&nbsp;&nbsp;
+                                {hotMbtwhy.writer}
                             </div>
                             <div className={style.boardDate}>
-                                {hotBoard.date}
+                                {hotMbtwhy.date}
                             </div>
                             <div className={style.boardContent}>
-                                {hotBoard.content}
+                                {hotMbtwhy.content}
                             </div>
                             <div className={style.boardLow}>
                                 <div>
-                                    <img src="/commentIcon.png"></img>
-                                    {hotBoard.commentCount}
+                                    <img src="/commentIcon.png" alt=""></img>
+                                    {hotMbtwhy.commentCount}
                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <div>
-                                    <img src="/thumbIcon.png"></img>
-                                    {hotBoard.likeCount}
+                                    <img src="/thumbIcon.png" alt=""></img>
+                                    {hotMbtwhy.likeCount}
                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <div>
-                                    <img src="/view-icon.png"></img>
-                                    {hotBoard.viewCount}
+                                    <img src="/viewIcon.png" alt=""></img>
+                                    {hotMbtwhy.viewCount}
                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </div>
                         </div>
@@ -264,33 +230,33 @@ function Mbtwhy() {
 
                 {/* 게시글 영역 */}
                 <div className={style.sectionBoards}>
-                    {boards.length !== 0 && boards.map(board => {
+                    {mbtwhyList.length !== 0 && mbtwhyList.map(mbtwhy => {
                         return (
-                            <Link to={"/detailform/only-detail/" + board.num} style={{textDecoration:"none"}}>
-                                <div key={board.num} className={style.sectionBoard}>
+                            <Link to={"/detailform/only-detail/" + mbtwhy.num} style={{textDecoration:"none"}}>
+                                <div key={mbtwhy.no} className={style.sectionBoard}>
                                     <div className={style.boardWriter}>
-                                    <div style={{backgroundColor:`${board.color}`}}> </div>&nbsp;&nbsp;&nbsp;
-                                        {board.mbti}&nbsp;&nbsp;&nbsp;
-                                        {board.writer}
+                                    <div style={{backgroundColor:`${mbtwhy.color}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                        {mbtwhy.mbtiCategory}&nbsp;&nbsp;&nbsp;
+                                        {mbtwhy.writerNickname}
                                     </div>
                                     <div className={style.boardDate}>
-                                        {board.date}
+                                        {mbtwhy.writeDate}
                                     </div>
                                     <div className={style.boardContent}>
-                                        {board.content}
+                                        {mbtwhy.content}
                                     </div>
                                     <div className={style.boardLow}>
                                         <div>
-                                            <img src="/commentIcon.png"></img>
-                                            {board.commentCount}
+                                            <img src="/commentIcon.png" alt=""></img>
+                                            {/* {mbtwhy.commentCount} */}
                                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <div>
-                                            <img src="/thumbIcon.png"></img>
-                                            {board.likeCount}
+                                            <img src="/thumbIcon.png" alt=""></img>
+                                            {mbtwhy.recommendCnt}
                                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <div>
-                                            <img src="/view-icon.png"></img>
-                                            {board.viewCount}
+                                            <img src="/viewIcon.png" alt=""></img>
+                                            {mbtwhy.viewCnt}
                                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     </div>
                                 </div>
@@ -300,44 +266,12 @@ function Mbtwhy() {
                 </div><br/><br/>
 
                 {/* 페이징 영역 */}
-                <Pagination aria-label="Page navigation example" className={style.pagingLabel}>
-                    {
-                        pageInfo.curPage===1?
-                        <PaginationItem disabled>
-                            <PaginationLink previous href="#" />
-                        </PaginationItem>:
-                        <PaginationItem>
-                            {/* <PaginationLink previous href={"/list/" + (pageInfo.curPage - 1)} /> */}
-                            <PaginationLink previous onClick={()=>pageChange(pageInfo.curPage-1)}/>
-                        </PaginationItem>
-                    }
-
-                    {                   
-                        pageBtn.map(item=>{
-                            return(
-                                <PaginationItem key={item} className={item===pageInfo.curPage? 'active':''}>
-                                    {/* <PaginationLink href={"/list/" + item}> */}
-                                    {/* 고유한 id를 넘겨줌 */}
-                                    <PaginationLink onClick={() => pageChange(item)}>
-                                        {item}
-                                    </PaginationLink>
-                                </PaginationItem>                            
-                            )
-                        })
-                    }
-
-                    {
-                        <PaginationItem disabled={pageInfo.curPage === pageInfo.endPage}>
-                            {/* <PaginationLink next href={"/list/" + (pageInfo.curPage + 1)}/> */}
-                            <PaginationLink next onClick={()=>pageChange(pageInfo.curPage+1)}/>
-                        </PaginationItem>
-                    }
-                </Pagination>
+                {PaginationInside()}
 
                 {/* 검색 영역 */}
                 <FormGroup row className={style.sectionSearch}>
                     <Col sm={3}>
-                        <Input type='select' name="type" onChange={(e)=>setType(e.target.value)}>
+                        <Input type='select' name="type">
                             <option value='content'>내용</option>
                             <option value='comment'>댓글</option>
                             <option value='content&comment'>내용 + 댓글</option>
@@ -345,10 +279,10 @@ function Mbtwhy() {
                         </Input>
                     </Col>
                     <Col sm={6}>
-                        <Input type="text" name="keyword" onChange={(e)=>setKeyword(e.target.value)}/>
+                        <Input type="text" onChange={handleSearchChange}/>
                     </Col>
                     <Col sm={3}>
-                        <Button style={buttonStyle} onClick={searchSubmit}>검색</Button>
+                        <Button style={buttonStyle} onClick={handleSearch}>검색</Button>
                     </Col>
                 </FormGroup>
             </div>
