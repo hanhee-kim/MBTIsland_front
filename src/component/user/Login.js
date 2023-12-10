@@ -1,5 +1,6 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import {
@@ -14,6 +15,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
+import Swal from "sweetalert2";
 // import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -60,39 +62,97 @@ const Login = () => {
     setFindModal(!findModal);
   };
 
-  const [userEmail, setUserEmail] = useState("");
+  // const [userEmail, setUserEmail] = useState("");
   const [user, setUser] = useState({
     username: "",
     userPassword: "",
   });
+  const [findForm,setFindForm] = useState({
+    userEmail:'',
+    type:'',
+  })
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //function
   const change = (e) => {
-    setUser({ ...user, [e.target.name]: [e.target.value] });
-    // console.log("user:" + user.username + "  " + user.password);
+    setUser({ ...user, [e.target.name]: e.target.value });
+    console.log("user:" + user.username + "  " + user.userPassword);
   };
+
   const login = (e) => {
     e.preventDefault();
-    // axios
-    //   .post("http://localhost:8090/login", user)
-    //   .then((res) => {
-    //     console.log(res.headers.authorization);
-    //     dispatch({ type: "token", payload: res.headers.authorization });
-    //     navigate("/user");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    axios
+      .post("http://localhost:8090/login", user)
+      .then((res) => {
+        console.log(res.headers.authorization);
+        dispatch({ type: "token", payload: res.headers.authorization });
+        Swal.fire({
+          title:'로그인되었습니다.',
+          icon:'success',
+        }).then(function(){
+          navigate("/"); //main으로 이동
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+        Swal.fire({
+          title:'회원정보가 일치하지 않습니다.',
+          icon:'error',
+        })
+      });
   };
   const openFind = (e, type) => {
     e.preventDefault();
     setModalType(type);
     toggle();
   };
-  // const goJoin = () => {
-  //   navigate("/join");
-  // };
+  //비밀번호 아이디 찾기에서 보내기 눌렀을때
+  const sendFindEmail = (e,type) => {
+    console.log(type);
+    console.log(findForm.userEmail);
+    //Email의 유효성조건
+    var emailRegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if(emailRegExp.test(findForm.userEmail)){
+      setFindForm({...findForm,type:type});
+      let sendFindForm = {...findForm};
+      
+      axios
+          .post("http://localhost:8090/find",sendFindForm)
+          .then((res)=>{
+            console.log(res);
+            if(res.data === "해당 Email 존재하지 않음."){
+              Swal.fire({
+                title:res.data,
+                icon:'warning'
+              })
+            }else if(res.data === "ID전송완료"){
+              Swal.fire({
+                title:res.data,
+                text:'전송이 완료되었습니다. Email을 확인해주세요!',
+                icon:'success',
+              })
+              .then(toggle())
+            }else if(res.data === "PW전송완료"){
+              Swal.fire({
+                title:res.data,
+                text:'전송이 완료되었습니다. Email을 확인해주세요!',
+                icon:'success',
+              })
+              .then(toggle())
+            }
+          })
+          .catch((err)=>{
+            console.log(err);
+          })
+    } else{
+      Swal.fire({
+        title:'Email을 올바르게 입력해주세요.',
+        icon:'warning',
+      })
+    }
+  
+    
+  }
   const goKakaoLogin = () => {
     Location.href = "http://www.naver.com";
   };
@@ -121,7 +181,7 @@ const Login = () => {
               name="username"
               id="username"
               placeholder="ID를 입력하세요."
-              onChange={change}
+              onChange={(e)=>change(e)}
             />
           </Col>
         </FormGroup>
@@ -135,7 +195,7 @@ const Login = () => {
               name="userPassword"
               id="userPassword"
               placeholder="PW를 입력하세요."
-              onChange={change}
+              onChange={(e)=>change(e)}
             />
           </Col>
         </FormGroup>
@@ -174,26 +234,26 @@ const Login = () => {
           <div style={{ width: "440px", border: "1px solid gray" }}></div>
         </div>
         <div style={socialBtnStyle}>
-          <a href="http://www.kakao.com" target="_blank">
-            {/* <a
+            <a
             href="http://localhost:8090/oauth2/authorization/kakao"
-            target="_blank"
-          > */}
+            // target="_blank"
+          >
             <img
               className=""
               src={"../kakao_login.png"}
               style={{ width: "183px", height: "45px" }}
-              onClick={goKakaoLogin}
+              // onClick={goKakaoLogin}
               alt="kakaoLogin"
             />
           </a>
-          <a href="http://www.naver.com" target="_blank">
-            {/* <a href="http://localhost:8090/oauth2/authorization/naver" target="_blank"> */}
+            <a href="http://localhost:8090/oauth2/authorization/naver" 
+            // target="_blank"
+            >
             <img
               className=""
               src={"../naver_Login.png"}
               style={{ width: "183px", height: "45px" }}
-              onClick={goNaverLogin}
+              // onClick={goNaverLogin}
               alt="naverLogin"
             />
           </a>
@@ -209,7 +269,7 @@ const Login = () => {
               type="text"
               name="userEmail"
               onChange={(e) => {
-                setUserEmail(e.target.value);
+                setFindForm({...findForm,userEmail:e.target.value});
               }}
             />
             <div
@@ -226,9 +286,12 @@ const Login = () => {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="dark" onClick={toggle}>
+          <Button color="light" onClick={toggle}>
+            취소
+          </Button>
+          <Button color="dark" onClick={(e)=>sendFindEmail(e,modalType)}>
             보내기
-          </Button>{" "}
+          </Button>
         </ModalFooter>
       </Modal>
     </div>

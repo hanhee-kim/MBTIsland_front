@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
 
 const AddJoin = () => {
   //css
   const addJoinFormStyle = {
     width: "700px",
-    height: "450px",
+    height: "auto",
     padding: "15px",
     margin: "0 auto",
     boxShadow: "5px 5px lightGray",
@@ -14,6 +17,7 @@ const AddJoin = () => {
     fontSize: "20px",
     fontWeight: "500",
     marginTop: "200px",
+    marginBottom:"200px"
   };
   const mbtiCheckBoxStyle = {
     border: "1px solid gray",
@@ -42,33 +46,51 @@ const AddJoin = () => {
     borderColor: "gray",
   };
   //state,effect,...
-  const [user, setUser] = useState({
-    userMbti: "",
-    userEmail: "",
-  });
+  const token = useSelector((state) => state.persistedReducer.token.token);
+  const user = useSelector((state) =>  state.persistedReducer.user.user)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [emailCode, setEmailCode] = useState("");
 
   const [mbtiCheckEI, setMbtiCheckEI] = useState("E");
   const [mbtiCheckNS, setMbtiCheckNS] = useState("N");
   const [mbtiCheckTF, setMbtiCheckTF] = useState("T");
   const [mbtiCheckPJ, setMbtiCheckPJ] = useState("P");
-  //보내기를 눌렀는지? 인증이 되었는지?mbti 4개 선택 했는지
+  useEffect(()=>{
+    console.log(token);
+  },[])
   //function
   const addJoin = (e) => {
     e.preventDefault();
-    let sendUser = {
-      ...user,
-      muserMbti: mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ,
-    };
+    const userMbti= mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ;
+    
+    axios
+    .get(`http://localhost:8090/guest/${userMbti}`,{
+      headers : {
+        Authorization : token,
+      }
+    })
+    .then(res=> {            
+      console.log(res);
+      console.log("data:"+res.data);
+      // setUser(res.data);
+      dispatch({type:"user",payload:res.data});
+      console.log(user.userMbti);
+      navigate("/");
+    })
+    .catch(err=> {
+      console.log("user가져오기 에러");
+      console.log(err);
+    })
   };
-  const change = (e) => {
-    setUser({ ...user });
-    console.log("user:" + user.userMbti + "email:" + user.userEmail);
-  };
-  const codeChange = (e) => {
-    setEmailCode(e.target.value);
-    console.log(emailCode);
-  };
+  // const change = (e) => {
+  //   setUser({ ...user });
+  //   console.log("user:" + user.userMbti + "email:" + user.userEmail);
+  // };
+  // const codeChange = (e) => {
+  //   setEmailCode(e.target.value);
+  //   console.log(emailCode);
+  // };
   const mbtiEIClick = (e, ei) => {
     e.stopPropagation();
     setMbtiCheckEI(ei);
@@ -96,8 +118,8 @@ const AddJoin = () => {
           <h3 style={{ fontSize: "40px" }}>ADD</h3>
         </FormGroup>
         <FormGroup>
-          <Label sm={12}>
-            필수입력 정보 미추가시 정상 회원가입이 되지 않습니다.
+          <Label sm={12} style={{textAlign:'center'}}>
+            * 필수입력 정보 미추가시 정상 이용이 불가합니다. *
           </Label>
         </FormGroup>
         <FormGroup tag="fieldset" style={{ display: "flex", gap: "10px" }} row>
@@ -188,7 +210,7 @@ const AddJoin = () => {
             </FormGroup>
           </div>
         </FormGroup>
-        <FormGroup row>
+        {/* <FormGroup row>
           <Label for="userEmail" sm={3}>
             이메일
           </Label>
@@ -231,7 +253,7 @@ const AddJoin = () => {
               인증
             </Button>
           </Col>
-        </FormGroup>
+        </FormGroup> */}
 
         <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
           <Button
