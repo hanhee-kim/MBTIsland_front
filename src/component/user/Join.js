@@ -261,7 +261,12 @@ const Join = () => {
                   .post("http://localhost:8090/join", sendUser)
                   .then((res) => {
                     console.log(res);
-                    navigate("/login");
+                    Swal.fire({
+                      title:'가입이 완료되었습니다.',
+                      icon:'success',
+                    }).then(function(){
+                      navigate("/login");
+                    })
                     // window.location.href('/login');
                   })
                   .catch((err) => {

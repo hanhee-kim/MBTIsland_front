@@ -3,14 +3,38 @@ import {Link, useLocation} from "react-router-dom";
 import style from "../../css/common/Header.module.css";
 import { Button, Popover, PopoverBody } from "reactstrap";
 import  axios  from 'axios';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
     const token = useSelector((state) => state.persistedReducer.token.token);
     const user = useSelector((state) => state.persistedReducer.user.user);
     const uri = useLocation().pathname;
+    const dispatch = useDispatch();
     useEffect(() => {
         console.log(uri);
+        //토큰보내서 유저 store에 올림
+        console.log("token???:"+token);
+        if(token == '' || token === null){
+            console.log("token없음");
+        }else{
+            // user 정보
+            axios
+            .get("http://localhost:8090/user",{
+                headers : {
+                    Authorization : token,
+                }
+            })
+            .then(res=> {            
+                console.log(res);
+                console.log("data:");
+                // setUser(res.data);
+                dispatch({type:"user",payload:res.data});
+            })
+            .catch(err=> {
+                console.log("user가져오기 에러");
+                console.log(err);
+            })
+        }
     }, [uri]);
 
 
@@ -36,10 +60,10 @@ const Header = () => {
         setPopoverStates((prevState) => ({...prevState, [popoverKey]:!prevState[popoverKey]}));
     };
     
-    // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
     useEffect(() => {
         
-
+        
+        // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
         //
         const clickOutsidePopover = (event) => {
             const popoverElements = document.querySelectorAll(".popover");
