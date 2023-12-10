@@ -232,7 +232,7 @@ const Header = () => {
 
                         </div>
                     </div>)
-                : user.userRole==='ADMIN'?
+                : user.userRole==='ROLE_ADMIN'?
                     (<div className={style.afterLogin}>
                         <div className={style.openPopover} onClick={()=>togglePopover("popoverUser")} id="popoverUser">
                             <span className={style.userNickname}>관리자 모드</span>
@@ -247,7 +247,12 @@ const Header = () => {
                             </Link>
                         </Popover>
                     </div>)
-                : null}
+                : user.userRole === 'ROLE_GUEST' ?(
+                    <div className={style.addJoin}>
+                        <Link to={'/addjoin'}><Button>추가정보</Button></Link>
+
+                    </div>
+                ):null}
 
             </ul>
             

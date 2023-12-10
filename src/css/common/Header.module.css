@@ -88,6 +88,12 @@
     font-weight: 600;
     font-size: 17px;
 }
+/* 추가정보 버튼 */
+.addJoin{
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+}
 .bellIcon, .messageIcon {
     margin-right: 20px;
     width: 20px;
