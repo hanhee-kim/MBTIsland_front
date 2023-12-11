@@ -56,7 +56,7 @@ function Mbtwhy() {
 
     // 정렬 값
     const sortValue = queryParams.get('sort');
-    const [sort, setSort] = useState('new');
+    const [sort, setSort] = useState(sortValue);
 
     // 정렬 드롭다운 open 여부
     const [open, setOpen] = useState(false);
@@ -99,7 +99,7 @@ function Mbtwhy() {
         console.log("유즈 이펙트! page는 " + page + ", mbti는 " + mbti);
         getMbtwhyList(mbti, page, search, sort);
     }, []);
-    
+
     const searchSubmit = () => {
         getMbtwhyList(mbti, 1, search);
     }
@@ -230,7 +230,7 @@ function Mbtwhy() {
 
                 {/* 인기 게시글 영역 */}
                 <div className={style.sectionBoards}>
-                    <Link to={"/detailform/only-detail/" + hotMbtwhy.num} style={{textDecoration:"none"}}>
+                    <Link to={"/mbtwhydetail"} style={{textDecoration:"none"}}>
                         <div key={hotMbtwhy.num} className={style.sectionBoard}>
                             <div className={style.hotTag}>
                                 &#128293;HOT
@@ -268,7 +268,8 @@ function Mbtwhy() {
                 <div className={style.sectionBoards}>
                     {mbtwhyList.length !== 0 && mbtwhyList.map(mbtwhy => {
                         return (
-                            <Link key={mbtwhy.no} to={"/mbtwhydetail?mbti=" + mbti + "&page=" + page + "&sort=" + sort + "&no=" + mbtwhy.no} style={{textDecoration:"none"}}>
+                            // <Link key={mbtwhy.no} to={"/mbtwhydetail?mbti=" + mbti + "&page=" + page + "&search=" + search + "&sort=" + sort + "&no=" + mbtwhy.no + "&commentPage=1"} style={{textDecoration:"none"}}>
+                                <Link key={mbtwhy.no} to={"/mbtwhydetail?&no=" + mbtwhy.no + "&commentPage=1"} style={{textDecoration:"none"}}>
                                 <div className={style.sectionBoard}>
                                     <div className={style.boardWriter}>
                                     <div style={{backgroundColor:`${mbtwhy.writerMbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
