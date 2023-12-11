@@ -44,6 +44,18 @@
     font-weight: 600;
 } 
 
+/* 주간 인기글 제목(링크) */
+.overflow,
+.overflow:link, 
+.overflow:visited, 
+.overflow:hover, 
+.overflow:active {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
 .weekyHotPostsTitle {
     font-weight: 600;
     padding-left: 12px;
@@ -258,6 +270,7 @@
     /* background: ghostwhite; */
 
     margin-left: -3px;
+    cursor: pointer;
 }
 
 .mbtmiTable>tbody>tr>td.errMsg {

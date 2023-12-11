@@ -2,7 +2,7 @@ import { Popover, PopoverBody, Table } from "reactstrap";
 
 import style from "../../css/mbtmi/MBTmi.module.css";
 import React, { useState } from "react";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 
@@ -28,6 +28,12 @@ const MBTmi = () => {
 
 
     useEffect(() => {
+        // localStorage에 저장된 페이지 정보를 읽음
+        const storedInfo = localStorage.getItem('curPage');
+        if(storedInfo) {
+            setPage(parseInt(storedInfo, 10)); // 페이지넘버
+        }
+
         getWeeklyHotList();
         getNewlyMbtmiList(category, type, search, page);
     }, []);
@@ -77,30 +83,6 @@ const MBTmi = () => {
         })
     }
 
-
-
-
-
-    // const [weeklyHotPosts, setWeeklyHotPosts] = useState([
-    //     {postNo: 22, category: '잡담', title: '잡담 게시판의 인기 게시글 제목', commentCnt: 103, writedate: '2일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 112},
-    //     {postNo: 44, category: '연애', title: '연애 게시판의 인기 게시글 제목', commentCnt: 99, writedate: '3일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 55},
-    //     {postNo: 66, category: '회사', title: '회사 게시판의 인기 게시글 제목', commentCnt: 88, writedate: '1일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 22},
-    //     {postNo: 88, category: '학교', title: '학교 게시판의 인기 게시글 제목', commentCnt: 77, writedate: '4일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 33},
-    //     {postNo: 110, category: '취미', title: '취미 게시판의 인기 게시글 제목취미 게시판의 인기 게시글 제목취미 게시판의 인기 게시글 제목', commentCnt: 111, writedate: '6일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 44},
-    // ]);
-    // const [mbtmiListByPaging, setMbtmiListByPaging] = useState([
-    //     {postNo: 222, category: '연애', title: '연애 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '1분 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 0},
-    //     {postNo: 221, category: '회사', title: '회사 게시판의 최신 게시글 제목회사 게시판의 최신 게시글 제목회사 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '1분 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 0},
-    //     {postNo: 220, category: '잡담', title: '잡담 게시판의 최신 게시글 제목', commentCnt: 2, writedate: '1시간 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 2},
-    //     {postNo: 199, category: '잡담', title: '잡담 게시판의 최신 게시글 제목', commentCnt: 4, writedate: '2일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 0},
-    //     {postNo: 198, category: '취미', title: '취미 게시판의 최신 게시글 제목', commentCnt: 6, writedate: '3주 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 3},
-    //     {postNo: 197, category: '학교', title: '학교 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '3달 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 1},
-    //     {postNo: 196, category: '회사', title: '회사 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '11달 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 5},
-    //     {postNo: 195, category: '잡담', title: '잡담 게시판의 최신 게시글 제목', commentCnt: 12, writedate: '2년 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 30},
-    //     {postNo: 194, category: '잡담', title: '잡담 게시판의 최신 게시글 제목', commentCnt: 8, writedate: '12년 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 40},
-    //     {postNo: 193, category: '취미', title: '취미 게시판의 최신 게시글 제목취미 게시판의 최신 게시글 제목취미 게시판의 최신 게시글 제목', commentCnt: 9, writedate: '13년 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 100},
-    // ]);
-
     const [open,setOpen]=useState(false);
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
     useEffect(() => {
@@ -121,6 +103,9 @@ const MBTmi = () => {
 
 
     const handlePageNo = (pageNo) => {
+        // 현재 페이지번호를 localStorage에 저장
+        localStorage.setItem('curPage', pageNo.toString());
+
         setPage(pageNo);
         console.log('현재 적용되는 검색어: ' + search);
         getNewlyMbtmiList(category, type, search, pageNo); // 1,2,3번째 인자: state에 저장된 기존의 값
@@ -131,6 +116,7 @@ const MBTmi = () => {
     };
     const handleSearch = () => {
         setSearch(tmpSearch);
+        setPage(1);
         getNewlyMbtmiList(category, type, tmpSearch, 1); // 페이지번호만 리셋
     }
 
@@ -163,6 +149,19 @@ const MBTmi = () => {
         );
     }
 
+    // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
+    const navigate = useNavigate();
+    const makeFlexibleLink = (post) => {
+        // alert('no, category, type, search, page: ' + post.no + ", " + category + ", " + type + ", " + search + ", " + page);
+        const linkTo = `/mbtmidetail/${post.no}` +
+                        (category? `/${category}` : '') +
+                        (type? `/${type}` : '') +
+                        (search? `/${search}` : '') +
+                        (page? `/${page}` : '');
+        navigate(linkTo, {replace:false});
+    }
+
+
     return (
         <>
         <div className={style.container} id="top">
@@ -183,10 +182,10 @@ const MBTmi = () => {
                             ) : (
                                 weeklyHotList.length>0 && weeklyHotList.map(post => {
                                     return (
-                                    <tr key={post.postNo}>
+                                    <tr key={post.no}>
                                         <td>[{post.category}]</td>
                                         <td>
-                                            <span className={style.overflow}>{post.title}</span>&nbsp;&nbsp;
+                                            <span className={style.overflow} onClick={()=>makeFlexibleLink(post)}>{post.title}</span>&nbsp;&nbsp;
                                             <span>[{post.commentCnt}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                             <small>{formatDate(post.writeDate)}</small>
                                         </td>
@@ -253,7 +252,7 @@ const MBTmi = () => {
                         ) : (
                             mbtmiList.length>0 && mbtmiList.map(post => {
                                 return(
-                                <tr>
+                                <tr key={post.no}>
                                     <td>
                                         <div className={style.td1row}>
                                             <div className={style.profileColor}/>&nbsp;
@@ -261,7 +260,7 @@ const MBTmi = () => {
                                             <small>{formatDate(post.writeDate)}</small>
                                         </div>
                                         <div className={style.td2row}>
-                                            <span className={style.overflowLong}>{post.title}</span>
+                                            <span className={style.overflowLong} onClick={()=>makeFlexibleLink(post)}>{post.title}</span>
                                             <span>
                                                 <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;{post.recommendCnt}</small>
                                                 <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;{post.commentCnt}</small>

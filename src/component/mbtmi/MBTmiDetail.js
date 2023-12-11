@@ -1,24 +1,85 @@
 import { Popover, PopoverBody, Table } from "reactstrap";
-
 import style from "../../css/mbtmi/MBTmi.module.css";
 import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { useLocation, useNavigate, useParams } from "react-router";
 
 const MBTmiDetail = () => {
 
-    const [mbtmi, setMbtmi] = useState({
-        postNo: 33, 
-        writerId: 'userId0123',
-        writerMbti: 'ESFP',
-        writerNickname: '포로리',
-        writedate: '2023년 11월 18일 00:28',
-        viewCnt: 22,
-        recommentCnt: 8,
-        postTitle: '게시글 상세페이지 글제목',
-        postContent: 
-            '게시글 내용 텍스트!!<br/>게시글 내용 텍스트게시글 내용 텍스트<br/>게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트?<br/>게시글 내용 텍스트<br/><br/>게시글 내용 텍스트<br/>게시글 내용 텍스트게시글 내용 텍스트<br/><br/>게시글 내용 텍스트<br/><br/>게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트 줄바꿈처리줄바꿈처리줄바꿈처리<br/>',
-    });
+    const { no, category, type, search, page } = useParams();
+    const location = useLocation();
+    
+    const [mbtmi, setMbtmi] = useState(null);
+    const [mbtmiCommentList, setMbtmiCommentList] = useState([]);
+    const [mbtmiCommentCnt, setMbtmiCommentCnt] = useState(0);
     const [isRecommended, setIsRecommended] = useState('Y');
     const [isBookmarked, setIsBookmarked] = useState('Y');
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}`;
+    };
+    const [commentPage, setCommentPage] = useState(1); // 페이지 이동번호
+
+    useEffect(()=> {
+        getMbtmiDetail(no);
+    }, [no]);
+
+    const getMbtmiDetail = (no) => {
+        let defaultUrl = `http://localhost:8090/mbtmidetail/${no}`;
+        if(commentPage!==null) defaultUrl += `?commentPage=${commentPage}`;
+        axios.get(defaultUrl)
+        .then(res=> {
+            console.log(res);
+            let mbtmi = res.data.mbtmi;
+            // let isRecommended = res.data.isRecommended;
+            // let isBookmarked = res.data.isBookmarked;
+            let mbtmiCommentList = res.data.mbtmiCommentList;
+            let mbtmiCommentCnt = res.data.mbtmiCommentCnt;
+            setMbtmi(mbtmi);
+            // setIsRecommended(isRecommended);
+            // setIsBookmarked(isBookmarked);
+            setMbtmiCommentList(mbtmiCommentList);
+            setMbtmiCommentCnt(mbtmiCommentCnt);
+        })
+        .catch(err=> {
+            console.log(err);
+        });
+    }
+    // const [mbtmi, setMbtmi] = useState({
+    //     postNo: 33, 
+    //     writerId: 'userId0123',
+    //     writerMbti: 'ESFP',
+    //     writerNickname: '포로리',
+    //     writedate: '2023년 11월 18일 00:28',
+    //     viewCnt: 22,
+    //     recommentCnt: 8,
+    //     postTitle: '게시글 상세페이지 글제목',
+    //     postContent: 
+    //         '게시글 내용 텍스트!!<br/>게시글 내용 텍스트게시글 내용 텍스트<br/>게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트?<br/>게시글 내용 텍스트<br/><br/>게시글 내용 텍스트<br/>게시글 내용 텍스트게시글 내용 텍스트<br/><br/>게시글 내용 텍스트<br/><br/>게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트 줄바꿈처리줄바꿈처리줄바꿈처리<br/>',
+    // });
+    
+    const deleteMbtmi = (no) => {
+        axios.delete(`http://localhost:8090/deletembtmi/${no}`)
+        .then(res => {
+            window.confirm('게시글을 삭제하시겠습니까?');
+            alert('완료되었습니다.');
+            goToPreviousList();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+    // 목록으로 가기 버튼
+    const navigate = useNavigate();
+    const goToPreviousList = () => {
+        navigate(-1);
+    }
+
 
     // 팝오버 여닫힘 상태, 함수
     const [popoverStates, setPopoverStates] = useState({popover1:false, popover2:false});
@@ -43,6 +104,8 @@ const MBTmiDetail = () => {
         };
 
     }, []);
+
+    
 
 
     // 댓글테이블 데이터 가정
@@ -69,45 +132,81 @@ const MBTmiDetail = () => {
                             <p>유형별로 모여 자유롭게  이야기를 나눌 수 있는 공간</p>
                         </span>
                 </div>
-                <span className={style.currnetCategory}>잡담 &gt;</span>
-                {isBookmarked==='N'? (
-                <img src={"/bookmarkIcon-white.png" } alt="책갈피" className={style.bookmarkIcon} />
+
+                {mbtmi? (
+                    <>
+                    <span className={style.currnetCategory}>{mbtmi.category} &gt;</span>
+                    {isBookmarked==='N'? (
+                    <img src={"/bookmarkIcon-white.png" } alt="책갈피" className={style.bookmarkIcon} />
+                    ) : (
+                    <img src={"/bookmarkIcon-red.png" } alt="책갈피" className={style.bookmarkIcon} />
+                    )}
+                    <div className={style.postArea}>
+                        <div>
+                            <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>togglePopover("popover1")} id="popover1"/>
+                            <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover1} target="popover1" toggle={()=>togglePopover("popover1")}>
+                                <PopoverBody className={style.popoverItem}>수정</PopoverBody>
+                                <PopoverBody className={style.popoverItem} onClick={()=> deleteMbtmi(mbtmi.no)}>삭제</PopoverBody>
+                            </Popover><br/><br/><br/>
+                        </div>
+                        <h2 className={style.postTitle}>{mbtmi.title}</h2>
+                        <div className={style.profileColor}/>&nbsp;
+                        <span>{mbtmi.writerMbti}&nbsp;{mbtmi.writerNickname}</span>
+                        <h6>{formatDate(mbtmi.writeDate)}
+                            <span><img src={"/view-icon.png" } alt="조회" className={style.viewIcon} />&nbsp;{mbtmi.viewCnt}</span>
+                        </h6>
+                        <div className={style.postContent} dangerouslySetInnerHTML={{ __html: mbtmi.content }}></div>
+                        <p>
+                            {isRecommended==='N'? (
+                            <img src={"/thumbIcon.png" } alt="추천아이콘" className={style.thumbIconDetail} />
+                            ) : (
+                            <img src={"/thumbIcon-full.png" } alt="추천아이콘" className={style.thumbIconDetail} />
+                            )}
+                            <span>&nbsp;추천&nbsp;{mbtmi.recommentCnt}</span>
+                        </p>
+                        <div className={style.postBtns}>
+                            <button onClick={goToPreviousList}>목록</button>
+                            <button><img src={"/reportIcon.png" } alt="신고아이콘" className={style.reportIcon} />&nbsp;신고</button>
+                        </div>
+                    </div>
+                    </>
                 ) : (
-                <img src={"/bookmarkIcon-red.png" } alt="책갈피" className={style.bookmarkIcon} />
-                )}
-                <div className={style.postArea}>
-                    <div>
-                        <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>togglePopover("popover1")} id="popover1"/>
-                        <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover1} target="popover1" toggle={()=>togglePopover("popover1")}>
-                            <PopoverBody className={style.popoverItem}>수정</PopoverBody>
-                            <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
-                        </Popover><br/><br/><br/>
-                    </div>
-                    <h2 className={style.postTitle}>{mbtmi.postTitle}</h2>
-                    <div className={style.profileColor}/>&nbsp;
-                    <span>{mbtmi.writerMbti}&nbsp;{mbtmi.writerNickname}</span>
-                    <h6>{mbtmi.writedate}
-                        <span><img src={"/view-icon.png" } alt="조회" className={style.viewIcon} />&nbsp;{mbtmi.viewCnt}</span>
-                    </h6>
-                    <div className={style.postContent} dangerouslySetInnerHTML={{ __html: mbtmi.postContent }}></div>
-                    <p>
-                        {isRecommended==='N'? (
-                        <img src={"/thumbIcon.png" } alt="추천아이콘" className={style.thumbIconDetail} />
-                        ) : (
-                        <img src={"/thumbIcon-full.png" } alt="추천아이콘" className={style.thumbIconDetail} />
-                        )}
-                        <span>&nbsp;추천&nbsp;{mbtmi.recommentCnt}</span>
-                    </p>
-                    <div className={style.postBtns}>
-                        <button>목록</button>
-                        <button><img src={"/reportIcon.png" } alt="신고아이콘" className={style.reportIcon} />&nbsp;신고</button>
-                    </div>
-                </div>
+                    <p>...페이지 로딩 중...</p>
+                )}             
+
                 <div className={style.commentArea}>
-                    <h6>&nbsp;&nbsp;70개의 댓글</h6>
+                    <h6>&nbsp;&nbsp;{mbtmiCommentCnt}개의 댓글</h6>
                     <table>
                         <tbody>
-                            <tr>
+                            {mbtmiCommentList.length>0 && mbtmiCommentList.map(comment=> {
+                                return(
+                                    <tr key={comment.commentNo}>
+                                        <td>
+                                            <div className={style.commentTd1row}>
+                                                <div className={style.CommentProfileColor}/>&nbsp;
+                                                <span>{comment.writerMbti}&nbsp;{comment.writerNickname}</span>
+                                                {/* <span>작성자</span> */}
+                                                <small>{formatDate(comment.writeDate)}</small>
+                                                <span>
+                                                    <img src={"/popover-icon.png" } alt="..." className={style.commentPopoverIcon} onClick={()=>togglePopover("popover2")} id="popover2"/>
+                                                    <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover2} target="popover2" toggle={()=>togglePopover("popover2")}>
+                                                            <PopoverBody className={style.popoverItem}>수정</PopoverBody>
+                                                            <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
+                                                    </Popover>
+                                                </span>
+                                            </div>
+                                            <div className={style.commentTd2row}>
+                                                {comment.commentContent}
+                                            </div>
+                                            <div className={style.commentTd3row}>
+                                                <small>답글쓰기</small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+
+                            {/* <tr>
                                 <td>
                                     <div className={style.commentTd1row}>
                                         <div className={style.CommentProfileColor}/>&nbsp;
@@ -173,7 +272,7 @@ const MBTmiDetail = () => {
                                         <small>답글쓰기</small>
                                     </div>
                                 </td>
-                            </tr>
+                            </tr> */}
 
                         </tbody>
                     </table>

@@ -26,7 +26,7 @@ import MBTmi from "./component/mbtmi/MBTmi";
 import MBTmiDetail from "./component/mbtmi/MBTmiDetail";
 import MBTmiForm from "./component/mbtmi/MBTmiForm";
 import Notice from "./component/notice/Notice";
-import NoticeDetail from "./component/notice/NoticeDeatil";
+import NoticeDetail from "./component/notice/NoticeDetail";
 import AdminFrame from "./component/admin/AdminFrame";
 import DefaultMypage from "./component/user/DefaultMypage";
 
@@ -91,10 +91,10 @@ function App() {
               {/* 하영 */}
               <Route exact path="/" element={<Main />} />
               <Route exact path="/mbtmi" element={<MBTmi />} />
-              <Route exact path="/mbtmidetail" element={<MBTmiDetail />} />
+              <Route exact path="/mbtmidetail/:no/:category?/:type?/:search?/:page?" element={<MBTmiDetail />} />
               <Route exact path="/mbtmiform" element={<MBTmiForm />} />
               <Route exact path="/notice" element={<Notice />} />
-              <Route exact path="/noticedetail" element={<NoticeDetail />} />
+              <Route exact path="/noticedetail/:no/:search?/:page?" element={<NoticeDetail />} />
               <Route exact path="/adminnotice" element={<AdminFrame />} />
               <Route exact path="/adminnoticeform" element={<AdminFrame />} />
               <Route exact path="/adminqna" element={<AdminFrame />} />
