@@ -11,12 +11,13 @@ const OAuth2User = () => {
   useEffect(() => {
     console.log("token:" + token);
     dispatch({ type: "token", payload: token });
+    localStorage.setItem("token",token);
     console.log("loginType : " + loginType);
-    // if (loginType === "join") {
-    //   navigate("/addjoin");
-    // } else {
-    //   navigate("/");
-    // }
+    if (loginType === "join") {
+      navigate("/addjoin");
+    } else {
+      navigate("/");
+    }
   }, []);
 };
 
