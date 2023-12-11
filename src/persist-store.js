@@ -4,7 +4,7 @@ import { rootReducer } from "./reducer";
 import thunk from "redux-thunk";
 import storage from "redux-persist/lib/storage";
 //logger
-import logger from "redux-logger";
+// import logger from "redux-logger";
 
 const persistConfig = {
   key: "root",
@@ -31,7 +31,7 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [PERSIST, PURGE],
       },
-    }).concat(logger),
+    }),
 });
 // const store = createStore(persistedReducer);
 
