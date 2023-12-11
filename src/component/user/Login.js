@@ -67,10 +67,10 @@ const Login = () => {
     username: "",
     userPassword: "",
   });
-  const [findForm,setFindForm] = useState({
-    userEmail:'',
-    type:'',
-  })
+  const [findForm, setFindForm] = useState({
+    userEmail: "",
+    type: "",
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //function
@@ -86,19 +86,21 @@ const Login = () => {
       .then((res) => {
         console.log(res.headers.authorization);
         dispatch({ type: "token", payload: res.headers.authorization });
+        console.log(res.data);
+        dispatch({ type: "user", payload: res.data });
         Swal.fire({
-          title:'로그인되었습니다.',
-          icon:'success',
-        }).then(function(){
+          title: "로그인되었습니다.",
+          icon: "success",
+        }).then(function () {
           navigate("/"); //main으로 이동
-        })
+        });
       })
       .catch((err) => {
         console.log(err);
         Swal.fire({
-          title:'회원정보가 일치하지 않습니다.',
-          icon:'error',
-        })
+          title: "회원정보가 일치하지 않습니다.",
+          icon: "error",
+        });
       });
   };
   const openFind = (e, type) => {
@@ -107,52 +109,48 @@ const Login = () => {
     toggle();
   };
   //비밀번호 아이디 찾기에서 보내기 눌렀을때
-  const sendFindEmail = (e,type) => {
+  const sendFindEmail = (e, type) => {
     console.log(type);
     console.log(findForm.userEmail);
     //Email의 유효성조건
     var emailRegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if(emailRegExp.test(findForm.userEmail)){
-      setFindForm({...findForm,type:type});
-      let sendFindForm = {...findForm};
-      
+    if (emailRegExp.test(findForm.userEmail)) {
+      setFindForm({ ...findForm, type: type });
+      let sendFindForm = { ...findForm };
+
       axios
-          .post("http://localhost:8090/find",sendFindForm)
-          .then((res)=>{
-            console.log(res);
-            if(res.data === "해당 Email 존재하지 않음."){
-              Swal.fire({
-                title:res.data,
-                icon:'warning'
-              })
-            }else if(res.data === "ID전송완료"){
-              Swal.fire({
-                title:res.data,
-                text:'전송이 완료되었습니다. Email을 확인해주세요!',
-                icon:'success',
-              })
-              .then(toggle())
-            }else if(res.data === "PW전송완료"){
-              Swal.fire({
-                title:res.data,
-                text:'전송이 완료되었습니다. Email을 확인해주세요!',
-                icon:'success',
-              })
-              .then(toggle())
-            }
-          })
-          .catch((err)=>{
-            console.log(err);
-          })
-    } else{
+        .post("http://localhost:8090/find", sendFindForm)
+        .then((res) => {
+          console.log(res);
+          if (res.data === "해당 Email 존재하지 않음.") {
+            Swal.fire({
+              title: res.data,
+              icon: "warning",
+            });
+          } else if (res.data === "ID전송완료") {
+            Swal.fire({
+              title: res.data,
+              text: "전송이 완료되었습니다. Email을 확인해주세요!",
+              icon: "success",
+            }).then(toggle());
+          } else if (res.data === "PW전송완료") {
+            Swal.fire({
+              title: res.data,
+              text: "전송이 완료되었습니다. Email을 확인해주세요!",
+              icon: "success",
+            }).then(toggle());
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
       Swal.fire({
-        title:'Email을 올바르게 입력해주세요.',
-        icon:'warning',
-      })
+        title: "Email을 올바르게 입력해주세요.",
+        icon: "warning",
+      });
     }
-  
-    
-  }
+  };
   const goKakaoLogin = () => {
     Location.href = "http://www.naver.com";
   };
@@ -181,7 +179,7 @@ const Login = () => {
               name="username"
               id="username"
               placeholder="ID를 입력하세요."
-              onChange={(e)=>change(e)}
+              onChange={(e) => change(e)}
             />
           </Col>
         </FormGroup>
@@ -195,7 +193,7 @@ const Login = () => {
               name="userPassword"
               id="userPassword"
               placeholder="PW를 입력하세요."
-              onChange={(e)=>change(e)}
+              onChange={(e) => change(e)}
             />
           </Col>
         </FormGroup>
@@ -234,7 +232,7 @@ const Login = () => {
           <div style={{ width: "440px", border: "1px solid gray" }}></div>
         </div>
         <div style={socialBtnStyle}>
-            <a
+          <a
             href="http://localhost:8090/oauth2/authorization/kakao"
             // target="_blank"
           >
@@ -246,9 +244,10 @@ const Login = () => {
               alt="kakaoLogin"
             />
           </a>
-            <a href="http://localhost:8090/oauth2/authorization/naver" 
+          <a
+            href="http://localhost:8090/oauth2/authorization/naver"
             // target="_blank"
-            >
+          >
             <img
               className=""
               src={"../naver_Login.png"}
@@ -269,7 +268,7 @@ const Login = () => {
               type="text"
               name="userEmail"
               onChange={(e) => {
-                setFindForm({...findForm,userEmail:e.target.value});
+                setFindForm({ ...findForm, userEmail: e.target.value });
               }}
             />
             <div
@@ -289,7 +288,7 @@ const Login = () => {
           <Button color="light" onClick={toggle}>
             취소
           </Button>
-          <Button color="dark" onClick={(e)=>sendFindEmail(e,modalType)}>
+          <Button color="dark" onClick={(e) => sendFindEmail(e, modalType)}>
             보내기
           </Button>
         </ModalFooter>

@@ -43,16 +43,14 @@ import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
 
-
-
 export const persistor = persistStore(store);
 function App() {
   const [isPopup, setIsPopup] = useState(false);
-  useEffect(() => {
-    window.onbeforeunload = () => {
-      persistor.purge();
-    };
-  }, []);
+  // useEffect(() => {
+  //   window.onbeforeunload = () => {
+  //     persistor.purge();
+  //   };
+  // }, []);
 
   return (
     <div className="App">
@@ -90,7 +88,11 @@ function App() {
                 path="/notewrite/:receiveName/:receiveNick"
                 element={<NoteWrite setIsPopup={setIsPopup} />}
               />
-              <Route exect path="/oauth/redirect/:token/:loginType" element={<OAuth2User />} />
+              <Route
+                exect
+                path="/oauth/redirect/:token/:loginType"
+                element={<OAuth2User />}
+              />
               <Route exact path="/logout" element={<Logout />} />
 
               {/* 하영 */}
