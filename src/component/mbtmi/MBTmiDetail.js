@@ -309,8 +309,6 @@ const MBTmiDetail = () => {
                     <h6>&nbsp;&nbsp;{mbtmiCommentCnt}개의 댓글</h6>
                     <table>
                         <tbody>
-
-                        {/* 댓글란 컴포넌트화 이후 */}
                         {mbtmiCommentList // 1차댓글
                             .filter(comment=> comment.parentcommentNo===null)
                             .map(comment => (
@@ -322,7 +320,6 @@ const MBTmiDetail = () => {
                                     .map(reply => <Reply key={reply.commentNo} reply={reply} />)}
                             </React.Fragment>
                         ))}
-
                         </tbody>
                     </table>
                     {PaginationInside()}

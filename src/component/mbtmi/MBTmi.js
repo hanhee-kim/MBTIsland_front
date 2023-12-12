@@ -56,7 +56,7 @@ const MBTmi = () => {
     const [type, setType] = useState(null);
     const [search, setSearch] = useState(null);
     const [tmpSearch, setTmpSearch] = useState(null);
-    const [activeFilter, setActiveFilter] = useState(null);
+    const [activeCategory, setActiveCategory] = useState(null);
 
 
     useEffect(() => {
@@ -119,14 +119,15 @@ const MBTmi = () => {
 
     const [open,setOpen]=useState(false);
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
+    const clickOutsidePopover = (event) => {
+        const popoverElements = document.querySelectorAll(".popover");
+        // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
+        if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
+            setOpen(false);
+        } 
+    };
     useEffect(() => {
-        const clickOutsidePopover = (event) => {
-            const popoverElements = document.querySelectorAll(".popover");
-            // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
-            if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
-                setOpen(false);
-            } 
-        };
+        clickOutsidePopover();
         document.addEventListener("mousedown", clickOutsidePopover);
         return () => {
             document.removeEventListener("mousedown", clickOutsidePopover);
@@ -195,6 +196,14 @@ const MBTmi = () => {
         navigate(linkTo, {replace:false});
     }
 
+    // 카테고리 변경
+    const handleCategoryChange = (categoryParam) => {
+        getNewlyMbtmiList(categoryParam, type, search, 1); // 카테고리 변경시 페이지는 리셋, 타입과 검색어는 유지
+        setPage(1);
+        setCategory(categoryParam);
+        setActiveCategory(categoryParam);
+    };
+
 
     return (
         <>
@@ -242,11 +251,12 @@ const MBTmi = () => {
                 <div className={style.categoryAndFilter}>
                     <div className={style.categoryBtns}>
                         <span>&#128270;</span>
-                        <button className={style.activeCategory}>잡담</button>
-                        <button>연애</button>
-                        <button>회사</button>
-                        <button>학교</button>
-                        <button>취미</button>
+                        <button className={activeCategory==='잡담'? style.activeCategory :''} onClick={() => handleCategoryChange('잡담')}>잡담</button>
+                        <button className={activeCategory==='연애'? style.activeCategory :''} onClick={() => handleCategoryChange('연애')}>연애</button>
+                        <button className={activeCategory==='회사'? style.activeCategory :''} onClick={() => handleCategoryChange('회사')}>회사</button>
+                        <button className={activeCategory==='학교'? style.activeCategory :''} onClick={() => handleCategoryChange('학교')}>학교</button>
+                        <button className={activeCategory==='취미'? style.activeCategory :''} onClick={() => handleCategoryChange('취미')}>취미</button>
+                        <img src={"/refreshIcon.png" } alt="" className={style.refreshIcon} onClick={() => handleCategoryChange(null)}/>
                     </div>
                     <div className={style.mbtiFilterBtns}> 
                         <span>&#128204;</span>&nbsp;&nbsp;
@@ -261,6 +271,7 @@ const MBTmi = () => {
                         &nbsp;+&nbsp;
                         <input type="radio" id="mbtiJ" name="mbti4"/><label for="mbtiJ">J</label>
                         <input type="radio" id="mbtiP" name="mbti4"/><label for="mbtiP">P</label>
+                        <img src={"/refreshIcon.png" } alt="" className={style.refreshIcon} />
                     </div>
                 </div>
 

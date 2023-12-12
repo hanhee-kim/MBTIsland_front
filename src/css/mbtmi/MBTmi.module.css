@@ -158,6 +158,11 @@
 .activeCategory {
     background: #E6E6E6 !important;
 }
+.refreshIcon {
+    width: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+}
 .mbtiFilterBtns input[type=radio]{
     display: none;
 }
