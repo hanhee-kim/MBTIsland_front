@@ -1,26 +1,22 @@
 import { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import {
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
     FormGroup,
     Col,
     Input,
-    Button } from "reactstrap";
+    Button,
+    Popover,
+    PopoverBody } from "reactstrap";
 import axios from 'axios';
 
 import style from "../../css/mbtwhy/Mbtwhy.module.css";
 
 function Mbtwhy() {
 
+    // 인기 게시글 더미 데이터
     const [hotMbtwhy, setHotMbtwhy] = useState(
         {
-            num:1,
+            no:1,
             mbti:"INTP",
             color:"#9BB7D4",
             writer:"마춤뻡파괴왕",
@@ -32,119 +28,154 @@ function Mbtwhy() {
         }
     );
 
-    useEffect(() => {
-        getMbtwhyList(1, search)
-    }, []);
-
     // Mbtwhy 게시글 목록
     const [mbtwhyList, setMbtwhyList] = useState([]);
 
     // Mbtwhy 게시글 수
-    const [mbtwhyCnt, setMbtwhyCnt] = useState(0);
+    // const [mbtwhyCnt, setMbtwhyCnt] = useState(0);
 
-    // mbti 유형
-    const [mbti, setMbti] = useState('istj');
-    
+    // URL 파라미터
+    // MBTI 유형, 페이지 번호, 정렬 옵션, 검색 값
+    const {mbti} = useParams();
+    console.log(mbti);
+    // const formatMbti = mbti.startsWith(':') ? mbti.substring(1) : mbti;
+    // const formatPage = page.startsWith(':') ? page.substring(1) : page;
+    // const formatSort = sort.startsWith(':') ? sort.substring(1) : sort;
+    // const formatSearch = search.startsWith(':') ? search.substring(1) : search;
+
+    // const [mbti, setMbti] = useState(mbtiType);
+    // console.log(mbti);
+
     // 페이징 상태 값
-    const [page, setPage] = useState([1]);
+    const [page, setPage] = useState(1);
     const [pageInfo, setPageInfo] = useState({});
 
     // 검색 값
-    const [search, setSearch] = useState(null);
+    const [search, setSearch] = useState('');
 
     // 임시 검색 값
     const [tmpSearch, setTmpSearch] = useState(null);
 
     // 정렬 값
-    const [sort, setSort] = useState(null);
-
+    const [sort, setSort] = useState("new");
+    
     // 정렬 드롭다운 open 여부
     const [open, setOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState('최신순'); // 기본 선택값
 
-    const handleToggle = () => {
-        setOpen(!open);
-    };
-    
-    const handleSelect = (option) => {
-        setSelectedOption(option);
-        setOpen(false);
-    };
+    // navigate
+    const navigate = useNavigate();
+
+    // 우측 MBTI 탭 변경
+    const goMbtwhy = (mbti) => {
+        const url = `/mbtwhy/${mbti}`;
+        navigate(url);
+    }
+
+    // mbtwhydetail 이동
+    const goMbtwhyDetail = (no) => {
+        let defaultUrl = `/mbtwhydetail`;
+        if(mbti !== null) defaultUrl += `/${mbti}`;
+        if(page !== null) defaultUrl += `/${page}`;
+        if(search) defaultUrl += `/${search}`;
+        if(sort !== null) defaultUrl += `/${sort}`;
+        if(no !== null) defaultUrl += `/${no}`;
+
+        navigate(defaultUrl);
+    }
     
     // url에 파라미터로 줄 변수 repage
-    const getMbtwhyList = (page, search) => {
+    const getMbtwhyList = (pageNo, searchValue, sortType) => {
+        console.log(sortType);
         let defaultUrl = `http://localhost:8090/mbtwhy?mbti=${mbti}`;
-        if(page !== null) defaultUrl += `&page=${page}`;
-        if(search !== null) defaultUrl += `&search=${search}`;
-        if(sort !== null) defaultUrl += `&sort=${sort}`;
+        if(page !== null) defaultUrl += `&page=${pageNo}`;
+        if(search !== null) defaultUrl += `&search=${searchValue}`;
+        if(sort !== null) defaultUrl += `&sort=${sortType}`;
 
         axios.get(defaultUrl)
         .then(res=> {
             console.log(res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.mbtwhyList;
-            let mbtwhyCnt = res.data.mbtwhyCnt;
+            // let mbtwhyCnt = res.data.mbtwhyCnt;
 
-            console.log(list);
             setMbtwhyList([...list]);
             setPageInfo({...pageInfo});
-            setMbtwhyCnt(mbtwhyCnt);
+            // setMbtwhyCnt(mbtwhyCnt);
             
             let btn = [];
             for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
                 btn.push(i)
             }
-            setPage(btn);
-            setPageInfo({...pageInfo});
         })
         .catch(err=> {
             console.log(err);
+            setMbtwhyList([]);
+            setPageInfo({});
+            // setMbtwhyCnt(0);
         })
     };
 
-    const searchSubmit = () => {
-        getMbtwhyList(1, search);
-    }
+    // 의존성 배열에 mbti 추가
+    // 의존성 배열 안에 추가된 변수가 변경될 때, useEffect 콜백 실행
+    useEffect(() => {
+        getMbtwhyList(page, search, sort);
+    }, [mbti]);
 
+    // 검색값 탐지
     const handleSearchChange = (event) => {
         const searchTerm = event.target.value;
         setTmpSearch(searchTerm);
     };
 
+    // 검색
     const handleSearch = () => {
         setSearch(tmpSearch);
+        
         console.log(tmpSearch);
-        getMbtwhyList(1, tmpSearch);
+        getMbtwhyList(page, tmpSearch, sort);
+    };
+
+    // page 핸들링
+    const handlePage = (pageNo) => {
+        setPage(pageNo);
+        getMbtwhyList(pageNo, search, sort);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // sort 핸들링
+    const handleSort = (sortType) => {
+        setSort(sortType);
+        setOpen(!open);
+        getMbtwhyList(page, search, sortType);
+        // getMbtwhyList();
     }
 
-    const handlePageNo = (pageNo) => {
-        setPage(pageNo);
-        console.log('현재 적용되는 검색어: ' + search);
-        getMbtwhyList(pageNo, search); // setPage(pageNo)는 업데이트가 지연되기 때문에, state인 page가 아니라 전달인자 pageNo로 요청해야함
+    // Toggle 핸들링
+    const handleToggle = () => {
+        setOpen(!open);
     };
 
     // 페이지네이션
     const PaginationInside = () => {
-        // if(errorMsg) return null;
         const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
         for(let i=pageInfo.startPage; i<=pageInfo.endPage; i++) {
             pageGroup.push(
-                <span key={i} className={`${page===i? style.activePage: ''}`} onClick={()=>handlePageNo(i)}>{i}</span>
+                <span key={i} className={`${page===i? style.activePage: ''}`} onClick={()=>handlePage(i)}>{i}</span>
             )
         }
         return (
             <div className={style.paging}>
                 {!(pageInfo.startPage===1) && (
                     <>
-                        <span onClick={()=>handlePageNo(1)}>≪</span>
-                        <span onClick={()=>handlePageNo(pageInfo.startPage-10)}>&lt;</span>
+                        <span onClick={()=>handlePage(1)}>≪</span>
+                        <span onClick={()=>handlePage(pageInfo.startPage-10)}>&lt;</span>
                     </>
                 )}
                 {pageGroup}
                 {!(pageInfo.endPage===pageInfo.allPage) && (
                     <>
-                        <span onClick={()=>handlePageNo(pageInfo.endPage+1)}>&gt;</span>
-                        <span onClick={()=>handlePageNo(pageInfo.allPage)}>≫</span>
+                        <span onClick={()=>handlePage(pageInfo.endPage+1)}>&gt;</span>
+                        <span onClick={()=>handlePage(pageInfo.allPage)}>≫</span>
                     </>
                 )}
             </div>
@@ -155,7 +186,7 @@ function Mbtwhy() {
         margin:"0 auto",
         border:"none",
         boxShadow:"none",
-        backgroundColor:"white",
+        background:"white",
         color:"black",
         fontWeight:"bold"
     }
@@ -177,24 +208,20 @@ function Mbtwhy() {
             <div className={style.sectionPageHeader}>
                 {/* 게시판 헤더 영역 */}
                 <div className={style.pageHeader}>
-                    <h1>ISTP</h1>
+                    <h1>{mbti}</h1>
                     <h6>글 작성</h6>
-                    <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                        <DropdownToggle style={sortStyle}>
-                            <img className={style.sortImg} src="/sortIcon.png" alt=""></img>
-                            {selectedOption}
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem onClick={() => handleSelect('최신순')}>최신순</DropdownItem>
-                            <DropdownItem onClick={() => handleSelect('조회순')}>조회순</DropdownItem>
-                            <DropdownItem onClick={() => handleSelect('추천순')}>추천순</DropdownItem>
-                        </DropdownMenu>
-                    </ButtonDropdown>
+                    <button onClick={()=>setOpen(!open)} id="Popover1" style={buttonStyle}><img src={"/sortIcon.png" } alt="" className={style.sortIcon} /></button>
+                    <Popover placement="bottom" isOpen={open} target="Popover1" toggle={()=>handleToggle()}>
+                        <PopoverBody className={style.popoverItem} onClick={()=>handleSort("new")}>최신순</PopoverBody>
+                        <PopoverBody className={style.popoverItem} onClick={()=>handleSort("view")}>조회순</PopoverBody>
+                        <PopoverBody className={style.popoverItem} onClick={()=>handleSort("recommend")}>추천순</PopoverBody>
+                    </Popover>
+                    
                 </div>
 
                 {/* 인기 게시글 영역 */}
                 <div className={style.sectionBoards}>
-                    <Link to={"/detailform/only-detail/" + hotMbtwhy.num} style={{textDecoration:"none"}}>
+                    <Link to={"/mbtwhydetail"} style={{textDecoration:"none"}}>
                         <div key={hotMbtwhy.num} className={style.sectionBoard}>
                             <div className={style.hotTag}>
                                 &#128293;HOT
@@ -232,38 +259,36 @@ function Mbtwhy() {
                 <div className={style.sectionBoards}>
                     {mbtwhyList.length !== 0 && mbtwhyList.map(mbtwhy => {
                         return (
-                            <Link to={"/detailform/only-detail/" + mbtwhy.num} style={{textDecoration:"none"}}>
-                                <div key={mbtwhy.no} className={style.sectionBoard}>
-                                    <div className={style.boardWriter}>
-                                    <div style={{backgroundColor:`${mbtwhy.color}`}}> </div>&nbsp;&nbsp;&nbsp;
-                                        {mbtwhy.mbtiCategory}&nbsp;&nbsp;&nbsp;
-                                        {mbtwhy.writerNickname}
-                                    </div>
-                                    <div className={style.boardDate}>
-                                        {mbtwhy.writeDate}
-                                    </div>
-                                    <div className={style.boardContent}>
-                                        {mbtwhy.content}
-                                    </div>
-                                    <div className={style.boardLow}>
-                                        <div>
-                                            <img src="/commentIcon.png" alt=""></img>
-                                            {/* {mbtwhy.commentCount} */}
-                                        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <div>
-                                            <img src="/thumbIcon.png" alt=""></img>
-                                            {mbtwhy.recommendCnt}
-                                        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <div>
-                                            <img src="/viewIcon.png" alt=""></img>
-                                            {mbtwhy.viewCnt}
-                                        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </div>
+                            <div className={style.sectionBoard} key={mbtwhy.no} onClick={()=>goMbtwhyDetail(mbtwhy.no)}>
+                                <div className={style.boardWriter}>
+                                <div style={{backgroundColor:`${mbtwhy.writerMbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                    {mbtwhy.writerMbti}&nbsp;&nbsp;&nbsp;
+                                    {mbtwhy.writerNickname}
                                 </div>
-                            </Link>
+                                <div className={style.boardDate}>
+                                    {mbtwhy.writeDate}
+                                </div>
+                                <div className={style.boardContent}>
+                                    {mbtwhy.content}
+                                </div>
+                                <div className={style.boardLow}>
+                                    <div>
+                                        <img src="/commentIcon.png" alt=""></img>
+                                        {/* {mbtwhy.commentCount} */}
+                                    </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <div>
+                                        <img src="/thumbIcon.png" alt=""></img>
+                                        {mbtwhy.recommendCnt}
+                                    </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <div>
+                                        <img src="/viewIcon.png" alt=""></img>
+                                        {mbtwhy.viewCnt}
+                                    </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
+                            </div>
                         )
                     })}
-                </div><br/><br/>
+                </div>
 
                 {/* 페이징 영역 */}
                 {PaginationInside()}
@@ -279,10 +304,10 @@ function Mbtwhy() {
                         </Input>
                     </Col>
                     <Col sm={6}>
-                        <Input type="text" onChange={handleSearchChange}/>
+                        <Input type="text"/>
                     </Col>
                     <Col sm={3}>
-                        <Button style={buttonStyle} onClick={handleSearch}>검색</Button>
+                        <Button style={buttonStyle} onClick={()=>handleSearch()}>검색</Button>
                     </Col>
                 </FormGroup>
             </div>
@@ -290,22 +315,23 @@ function Mbtwhy() {
             {/* 우측 사이드 영역 */}
             <div className={style.container}>
                 <div className={style.sectionSide}>
-                    <div style={{backgroundColor:"#ADB1B0"}}><Link to="/mbtwhy/istj" style={linkStyle}><h5>ISTJ</h5></Link></div>
-                    <div style={{backgroundColor:"#F2DCB3"}}><Link to="/isfj" style={linkStyle}><h5>ISFJ</h5></Link></div>
-                    <div style={{backgroundColor:"#EAEFF9"}}><h5>INFJ</h5></div>
-                    <div style={{backgroundColor:"#D8D4EA"}}><h5>INTJ</h5></div>
-                    <div style={{backgroundColor:"#4D6879"}}><h5>ISTP</h5></div>
-                    <div style={{backgroundColor:"#BDC9A6"}}><h5>ISFP</h5></div>
-                    <div style={{backgroundColor:"#648181"}}><h5>INFP</h5></div>
-                    <div style={{backgroundColor:"#9BB7D4"}}><h5>INTP</h5></div>
-                    <div style={{backgroundColor:"#D8927A"}}><h5>ESTP</h5></div>
-                    <div style={{backgroundColor:"#F0A4AB"}}><h5>ESFP</h5></div>
-                    <div style={{backgroundColor:"#FFD966"}}><h5>ENFP</h5></div>
-                    <div style={{backgroundColor:"#B6634A"}}><h5>ENTP</h5></div>
-                    <div style={{backgroundColor:"#596D55"}}><h5>ESTJ</h5></div>
-                    <div style={{backgroundColor:"#E6D0CE"}}><h5>ESFJ</h5></div>
-                    <div style={{backgroundColor:"#82B8AD"}}><h5>ENFJ</h5></div>
-                    <div style={{backgroundColor:"#35598F"}}><h5>ENTJ</h5></div>
+                    {/* <div style={{backgroundColor:"#ADB1B0"}} onClick={handleMbti}><h5>ISTJ</h5></div> */}
+                    <div style={{backgroundColor:"#ADB1B0"}} onClick={()=>goMbtwhy("istj")}><h5>ISTJ</h5></div>
+                    <div style={{backgroundColor:"#F2DCB3"}} onClick={()=>goMbtwhy("isfj")}><h5>ISFJ</h5></div>
+                    <div style={{backgroundColor:"#EAEFF9"}} onClick={()=>goMbtwhy("infj")}><h5>INFJ</h5></div>
+                    <div style={{backgroundColor:"#D8D4EA"}} onClick={()=>goMbtwhy("intj")}><h5>INTJ</h5></div>
+                    <div style={{backgroundColor:"#4D6879"}} onClick={()=>goMbtwhy("istp")}><h5>ISTP</h5></div>
+                    <div style={{backgroundColor:"#BDC9A6"}} onClick={()=>goMbtwhy("isfp")}><h5>ISFP</h5></div>
+                    <div style={{backgroundColor:"#648181"}} onClick={()=>goMbtwhy("infp")}><h5>INFP</h5></div>
+                    <div style={{backgroundColor:"#9BB7D4"}} onClick={()=>goMbtwhy("intp")}><h5>INTP</h5></div>
+                    <div style={{backgroundColor:"#D8927A"}} onClick={()=>goMbtwhy("estp")}><h5>ESTP</h5></div>
+                    <div style={{backgroundColor:"#F0A4AB"}} onClick={()=>goMbtwhy("esfp")}><h5>ESFP</h5></div>
+                    <div style={{backgroundColor:"#FFD966"}} onClick={()=>goMbtwhy("enfp")}><h5>ENFP</h5></div>
+                    <div style={{backgroundColor:"#B6634A"}} onClick={()=>goMbtwhy("entp")}><h5>ENTP</h5></div>
+                    <div style={{backgroundColor:"#596D55"}} onClick={()=>goMbtwhy("estj")}><h5>ESTJ</h5></div>
+                    <div style={{backgroundColor:"#E6D0CE"}} onClick={()=>goMbtwhy("esfj")}><h5>ESFJ</h5></div>
+                    <div style={{backgroundColor:"#82B8AD"}} onClick={()=>goMbtwhy("enfj")}><h5>ENFJ</h5></div>
+                    <div style={{backgroundColor:"#35598F"}} onClick={()=>goMbtwhy("entj")}><h5>ENTJ</h5></div>
                 </div>
             </div>
         </div>
