@@ -26,30 +26,48 @@ const MBTmiDetail = () => {
     const [commentPage, setCommentPage] = useState(1); // 페이지 이동번호
 
     useEffect(()=> {
+        console.log("게시글번호: " + no);
         getMbtmiDetail(no);
+        getMbtmiCommentList(no);
     }, [no]);
 
     const getMbtmiDetail = (no) => {
         let defaultUrl = `http://localhost:8090/mbtmidetail/${no}`;
-        if(commentPage!==null) defaultUrl += `?commentPage=${commentPage}`;
         axios.get(defaultUrl)
         .then(res=> {
             console.log(res);
             let mbtmi = res.data.mbtmi;
+            let mbtmiCommentCnt = res.data.mbtmiCommentCnt;
             // let isRecommended = res.data.isRecommended;
             // let isBookmarked = res.data.isBookmarked;
-            let mbtmiCommentList = res.data.mbtmiCommentList;
-            let mbtmiCommentCnt = res.data.mbtmiCommentCnt;
+
             setMbtmi(mbtmi);
+            setMbtmiCommentCnt(mbtmiCommentCnt);
             // setIsRecommended(isRecommended);
             // setIsBookmarked(isBookmarked);
-            setMbtmiCommentList(mbtmiCommentList);
-            setMbtmiCommentCnt(mbtmiCommentCnt);
+            
+            // let mbtmiCommentList = res.data.mbtmiCommentList;
+            // setMbtmiCommentList(mbtmiCommentList);
         })
         .catch(err=> {
             console.log(err);
         });
     }
+
+    const getMbtmiCommentList = (no) => {
+        let defaultUrl = `http://localhost:8090/mbtmicommentlist/${no}`;
+        if(commentPage!=null) defaultUrl += `?commentpage=${commentPage}`;
+        axios.get(defaultUrl)
+        .then(res=> {
+            console.log(res);
+            let mbtmiCommentList = res.data;
+            setMbtmiCommentList([...mbtmiCommentList]);
+        })
+        .catch(err=> {
+            console.log(err);
+        });
+    }
+
     // const [mbtmi, setMbtmi] = useState({
     //     postNo: 33, 
     //     writerId: 'userId0123',
@@ -120,6 +138,57 @@ const MBTmiDetail = () => {
         { index: 8, author: "User4", createdDate: "2023-11-31", content: "1차댓글3", parentIndex: null }
     ];
 
+
+
+    const Comment = ({ comment, togglePopover }) => {
+        return (
+            <tr key={comment.commentNo}>
+                <td>
+                    <div className={style.commentTd1row}>
+                        <div className={style.CommentProfileColor} />
+                        <span>{comment.writerMbti} {comment.writerNickname}</span>
+                        <small>{formatDate(comment.writeDate)}</small>
+                        <span>
+                            <img src={"/popover-icon.png"} alt="..." className={style.commentPopoverIcon} onClick={() => togglePopover(`popover-${comment.commentNo}`)} id={`popover-${comment.commentNo}`} />
+                            <Popover className={style.popover} placement="bottom" isOpen={popoverStates[`popover-${comment.commentNo}`]} target={`popover-${comment.commentNo}`} toggle={() => togglePopover(`popover-${comment.commentNo}`)}>
+                                <PopoverBody className={style.popoverItem}>Edit</PopoverBody>
+                                <PopoverBody className={style.popoverItem}>Delete</PopoverBody>
+                            </Popover>
+                        </span>
+                    </div>
+                    <div className={style.commentTd2row}>
+                        {comment.commentContent}
+                    </div>
+                    <div className={style.commentTd3row}>
+                        <small>답글쓰기</small>
+                    </div>
+                </td>
+            </tr>
+        );
+    };
+    const Reply = ({ reply }) => {
+        return (
+            <tr key={reply.commentNo}>
+                <td>
+                    <div className={style.commentTd1row}>
+                        <div className={style.CommentProfileColor} />
+                        <span>{reply.writerMbti} {reply.writerNickname}</span>
+                        <small>{formatDate(reply.writeDate)}</small>
+                    </div>
+                    <div className={style.commentTd2row}>
+                        {reply.commentContent}
+                    </div>
+                </td>
+            </tr>
+        );
+    };
+
+
+
+
+
+
+
     return (
         <>
         <div className={style.container} id="top">
@@ -153,7 +222,7 @@ const MBTmiDetail = () => {
                         <div className={style.profileColor}/>&nbsp;
                         <span>{mbtmi.writerMbti}&nbsp;{mbtmi.writerNickname}</span>
                         <h6>{formatDate(mbtmi.writeDate)}
-                            <span><img src={"/view-icon.png" } alt="조회" className={style.viewIcon} />&nbsp;{mbtmi.viewCnt}</span>
+                            <span><img src={"/viewIcon.png" } alt="조회" className={style.viewIcon} />&nbsp;{mbtmi.viewCnt}</span>
                         </h6>
                         <div className={style.postContent} dangerouslySetInnerHTML={{ __html: mbtmi.content }}></div>
                         <p>
@@ -178,15 +247,33 @@ const MBTmiDetail = () => {
                     <h6>&nbsp;&nbsp;{mbtmiCommentCnt}개의 댓글</h6>
                     <table>
                         <tbody>
-                            {mbtmiCommentList.length>0 && mbtmiCommentList.map(comment=> {
-                                return(
-                                    <tr key={comment.commentNo}>
+
+                        {/* 댓글란 컴포넌트화 이후 */}
+                        {mbtmiCommentList
+                            .filter(comment=> comment.parentcommentNo===null)
+                            .map(comment => (
+                            <React.Fragment key={comment.commentNo}>
+                                <Comment comment={comment} togglePopover={togglePopover} popoverStates={popoverStates} />
+
+                                {mbtmiCommentList
+                                    .filter(reply => reply.parentcommentNo === comment.commentNo)
+                                    .map(reply => <Reply key={reply.commentNo} reply={reply} />)}
+                            </React.Fragment>
+                        ))}
+
+
+                        {/* 댓글란 컴포넌트화 이전 */}
+                        {/* {console.log("***댓글목록 렌더링 확인: ", mbtmiCommentList)}
+                        {mbtmiCommentList.length>0 && mbtmiCommentList
+                            .filter(comment=> comment.parentcommentNo===null)
+                            .map(parentComment => (
+                                <React.Fragment key={parentComment.commentNo}>
+                                    <tr>
                                         <td>
                                             <div className={style.commentTd1row}>
-                                                <div className={style.CommentProfileColor}/>&nbsp;
-                                                <span>{comment.writerMbti}&nbsp;{comment.writerNickname}</span>
-                                                {/* <span>작성자</span> */}
-                                                <small>{formatDate(comment.writeDate)}</small>
+                                                <div className={style.CommentProfileColor} />&nbsp;
+                                                <span>{parentComment.writerMbti}&nbsp;{parentComment.writerNickname}</span>
+                                                <small>{formatDate(parentComment.writeDate)}</small>
                                                 <span>
                                                     <img src={"/popover-icon.png" } alt="..." className={style.commentPopoverIcon} onClick={()=>togglePopover("popover2")} id="popover2"/>
                                                     <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover2} target="popover2" toggle={()=>togglePopover("popover2")}>
@@ -196,15 +283,41 @@ const MBTmiDetail = () => {
                                                 </span>
                                             </div>
                                             <div className={style.commentTd2row}>
-                                                {comment.commentContent}
+                                                {parentComment.commentContent}
                                             </div>
                                             <div className={style.commentTd3row}>
                                                 <small>답글쓰기</small>
                                             </div>
                                         </td>
                                     </tr>
-                                )
-                            })}
+
+                                    {mbtmiCommentList
+                                        .filter(childComment=> childComment.parentcommentNo===parentComment.commentNo)
+                                        .map(childComment => (
+                                            <tr key={childComment.commentNo}>
+                                                <td>
+                                                    <div className={style.commentTd1row}>
+                                                        <div className={style.CommentProfileColor} />&nbsp;
+                                                        <span>{childComment.writerMbti}&nbsp;{childComment.writerNickname}</span>
+                                                        <small>{formatDate(childComment.writeDate)}</small>
+                                                        <span>
+                                                            <img src={"/popover-icon.png" } alt="..." className={style.commentPopoverIcon} onClick={()=>togglePopover("popover2")} id="popover2"/>
+                                                            <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover2} target="popover2" toggle={()=>togglePopover("popover2")}>
+                                                                    <PopoverBody className={style.popoverItem}>수정</PopoverBody>
+                                                                    <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
+                                                            </Popover>
+                                                        </span>
+                                                    </div>
+                                                    <div className={style.commentTd2row}>
+                                                        {childComment.commentContent}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                </React.Fragment>
+                            ))
+                        } */}
+
 
                             {/* <tr>
                                 <td>
@@ -284,7 +397,7 @@ const MBTmiDetail = () => {
 
                 </div>
 
-                <hr style={{border: '3px solid lightgray'}}/>
+                {/* <hr style={{border: '3px solid lightgray'}}/>
                 <table style={{border:'1px solid gray', textAlign:'center'}}>
                     <thead>
                         <tr style={{border:'1px solid gray', textAlign:'center'}}>
@@ -298,7 +411,6 @@ const MBTmiDetail = () => {
                     <tbody>
                         {commentsData
                             .filter(comment => comment.parentIndex === null)
-                            // 부모댓글
                             .map(parentComment => (
                                 <React.Fragment key={parentComment.index}>
                                     <tr>
@@ -309,7 +421,6 @@ const MBTmiDetail = () => {
                                         <td style={{border:'1px solid gray', textAlign:'center'}}>{parentComment.parentIndex}</td>
                                     </tr>
 
-                                    {/* 자식댓글 */}
                                     {commentsData
                                         .filter(childComment => childComment.parentIndex === parentComment.index)
                                         .map(childComment => (
@@ -324,7 +435,7 @@ const MBTmiDetail = () => {
                                 </React.Fragment>
                         ))}
                     </tbody>
-                </table>
+                </table> */}
 
             </section>
             <section className={style.sectionRightArea}>

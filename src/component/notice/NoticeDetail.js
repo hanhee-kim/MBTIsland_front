@@ -106,7 +106,7 @@ const NoticeDetail = () => {
                         <>
                             <h2 className={style.postTitle}>{notice.title}</h2>
                             <h6>{formatDate(notice.writeDate)}
-                                <span><img src={"/view-icon.png" } alt="조회" className={style.viewIcon} />&nbsp;{notice.viewCnt}</span>
+                                <span><img src={"/viewIcon.png" } alt="조회" className={style.viewIcon} />&nbsp;{notice.viewCnt}</span>
                             </h6>
                             <div className={style.postContent}>{notice.content}</div>
                         </>

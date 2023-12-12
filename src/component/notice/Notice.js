@@ -144,7 +144,7 @@ const Notice = () => {
                                     <td>[공지]</td>
                                     <td onClick={()=>makeFlexibleLink(post)}>{post.title}</td>
                                     <td>{formatDate(post.writeDate)}</td>
-                                    <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>{post.viewCnt}</td>
+                                    <td><img src={"/viewIcon.png" } alt="view" className={style.viewIcon}/>{post.viewCnt}</td>
                                 </tr>
                                 )
                             })
