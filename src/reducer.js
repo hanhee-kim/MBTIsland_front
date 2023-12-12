@@ -5,6 +5,6 @@ import { tokenReducer } from "./reducer/tokenReducer";
 
 export const rootReducer = combineReducers({
   user: userReducer,
-  token:tokenReducer,
-  report: reportReducer
+  token: tokenReducer,
+  report: reportReducer,
 });

@@ -18,6 +18,7 @@ const DefaultMypage = (props) => {
     fontSize: "20px",
     fontWeight: "500",
     marginTop: "40px",
+    marginBottom:"25px",
   };
   const mbtiCheckBoxStyle = {
     border: "1px solid gray",
@@ -110,7 +111,7 @@ const DefaultMypage = (props) => {
     console.log("보내기버튼클릭");
     if (emailRegExp.test(changeUser.userEmail)) {
       axios
-        .get(`http://localhost:8090/sendmail/${user.userEmail}`)
+        .get(`http://localhost:8090/sendmail/${changeUser.userEmail}`)
         .then((res) => {
           console.log(res);
           setServerEmailCode(res.data);
@@ -239,7 +240,6 @@ const DefaultMypage = (props) => {
           .catch((err)=>{
             console.log(err);
           })
-  
         
       }else{
         Swal.fire({
@@ -249,22 +249,60 @@ const DefaultMypage = (props) => {
         });
       }
     }else{  //소셜아닐때 ( 닉네임 , 비밀번호 ,이메일 validation + email인증여부 확인)
-
+      if(nickRegExp.test(changeUser.userNickname)){
+        if(changeUser.userPassword.length >= 4){
+          if(emailRegExp.test(changeUser.userEmail)){
+            if(isEmailCheck){
+              //서버에 값 넘기고 변경
+              axios
+                .post("http://localhost:8090/user/modify",sendUser,{
+                  headers : {
+                      Authorization : token,
+                  }
+                })
+                .then((res)=>{
+                  console.log(res);
+                  dispatch({
+                    type: 'user',
+                    payload: res.data
+                  });
+                })
+                .catch((err)=>{
+                  console.log(err);
+                })
+            }else{
+              Swal.fire({
+                title: "Email을 인증을 해주세요.",
+                icon: "warning",
+              });
+            }
+          }else{
+            Swal.fire({
+              title: "Email을 올바르게 입력해주세요.",
+              icon: "warning",
+            });
+          }
+        }else{
+          Swal.fire({
+            title: "비밀번호을 확인해주세요.",
+            text: "비밀번호는 4~8자로 구성되어야 합니다.",
+            icon: "warning",
+          });
+        }
+      }else{
+        Swal.fire({
+          title: "닉네임을 확인해주세요.",
+          text: "닉네임은 특수문자 제외 이루어진 2~8자입니다.",
+          icon: "warning",
+        });
+      }
     }
 
     
-    // dispatch({
-    //   type: 'user',
-    //   payload: {
-    //     changeUser,
-    //   },
-    // });
+    
   };
   return (
     <div className={style.myProfileContainer}>
-      {/* <div style={{width:"800px",height:"2000px",backgroundColor:"pink"}}></div> */}
-      {/* <div className={style.title}>프로필</div> */}
-      {/* {console.log(arrMbti)} */}
       <div className={style.sectionGr}>
         <div className={style.section}>
           <div className={style.sectionTitle}>방문</div>
@@ -503,6 +541,7 @@ const DefaultMypage = (props) => {
             <Button
               color="white"
               style={{ border: "1px solid black", fontWeight: "600" }}
+              onClick={(e)=>emailConfirm(e)}  
             >
               인증
             </Button>

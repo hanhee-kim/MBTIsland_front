@@ -16,6 +16,9 @@ import Mypage from "./component/user/Mypage";
 import QnAWrite from "./component/user/QnAWrite";
 import NoteWrite from "./component/user/NoteWrite";
 import NoteDetail from "./component/user/NoteDetail";
+// import DefaultMypage from "./component/user/DefaultMypage";
+import OAuth2User from "./component/user/OAuth2User";
+import Logout from "./component/user/Logout";
 
 // 하영
 import ScrollReset from "./component/common/ScrollReset";
@@ -28,7 +31,6 @@ import MBTmiForm from "./component/mbtmi/MBTmiForm";
 import Notice from "./component/notice/Notice";
 import NoticeDetail from "./component/notice/NoticeDetail";
 import AdminFrame from "./component/admin/AdminFrame";
-import DefaultMypage from "./component/user/DefaultMypage";
 
 // 인수
 import MbtwhyMain from "./component/mbtwhy/MbtwhyMain";
@@ -40,16 +42,17 @@ import MBattle from "./component/mbattle/MBattle";
 import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
-import OAuth2User from "./component/user/OAuth2User";
+
+
 
 export const persistor = persistStore(store);
 function App() {
   const [isPopup, setIsPopup] = useState(false);
-  // useEffect(() => {
-  //   window.onbeforeunload = () => {
-  //     persistor.purge();
-  //   };
-  // }, []);
+  useEffect(() => {
+    window.onbeforeunload = () => {
+      persistor.purge();
+    };
+  }, []);
 
   return (
     <div className="App">
@@ -70,7 +73,7 @@ function App() {
                 <Route exact path=":qna" element={<MyQnA/>}/>
                 <Route exact path=":bookmark" element={<MyBookmark/>}/>
                 <Route exact path=":alarm" element={<MyAlarm/>}/>
-                <Route exact path=":note" element={<MyNote/>}/> */}
+              <Route exact path=":note" element={<MyNote/>}/> */}
               </Route>
               <Route
                 exact
@@ -88,6 +91,8 @@ function App() {
                 element={<NoteWrite setIsPopup={setIsPopup} />}
               />
               <Route exect path="/oauth/redirect/:token/:loginType" element={<OAuth2User />} />
+              <Route exact path="/logout" element={<Logout />} />
+
               {/* 하영 */}
               <Route exact path="/" element={<Main />} />
               <Route exact path="/mbtmi" element={<MBTmi />} />
