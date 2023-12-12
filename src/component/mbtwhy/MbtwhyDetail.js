@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
 import {
     Pagination,
@@ -42,36 +42,28 @@ function MbtwhyDetail() {
         }
     );
 
+    const {mbti, page, search, sort, no} = useParams();
+
     // Mbtwhy 게시글 목록
     const [mbtwhy, setMbtwhy] = useState({});
 
-    // useLocation
-    const location = useLocation(); // 훅 사용하여 현재 위치 정보 가져옴
-    const queryParams = new URLSearchParams(location.search); // URL에서 쿼리 문자열을 객체로 파싱
-
     // mbti 값
-    const mbtiValue = queryParams.get('mbti');
-    const [mbti, setMbti] = useState(mbtiValue);
+    // const [mbti, setMbti] = useState(mbtiValue);
 
     // 페이지 값
-    const pageValue = queryParams.get('page');
-    const [page, setPage] = useState(pageValue);
+    // const [page, setPage] = useState(pageValue);
 
     // 검색 값
-    const searchValue = queryParams.get('search');
-    const [search, setSearch] = useState(searchValue);
+    // const [search, setSearch] = useState(searchValue);
 
     // 정렬 값
-    const sortValue = queryParams.get('sort');
-    const [sort, setSort] = useState(sortValue);
+    // const [sort, setSort] = useState(sortValue);
 
     // Mbtwhy 게시글 번호 값
-    const noValue = queryParams.get('no');
-    const [no, setNo] = useState(noValue);
+    // const [no, setNo] = useState(noValue);
 
     // 댓글 페이지 번호
-    const commentPageValue = queryParams.get('commentPage');
-    const [commentPage, setCommentPage] = useState(commentPageValue);
+    const [commentPage, setCommentPage] = useState(1);
     
     // 댓글 페이징 정보
     const [commentPageInfo, setCommentPageInfo] = useState({});
@@ -97,12 +89,14 @@ function MbtwhyDetail() {
 
     // url에 파라미터로 줄 변수 repage
     const getMbtwhyDetail = (no, commentPage) => {
-        let defaultUrl = `http://localhost:8090/mbtwhydetail?no=${no}&commentPage=${commentPage}`;
-        // let defaultUrl = `http://localhost:8090/mbtwhydetail?mbti=${mbti}`;
-        // if(page !== null) defaultUrl += `&page=${page}`;
-        // if(search !== null) defaultUrl += `&search=${search}`;
-        // if(sort !== null) defaultUrl += `&sort=${sort}`;
-        // if(no !== null) defaultUrl += `&no=${no}`;
+        // let defaultUrl = `http://localhost:8090/mbtwhydetail?no=${no}&commentPage=${commentPage}`;
+        
+        let defaultUrl = `http://localhost:8090/mbtwhydetail?mbti=${mbti}`;
+        if(page !== null) defaultUrl += `&page=${page}`;
+        if(search !== null) defaultUrl += `&search=${search}`;
+        if(sort !== null) defaultUrl += `&sort=${sort}`;
+        if(no !== null) defaultUrl += `&no=${no}`;
+        if(no !== null) defaultUrl += `&commentPage=${commentPage}`;
         
         axios.get(defaultUrl)
         .then(res=> {

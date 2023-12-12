@@ -35,6 +35,12 @@
     font-weight: bold;
 }
 
+.popoverItem {
+    cursor: pointer;
+    min-width: 60px;
+    text-align: center;
+}
+
 .sortImg {
     height: 30px;
     margin-right: 10px;
