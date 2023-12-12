@@ -26,8 +26,12 @@ export const reportReducer = (currentState, action) => {
 
     const newState = {...currentState};
 
-    switch(action) {
-
+    switch(action.type) {
+        case "신고타입":
+            //스테이트 변경
+            newState.report = {...newState.report,...action.payload};
+            break;
+          default:
     }
 
     return newState;

@@ -20,19 +20,23 @@ const Main = () => {
   // 캐러셀 이미지
   const items = [
       {
+          key:0,
           src:'https://picsum.photos/seed/picsum/1440/300',
           altText:'배너이미지1',
           caption:'caption1',
           header:'header1',
+          
       },
       {
-        src:'https://picsum.photos/seed/picsum/1440/300',
+          key:1,
+          src:'https://picsum.photos/seed/picsum/1440/300',
           altText:'배너이미지2',
           caption:'caption2',
           header:'header2'
       },
       {
-        src:'https://picsum.photos/seed/picsum/1440/300',
+          key:2,
+          src:'https://picsum.photos/seed/picsum/1440/300',
           altText:'배너이미지3',
           caption:'caption3',
           header:'header3'

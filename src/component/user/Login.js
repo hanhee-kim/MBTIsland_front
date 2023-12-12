@@ -89,8 +89,8 @@ const Login = () => {
         dispatch({ type: "token", payload: res.headers.authorization });
         console.log(res.data);
         dispatch({ type: "user", payload: res.data });
-        localStorage.setItem("token",res.headers.authorization);
-        localStorage.setItem("user",res.data);
+        // localStorage.setItem("token",res.headers.authorization);
+        // localStorage.setItem("user",res.data);
         Swal.fire({
           title:'로그인되었습니다.',
           icon:'success',

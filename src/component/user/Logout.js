@@ -9,7 +9,8 @@ const Logout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch({ type: "token", payload: "" });
+    dispatch({ type: "logout", payload: "" });
+    dispatch({ type: "logout", payload: {} });
     persistor.purge();
     navigate("/login");
   }, []);
