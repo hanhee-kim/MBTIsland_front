@@ -9,6 +9,7 @@ import axios from "axios";
 const MBTmi = () => {
 
     const [weeklyHotList, setWeeklyHotList] = useState([]);
+    const [commentCntList, setCommentCntList] = useState([]);
     const [errorMsg, setErrorMsg] = useState(null);
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -17,6 +18,37 @@ const MBTmi = () => {
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
+    // 상대시간(시간차)
+    const formatDatetimeGap = (dateString) => {
+        const date = new Date(dateString);
+        const currentDate = new Date();
+        const datetimeGap = currentDate - date;
+        const seconds = Math.floor(datetimeGap/1000);
+        const minutes = Math.floor(seconds/60);
+        const hours = Math.floor(minutes/60);
+        const days = Math.floor(hours/24);
+        const weeks = Math.floor(days/7);
+        const months = Math.floor(weeks/4);
+        const years = Math.floor(months/12);
+
+        // if(seconds<60) {
+        //     return `${seconds}초 전`;
+        // } 
+        // else 
+        if(minutes<60) {
+            return `${minutes}분 전`;
+        } else if(hours<24) {
+            return `${hours}시간 전`;
+        } else if(days<7) {
+            return `${days}일 전`;
+        } else if(weeks<4) {
+            return `${weeks}주 전`;
+        } else if(months<12) {
+            return `${months}달 전`;
+        } else {
+            return `${years}년 전`;
+        }
+    }
     const [mbtmiList, setMbtmiList] = useState([]);
     const [page, setPage] = useState(1);
     const [pageInfo, setPageInfo] = useState({});
@@ -42,8 +74,10 @@ const MBTmi = () => {
         axios.get(`http://localhost:8090/weeklyhotmbtmi`)
         .then(res=> {
             console.log(res);
-            let list = res.data;
+            let list = res.data.weeklyHotMbtmiList;
+            let commentCntList = res.data.commentCntList;
             setWeeklyHotList([...list]);
+            setCommentCntList([...commentCntList]);
             setErrorMsg(null);
         })
         .catch(err=> {
@@ -187,10 +221,10 @@ const MBTmi = () => {
                                         <td>
                                             <span className={style.overflow} onClick={()=>makeFlexibleLink(post)}>{post.title}</span>&nbsp;&nbsp;
                                             <span>[{post.commentCnt}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <small>{formatDate(post.writeDate)}</small>
+                                            <small>{formatDatetimeGap(post.writeDate)}</small>
                                         </td>
                                         <td>
-                                            <div className={style.profileColor}/>&nbsp;
+                                            <div className={style.profileColor} style={{ background: post.writerMbtiColor, borderColor: post.writerMbtiColor }}/>&nbsp;
                                             <span>{post.writerMbti}&nbsp;{post.writerNickname}</span>
                                         </td>
                                         <td>
@@ -255,9 +289,9 @@ const MBTmi = () => {
                                 <tr key={post.no}>
                                     <td>
                                         <div className={style.td1row}>
-                                            <div className={style.profileColor}/>&nbsp;
+                                            <div className={style.profileColor} style={{ background: post.writerMbtiColor, borderColor: post.writerMbtiColor }}/>&nbsp;
                                             <span>{post.writerMbti}&nbsp;{post.writerNickname}</span>
-                                            <small>{formatDate(post.writeDate)}</small>
+                                            <small>{formatDatetimeGap(post.writeDate)}</small>
                                         </div>
                                         <div className={style.td2row}>
                                             <span className={style.overflowLong} onClick={()=>makeFlexibleLink(post)}>{post.title}</span>

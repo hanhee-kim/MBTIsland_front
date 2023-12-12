@@ -6,14 +6,23 @@ import { useLocation, useNavigate, useParams } from "react-router";
 
 const MBTmiDetail = () => {
 
+    // 로그인유저 정보
+    const [loginUser, sestLoginUser] = useState({
+        username: "user01",
+        userNickname: "닉네임1",
+        userMbti: "INFP",
+        userMbtiColor: "#648181",
+        userRole: "ROLE_USER",
+    });
+
     const { no, category, type, search, page } = useParams();
     const location = useLocation();
     
     const [mbtmi, setMbtmi] = useState(null);
-    const [mbtmiCommentList, setMbtmiCommentList] = useState([]);
     const [mbtmiCommentCnt, setMbtmiCommentCnt] = useState(0);
     const [isRecommended, setIsRecommended] = useState('Y');
     const [isBookmarked, setIsBookmarked] = useState('Y');
+    // 절대시간
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -23,15 +32,55 @@ const MBTmiDetail = () => {
         const minutes = date.getMinutes().toString().padStart(2, '0');
         return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}`;
     };
-    const [commentPage, setCommentPage] = useState(1); // 페이지 이동번호
+    // 상대시간(시간차)
+    const formatDatetimeGap = (dateString) => {
+        const date = new Date(dateString);
+        const currentDate = new Date();
+        const datetimeGap = currentDate - date;
+        const seconds = Math.floor(datetimeGap/1000);
+        const minutes = Math.floor(seconds/60);
+        const hours = Math.floor(minutes/60);
+        const days = Math.floor(hours/24);
+        const weeks = Math.floor(days/7);
+        const months = Math.floor(weeks/4);
+        const years = Math.floor(months/12);
+
+        // if(seconds<60) {
+        //     return `${seconds}초 전`;
+        // } 
+        // else 
+        if(minutes<60) {
+            return `${minutes}분 전`;
+        } else if(hours<24) {
+            return `${hours}시간 전`;
+        } else if(days<7) {
+            return `${days}일 전`;
+        } else if(weeks<4) {
+            return `${weeks}주 전`;
+        } else if(months<12) {
+            return `${months}달 전`;
+        } else {
+            return `${years}년 전`;
+        }
+    }
+    const [mbtmiCommentList, setMbtmiCommentList] = useState([]);
+    const [commentPage, setCommentPage] = useState(1); // 댓글목록 페이지 이동번호
+    const [commentPageInfo, setCommentPageInfo] = useState({}); // 댓글목록 페이지 정보(전체페이지, 현재페이지, 시작페이지번호, 끝페이지번호)
 
     useEffect(()=> {
-        console.log("게시글번호: " + no);
         getMbtmiDetail(no);
-        getMbtmiCommentList(no);
-    }, [no]);
 
-    const getMbtmiDetail = (no) => {
+        // localStorage에 저장된 페이지 정보를 읽음
+        const storedInfo = localStorage.getItem('commentCurPage');
+        if(storedInfo) {
+            setCommentPage(parseInt(storedInfo, 10)); // 페이지넘버 (두번째인자: 10진수임을 의미)
+        }
+        getMbtmiCommentList(1);
+        
+        console.log("현재 게시글번호: " + no);
+    }, []);
+
+    const getMbtmiDetail = () => {
         let defaultUrl = `http://localhost:8090/mbtmidetail/${no}`;
         axios.get(defaultUrl)
         .then(res=> {
@@ -51,36 +100,30 @@ const MBTmiDetail = () => {
         })
         .catch(err=> {
             console.log(err);
+            setMbtmiCommentCnt(0);
         });
     }
 
-    const getMbtmiCommentList = (no) => {
+    const getMbtmiCommentList = (commentPageParam) => {
         let defaultUrl = `http://localhost:8090/mbtmicommentlist/${no}`;
-        if(commentPage!=null) defaultUrl += `?commentpage=${commentPage}`;
+        if(commentPageParam!==1) defaultUrl += `?commentpage=${commentPageParam}`;
+
+        // alert(defaultUrl);
+
         axios.get(defaultUrl)
         .then(res=> {
             console.log(res);
-            let mbtmiCommentList = res.data;
+            let mbtmiCommentList = res.data.mbtmiCommentList;
+            let commentPageInfo = res.data.pageInfo;
             setMbtmiCommentList([...mbtmiCommentList]);
+            setCommentPageInfo({...commentPageInfo});
         })
         .catch(err=> {
             console.log(err);
+            setCommentPageInfo({});
         });
     }
 
-    // const [mbtmi, setMbtmi] = useState({
-    //     postNo: 33, 
-    //     writerId: 'userId0123',
-    //     writerMbti: 'ESFP',
-    //     writerNickname: '포로리',
-    //     writedate: '2023년 11월 18일 00:28',
-    //     viewCnt: 22,
-    //     recommentCnt: 8,
-    //     postTitle: '게시글 상세페이지 글제목',
-    //     postContent: 
-    //         '게시글 내용 텍스트!!<br/>게시글 내용 텍스트게시글 내용 텍스트<br/>게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트?<br/>게시글 내용 텍스트<br/><br/>게시글 내용 텍스트<br/>게시글 내용 텍스트게시글 내용 텍스트<br/><br/>게시글 내용 텍스트<br/><br/>게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트게시글 내용 텍스트 줄바꿈처리줄바꿈처리줄바꿈처리<br/>',
-    // });
-    
     const deleteMbtmi = (no) => {
         axios.delete(`http://localhost:8090/deletembtmi/${no}`)
         .then(res => {
@@ -123,70 +166,89 @@ const MBTmiDetail = () => {
 
     }, []);
 
-    
 
-
-    // 댓글테이블 데이터 가정
-    const commentsData = [
-        { index: 1, author: "User1", createdDate: "2023-11-25", content: "1차댓글1", parentIndex: null },
-        { index: 2, author: "User2", createdDate: "2023-11-26", content: "2차댓글1", parentIndex: 1 },
-        { index: 3, author: "User3", createdDate: "2023-11-27", content: "1차댓글2", parentIndex: null },
-        { index: 4, author: "User4", createdDate: "2023-11-28", content: "2차댓글2", parentIndex: 1 },
-        { index: 5, author: "User4", createdDate: "2023-11-29", content: "2차댓글3", parentIndex: 1 },
-        { index: 6, author: "User4", createdDate: "2023-11-30", content: "2차댓글4", parentIndex: 3 },
-        { index: 7, author: "User4", createdDate: "2023-11-31", content: "2차댓글5", parentIndex: 3 },
-        { index: 8, author: "User4", createdDate: "2023-11-31", content: "1차댓글3", parentIndex: null }
-    ];
-
-
-
-    const Comment = ({ comment, togglePopover }) => {
+    const handlePageNo = (pageNo) => {
+        // 현재 페이지번호를 localStorage에 저장
+        localStorage.setItem('commentCurPage', pageNo.toString());
+        setCommentPage(pageNo);
+        getMbtmiCommentList(pageNo);
+    };
+    // 댓글목록 페이지네이션
+    const PaginationInside = () => {
+        const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
+        for(let i=commentPageInfo.startPage; i<=commentPageInfo.endPage; i++) {
+            pageGroup.push(
+                <span key={i} className={`${commentPage===i? style.activePage: ''}`} onClick={()=>handlePageNo(i)}>{i}</span>
+            )
+        }
         return (
-            <tr key={comment.commentNo}>
+            <div className={style.paging}>
+                {!(commentPageInfo.startPage===1) && (
+                    <>
+                        <span onClick={()=>handlePageNo(1)}>≪</span>
+                        <span onClick={()=>handlePageNo(commentPageInfo.startPage-10)}>&lt;</span>
+                    </>
+                )}
+                {pageGroup}
+                {!(commentPageInfo.endPage===commentPageInfo.allPage) && (
+                    <>
+                        <span onClick={()=>handlePageNo(commentPageInfo.endPage+1)}>&gt;</span>
+                        <span onClick={()=>handlePageNo(commentPageInfo.allPage)}>≫</span>
+                    </>
+                )}
+            </div>
+        );
+    }
+
+
+    // 1차댓글
+    const Comment = ({comment, togglePopover}) => {
+        const isLoginUserComment = comment.writerId === loginUser.username;
+        const isPostWriter = comment.writerId === mbtmi.writerId;
+        return (
+            <tr key={comment.commentNo} className={`${style.commentTr} ${isLoginUserComment ? style.loginUsersComment : ''}`}>
                 <td>
                     <div className={style.commentTd1row}>
-                        <div className={style.CommentProfileColor} />
+                        <div className={style.commentProfileColor} style={{ background: comment.writerMbtiColor, borderColor: comment.writerMbtiColor }}/>
                         <span>{comment.writerMbti} {comment.writerNickname}</span>
-                        <small>{formatDate(comment.writeDate)}</small>
-                        <span>
-                            <img src={"/popover-icon.png"} alt="..." className={style.commentPopoverIcon} onClick={() => togglePopover(`popover-${comment.commentNo}`)} id={`popover-${comment.commentNo}`} />
-                            <Popover className={style.popover} placement="bottom" isOpen={popoverStates[`popover-${comment.commentNo}`]} target={`popover-${comment.commentNo}`} toggle={() => togglePopover(`popover-${comment.commentNo}`)}>
-                                <PopoverBody className={style.popoverItem}>Edit</PopoverBody>
-                                <PopoverBody className={style.popoverItem}>Delete</PopoverBody>
-                            </Popover>
-                        </span>
+                        {isPostWriter && <span className={style.isPostWriter}>작성자</span>}
                     </div>
                     <div className={style.commentTd2row}>
                         {comment.commentContent}
                     </div>
                     <div className={style.commentTd3row}>
+                        {/* <small>{formatDate(comment.writeDate)}</small> */}
+                        <small>{formatDatetimeGap(comment.writeDate)}</small>
                         <small>답글쓰기</small>
+                        <small className={style.commentReportOrDeleteBtn}>신고</small>
                     </div>
                 </td>
             </tr>
         );
     };
-    const Reply = ({ reply }) => {
+    // 2차댓글
+    const Reply = ({reply}) => {
+        const isLoginUserComment = reply.writerId === loginUser.username;
+        const isPostWriter = reply.writerId === mbtmi.writerId;
         return (
-            <tr key={reply.commentNo}>
+            <tr key={reply.commentNo} className={`${style.reply} ${isLoginUserComment ? style.loginUsersComment : ''}`}>
                 <td>
                     <div className={style.commentTd1row}>
-                        <div className={style.CommentProfileColor} />
+                        <div className={style.commentProfileColor} style={{ background: reply.writerMbtiColor, borderColor: reply.writerMbtiColor }}/>
                         <span>{reply.writerMbti} {reply.writerNickname}</span>
-                        <small>{formatDate(reply.writeDate)}</small>
+                        {isPostWriter && <span className={style.isPostWriter}>작성자</span>}
                     </div>
                     <div className={style.commentTd2row}>
                         {reply.commentContent}
                     </div>
+                    <div className={style.commentTd3row}>
+                        {/* <small>{formatDate(reply.writeDate)}</small> */}
+                        <small>{formatDatetimeGap(reply.writeDate)}</small>
+                    </div>
                 </td>
             </tr>
         );
     };
-
-
-
-
-
 
 
     return (
@@ -206,10 +268,10 @@ const MBTmiDetail = () => {
                     <>
                     <span className={style.currnetCategory}>{mbtmi.category} &gt;</span>
                     {isBookmarked==='N'? (
-                    <img src={"/bookmarkIcon-white.png" } alt="책갈피" className={style.bookmarkIcon} />
-                    ) : (
-                    <img src={"/bookmarkIcon-red.png" } alt="책갈피" className={style.bookmarkIcon} />
-                    )}
+                        <img src={"/bookmarkIcon-white.png" } alt="책갈피" className={style.bookmarkIcon} />
+                        ) : (
+                        <img src={"/bookmarkIcon-red.png" } alt="책갈피" className={style.bookmarkIcon} />
+                        )}
                     <div className={style.postArea}>
                         <div>
                             <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>togglePopover("popover1")} id="popover1"/>
@@ -219,7 +281,7 @@ const MBTmiDetail = () => {
                             </Popover><br/><br/><br/>
                         </div>
                         <h2 className={style.postTitle}>{mbtmi.title}</h2>
-                        <div className={style.profileColor}/>&nbsp;
+                        <div className={style.profileColor} style={{ background: mbtmi.writerMbtiColor, borderColor: mbtmi.writerMbtiColor }}/>&nbsp;
                         <span>{mbtmi.writerMbti}&nbsp;{mbtmi.writerNickname}</span>
                         <h6>{formatDate(mbtmi.writeDate)}
                             <span><img src={"/viewIcon.png" } alt="조회" className={style.viewIcon} />&nbsp;{mbtmi.viewCnt}</span>
@@ -249,193 +311,22 @@ const MBTmiDetail = () => {
                         <tbody>
 
                         {/* 댓글란 컴포넌트화 이후 */}
-                        {mbtmiCommentList
+                        {mbtmiCommentList // 1차댓글
                             .filter(comment=> comment.parentcommentNo===null)
                             .map(comment => (
                             <React.Fragment key={comment.commentNo}>
                                 <Comment comment={comment} togglePopover={togglePopover} popoverStates={popoverStates} />
 
-                                {mbtmiCommentList
+                                {mbtmiCommentList // 2차댓글
                                     .filter(reply => reply.parentcommentNo === comment.commentNo)
                                     .map(reply => <Reply key={reply.commentNo} reply={reply} />)}
                             </React.Fragment>
                         ))}
 
-
-                        {/* 댓글란 컴포넌트화 이전 */}
-                        {/* {console.log("***댓글목록 렌더링 확인: ", mbtmiCommentList)}
-                        {mbtmiCommentList.length>0 && mbtmiCommentList
-                            .filter(comment=> comment.parentcommentNo===null)
-                            .map(parentComment => (
-                                <React.Fragment key={parentComment.commentNo}>
-                                    <tr>
-                                        <td>
-                                            <div className={style.commentTd1row}>
-                                                <div className={style.CommentProfileColor} />&nbsp;
-                                                <span>{parentComment.writerMbti}&nbsp;{parentComment.writerNickname}</span>
-                                                <small>{formatDate(parentComment.writeDate)}</small>
-                                                <span>
-                                                    <img src={"/popover-icon.png" } alt="..." className={style.commentPopoverIcon} onClick={()=>togglePopover("popover2")} id="popover2"/>
-                                                    <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover2} target="popover2" toggle={()=>togglePopover("popover2")}>
-                                                            <PopoverBody className={style.popoverItem}>수정</PopoverBody>
-                                                            <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
-                                                    </Popover>
-                                                </span>
-                                            </div>
-                                            <div className={style.commentTd2row}>
-                                                {parentComment.commentContent}
-                                            </div>
-                                            <div className={style.commentTd3row}>
-                                                <small>답글쓰기</small>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    {mbtmiCommentList
-                                        .filter(childComment=> childComment.parentcommentNo===parentComment.commentNo)
-                                        .map(childComment => (
-                                            <tr key={childComment.commentNo}>
-                                                <td>
-                                                    <div className={style.commentTd1row}>
-                                                        <div className={style.CommentProfileColor} />&nbsp;
-                                                        <span>{childComment.writerMbti}&nbsp;{childComment.writerNickname}</span>
-                                                        <small>{formatDate(childComment.writeDate)}</small>
-                                                        <span>
-                                                            <img src={"/popover-icon.png" } alt="..." className={style.commentPopoverIcon} onClick={()=>togglePopover("popover2")} id="popover2"/>
-                                                            <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover2} target="popover2" toggle={()=>togglePopover("popover2")}>
-                                                                    <PopoverBody className={style.popoverItem}>수정</PopoverBody>
-                                                                    <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
-                                                            </Popover>
-                                                        </span>
-                                                    </div>
-                                                    <div className={style.commentTd2row}>
-                                                        {childComment.commentContent}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                </React.Fragment>
-                            ))
-                        } */}
-
-
-                            {/* <tr>
-                                <td>
-                                    <div className={style.commentTd1row}>
-                                        <div className={style.CommentProfileColor}/>&nbsp;
-                                        <span>ESFP 포로리</span>
-                                        <span>작성자</span>
-                                        <small>6분 전</small>
-                                        <span>
-                                            <img src={"/popover-icon.png" } alt="..." className={style.commentPopoverIcon} onClick={()=>togglePopover("popover2")} id="popover2"/>
-                                            <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover2} target="popover2" toggle={()=>togglePopover("popover2")}>
-                                                    <PopoverBody className={style.popoverItem}>수정</PopoverBody>
-                                                    <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
-                                            </Popover>
-                                        </span>
-                                    </div>
-                                    <div className={style.commentTd2row}>
-                                        댓글내용 댓글내용 댓글내용 댓글내용 댓글내용 댓글내용
-                                    </div>
-                                    <div className={style.commentTd3row}>
-                                        <small>답글쓰기</small>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className={style.loginUsersComment}>
-                                <td>
-                                    <div className={style.commentTd1row}>
-                                        <div className={style.CommentProfileColor}/>&nbsp;
-                                        <span>ISFJ 너부리</span>
-                                        <small>6분 전</small>
-                                        <span>
-                                            <img src={"/popover-icon.png" } alt="..." className={style.commentPopoverIcon} onClick={()=>togglePopover("popover2")} id="popover2"/>
-                                            <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover2} target="popover2" toggle={()=>togglePopover("popover2")}>
-                                                    <PopoverBody className={style.popoverItem}>수정</PopoverBody>
-                                                    <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
-                                            </Popover>
-                                        </span>
-                                    </div>
-                                    <div className={style.commentTd2row}>
-                                        댓글내용 댓글내용 댓글내용 댓글내용 댓글내용 댓글내용
-                                    </div>
-                                    <div className={style.commentTd3row}>
-                                        <small>답글쓰기</small>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div className={style.commentTd1row}>
-                                        <div className={style.CommentProfileColor}/>&nbsp;
-                                        <span>ISFJ 너부리</span>
-                                        <small>2023년 11월 19일  02:14</small> 
-                                        <span>
-                                            <img src={"/popover-icon.png" } alt="..." className={style.commentPopoverIcon} onClick={()=>togglePopover("popover2")} id="popover2"/>
-                                            <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover2} target="popover2" toggle={()=>togglePopover("popover2")}>
-                                                    <PopoverBody className={style.popoverItem}>수정</PopoverBody>
-                                                    <PopoverBody className={style.popoverItem}>삭제</PopoverBody>
-                                            </Popover>
-                                        </span>
-                                    </div>
-                                    <div className={style.commentTd2row}>
-                                        댓글내용 댓글내용 댓글내용 댓글내용 댓글내용 댓글내용
-                                    </div>
-                                    <div className={style.commentTd3row}>
-                                        <small>답글쓰기</small>
-                                    </div>
-                                </td>
-                            </tr> */}
-
                         </tbody>
                     </table>
-
-
-                    
-                    
-
-
+                    {PaginationInside()}
                 </div>
-
-                {/* <hr style={{border: '3px solid lightgray'}}/>
-                <table style={{border:'1px solid gray', textAlign:'center'}}>
-                    <thead>
-                        <tr style={{border:'1px solid gray', textAlign:'center'}}>
-                            <td style={{border:'1px solid gray', textAlign:'center'}}>인덱스</td>
-                            <td style={{border:'1px solid gray', textAlign:'center'}}>작성자</td>
-                            <td style={{border:'1px solid gray', textAlign:'center'}}>작성일</td>
-                            <td style={{border:'1px solid gray', textAlign:'center'}}>내용</td>
-                            <td style={{border:'1px solid gray', textAlign:'center'}}>상위댓글인덱스</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {commentsData
-                            .filter(comment => comment.parentIndex === null)
-                            .map(parentComment => (
-                                <React.Fragment key={parentComment.index}>
-                                    <tr>
-                                        <td style={{border:'1px solid gray', textAlign:'center'}}>{parentComment.index}</td>
-                                        <td style={{border:'1px solid gray', textAlign:'center'}}>{parentComment.author}</td>
-                                        <td style={{border:'1px solid gray', textAlign:'center'}}>{parentComment.createdDate}</td>
-                                        <td style={{border:'1px solid gray', textAlign:'center'}}>{parentComment.content}</td>
-                                        <td style={{border:'1px solid gray', textAlign:'center'}}>{parentComment.parentIndex}</td>
-                                    </tr>
-
-                                    {commentsData
-                                        .filter(childComment => childComment.parentIndex === parentComment.index)
-                                        .map(childComment => (
-                                            <tr key={childComment.index}>
-                                                <td style={{border:'1px solid gray', textAlign:'center'}}>{childComment.index}</td>
-                                                <td style={{border:'1px solid gray', textAlign:'center'}}>{childComment.author}</td>
-                                                <td style={{border:'1px solid gray', textAlign:'center'}}>{childComment.createdDate}</td>
-                                                <td style={{border:'1px solid gray', textAlign:'center'}}>{childComment.content}</td>
-                                                <td style={{border:'1px solid gray', textAlign:'center'}}>{childComment.parentIndex}</td>
-                                            </tr>
-                                        ))}
-                                </React.Fragment>
-                        ))}
-                    </tbody>
-                </table> */}
 
             </section>
             <section className={style.sectionRightArea}>
