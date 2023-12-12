@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import style from "../../css/user/Mypage.module.css";
 import { Table } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 const MyBookmark = () => {
@@ -12,6 +12,7 @@ const MyBookmark = () => {
   // -> 맞는 보드No로 게시글뽑아서 각 게시글리스트에 담기
   // -> mbtwhy , mbtmi 리스트이름으로 보내기.
   // DTO에서 해당하는 게시글의 제목과 작성일(0000-00-00형태로) 댓글수를 포함해서 가져올것.
+  const navigate = useNavigate();
   //더미데이터
   const [bookmarkList] = useState([
     {
@@ -61,25 +62,26 @@ const MyBookmark = () => {
     },
   ]);
   // const [isBookmarked,setIsBookmarked] = useState(true);
-  const changeBookmarkIcon = (e,no) => {
+  const changeBookmarkIcon = (e,no,boardType) => {
+    console.log("trClick"+no+boardType)
     //해당 북마크 넘버 가져가서 북마크테이블에서 지우기
     //원래 가져온게 (true) 만가져오긴함 true면 false로 ,
     // false로 바꾸면 해당 리스트에서 지우고 한번 더 데이터 가져올지? 
+    // const trClick = (bookmark) => {
+    //   console.log("trClick ");
+    //   if(boardType === 'MBT-WHY'){
+    //     console.log("???")
+    //     navigate('/mbtwhydetail/:no');
+    //   }
+    //   else{ //MBTMI
+    //    navigate('/mbtmidetail/:no');
+    //   }
+    // }
   }
-  // const trClick = (bookmark) => {
-  //   console.log("trClick ");
-  //   if(bookmark.boardType === 'MBT-WHY'){
-  //     console.log("???")
-  //     Navigate('/login');
       
-  //   }
-  //   else{
-  //     // Location.href('');
-  //   }
-  // }
   return (
     <div className={style.bookmarkContainer}>
-      <div className={style.bookmarkTitle}>* 찜목록 *</div>
+      <div className={style.bookmarkTitle}>* 북마크 *</div>
       <div style={{ padding: "20px", marginTop: "10px" }}>
         <div style={{height:'25px'}}></div>
         <div className={style.tableDiv}>
@@ -109,9 +111,9 @@ const MyBookmark = () => {
           <tbody>
             {bookmarkList.map((bookmark, index) => {
               return (
-                <tr key={index} >
+                <tr key={index} onClick={(e)=>changeBookmarkIcon(e,bookmark.no,bookmark.boardType)} >
                   <td sm={1} className="text-center">
-                    <img src='' alt='' onClick={(e)=>changeBookmarkIcon(e,bookmark.no)}/>
+                    <img src='' alt='' />
                   </td>
                   <td sm={1} className="text-center">
                     {bookmark.no}
@@ -125,9 +127,9 @@ const MyBookmark = () => {
                     style={{ maxWidth: "400px" }}
                     >
                       {/* {bookmark.title} */}
-                    <Link to={bookmark.boardType === 'MBT-WHY' ? '' : '' }>
+                    {/* <Link to={bookmark.boardType === 'MBT-WHY' ? '' : '' }> */}
                       {bookmark.title}
-                    </Link>
+                    {/* </Link> */}
                   </td>
                   <td
                     sm={3}

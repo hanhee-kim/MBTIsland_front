@@ -14,7 +14,7 @@ const Aside = (props) => {
     { name: "MBTWHY", path: "/mbtwhy" },
     { name: "MBTMI", path: "/mbtmi" },
     { name: "문의함", path: "/qna" },
-    { name: "찜목록", path: "/bookmark" },
+    { name: "북마크", path: "/bookmark" },
     { name: "알림함", path: "/alarm" },
     { name: "쪽지함", path: "/note" },
   ];

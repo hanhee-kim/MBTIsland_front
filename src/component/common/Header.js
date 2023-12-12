@@ -6,17 +6,17 @@ import  axios  from 'axios';
 import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
-    // const token = useSelector((state) => state.persistedReducer.token.token);
+    const token = useSelector((state) => state.persistedReducer.token.token);
     const user = useSelector((state) => state.persistedReducer.user.user);
     const uri = useLocation().pathname;
     const dispatch = useDispatch();
-    const token = localStorage.getItem("token");
-    const localUser = localStorage.getItem("user");
+    // const token = localStorage.getItem("token");
+    // const localUser = localStorage.getItem("user");
     useEffect(() => {
         console.log(uri);
         //토큰보내서 유저 store에 올림
         console.log("token???:"+token);
-        if(token == '' || token === null){
+        if(token === null || token == ''){
             console.log("token없음");
         }else{
             // user 정보
@@ -62,33 +62,33 @@ const Header = () => {
         setPopoverStates((prevState) => ({...prevState, [popoverKey]:!prevState[popoverKey]}));
     };
     
-    // useEffect(() => {
+    useEffect(() => {
         
         
-    //     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
-    //     //
-    //     const clickOutsidePopover = (event) => {
-    //         const popoverElements = document.querySelectorAll(".popover");
-    //         // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
-    //         if (
-    //             Array.from(popoverElements).every(
-    //                 (popover) => !popover.contains(event.target)
-    //             )
-    //         ) {
-    //             setPopoverStates({popoverUser: false, popoverBell:false, popoverMessage:false});
-    //         } 
-    //     };
+        // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
+        //
+        const clickOutsidePopover = (event) => {
+            const popoverElements = document.querySelectorAll(".popover");
+            // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
+            if (
+                Array.from(popoverElements).every(
+                    (popover) => !popover.contains(event.target)
+                )
+            ) {
+                setPopoverStates({popoverUser: false, popoverBell:false, popoverMessage:false});
+            } 
+        };
     
-    //     document.addEventListener("mousedown", clickOutsidePopover);
-    //     return () => {
-    //         document.removeEventListener("mousedown", clickOutsidePopover);
-    //     };
-    // }, []);
+        document.addEventListener("mousedown", clickOutsidePopover);
+        return () => {
+            document.removeEventListener("mousedown", clickOutsidePopover);
+        };
+    }, []);
 
-    // // 팝오버 내부 Link클릭하여 uri가 변경되면 팝오버 닫기
-    // useEffect(() => {
-    //     setPopoverStates({popoverUser: false, popoverBell:false, popoverMessage:false});
-    // }, [uri]);
+    // 팝오버 내부 Link클릭하여 uri가 변경되면 팝오버 닫기
+    useEffect(() => {
+        setPopoverStates({popoverUser: false, popoverBell:false, popoverMessage:false});
+    }, [uri]);
 
 
 

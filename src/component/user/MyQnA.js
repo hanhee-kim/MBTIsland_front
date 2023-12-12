@@ -14,19 +14,37 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 const MyQnA = (props) => {
+  const [answered, setAnswered] = useState(null);
   const [page, setPage] = useState(1);
   const [pageInfo, setPageInfo] = useState({});
-  const [qnaList,setQnaList] = useState([])
+  const [qnaList,setQnaList] = useState([]);
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
   const user = useSelector((state) => state.persistedReducer.user.user);
   useEffect(() => {
-    getMyQnaList(user.userIdx,page);
+    getMyQnaList(user.username ,answered ,page );
   },[])
-  const getMyQnaList = ( userIdx , page ) => {
+  const getMyQnaList = ( username , answered , page ) => {
+    let defaultUrl = 'http://localhost:8090/questionlistofuser';
+
+        defaultUrl += `?user=${username}`;
+        if (answered !== null) defaultUrl += `${username !== null ? '&' : '?'}answered=${answered}`;
+        if (page !== null) defaultUrl += `${username !== null || answered !== null ? '&' : '?'}page=${page}`;
+        console.log('요청url:' + defaultUrl);
+
     axios
-    .get(`http://localhost:8090/questionlist/${userIdx}/${page}`)
+    .get(defaultUrl)
     .then((res) => {
-      setQnaList([...res.data.quaList]);
-      setPageInfo({...res.data.pageInfo});
+      let pageInfo = res.data.pageInfo;
+      let list = res.data.questionList;
+      setQnaList([...list]);
+      setPageInfo({...pageInfo});
+      
     })
     .catch((err) => {
       console.log(err);
@@ -44,7 +62,7 @@ const MyQnA = (props) => {
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
     console.log('***페이지이동***');
-    getMyQnaList(user.username , pageNo); 
+    getMyQnaList(user.username, answered, pageNo); 
 };
   // 페이지네이션
   const PaginationInside = () => {
@@ -73,6 +91,10 @@ const MyQnA = (props) => {
         </div>
     );
 }
+//tr 클릭시
+const goQuestionDeatail = (e, no) => {
+  console.log("tr클릭"+no);
+}
 
   return (
     <div className={style.myQnaContainer}>
@@ -88,8 +110,8 @@ const MyQnA = (props) => {
         </Button> */}
         {(qnaList == null || qnaList == "")?
         <div className={style.tableDiv}>
-          <div style={{fontSize:'25px',display:'flex',height:"100%"}}>
-            <div>* 문의하신 내용이 없습니다. *</div>
+          <div style={{fontSize:'25px',display:'flex',minHeight:"580px",alignItems:'center',}}>
+            <div style={{textAlign:'center',width:'98%',}}>* 문의하신 내용이 없습니다. *</div>
           </div>
         </div>:
         <>
@@ -114,7 +136,7 @@ const MyQnA = (props) => {
           <tbody>
             {qnaList.map((qna, index) => {
               return (
-                <tr key={index}>
+                <tr key={index} onClick={(e)=>goQuestionDeatail(e,qna.no)}>
                   <td sm={1} className="text-center">
                     {qna.no}
                   </td>
@@ -130,8 +152,8 @@ const MyQnA = (props) => {
                     className="text-center"
                     style={{ minWidth: "105px" }}
                   >
-                    {/* {qna.writedDate} */}
-                    {qna.writedDate.split("T")[0]}
+                    {formatDate(qna.writeDate)}
+                    {/* {qna.writedDate.split("T")[0]} */}
                   </td>
                   <td sm={2} className="text-center">
                     {qna.isAnswered === "N" ? "처리중" : "답변완료"}

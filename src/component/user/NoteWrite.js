@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -11,17 +12,15 @@ import Swal from "sweetalert2";
 const NoteWrite = (props) => {
   const user = useSelector((state) => state.persistedReducer.user.user);
   const {receiveName,receiveNick} = useParams();
-  const formatReceiveName = receiveName.startsWith(':') ? receiveName.substring(1) : receiveName;
-  const formatReceiveNick = receiveNick.startsWith(':') ? receiveNick.substring(1) : receiveNick;
+  // const formatReceiveName = receiveName.startsWith(':') ? receiveName.substring(1) : receiveName;
+  // const formatReceiveNick = receiveNick.startsWith(':') ? receiveNick.substring(1) : receiveNick;
 
   const [note,setNote] = useState({
     sentUsername:user.username,
     sentUserNick:user.userNickname,
     noteContent: '',
-    receiveUsername:formatReceiveName,
-    receiveUserNick:formatReceiveNick,
-    sentDate:new Date(),
-    noteIsRead:'N'
+    receiveUsername:receiveName,
+    receiveUserNick:receiveNick,
 })
   useEffect(() => {
     props.setIsPopup(true);
@@ -35,13 +34,29 @@ const NoteWrite = (props) => {
   
   const send = (e) => {
     e.preventDefault();
+    let sendNote = {...note,sentUsername:user.username,sentUserNick:user.userNickname};
     //note 보내기
-    Swal.fire({
-      title: "쪽지를 성공적으로 보냈습니다.",
-      icon: "success",
-    }).then(function () {
-      window.close();
-    });
+    axios
+      .post("http://localhost:8090/notewrite",sendNote)
+      .then((res)=>{
+        console.log(res);
+        Swal.fire({
+          title: "쪽지가 발송되었습니다.",
+          icon: "success",
+        }).then(function () {
+          window.close();
+        });
+      })
+      .catch((err)=>{
+        console.log(err);
+        Swal.fire({
+          title: "쪽지 발송이 실패했습니다.",
+          icon: "error",
+        }).then(function () {
+          window.close();
+        });
+      })
+    
   }
 
   return (
@@ -84,10 +99,10 @@ const NoteWrite = (props) => {
               justifyContent: "flex-end",
             }}
           >
-            <Button color="light" onClick={close}>
+            <Button color="light" onClick={(e) =>close(e)}>
               취소
             </Button>
-            <Button color="dark" onClick={send}>
+            <Button color="dark" onClick={(e)=>send(e)}>
               보내기
             </Button>
           </FormGroup>
