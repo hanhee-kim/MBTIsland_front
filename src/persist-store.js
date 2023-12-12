@@ -4,7 +4,7 @@ import { rootReducer } from "./reducer";
 import thunk from "redux-thunk";
 import storage from "redux-persist/lib/storage";
 //logger
-// import logger from "redux-logger";
+import logger from "redux-logger";
 
 const persistConfig = {
   key: "root",
@@ -21,17 +21,17 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: { persistedReducer },
-  // middleware: (getDefaultMiddleware) =>
-  //   getDefaultMiddleware({
-  //     serializableCheck: false,
-  //   }).concat(logger),
   middleware: (getDefaultMiddleware) =>
-    //미들웨어 작성시 에러 주의
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [PERSIST, PURGE],
-      },
-    }),
+      serializableCheck: false,
+    }).concat(logger),
+  // middleware: (getDefaultMiddleware) =>
+  //   //미들웨어 작성시 에러 주의
+  //   getDefaultMiddleware({
+  //     serializableCheck: {
+  //       ignoredActions: [PERSIST, PURGE],
+  //     },
+  //   }),
 });
 // const store = createStore(persistedReducer);
 
