@@ -29,7 +29,7 @@ import MBTmi from "./component/mbtmi/MBTmi";
 import MBTmiDetail from "./component/mbtmi/MBTmiDetail";
 import MBTmiForm from "./component/mbtmi/MBTmiForm";
 import Notice from "./component/notice/Notice";
-import NoticeDetail from "./component/notice/NoticeDeatil";
+import NoticeDetail from "./component/notice/NoticeDetail";
 import AdminFrame from "./component/admin/AdminFrame";
 
 // 인수
@@ -96,10 +96,10 @@ function App() {
               {/* 하영 */}
               <Route exact path="/" element={<Main />} />
               <Route exact path="/mbtmi" element={<MBTmi />} />
-              <Route exact path="/mbtmidetail" element={<MBTmiDetail />} />
+              <Route exact path="/mbtmidetail/:no/:category?/:type?/:search?/:page?" element={<MBTmiDetail />} />
               <Route exact path="/mbtmiform" element={<MBTmiForm />} />
               <Route exact path="/notice" element={<Notice />} />
-              <Route exact path="/noticedetail" element={<NoticeDetail />} />
+              <Route exact path="/noticedetail/:no/:search?/:page?" element={<NoticeDetail />} />
               <Route exact path="/adminnotice" element={<AdminFrame />} />
               <Route exact path="/adminnoticeform" element={<AdminFrame />} />
               <Route exact path="/adminqna" element={<AdminFrame />} />
@@ -107,8 +107,8 @@ function App() {
 
               {/* 인수 */}
               <Route exect path="/mbtwhymain" element={<MbtwhyMain />} />
-              <Route exect path="/mbtwhy" element={<Mbtwhy />} />
-              <Route exact path="/mbtwhydetail" element={<MbtwhyDetail />} />
+              <Route exect path="/mbtwhy/:mbti" element={<Mbtwhy />} />
+              <Route exact path="/mbtwhydetail/:mbti?/:page?/:search?/:no?" element={<MbtwhyDetail />} />
               <Route exact path="/mbtwhywrite" element={<MbtwhyWrite />} />
               <Route exact path="/mbtwhymodify" element={<MbtwhyModify />} />
               <Route exact path="/mbattle" element={<MBattle />} />

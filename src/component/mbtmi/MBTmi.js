@@ -2,13 +2,14 @@ import { Popover, PopoverBody, Table } from "reactstrap";
 
 import style from "../../css/mbtmi/MBTmi.module.css";
 import React, { useState } from "react";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 
 const MBTmi = () => {
 
     const [weeklyHotList, setWeeklyHotList] = useState([]);
+    const [commentCntList, setCommentCntList] = useState([]);
     const [errorMsg, setErrorMsg] = useState(null);
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -17,6 +18,37 @@ const MBTmi = () => {
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
+    // 상대시간(시간차)
+    const formatDatetimeGap = (dateString) => {
+        const date = new Date(dateString);
+        const currentDate = new Date();
+        const datetimeGap = currentDate - date;
+        const seconds = Math.floor(datetimeGap/1000);
+        const minutes = Math.floor(seconds/60);
+        const hours = Math.floor(minutes/60);
+        const days = Math.floor(hours/24);
+        const weeks = Math.floor(days/7);
+        const months = Math.floor(weeks/4);
+        const years = Math.floor(months/12);
+
+        // if(seconds<60) {
+        //     return `${seconds}초 전`;
+        // } 
+        // else 
+        if(minutes<60) {
+            return `${minutes}분 전`;
+        } else if(hours<24) {
+            return `${hours}시간 전`;
+        } else if(days<7) {
+            return `${days}일 전`;
+        } else if(weeks<4) {
+            return `${weeks}주 전`;
+        } else if(months<12) {
+            return `${months}달 전`;
+        } else {
+            return `${years}년 전`;
+        }
+    }
     const [mbtmiList, setMbtmiList] = useState([]);
     const [page, setPage] = useState(1);
     const [pageInfo, setPageInfo] = useState({});
@@ -24,10 +56,16 @@ const MBTmi = () => {
     const [type, setType] = useState(null);
     const [search, setSearch] = useState(null);
     const [tmpSearch, setTmpSearch] = useState(null);
-    const [activeFilter, setActiveFilter] = useState(null);
+    const [activeCategory, setActiveCategory] = useState(null);
 
 
     useEffect(() => {
+        // localStorage에 저장된 페이지 정보를 읽음
+        const storedInfo = localStorage.getItem('curPage');
+        if(storedInfo) {
+            setPage(parseInt(storedInfo, 10)); // 페이지넘버
+        }
+
         getWeeklyHotList();
         getNewlyMbtmiList(category, type, search, page);
     }, []);
@@ -36,8 +74,10 @@ const MBTmi = () => {
         axios.get(`http://localhost:8090/weeklyhotmbtmi`)
         .then(res=> {
             console.log(res);
-            let list = res.data;
+            let list = res.data.weeklyHotMbtmiList;
+            let commentCntList = res.data.commentCntList;
             setWeeklyHotList([...list]);
+            setCommentCntList([...commentCntList]);
             setErrorMsg(null);
         })
         .catch(err=> {
@@ -77,40 +117,17 @@ const MBTmi = () => {
         })
     }
 
-
-
-
-
-    // const [weeklyHotPosts, setWeeklyHotPosts] = useState([
-    //     {postNo: 22, category: '잡담', title: '잡담 게시판의 인기 게시글 제목', commentCnt: 103, writedate: '2일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 112},
-    //     {postNo: 44, category: '연애', title: '연애 게시판의 인기 게시글 제목', commentCnt: 99, writedate: '3일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 55},
-    //     {postNo: 66, category: '회사', title: '회사 게시판의 인기 게시글 제목', commentCnt: 88, writedate: '1일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 22},
-    //     {postNo: 88, category: '학교', title: '학교 게시판의 인기 게시글 제목', commentCnt: 77, writedate: '4일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 33},
-    //     {postNo: 110, category: '취미', title: '취미 게시판의 인기 게시글 제목취미 게시판의 인기 게시글 제목취미 게시판의 인기 게시글 제목', commentCnt: 111, writedate: '6일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 44},
-    // ]);
-    // const [mbtmiListByPaging, setMbtmiListByPaging] = useState([
-    //     {postNo: 222, category: '연애', title: '연애 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '1분 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 0},
-    //     {postNo: 221, category: '회사', title: '회사 게시판의 최신 게시글 제목회사 게시판의 최신 게시글 제목회사 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '1분 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 0},
-    //     {postNo: 220, category: '잡담', title: '잡담 게시판의 최신 게시글 제목', commentCnt: 2, writedate: '1시간 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 2},
-    //     {postNo: 199, category: '잡담', title: '잡담 게시판의 최신 게시글 제목', commentCnt: 4, writedate: '2일 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 0},
-    //     {postNo: 198, category: '취미', title: '취미 게시판의 최신 게시글 제목', commentCnt: 6, writedate: '3주 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 3},
-    //     {postNo: 197, category: '학교', title: '학교 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '3달 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 1},
-    //     {postNo: 196, category: '회사', title: '회사 게시판의 최신 게시글 제목', commentCnt: 0, writedate: '11달 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 5},
-    //     {postNo: 195, category: '잡담', title: '잡담 게시판의 최신 게시글 제목', commentCnt: 12, writedate: '2년 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 30},
-    //     {postNo: 194, category: '잡담', title: '잡담 게시판의 최신 게시글 제목', commentCnt: 8, writedate: '12년 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 40},
-    //     {postNo: 193, category: '취미', title: '취미 게시판의 최신 게시글 제목취미 게시판의 최신 게시글 제목취미 게시판의 최신 게시글 제목', commentCnt: 9, writedate: '13년 전', writerMbti: 'ESFP', writerNickname: '포로리', recommentCnt: 100},
-    // ]);
-
     const [open,setOpen]=useState(false);
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
+    const clickOutsidePopover = (event) => {
+        const popoverElements = document.querySelectorAll(".popover");
+        // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
+        if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
+            setOpen(false);
+        } 
+    };
     useEffect(() => {
-        const clickOutsidePopover = (event) => {
-            const popoverElements = document.querySelectorAll(".popover");
-            // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
-            if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
-                setOpen(false);
-            } 
-        };
+        clickOutsidePopover();
         document.addEventListener("mousedown", clickOutsidePopover);
         return () => {
             document.removeEventListener("mousedown", clickOutsidePopover);
@@ -121,6 +138,9 @@ const MBTmi = () => {
 
 
     const handlePageNo = (pageNo) => {
+        // 현재 페이지번호를 localStorage에 저장
+        localStorage.setItem('curPage', pageNo.toString());
+
         setPage(pageNo);
         console.log('현재 적용되는 검색어: ' + search);
         getNewlyMbtmiList(category, type, search, pageNo); // 1,2,3번째 인자: state에 저장된 기존의 값
@@ -131,6 +151,7 @@ const MBTmi = () => {
     };
     const handleSearch = () => {
         setSearch(tmpSearch);
+        setPage(1);
         getNewlyMbtmiList(category, type, tmpSearch, 1); // 페이지번호만 리셋
     }
 
@@ -163,6 +184,27 @@ const MBTmi = () => {
         );
     }
 
+    // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
+    const navigate = useNavigate();
+    const makeFlexibleLink = (post) => {
+        // alert('no, category, type, search, page: ' + post.no + ", " + category + ", " + type + ", " + search + ", " + page);
+        const linkTo = `/mbtmidetail/${post.no}` +
+                        (category? `/${category}` : '') +
+                        (type? `/${type}` : '') +
+                        (search? `/${search}` : '') +
+                        (page? `/${page}` : '');
+        navigate(linkTo, {replace:false});
+    }
+
+    // 카테고리 변경
+    const handleCategoryChange = (categoryParam) => {
+        getNewlyMbtmiList(categoryParam, type, search, 1); // 카테고리 변경시 페이지는 리셋, 타입과 검색어는 유지
+        setPage(1);
+        setCategory(categoryParam);
+        setActiveCategory(categoryParam);
+    };
+
+
     return (
         <>
         <div className={style.container} id="top">
@@ -183,15 +225,15 @@ const MBTmi = () => {
                             ) : (
                                 weeklyHotList.length>0 && weeklyHotList.map(post => {
                                     return (
-                                    <tr key={post.postNo}>
+                                    <tr key={post.no}>
                                         <td>[{post.category}]</td>
                                         <td>
-                                            <span className={style.overflow}>{post.title}</span>&nbsp;&nbsp;
+                                            <span className={style.overflow} onClick={()=>makeFlexibleLink(post)}>{post.title}</span>&nbsp;&nbsp;
                                             <span>[{post.commentCnt}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <small>{formatDate(post.writeDate)}</small>
+                                            <small>{formatDatetimeGap(post.writeDate)}</small>
                                         </td>
                                         <td>
-                                            <div className={style.profileColor}/>&nbsp;
+                                            <div className={style.profileColor} style={{ background: post.writerMbtiColor, borderColor: post.writerMbtiColor }}/>&nbsp;
                                             <span>{post.writerMbti}&nbsp;{post.writerNickname}</span>
                                         </td>
                                         <td>
@@ -209,11 +251,12 @@ const MBTmi = () => {
                 <div className={style.categoryAndFilter}>
                     <div className={style.categoryBtns}>
                         <span>&#128270;</span>
-                        <button className={style.activeCategory}>잡담</button>
-                        <button>연애</button>
-                        <button>회사</button>
-                        <button>학교</button>
-                        <button>취미</button>
+                        <button className={activeCategory==='잡담'? style.activeCategory :''} onClick={() => handleCategoryChange('잡담')}>잡담</button>
+                        <button className={activeCategory==='연애'? style.activeCategory :''} onClick={() => handleCategoryChange('연애')}>연애</button>
+                        <button className={activeCategory==='회사'? style.activeCategory :''} onClick={() => handleCategoryChange('회사')}>회사</button>
+                        <button className={activeCategory==='학교'? style.activeCategory :''} onClick={() => handleCategoryChange('학교')}>학교</button>
+                        <button className={activeCategory==='취미'? style.activeCategory :''} onClick={() => handleCategoryChange('취미')}>취미</button>
+                        <img src={"/refreshIcon.png" } alt="" className={style.refreshIcon} onClick={() => handleCategoryChange(null)}/>
                     </div>
                     <div className={style.mbtiFilterBtns}> 
                         <span>&#128204;</span>&nbsp;&nbsp;
@@ -228,6 +271,7 @@ const MBTmi = () => {
                         &nbsp;+&nbsp;
                         <input type="radio" id="mbtiJ" name="mbti4"/><label for="mbtiJ">J</label>
                         <input type="radio" id="mbtiP" name="mbti4"/><label for="mbtiP">P</label>
+                        <img src={"/refreshIcon.png" } alt="" className={style.refreshIcon} />
                     </div>
                 </div>
 
@@ -253,15 +297,15 @@ const MBTmi = () => {
                         ) : (
                             mbtmiList.length>0 && mbtmiList.map(post => {
                                 return(
-                                <tr>
+                                <tr key={post.no}>
                                     <td>
                                         <div className={style.td1row}>
-                                            <div className={style.profileColor}/>&nbsp;
+                                            <div className={style.profileColor} style={{ background: post.writerMbtiColor, borderColor: post.writerMbtiColor }}/>&nbsp;
                                             <span>{post.writerMbti}&nbsp;{post.writerNickname}</span>
-                                            <small>{formatDate(post.writeDate)}</small>
+                                            <small>{formatDatetimeGap(post.writeDate)}</small>
                                         </div>
                                         <div className={style.td2row}>
-                                            <span className={style.overflowLong}>{post.title}</span>
+                                            <span className={style.overflowLong} onClick={()=>makeFlexibleLink(post)}>{post.title}</span>
                                             <span>
                                                 <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;{post.recommendCnt}</small>
                                                 <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;{post.commentCnt}</small>
