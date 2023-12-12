@@ -20,6 +20,7 @@
     "reactstrap": "^8.4.1",
     "recharts": "^2.10.3",
     "redux": "^4.2.1",
+    "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "sweetalert2": "^11.7.32",
     "web-vitals": "^2.1.4"
