@@ -189,6 +189,29 @@
     border-radius: 8px;
     color: #ffff;
 }
+/* .uncheckedRadioLabel{
+    font-size: 25px !important;
+    line-height: 35px !important;
+    font-weight: 500 !important;
+    display: inline-block;
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    border: 1px solid #E9E9E9;
+    border-radius: 8px;
+    line-height: 24px;
+    text-align: center;
+    font-weight:bold;
+    font-size:13px;
+    background-color: #ffff;
+    margin: 0 3px 0 3px;
+}
+.checkedRadioLabel {
+    background-color: #25B2A2;
+    border: 1px solid #25B2A2;
+    border-radius: 8px;
+    color: #ffff;
+} */
 
 .aboveTable {
     display:flex;
