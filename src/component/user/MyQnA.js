@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import style from "../../css/user/Mypage.module.css";
 import {
   Button,
+  ButtonDropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
   Input,
   Label,
   Modal,
@@ -14,6 +18,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 const MyQnA = (props) => {
+  const [openDropdown, setOpenDropdown] = useState(false);
   const [answered, setAnswered] = useState(null);
   const [page, setPage] = useState(1);
   const [pageInfo, setPageInfo] = useState({});
@@ -112,20 +117,50 @@ const MyQnA = (props) => {
       "width=720,height=780,location=no,status=no,scrollbars=yes"
     );
   };
+  const changeFilter = (e) => {
 
+  }
   return (
     <div className={style.myQnaContainer}>
       <div className={style.myQnaTitle}>* 문의 내역 *</div>
       <div style={{ padding: "20px", marginTop: "10px" }}>
+        <div>
+
         <Button color="light" style={{ margin: "10px" }} onClick={openQnaWrite}>
           문의하기
         </Button>
-        {/* <Button color="light" style={{ margin: "10px" }}>
-          <Link to="/qnaWrite" target="_blank">
-            문의하기
-          </Link>
-        </Button> */}
-        {qnaList == null || qnaList == "" ? (
+        <ButtonDropdown
+                    direction="left"
+                    isOpen={openDropdown}
+                    toggle={() => setOpenDropdown(!openDropdown)}
+                    style={{marginLeft:'530px'}}
+                  >
+                    <DropdownToggle
+                      caret
+                      style={{
+                        backgroundColor: "#fdfdfd00",
+                        height: "35px",
+                        color: "black",
+                        border: "none",
+                      }}
+                      size="lg"
+                    >
+                      답변여부
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem onClick={(e) => changeFilter(e, null)}>
+                        모두
+                      </DropdownItem>
+                      <DropdownItem onClick={(e) => changeFilter(e, "Y")}>
+                        처리중
+                      </DropdownItem>
+                      <DropdownItem onClick={(e) => changeFilter(e, "N")}>
+                        답변완료
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </ButtonDropdown>
+        </div>
+        {qnaList == null || qnaList == '' ? (
           <div className={style.tableDiv}>
             <div
               style={{

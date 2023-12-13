@@ -3,10 +3,12 @@ import { useSelector } from 'react-redux';
 import style from "../../css/common/common.css";
 import { useParams } from 'react-router';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import axios from 'axios';
 
 const NoteDetail = (props) => {
-  // const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user.user);
   const {noteNo} = useParams();
+  // const [noteType,setNoteType] = useState('');
 
 
   const [note,setNote] = useState({
@@ -21,18 +23,29 @@ const NoteDetail = (props) => {
   })
   useEffect(() => {
     props.setIsPopup(true);
+    
+    axios
+      .get(`http://localhost:8090/notedetail/${noteNo}`)
+      .then((res) => {
+        console.log(res);
+        setNote(res.data);
+        // setAnswer(res.data.answer);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     // formatNo가지고 note 가져오기(더미데이터)
-    setNote({
-      noteNo:1,
-      sentUsername:'asdf',
-      sentUserNick:'asdf',
-      noteContent: '노트 내용',
-      receiveUsername:'123456AA7891011',
-      receiveUserNick:'나',
-      sentDate:'0000-00-00T00:00:00',
-      noteIsRead:'N'
-    })
-  }, []);
+    // setNote({
+    //   noteNo:1,
+    //   sentUsername:'asdf',
+    //   sentUserNick:'asdf',
+    //   noteContent: '노트 내용',
+    //   receiveUsername:'123456AA7891011',
+    //   receiveUserNick:'나',
+    //   sentDate:'0000-00-00T00:00:00',
+    //   noteIsRead:'N'
+    // })
+  }, [note.noteIsRead]);
 
   const close = (e) => {
     e.preventDefault();
@@ -65,7 +78,7 @@ const NoteDetail = (props) => {
           }}
         >
           <FormGroup row style={{ justifyContent: "center" }}>
-            <h3 style={{ fontSize: "40px" }}>받은 쪽지</h3>
+            <h3 style={{ fontSize: "40px" }}>* 쪽지 *</h3>
           </FormGroup>
           <FormGroup style={{ justifyContent: "center" }}>
             <Label for="sentUserNick" sm={3}>
