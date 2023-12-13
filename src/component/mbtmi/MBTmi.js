@@ -52,8 +52,7 @@ const MBTmi = () => {
 
 
     useEffect(() => {
-        alert('useEffect빈배열 호출!');
-
+        // alert('useEffect빈배열 호출!');
 
         // localStorage에 저장된 페이지 정보를 읽음
         const storedInfo = localStorage.getItem('curPage');
@@ -96,7 +95,7 @@ const MBTmi = () => {
         axios.get(defaultUrl)
         .then(res=> {
             console.log('최신글목록 요청결과');
-            console.log(res);
+            console.log('-!@!@!@!',res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.mbtmiList;
             setMbtmiList([...list]);
@@ -160,14 +159,14 @@ const MBTmi = () => {
 
     // MBTI필터 변경
     const [checkedRadioValues, setCheckedRadioValues] = useState([]);
-    const handleRadioCheck = (group, value) => { // 그룹별 value가 들어가야하기 때문에 group에 대한 정보가 필요함
+    const handleRadioCheck = (group, value) => {
         setCheckedRadioValues(prev=> ({
             ...prev, [group]: value
         }));
-        console.log('value: ', value);
+        // console.log('value: ', value);
     };
     useEffect(()=> {
-        console.log('checkedRadioValues: ', checkedRadioValues); 
+        // console.log('checkedRadioValues: ', checkedRadioValues); 
         const onlyValuesExceptKeys = Object.values(checkedRadioValues);
         setType(onlyValuesExceptKeys.join(''));
     }, [checkedRadioValues]);
@@ -282,7 +281,7 @@ const MBTmi = () => {
                     </div>
                     <div className={style.mbtiFilterBtns}> 
                         <span>&#128204;</span>&nbsp;&nbsp;
-                        <input type="radio" id="mbtiE" name="group1" value="E" onChange={(e)=>handleRadioCheck('group1', e.target.value)} checked={checkedRadioValues['group1']==='E'? true: false}/><label htmlFor="mbtiE" className={style.uncheckedRadioLabel}>E</label>
+                        <input type="radio" id="mbtiE" name="group1" value="E" onChange={(e)=>handleRadioCheck('group1', e.target.value)} checked={checkedRadioValues['group1']==='E'? true: false} /><label htmlFor="mbtiE" className={style.uncheckedRadioLabel}>E</label>
                         <input type="radio" id="mbtiI" name="group1" value="I" onChange={(e)=>handleRadioCheck('group1', e.target.value)} checked={checkedRadioValues['group1']==='I'? true: false} /><label htmlFor="mbtiI" className={style.uncheckedRadioLabel}>I</label>
                         &nbsp;&nbsp;+&nbsp;&nbsp;
                         <input type="radio" id="mbtiN" name="group2" value="N" onChange={(e)=>handleRadioCheck('group2', e.target.value)} checked={checkedRadioValues['group2']==='N'? true: false} /><label htmlFor="mbtiN" className={style.uncheckedRadioLabel}>N</label>
