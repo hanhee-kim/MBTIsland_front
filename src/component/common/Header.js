@@ -6,38 +6,38 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
-    const token = useSelector((state) => state.persistedReducer.token.token);
-    const user = useSelector((state) => state.persistedReducer.user.user);
-    const uri = useLocation().pathname;
-    const dispatch = useDispatch();
-    // const token = localStorage.getItem("token");
-    // const localUser = localStorage.getItem("user");
-    useEffect(() => {
-        console.log(uri);
-        //토큰보내서 유저 store에 올림
-        console.log("token???:"+token);
-        if(token === null || token == ''){
-            console.log("token없음");
-        }else{
-            // user 정보
-            axios
-            .get("http://localhost:8090/user",{
-                headers : {
-                    Authorization : token,
-                }
-            })
-            .then(res=> {            
-                console.log(res);
-                console.log("data:"+res.data);
-                // setUser(res.data);
-                dispatch({type:"user",payload:res.data});
-            })
-            .catch(err=> {
-                console.log("user가져오기 에러");
-                console.log(err);
-            })
-        }
-    }, [uri]);
+  // const token = useSelector((state) => state.persistedReducer.token.token);
+  const user = useSelector((state) => state.persistedReducer.user.user);
+  const uri = useLocation().pathname;
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("token");
+  // const localUser = localStorage.getItem("user");
+  useEffect(() => {
+    console.log(uri);
+    //토큰보내서 유저 store에 올림
+    console.log("token???:" + token);
+    if (token === null || token == "") {
+      console.log("token없음");
+    } else {
+      // user 정보
+      axios
+        .get("http://localhost:8090/user", {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          console.log("data:" + res.data);
+          // setUser(res.data);
+          dispatch({ type: "user", payload: res.data });
+        })
+        .catch((err) => {
+          console.log("user가져오기 에러");
+          console.log(err);
+        });
+    }
+  }, [uri]);
 
   // // 로그인 유저
   // const [loginuser, sestLoginuser] = useState({

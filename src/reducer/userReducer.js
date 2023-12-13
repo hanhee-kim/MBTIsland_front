@@ -24,12 +24,12 @@ const initState = {
   },
 };
 
-const userPersistConfig = {
-  key: "user",
-  storage,
-  whitelist: ["userReducer"],
-};
-const userReducer = (currentState, action) => {
+// const userPersistConfig = {
+//   key: "user",
+//   storage,
+//   whitelist: ["userReducer"],
+// };
+export const userReducer = (currentState, action) => {
   if (currentState === undefined) {
     return initState;
   }
@@ -39,14 +39,14 @@ const userReducer = (currentState, action) => {
       newState.user = { ...newState.user, ...action.payload };
       break;
     case "logout":
-      newState.user = {}
+      newState.user = {};
       break;
     default:
   }
   return newState;
 };
 
-export const persistedUserReducer = persistReducer(
-  userPersistConfig,
-  userReducer
-);
+// export const persistedUserReducer = persistReducer(
+//   userPersistConfig,
+//   userReducer
+// );

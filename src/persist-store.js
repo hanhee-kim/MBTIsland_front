@@ -10,11 +10,11 @@ import { tokenReducer } from "./reducer/tokenReducer";
 import { combineReducers } from "redux";
 
 //test
-const rootReducer = combineReducers({
-  user: persistedUserReducer,
-  token: tokenReducer,
-  // report: reportReducer,
-});
+// const rootReducer = combineReducers({
+//   user: persistedUserReducer,
+//   token: tokenReducer,
+//   // report: reportReducer,
+// });
 
 const persistConfig = {
   key: "root",
@@ -22,24 +22,28 @@ const persistConfig = {
   //whiteList: ,
 };
 
-const persistedReducer = persistReducer(persistConfig,rootReducer);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-  reducer: {persistedReducer} ,
-  // middleware: (getDefaultMiddleware) =>
-  //   //미들웨어 작성시 에러 주의
-  //   getDefaultMiddleware({
-  //     serializableCheck: {
-  //       ignoredActions: [PERSIST, PURGE],
-  //     },
-  //   }).concat(logger),
+  reducer: { persistedReducer },
   middleware: (getDefaultMiddleware) =>
-    //미들웨어 작성시 에러 주의
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [PERSIST, REHYDRATE, PURGE],
-      },
+      serializableCheck: false,
     }).concat(logger),
+  // middleware: (getDefaultMiddleware) =>
+  // //미들웨어 작성시 에러 주의
+  // getDefaultMiddleware({
+  //   serializableCheck: {
+  //     ignoredActions: [PERSIST, PURGE],
+  //   },
+  // }).concat(logger),
+  //   middleware: (getDefaultMiddleware) =>
+  //     //미들웨어 작성시 에러 주의
+  //     getDefaultMiddleware({
+  //       serializableCheck: {
+  //         ignoredActions: [PERSIST, REHYDRATE, PURGE],
+  //       },
+  //     }).concat(logger),
 });
 // const store = createStore(persistedReducer);
 
