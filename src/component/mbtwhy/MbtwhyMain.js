@@ -1,5 +1,5 @@
 import { Table } from "reactstrap";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import style from "../../css/mbtwhy/MbtwhyMain.module.css"
 
@@ -13,8 +13,16 @@ function MbtwhyMain() {
         borderRadius:"20px",
         justifyContent:"center",
         flexDirection:"column",
-        color:"black"
+        color:"black",
+        cursor:"pointer"
     };
+
+    const navigate = useNavigate();
+
+    const goMbtwhy = (mbti) => {
+        const url = `/mbtwhy/${mbti}`;
+        navigate(url);
+    }
 
     return (
         <div className={style.container}>
@@ -32,28 +40,28 @@ function MbtwhyMain() {
                 <Table className={style.mbtwhyTable}>
                     <tbody>
                         <tr>
-                            <Link to="/mbtwhy/istj" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#ADB1B0"}}><h1>ISTJ</h1></td></Link>
-                            <Link to="/mbtwhy/isfj" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#F2DCB3"}}><h1>ISFJ</h1></td></Link>
-                            <Link to="/mbtwhy/infj" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#EAEFF9"}}><h1>INFJ</h1></td></Link>
-                            <Link to="/mbtwhy/intj" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#D8D4EA"}}><h1>INTJ</h1></td></Link>
+                            <td style={{...cardStyle, backgroundColor:"#ADB1B0"}} onClick={()=>goMbtwhy("istj")}><h1>ISTJ</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#F2DCB3"}} onClick={()=>goMbtwhy("isfj")}><h1>ISFJ</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#EAEFF9"}} onClick={()=>goMbtwhy("infj")}><h1>INFJ</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#D8D4EA"}} onClick={()=>goMbtwhy("intj")}><h1>INTJ</h1></td>
                         </tr>
                         <tr>
-                            <Link to="/mbtwhy/istp" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#4D6879"}}><h1>ISTP</h1></td></Link>
-                            <Link to="/mbtwhy/isfp" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#BDC9A6"}}><h1>ISFP</h1></td></Link>
-                            <Link to="/mbtwhy/infp" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#648181"}}><h1>INFP</h1></td></Link>
-                            <Link to="/mbtwhy/intp" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#9BB7D4"}}><h1>INTP</h1></td></Link>
+                            <td style={{...cardStyle, backgroundColor:"#4D6879"}} onClick={()=>goMbtwhy("istp")}><h1>ISTP</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#BDC9A6"}} onClick={()=>goMbtwhy("isfp")}><h1>ISFP</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#648181"}} onClick={()=>goMbtwhy("infp")}><h1>INFP</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#9BB7D4"}} onClick={()=>goMbtwhy("intp")}><h1>INTP</h1></td>
                         </tr>
                         <tr>
-                            <Link to="/mbtwhy/estp" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#D8927A"}}><h1>ESTP</h1></td></Link>
-                            <Link to="/mbtwhy/esfp" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#F0A4AB"}}><h1>ESFP</h1></td></Link>
-                            <Link to="/mbtwhy/enfp" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#FFD966"}}><h1>ENFP</h1></td></Link>
-                            <Link to="/mbtwhy/entp" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#B6634A"}}><h1>ENTP</h1></td></Link>
+                            <td style={{...cardStyle, backgroundColor:"#D8927A"}} onClick={()=>goMbtwhy("estp")}><h1>ESTP</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#F0A4AB"}} onClick={()=>goMbtwhy("esfp")}><h1>ESFP</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#FFD966"}} onClick={()=>goMbtwhy("enfp")}><h1>ENFP</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#B6634A"}} onClick={()=>goMbtwhy("istj")}><h1>ENTP</h1></td>
                         </tr>
                         <tr>
-                            <Link to="/mbtwhy/estj" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#596D55"}}><h1>ESTJ</h1></td></Link>
-                            <Link to="/mbtwhy/esfj" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#E6D0CE"}}><h1>ESFJ</h1></td></Link>
-                            <Link to="/mbtwhy/enfj" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#82B8AD"}}><h1>ENFJ</h1></td></Link>
-                            <Link to="/mbtwhy/entj" style={{textDecoration:"none"}}><td style={{...cardStyle, backgroundColor:"#35598F"}}><h1>ENTJ</h1></td></Link>
+                            <td style={{...cardStyle, backgroundColor:"#596D55"}} onClick={()=>goMbtwhy("estj")}><h1>ESTJ</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#E6D0CE"}} onClick={()=>goMbtwhy("esfj")}><h1>ESFJ</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#82B8AD"}} onClick={()=>goMbtwhy("enfj")}><h1>ENFJ</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#35598F"}} onClick={()=>goMbtwhy("entj")}><h1>ENTJ</h1></td>
                         </tr>
                     </tbody>
                 </Table>

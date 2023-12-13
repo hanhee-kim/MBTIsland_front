@@ -1,8 +1,8 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import { useEffect, useState } from "react";
-import persistStore from "redux-persist/es/persistStore";
+import {persistStore} from "redux-persist";
 import store from "./persist-store";
 
 import "./App.css";
@@ -29,7 +29,7 @@ import MBTmi from "./component/mbtmi/MBTmi";
 import MBTmiDetail from "./component/mbtmi/MBTmiDetail";
 import MBTmiForm from "./component/mbtmi/MBTmiForm";
 import Notice from "./component/notice/Notice";
-import NoticeDetail from "./component/notice/NoticeDeatil";
+import NoticeDetail from "./component/notice/NoticeDetail";
 import AdminFrame from "./component/admin/AdminFrame";
 
 // 인수
@@ -43,16 +43,38 @@ import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
 
-
-
 export const persistor = persistStore(store);
+
+// App.js 또는 index.js 등에서 초기화할 때
+const initApp = () => {
+  // beforeunload 이벤트 핸들러 등록
+  window.addEventListener('beforeunload', handleBeforeUnload);
+
+  // 나머지 초기화 작업...
+};
+const handleBeforeUnload = () => {
+  // 브라우저 창이 닫힐 때 로컬 스토리지 내용을 지움
+  persistor.purge();
+};
+
 function App() {
   const [isPopup, setIsPopup] = useState(false);
-  useEffect(() => {
-    window.onbeforeunload = () => {
-      persistor.purge();
-    };
-  }, []);
+  // useEffect(() => {
+  //   window.onbeforeunload = () => {
+  //     persistor.purge();
+  //     localStorage.removeItem('token');
+  //     localStorage.removeItem('user');
+  //   };
+  // }, []);
+  // App 컴포넌트 내부에서 useEffect 등을 사용하여 initApp 호출
+    useEffect(() => {
+      initApp();
+
+      // 컴포넌트가 언마운트될 때 이벤트 핸들러 제거
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }, []);
 
   return (
     <div className="App">
@@ -90,16 +112,20 @@ function App() {
                 path="/notewrite/:receiveName/:receiveNick"
                 element={<NoteWrite setIsPopup={setIsPopup} />}
               />
-              <Route exect path="/oauth/redirect/:token/:loginType" element={<OAuth2User />} />
+              <Route
+                exect
+                path="/oauth/redirect/:token/:loginType"
+                element={<OAuth2User />}
+              />
               <Route exact path="/logout" element={<Logout />} />
 
               {/* 하영 */}
               <Route exact path="/" element={<Main />} />
               <Route exact path="/mbtmi" element={<MBTmi />} />
-              <Route exact path="/mbtmidetail" element={<MBTmiDetail />} />
+              <Route exact path="/mbtmidetail/:no/:category?/:type?/:search?/:page?" element={<MBTmiDetail />} />
               <Route exact path="/mbtmiform" element={<MBTmiForm />} />
               <Route exact path="/notice" element={<Notice />} />
-              <Route exact path="/noticedetail" element={<NoticeDetail />} />
+              <Route exact path="/noticedetail/:no/:search?/:page?" element={<NoticeDetail />} />
               <Route exact path="/adminnotice" element={<AdminFrame />} />
               <Route exact path="/adminnoticeform" element={<AdminFrame />} />
               <Route exact path="/adminqna" element={<AdminFrame />} />
@@ -107,8 +133,8 @@ function App() {
 
               {/* 인수 */}
               <Route exect path="/mbtwhymain" element={<MbtwhyMain />} />
-              <Route exect path="/mbtwhy" element={<Mbtwhy />} />
-              <Route exact path="/mbtwhydetail" element={<MbtwhyDetail />} />
+              <Route exect path="/mbtwhy/:mbti" element={<Mbtwhy />} />
+              <Route exact path="/mbtwhydetail/:mbti?/:page?/:search?/:no?" element={<MbtwhyDetail />} />
               <Route exact path="/mbtwhywrite" element={<MbtwhyWrite />} />
               <Route exact path="/mbtwhymodify" element={<MbtwhyModify />} />
               <Route exact path="/mbattle" element={<MBattle />} />

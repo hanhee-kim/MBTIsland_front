@@ -1,6 +1,6 @@
 import style from "../../css/notice/Notice.module.css";
 import React, { useEffect, useState } from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 
 const Notice = () => {
@@ -21,6 +21,12 @@ const Notice = () => {
     };
 
     useEffect(() => {
+        // localStorage에 저장된 페이지 정보를 읽음
+        const storedInfo = localStorage.getItem('curPage');
+        if(storedInfo) {
+            setPage(parseInt(storedInfo, 10)); // 페이지넘버
+        }
+
         getNoticeList(search, page);
     }, []);
     
@@ -54,6 +60,9 @@ const Notice = () => {
     }
 
     const handlePageNo = (pageNo) => {
+        // 현재 페이지번호를 localStorage에 저장
+        localStorage.setItem('curPage', pageNo.toString());
+
         setPage(pageNo);
         console.log('현재 적용되는 검색어: ' + search);
         getNoticeList(search, pageNo); // setPage(pageNo)는 업데이트가 지연되기 때문에, state인 page가 아니라 전달인자 pageNo로 요청해야함
@@ -64,6 +73,7 @@ const Notice = () => {
     };
     const handleSearch = () => {
         setSearch(tmpSearch);
+        setPage(1);
         getNoticeList(tmpSearch, 1);
     }
 
@@ -95,6 +105,16 @@ const Notice = () => {
         );
     }
 
+    // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
+    const navigate = useNavigate();
+    const makeFlexibleLink = (post) => {
+        // alert('no, search, page: ' + post.no + ", " + search + ", " + page);
+        const linkTo = `/noticedetail/${post.no}` +
+                        (search ? `/${search}` : '') +
+                        (page ? `/${page}` : '');
+        navigate(linkTo, {replace:false});
+    }
+
 
     return (
         <>
@@ -122,9 +142,9 @@ const Notice = () => {
                                 return(
                                 <tr key={post.no}>
                                     <td>[공지]</td>
-                                    <td>{post.title}</td>
+                                    <td onClick={()=>makeFlexibleLink(post)}>{post.title}</td>
                                     <td>{formatDate(post.writeDate)}</td>
-                                    <td><img src={"/view-icon.png" } alt="view" className={style.viewIcon}/>{post.viewCnt}</td>
+                                    <td><img src={"/viewIcon.png" } alt="view" className={style.viewIcon}/>{post.viewCnt}</td>
                                 </tr>
                                 )
                             })

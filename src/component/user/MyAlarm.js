@@ -90,14 +90,14 @@ const MyAlarm = () => {
           <div>
             <Button
               color="light"
-              style={{ margin: "10px" }}
+              style={{ margin: "10px" , minWidth:'82px'}}
               onClick={readAlarm}
             >
               읽음
             </Button>
           </div>
           <div>
-            <Button color="dark" style={{ margin: "10px" }} onClick={allRaed}>
+            <Button color="dark" style={{ margin: "10px" , minWidth:'82px' }} onClick={allRaed}>
               모두 읽음
             </Button>
           </div>

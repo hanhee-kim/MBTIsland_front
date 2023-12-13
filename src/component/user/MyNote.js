@@ -17,8 +17,8 @@ const MyNote = () => {
   const [noteList, setNoteList] = useState([
     {
       noteNo: 1,
-      sentUsername: "158432AE25",
-      sentUserNick: "보노보노",
+      sentUsername: "asdf",
+      sentUserNick: "asdf",
       noteContent: "노트 내용",
       receiveUsername: "123456AA7891011",
       receiveUserNick: "나",
@@ -27,8 +27,8 @@ const MyNote = () => {
     },
     {
       noteNo: 2,
-      sentUsername: "158432AE25",
-      sentUserNick: "보노보노",
+      sentUsername: "asdf",
+      sentUserNick: "asdf",
       noteContent: "노트 내용",
       receiveUsername: "123456AA7891011",
       receiveUserNick: "나",
@@ -38,7 +38,7 @@ const MyNote = () => {
   ]);
 
   const NoteDetail = (e, note) => {
-    const url = "/notedetail/:" + note.noteNo;
+    const url = "/notedetail/" + note.noteNo;
     window.open(
       url,
       "_blank",

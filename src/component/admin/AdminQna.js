@@ -60,7 +60,7 @@ const AdminQna = () => {
                 setErrorMsg(err.response.data);
                 setQuestionCnts({'totalCnt':0, 'answeredCnt':0, 'answeredNotCnt':0});
             }
-        })
+        });
     }
 
     const handlePageNo = (pageNo) => {
@@ -104,6 +104,7 @@ const AdminQna = () => {
         setOpenList(newOpenList);
     };
 
+    
     const clickPopoverBody = (writerId) => {
         // alert(writerId);
 
