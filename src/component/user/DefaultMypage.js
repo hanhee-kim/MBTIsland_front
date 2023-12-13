@@ -61,7 +61,7 @@ const DefaultMypage = (props) => {
     (today - mbtiChangeDate) / (1000 * 60 * 60 * 24)
   );
   const changeDay = 90 - modifyMbtiDay;
-  const joinDay = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24));
+  const joinDay = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24)+1);
 
   const mbti = user.userMbti;
   const arrMbti = [...mbti];
