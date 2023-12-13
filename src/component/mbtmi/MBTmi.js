@@ -9,8 +9,8 @@ import axios from "axios";
 const MBTmi = () => {
 
     const [weeklyHotList, setWeeklyHotList] = useState([]);
-    const [commentCntList, setCommentCntList] = useState([]);
     const [errorMsg, setErrorMsg] = useState(null);
+    // 절대시간
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -31,23 +31,14 @@ const MBTmi = () => {
         const months = Math.floor(weeks/4);
         const years = Math.floor(months/12);
 
-        // if(seconds<60) {
-        //     return `${seconds}초 전`;
-        // } 
+        // if(seconds<60) return `${seconds}초 전`;
         // else 
-        if(minutes<60) {
-            return `${minutes}분 전`;
-        } else if(hours<24) {
-            return `${hours}시간 전`;
-        } else if(days<7) {
-            return `${days}일 전`;
-        } else if(weeks<4) {
-            return `${weeks}주 전`;
-        } else if(months<12) {
-            return `${months}달 전`;
-        } else {
-            return `${years}년 전`;
-        }
+        if(minutes<60) return `${minutes}분 전`;
+        else if(hours<24) return `${hours}시간 전`;
+        else if(days<7) return `${days}일 전`;
+        else if(weeks<4) return `${weeks}주 전`;
+        else if(months<12) return `${months}달 전`;
+        else return `${years}년 전`;
     }
     const [mbtmiList, setMbtmiList] = useState([]);
     const [page, setPage] = useState(1);
@@ -75,9 +66,7 @@ const MBTmi = () => {
         .then(res=> {
             console.log(res);
             let list = res.data.weeklyHotMbtmiList;
-            let commentCntList = res.data.commentCntList;
             setWeeklyHotList([...list]);
-            setCommentCntList([...commentCntList]);
             setErrorMsg(null);
         })
         .catch(err=> {
@@ -89,11 +78,11 @@ const MBTmi = () => {
         })
     }
 
-    const getNewlyMbtmiList = (category, type, search, page) => {
+    const getNewlyMbtmiList = (category, paramType, search, page) => {
         let defaultUrl = 'http://localhost:8090/mbtmilist';
 
         if (category !== null) defaultUrl += `?category=${category}`;
-        if (type !== null) defaultUrl += `${category !== null ? '&' : '?'}type=${type}`;
+        if (paramType !== null) defaultUrl += `${category !== null ? '&' : '?'}type=${paramType}`;
         if (search !== null) defaultUrl += `${category !== null || type !== null ? '&' : '?'}search=${search}`;
         if (page !== null) defaultUrl += `${category !== null || type !== null || search !== null ? '&' : '?'}page=${page}`;
 
@@ -155,6 +144,75 @@ const MBTmi = () => {
         getNewlyMbtmiList(category, type, tmpSearch, 1); // 페이지번호만 리셋
     }
 
+    // 카테고리 변경
+    const handleCategoryChange = (categoryParam) => {
+        getNewlyMbtmiList(categoryParam, type, search, 1); // 카테고리 변경시 페이지는 리셋, 타입과 검색어는 유지
+        setPage(1);
+        setCategory(categoryParam);
+        setActiveCategory(categoryParam);
+    };
+
+    // MBTI필터 변경
+/*
+    let tmpTypeObject = {};
+    let tmpTypeString = '';
+    let tmpType = '';
+    const handleTypeFilterChange = (group, value) => {
+        // setType({...type, [group]: value});
+        // console.log('type state변수값: ', type); // state의 업데이트가 출력문보다 한박자씩 느림
+
+        tmpTypeObject = {...tmpTypeObject, [group]: value};
+        console.log('tmpTypeObject: ', tmpTypeObject); // {group1: 'I', group2: 'S', group3: 'F', group4: 'P'}
+
+        tmpTypeString = Object.values(tmpTypeObject);
+        console.log('tmpTypeString: ', tmpTypeString); // ['I', 'S', 'F', 'P']
+
+        tmpType = tmpTypeString.join('');
+        console.log('tmpType: ' + tmpType); // ISFP
+
+        getNewlyMbtmiList(category, tmpType, search, 1); // 페이지번호만 리셋
+
+    };
+*/
+/*
+    let checkedValues = '';
+    const handleTypeFilterChange = (group, value) => {
+        const checkedRadioButtons = document.querySelectorAll(`input[name=${group}]:checked`);
+        const newCheckedValue = checkedRadioButtons.length>0 ? Array.from(checkedRadioButtons).map((radio) => radio.value).join('') : '';
+        checkedValues = newCheckedValue;
+
+        console.log(`${group} : ${checkedValues}`);
+        console.log('checkedValues: ', checkedValues);
+        
+        // getNewlyMbtmiList(category, checkedValue, search, 1);
+    }
+*/
+
+
+    const [checkedRadioValues, setCheckedRadioValues] = useState([]);
+    const handleRadioCheck = (value) => {
+        setCheckedRadioValues(prev=> [...prev, value]);
+        console.log('value: ', value);
+        console.log('checkedRadioValues: ', checkedRadioValues); 
+
+        // 기존: 아래 코드를 이곳에서 수행하려 했었다
+        // setType(checkedRadioValues.join(''));
+        // console.log(type);
+
+        // 문제: setState함수는 state를 즉시 업데이트하지 않음--->변경
+    };
+    // 변경: useEffect 사용하여 state 업데이트를 감지하고, 그떄에만 '후속'작업이 수행되도록한다
+    useEffect(()=> {
+        setType(checkedRadioValues.join(''));
+        console.log(type);
+    }, [checkedRadioValues]);
+    useEffect(()=> {
+        console.log("category: ", category);
+        console.log("type: ", type);
+        console.log("search: ", search);
+        getNewlyMbtmiList(category, type, search, 1);
+    }, [type]);
+
 
     // 페이지네이션
     const PaginationInside = () => {
@@ -196,13 +254,7 @@ const MBTmi = () => {
         navigate(linkTo, {replace:false});
     }
 
-    // 카테고리 변경
-    const handleCategoryChange = (categoryParam) => {
-        getNewlyMbtmiList(categoryParam, type, search, 1); // 카테고리 변경시 페이지는 리셋, 타입과 검색어는 유지
-        setPage(1);
-        setCategory(categoryParam);
-        setActiveCategory(categoryParam);
-    };
+    
 
 
     return (
@@ -258,19 +310,34 @@ const MBTmi = () => {
                         <button className={activeCategory==='취미'? style.activeCategory :''} onClick={() => handleCategoryChange('취미')}>취미</button>
                         <img src={"/refreshIcon.png" } alt="" className={style.refreshIcon} onClick={() => handleCategoryChange(null)}/>
                     </div>
+                    {/* <div className={style.mbtiFilterBtns}> 
+                        <span>&#128204;</span>&nbsp;&nbsp;
+                        <input type="radio" id="mbtiE" name="group1" value="E" onChange={()=>handleTypeFilterChange('group1', 'E')}/><label for="mbtiE">E</label>
+                        <input type="radio" id="mbtiI" name="group1" value="I" onChange={()=>handleTypeFilterChange('group1', 'I')}/><label for="mbtiI">I</label>
+                        &nbsp;&nbsp;+&nbsp;&nbsp;
+                        <input type="radio" id="mbtiN" name="group2" value="N" onChange={()=>handleTypeFilterChange('group2', 'N')}/><label for="mbtiN">N</label>
+                        <input type="radio" id="mbtiS" name="group2" value="S" onChange={()=>handleTypeFilterChange('group2', 'S')}/><label for="mbtiS">S</label>
+                        &nbsp;+&nbsp;
+                        <input type="radio" id="mbtiF" name="group3" value="F" onChange={()=>handleTypeFilterChange('group3', 'F')}/><label for="mbtiF">F</label>
+                        <input type="radio" id="mbtiT" name="group3" value="T" onChange={()=>handleTypeFilterChange('group3', 'T')}/><label for="mbtiT">T</label>
+                        &nbsp;+&nbsp;
+                        <input type="radio" id="mbtiJ" name="group4" value="J" onChange={()=>handleTypeFilterChange('group4', 'J')}/><label for="mbtiJ">J</label>
+                        <input type="radio" id="mbtiP" name="group4" value="P" onChange={()=>handleTypeFilterChange('group4', 'P')}/><label for="mbtiP">P</label>
+                        <img src={"/refreshIcon.png" } alt="" className={style.refreshIcon} />
+                    </div> */}
                     <div className={style.mbtiFilterBtns}> 
                         <span>&#128204;</span>&nbsp;&nbsp;
-                        <input type="radio" id="mbtiE" name="mbti1"/><label for="mbtiE">E</label>
-                        <input type="radio" id="mbtiI" name="mbti1"/><label for="mbtiI">I</label>
+                        <input type="radio" id="mbtiE" name="group1" value="E" onChange={(e)=>handleRadioCheck(e.target.value)}/><label for="mbtiE">E</label>
+                        <input type="radio" id="mbtiI" name="group1" value="I" onChange={(e)=>handleRadioCheck(e.target.value)} /><label for="mbtiI">I</label>
                         &nbsp;&nbsp;+&nbsp;&nbsp;
-                        <input type="radio" id="mbtiN" name="mbti2"/><label for="mbtiN">N</label>
-                        <input type="radio" id="mbtiS" name="mbti2"/><label for="mbtiS">S</label>
+                        <input type="radio" id="mbtiN" name="group2" value="N" onChange={(e)=>handleRadioCheck(e.target.value)} /><label for="mbtiN">N</label>
+                        <input type="radio" id="mbtiS" name="group2" value="S" onChange={(e)=>handleRadioCheck(e.target.value)} /><label for="mbtiS">S</label>
                         &nbsp;+&nbsp;
-                        <input type="radio" id="mbtiF" name="mbti3"/><label for="mbtiF">F</label>
-                        <input type="radio" id="mbtiT" name="mbti3"/><label for="mbtiT">T</label>
+                        <input type="radio" id="mbtiF" name="group3" value="F" onChange={(e)=>handleRadioCheck(e.target.value)} /><label for="mbtiF">F</label>
+                        <input type="radio" id="mbtiT" name="group3" value="T" onChange={(e)=>handleRadioCheck(e.target.value)} /><label for="mbtiT">T</label>
                         &nbsp;+&nbsp;
-                        <input type="radio" id="mbtiJ" name="mbti4"/><label for="mbtiJ">J</label>
-                        <input type="radio" id="mbtiP" name="mbti4"/><label for="mbtiP">P</label>
+                        <input type="radio" id="mbtiJ" name="group4" value="J" onChange={(e)=>handleRadioCheck(e.target.value)} /><label for="mbtiJ">J</label>
+                        <input type="radio" id="mbtiP" name="group4" value="P" onChange={(e)=>handleRadioCheck(e.target.value)} /><label for="mbtiP">P</label>
                         <img src={"/refreshIcon.png" } alt="" className={style.refreshIcon} />
                     </div>
                 </div>
