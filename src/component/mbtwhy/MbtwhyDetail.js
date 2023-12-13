@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
 import {
     Pagination,
@@ -36,7 +36,7 @@ function MbtwhyDetail() {
             num:1,
             mbti:"ISTP",
             color:"#4D6879",
-            writer:"마춤뻡파괴왕",
+            writer:"ㅋㅋㅋㅋ",
             date:"1일전",
             content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
         }
@@ -152,6 +152,20 @@ function MbtwhyDetail() {
     const submit=(e)=> {
         e.preventDefault();
     };
+    
+    const navigate = useNavigate();
+
+    // mbtwhy 이동
+    const goMbtwhy = () => {
+        // let defaultUrl = `/mbtwhy`;
+        // if(mbti !== null) defaultUrl += `/${mbti}`;
+        // if(page !== null) defaultUrl += `/${page}`;
+        // if(sort !== null) defaultUrl += `/${sort}`;
+        // if(search) defaultUrl += `/${search}`;
+
+        // navigate(defaultUrl);
+        navigate(-1);
+    }
 
     // 페이지네이션
     const PaginationInside = () => {
@@ -159,7 +173,7 @@ function MbtwhyDetail() {
         const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
         for(let i=commentPageInfo.startPage; i<=commentPageInfo.endPage; i++) {
             pageGroup.push(
-                <span key={i} className={`${page===i? style.activePage: ''}`}><Link to={"/mbtwhydetail?mbti=" + mbti + "&page=" + i + "&sort=" + sort} style={linkStyle} onClick={()=>handleCommentPageNo(i)}>{i}</Link></span>
+                <span key={i} className={`${page===i? style.activePage: ''}`} onClick={()=>handleCommentPageNo(i)}>{i}</span>
             )
         }
         return (
@@ -185,7 +199,7 @@ function MbtwhyDetail() {
         display:"flex",
         border:"none",
         boxShadow:"none",
-        backgroundColor:"white",
+        backgroundColor:"white"
     }
 
     const buttonStyle = {
@@ -259,7 +273,7 @@ function MbtwhyDetail() {
                         <div style={{color:"#C5C5C5"}}>
                             {mbtwhy.writeDate}
                             <img className={style.viewIcon} src="/viewIcon-bold.png" alt=""></img>
-                            {mbtwhy.viewCount}
+                            {mbtwhy.viewCnt}
                         </div>
                         <div className={style.boardContent}>
                             {mbtwhy.content}
@@ -274,14 +288,14 @@ function MbtwhyDetail() {
                                 {mbtwhy.recommendCnt}
                             </div>
                             <div className={style.listDiv}>
-                                <Button style={buttonStyle}>목록</Button>
+                                <Button style={buttonStyle} onClick={()=>goMbtwhy()}>목록</Button>
                             </div>
                         </div>
                     </div>
                     <div className={style.commentCountDiv}>
                         <div>
                             댓글&nbsp;
-                            {mbtwhy.commentCount}
+                            {mbtwhy.commentCnt}
                         </div>
                     </div>
                 </div>
@@ -290,29 +304,31 @@ function MbtwhyDetail() {
                 {/* 댓글 영역 */}
                 <div>
                     {/* 댓글 목록 */}
-                    {comments.length !== 0 && comments.map(comment => {
-                        return (
-                            <div key={comment.num} className={style.sectionComment}>
-                                <div className={style.writerDiv}>
-                                    <div>
-                                        <div className={style.circleDiv} style={{backgroundColor:`${comment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
-                                        {comment.mbti}&nbsp;&nbsp;&nbsp;
-                                        {comment.writer}
+                    <div>
+                        {comments.length !== 0 && comments.map(comment => {
+                            return (
+                                <div key={comment.num} className={style.sectionComment}>
+                                    <div className={style.writerDiv}>
+                                        <div>
+                                            <div className={style.circleDiv} style={{backgroundColor:`${comment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                            {comment.mbti}&nbsp;&nbsp;&nbsp;
+                                            {comment.writer}
+                                        </div>
+                                    </div>
+                                    <div className={style.boardContent}>
+                                        {comment.content}
+                                    </div>
+                                    <div className={style.commentLowDiv}>
+                                        <div>
+                                            {comment.date}&nbsp;&nbsp;&nbsp;
+                                            <Button style={replyButtonStyle}>답글</Button>
+                                        </div>
+                                        <Button style={replyButtonStyle} name="mbtwhycomment" onClick={(e)=>{openReportWrite(e, comment)}}>신고</Button>
                                     </div>
                                 </div>
-                                <div className={style.boardContent}>
-                                    {comment.content}
-                                </div>
-                                <div className={style.commentLowDiv}>
-                                    <div>
-                                        {comment.date}&nbsp;&nbsp;&nbsp;
-                                        <Button style={replyButtonStyle}>답글</Button>
-                                    </div>
-                                    <Button style={replyButtonStyle} name="mbtwhycomment" onClick={(e)=>{openReportWrite(e, comment)}}>신고</Button>
-                                </div>
-                            </div>
-                        )
-                    })}
+                            )
+                        })}
+                    </div>
 
                     {/* 대댓글 */}
                     <div key={replyComment.num} className={style.sectionReply} style={{display:"flex"}}>

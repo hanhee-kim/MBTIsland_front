@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
     FormGroup,
     Col,
@@ -14,19 +14,7 @@ import style from "../../css/mbtwhy/Mbtwhy.module.css";
 function Mbtwhy() {
 
     // 인기 게시글 더미 데이터
-    const [hotMbtwhy, setHotMbtwhy] = useState(
-        {
-            no:1,
-            mbti:"INTP",
-            color:"#9BB7D4",
-            writer:"마춤뻡파괴왕",
-            date:"1일전",
-            content:"ISTJ들은 ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.ISTJ들은 대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요.대체 왜 그러죠? 진짜 숨을 끊어버리고 싶어요. 이거 제가 잘못한 건가요? 저 인간 진짜",
-            commentCount:2,
-            likeCount:1,
-            viewCount:23
-        }
-    );
+    const [hotMbtwhy, setHotMbtwhy] = useState({});
 
     // Mbtwhy 게시글 목록
     const [mbtwhyList, setMbtwhyList] = useState([]);
@@ -37,7 +25,6 @@ function Mbtwhy() {
     // URL 파라미터
     // MBTI 유형, 페이지 번호, 정렬 옵션, 검색 값
     const {mbti} = useParams();
-    console.log(mbti);
     // const formatMbti = mbti.startsWith(':') ? mbti.substring(1) : mbti;
     // const formatPage = page.startsWith(':') ? page.substring(1) : page;
     // const formatSort = sort.startsWith(':') ? sort.substring(1) : sort;
@@ -74,16 +61,24 @@ function Mbtwhy() {
     // mbtwhydetail 이동
     const goMbtwhyDetail = (no) => {
         let defaultUrl = `/mbtwhydetail`;
-        if(mbti !== null) defaultUrl += `/${mbti}`;
-        if(page !== null) defaultUrl += `/${page}`;
-        if(search) defaultUrl += `/${search}`;
-        if(sort !== null) defaultUrl += `/${sort}`;
         if(no !== null) defaultUrl += `/${no}`;
+        // if(mbti !== null) defaultUrl += `/${mbti}`;
+        // if(page !== null) defaultUrl += `/${page}`;
+        // if(sort !== null) defaultUrl += `/${sort}`;
+        // if(search) defaultUrl += `/${search}`;
 
         navigate(defaultUrl);
     }
+
+    // mbtwhywrite 이동
+    const goMbtwhyWrite = () => {
+        let defaultUrl = `/mbtwhydetail`;
+        if(mbti !== null) defaultUrl += `/${mbti}`;
+        
+        navigate(defaultUrl);
+    }
     
-    // url에 파라미터로 줄 변수 repage
+    // 게시글 목록 조회
     const getMbtwhyList = (pageNo, searchValue, sortType) => {
         console.log(sortType);
         let defaultUrl = `http://localhost:8090/mbtwhy?mbti=${mbti}`;
@@ -96,10 +91,12 @@ function Mbtwhy() {
             console.log(res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.mbtwhyList;
+            let mbtwhyHot = res.data.mbtwhyHot;
             // let mbtwhyCnt = res.data.mbtwhyCnt;
 
             setMbtwhyList([...list]);
             setPageInfo({...pageInfo});
+            setHotMbtwhy({...mbtwhyHot});
             // setMbtwhyCnt(mbtwhyCnt);
             
             let btn = [];
@@ -111,6 +108,7 @@ function Mbtwhy() {
             console.log(err);
             setMbtwhyList([]);
             setPageInfo({});
+            setHotMbtwhy({});
             // setMbtwhyCnt(0);
         })
     };
@@ -209,7 +207,7 @@ function Mbtwhy() {
                 {/* 게시판 헤더 영역 */}
                 <div className={style.pageHeader}>
                     <h1>{mbti}</h1>
-                    <h6>글 작성</h6>
+                    <h6 onClick={()=>goMbtwhyWrite()}>글 작성</h6>
                     <button onClick={()=>setOpen(!open)} id="Popover1" style={buttonStyle}><img src={"/sortIcon.png" } alt="" className={style.sortIcon} /></button>
                     <Popover placement="bottom" isOpen={open} target="Popover1" toggle={()=>handleToggle()}>
                         <PopoverBody className={style.popoverItem} onClick={()=>handleSort("new")}>최신순</PopoverBody>
@@ -219,20 +217,20 @@ function Mbtwhy() {
                     
                 </div>
 
-                {/* 인기 게시글 영역 */}
-                <div className={style.sectionBoards}>
-                    <Link to={"/mbtwhydetail"} style={{textDecoration:"none"}}>
-                        <div key={hotMbtwhy.num} className={style.sectionBoard}>
+                {/* 일간 인기 게시글 영역 */}
+                {hotMbtwhy.no?
+                    <div className={style.sectionBoards}>
+                        <div key={hotMbtwhy.no} className={style.sectionBoard} onClick={()=>goMbtwhyDetail(hotMbtwhy.no)}>
                             <div className={style.hotTag}>
                                 &#128293;HOT
                             </div>
                             <div className={style.boardWriter}>
-                                <div style={{backgroundColor:`${hotMbtwhy.color}`}}> </div>&nbsp;&nbsp;&nbsp;
-                                {hotMbtwhy.mbti}&nbsp;&nbsp;&nbsp;
-                                {hotMbtwhy.writer}
+                                <div style={{backgroundColor:`${hotMbtwhy.writerMbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                {hotMbtwhy.writerMbti}&nbsp;&nbsp;&nbsp;
+                                {hotMbtwhy.writerNickname}
                             </div>
                             <div className={style.boardDate}>
-                                {hotMbtwhy.date}
+                                {hotMbtwhy.writeDate}
                             </div>
                             <div className={style.boardContent}>
                                 {hotMbtwhy.content}
@@ -240,20 +238,20 @@ function Mbtwhy() {
                             <div className={style.boardLow}>
                                 <div>
                                     <img src="/commentIcon.png" alt=""></img>
-                                    {hotMbtwhy.commentCount}
+                                    {hotMbtwhy.commentCnt}
                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <div>
                                     <img src="/thumbIcon.png" alt=""></img>
-                                    {hotMbtwhy.likeCount}
+                                    {hotMbtwhy.recommendCnt}
                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <div>
                                     <img src="/viewIcon.png" alt=""></img>
-                                    {hotMbtwhy.viewCount}
+                                    {hotMbtwhy.viewCnt}
                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </div>
                         </div>
-                    </Link>
-                </div>
+                    </div>
+                :<></>}
 
                 {/* 게시글 영역 */}
                 <div className={style.sectionBoards}>
@@ -274,7 +272,7 @@ function Mbtwhy() {
                                 <div className={style.boardLow}>
                                     <div>
                                         <img src="/commentIcon.png" alt=""></img>
-                                        {/* {mbtwhy.commentCount} */}
+                                        {mbtwhy.commentCnt}
                                     </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <div>
                                         <img src="/thumbIcon.png" alt=""></img>

@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from 'react-router-dom';
 
 import {
     Button,
     Input
 } from "reactstrap";
+import axios from 'axios';
 
 import style from "../../css/mbtwhy/MbtwhyForm.module.css";
 
@@ -13,14 +15,47 @@ function MbtwhyWrite() {
     const [color, setColor] = useState("#ADB1B0");
 
     // MBTI 유형
-    const [mbti, setMbti] = useState("ISTJ");
+    const {mbti} = useParams();
+    
+    const [mbtiValue, setMbtiValue] = useState(mbti);
 
     const [content, setContent] = useState("");
 
+    useEffect(() => {
+        console.log(mbtiValue);
+        console.log(content);
+    }, [mbtiValue, content]);
+
+    // MBTI 유형 변경
     const typeChange = (e) => {
         const arr = e.target.value.split(",");
         setColor(arr[0]);
-        setMbti(arr[1]);
+        setMbtiValue(arr[1]);
+    };
+
+    // 내용 변경
+    const contentChange = (e) => {
+        setContent(e.target.value);
+    }
+
+    // 게시글 목록 조회
+    const postMbtwhy = () => {
+        let defaultUrl = `http://localhost:8090/mbtwhywrite?`;
+        if(mbtiValue !== null) defaultUrl += `&mbti=${mbtiValue}`;
+        if(content !== null) defaultUrl += `&content=${content}`;
+
+        axios.post(defaultUrl)
+        .then(res=> {
+            console.log(res);
+
+            // let mbtwhyCnt = res.data.mbtwhyCnt;
+
+            // setMbtwhyCnt(mbtwhyCnt);
+
+        })
+        .catch(err=> {
+            console.log(err);
+        })
     };
 
     const pageHeader = {
@@ -38,10 +73,6 @@ function MbtwhyWrite() {
         background:"white",
         color:"black",
         border:"1px solid lightgray"
-    }
-
-    const change = (e) => {
-        setContent(e.target.value);
     }
     
     return (
@@ -87,7 +118,7 @@ function MbtwhyWrite() {
                         type="textarea"
                         id="content"
                         name="content"
-                        onChange={change}
+                        onChange={contentChange}
                         cols="40"
                         rows="15"
                         required="required"
