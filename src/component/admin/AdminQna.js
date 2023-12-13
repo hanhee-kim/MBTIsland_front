@@ -210,7 +210,8 @@ const AdminQna = () => {
                     </thead>
                     <tbody>
                         {errorMsg? (
-                            <tr><td colSpan="5" className={styleQna.errMsg}>{errorMsg}</td></tr>
+                            // <tr><td colSpan="5" className={styleQna.errMsg}>{errorMsg}</td></tr>
+                            <tr><td colSpan="5" className={style.errMsg}>{JSON.stringify(errorMsg)}</td></tr>
                         ) : (
                             questionList.length>0 && questionList.map((post, index) => {
                                 return (

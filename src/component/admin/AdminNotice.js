@@ -200,7 +200,8 @@ const AdminNotice = () => {
                 <table className={style.table}>
                     <tbody>
                         {errorMsg? (
-                            <tr><td colSpan="4" className={style.errMsg}>{errorMsg}</td></tr>
+                            // <tr><td colSpan="4" className={style.errMsg}>{errorMsg}</td></tr>
+                            <tr><td colSpan="4" className={style.errMsg}>{JSON.stringify(errorMsg)}</td></tr>
                         ) : (
                             noticeList.length>0 && noticeList.map(post => {
                                 return (

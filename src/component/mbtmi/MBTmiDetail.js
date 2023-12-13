@@ -204,14 +204,15 @@ const MBTmiDetail = () => {
     // 1차댓글
     const Comment = ({comment, togglePopover}) => {
         const isLoginUserComment = comment.writerId === loginUser.username;
-        const isPostWriter = comment.writerId === mbtmi.writerId;
+        // const isPostWriterComment = comment.writerId === mbtmi.writerId;
+        const isPostWriterComment = comment?.writerId === mbtmi?.writerId; // comment가 null 또는 undefine이 아닌 경우에만 writerId 속성 값을 읽도록하여  Uncaught runtime errors런타임에러 방지
         return (
             <tr key={comment.commentNo} className={`${style.commentTr} ${isLoginUserComment ? style.loginUsersComment : ''}`}>
                 <td>
                     <div className={style.commentTd1row}>
                         <div className={style.commentProfileColor} style={{ background: comment.writerMbtiColor, borderColor: comment.writerMbtiColor }}/>
                         <span>{comment.writerMbti} {comment.writerNickname}</span>
-                        {isPostWriter && <span className={style.isPostWriter}>작성자</span>}
+                        {isPostWriterComment && <span className={style.isPostWriterComment}>작성자</span>}
                     </div>
                     <div className={style.commentTd2row}>
                         {comment.commentContent}
@@ -229,14 +230,15 @@ const MBTmiDetail = () => {
     // 2차댓글
     const Reply = ({reply}) => {
         const isLoginUserComment = reply.writerId === loginUser.username;
-        const isPostWriter = reply.writerId === mbtmi.writerId;
+        // const isPostWriterComment = reply.writerId === mbtmi.writerId;
+        const isPostWriterComment = reply?.writerId === mbtmi?.writerId; // reply가 null 또는 undefine이 아닌 경우에만 writerId 속성 값을 읽도록하여  Uncaught runtime errors런타임에러 방지
         return (
             <tr key={reply.commentNo} className={`${style.reply} ${isLoginUserComment ? style.loginUsersComment : ''}`}>
                 <td>
                     <div className={style.commentTd1row}>
                         <div className={style.commentProfileColor} style={{ background: reply.writerMbtiColor, borderColor: reply.writerMbtiColor }}/>
                         <span>{reply.writerMbti} {reply.writerNickname}</span>
-                        {isPostWriter && <span className={style.isPostWriter}>작성자</span>}
+                        {isPostWriterComment && <span className={style.isPostWriterComment}>작성자</span>}
                     </div>
                     <div className={style.commentTd2row}>
                         {reply.commentContent}

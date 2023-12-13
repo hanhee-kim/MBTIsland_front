@@ -1,7 +1,7 @@
 import { Popover, PopoverBody, Table } from "reactstrap";
 
 import style from "../../css/mbtmi/MBTmi.module.css";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
@@ -45,6 +45,7 @@ const MBTmi = () => {
     const [page, setPage] = useState(1);
     const [pageInfo, setPageInfo] = useState({});
     const [category, setCategory] = useState(null);
+    const [sort, setSort] = useState(null);
     const [type, setType] = useState(null);
     const [search, setSearch] = useState(null);
     const [tmpSearch, setTmpSearch] = useState(null);
@@ -61,14 +62,14 @@ const MBTmi = () => {
         }
 
         getWeeklyHotList();
-        getNewlyMbtmiList(category, type, search, page);
+        // getNewlyMbtmiList(category, type, search, page, sort);
+        getNewlyMbtmiList(null, null, null, null, null);
     }, []);
 
     const getWeeklyHotList = () => {
         axios.get(`http://localhost:8090/weeklyhotmbtmi`)
         .then(res=> {
-            console.log('주간인기글목록 요청결과');
-            console.log(res);
+            // console.log(res);
             let list = res.data.weeklyHotMbtmiList;
             setWeeklyHotList([...list]);
             setErrorMsgWeekly(null);
@@ -82,20 +83,21 @@ const MBTmi = () => {
         })
     }
 
-    const getNewlyMbtmiList = (category, paramType, search, page) => {
+    const getNewlyMbtmiList = (paramCategory, paramType, paramSearch, paramPage, paramSort) => {
         let defaultUrl = 'http://localhost:8090/mbtmilist';
 
-        if (category !== null) defaultUrl += `?category=${category}`;
-        if (paramType !== null) defaultUrl += `${category !== null ? '&' : '?'}type=${paramType}`;
-        if (search !== null) defaultUrl += `${category !== null || type !== null ? '&' : '?'}search=${search}`;
-        if (page !== null) defaultUrl += `${category !== null || type !== null || search !== null ? '&' : '?'}page=${page}`;
+        if (paramCategory !== null) defaultUrl += `?category=${paramCategory}`;
+        if (paramType !== null) defaultUrl += `${paramCategory !== null ? '&' : '?'}type=${paramType}`;
+        if (paramSearch !== null) defaultUrl += `${paramCategory !== null || paramType !== null ? '&' : '?'}search=${paramSearch}`;
+        if (paramPage !== null) defaultUrl += `${paramCategory !== null || paramType !== null || paramSearch !== null ? '&' : '?'}page=${paramPage}`;
+        if (paramSort !== null) defaultUrl += `${paramCategory !== null || paramType !== null || paramSearch !== null || paramPage !== null ? '&' : '?'}sort=${paramSort}`;
 
         console.log('*** 요청url:' + defaultUrl);
 
         axios.get(defaultUrl)
         .then(res=> {
             console.log('최신글목록 요청결과');
-            console.log('-!@!@!@!',res);
+            console.log(res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.mbtmiList;
             setMbtmiList([...list]);
@@ -115,10 +117,15 @@ const MBTmi = () => {
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
     const clickOutsidePopover = (event) => {
         const popoverElements = document.querySelectorAll(".popover");
-        // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
-        if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
-            setOpen(false);
-        } 
+
+        // 이벤트객체와 해당하는 target속성이 정의되어 있는지 확인 (null 또는 undefined인 target에 접근할때  "Cannot read properties of undefined" 에러가 발생하기 때문에 if문으로 감싼다)
+        if(event && event.target) {
+
+            // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
+            if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
+                setOpen(false);
+            } 
+        }
     };
     useEffect(() => {
         clickOutsidePopover();
@@ -137,7 +144,7 @@ const MBTmi = () => {
 
         setPage(pageNo);
         console.log('현재 적용되는 검색어: ' + search);
-        getNewlyMbtmiList(category, type, search, pageNo); // 1,2,3번째 인자: state에 저장된 기존의 값
+        getNewlyMbtmiList(category, type, search, pageNo, sort);
     };
     const handleSearchChange = (event) => {
         const searchTerm = event.target.value;
@@ -146,40 +153,58 @@ const MBTmi = () => {
     const handleSearch = () => {
         setSearch(tmpSearch);
         setPage(1);
-        getNewlyMbtmiList(category, type, tmpSearch, 1); // 페이지번호만 리셋
+        getNewlyMbtmiList(category, type, tmpSearch, 1, sort); // 페이지번호만 리셋
     }
 
     // 카테고리 변경
     const handleCategoryChange = (categoryParam) => {
-        getNewlyMbtmiList(categoryParam, type, search, 1); // 카테고리 변경시 페이지는 리셋, 타입과 검색어는 유지
+        getNewlyMbtmiList(categoryParam, type, search, 1, sort); // 카테고리 변경시 페이지는 리셋, 타입과 검색어와 정렬은 유지
         setPage(1);
         setCategory(categoryParam);
         setActiveCategory(categoryParam);
     };
 
     // MBTI필터 변경
-    const [checkedRadioValues, setCheckedRadioValues] = useState([]);
+    const [checkedRadioValues, setCheckedRadioValues] = useState({group1: '', group2: '', group3: '', group4: ''});
     const handleRadioCheck = (group, value) => {
+        console.log('handleRadioCheck함수 실행!');
         setCheckedRadioValues(prev=> ({
             ...prev, [group]: value
         }));
-        // console.log('value: ', value);
+        console.log('value: ', value);
     };
-    useEffect(()=> {
-        // console.log('checkedRadioValues: ', checkedRadioValues); 
-        const onlyValuesExceptKeys = Object.values(checkedRadioValues);
-        setType(onlyValuesExceptKeys.join(''));
+
+    useEffect(() => {
+        // 모든 라디오버튼이 초기값이 아닌 경우에만 실행되도록 if문으로 감싼다 (초기렌더링시에  자동실행되지 않도록)
+        if(Object.values(checkedRadioValues).every(value => value !== '')) {
+            console.log('checkedRadioValues: ', checkedRadioValues);
+            const onlyValuesExceptKeys = Object.values(checkedRadioValues);
+            setType(onlyValuesExceptKeys.join(''));
+        }
     }, [checkedRadioValues]);
     useEffect(()=> {
-        // console.log("category: ", category);
-        console.log("type: ", type);
-        // console.log("search: ", search);
-        getNewlyMbtmiList(category, type, search, 1);
+        // type이 초기값이 아닌 경우에만 실행되도록 if문으로 감싼다
+        if(type!==null) {
+            // console.log("category: ", category);
+            console.log("type: ", type);
+            // console.log("search: ", search);
+            setPage(1);
+            getNewlyMbtmiList(category, type, search, 1, sort);
+        }
     }, [type]);
 
     // MBTI필터 리셋 버튼
     const refreshRadioCheck = () => {
-        setCheckedRadioValues([]);
+        console.log('refreshRadioCheck함수 실행!');
+        setCheckedRadioValues({group1: '', group2: '', group3: '', group4: ''});
+    }
+
+    // 정렬값 변경
+    const handleSort = (paramSort) => {
+        console.log('정렬값: ', paramSort);
+        setSort(paramSort);
+        setOpen(!open); // 팝오버 닫기
+        getNewlyMbtmiList(category, type, search, 1, paramSort); // 페이지번호만 리셋
     }
 
 
@@ -242,7 +267,8 @@ const MBTmi = () => {
                     <table className={style.weeklyPostsTable}>
                         <tbody>
                             {errorMsgWeekly? (
-                                <tr><td colSpan="4" className={style.errMsg}>{errorMsgWeekly}</td></tr>
+                                // <tr><td colSpan="4" className={style.errMsg}>{errorMsgWeekly}</td></tr>
+                                <tr><td colSpan="4" className={style.errMsg}>{JSON.stringify(errorMsgWeekly)}</td></tr>
                             ) : (
                                 weeklyHotList.length>0 && weeklyHotList.map(post => {
                                     return (
@@ -298,11 +324,12 @@ const MBTmi = () => {
 
                 <div className={style.aboveTable}>
                     <span>
-                        <button onClick={()=>setOpen(!open)} id="Popover1"><img src={"/sortIcon.png" } alt="" className={style.sortIcon} />최신순</button>
+                        <button onClick={()=>setOpen(!open)} id="Popover1"><img src={"/sortIcon.png" } alt="" className={style.sortIcon} />{!sort? '최신순' : sort}</button>
                         <Popover className={style.popover} placement="bottom" isOpen={open} target="Popover1" toggle={()=>setOpen(!open)}>
-                            <PopoverBody className={style.popoverItem}>최신순</PopoverBody>
-                            <PopoverBody className={style.popoverItem}>조회수</PopoverBody>
-                            <PopoverBody className={style.popoverItem}>댓글수</PopoverBody>
+                            <PopoverBody className={style.popoverItem} onClick={()=>handleSort("최신순")}>최신순</PopoverBody>
+                            <PopoverBody className={style.popoverItem} onClick={()=>handleSort("조회순")}>조회순</PopoverBody>
+                            <PopoverBody className={style.popoverItem} onClick={()=>handleSort("추천순")}>추천순</PopoverBody>
+                            {/* <PopoverBody className={style.popoverItem} onClick={()=>handleSort("댓글순")}>댓글순</PopoverBody> */}
                         </Popover>
                         <button><img src={"/writebtnIcon.png" } alt="" className={style.writebtnIcon} />작성하기</button>
                     </span>
@@ -314,7 +341,8 @@ const MBTmi = () => {
                 <table className={style.mbtmiTable}>
                     <tbody>
                         {errorMsgNewly? (
-                            <tr><td className={style.errMsg}>{errorMsgNewly}</td></tr>
+                            // <tr><td className={style.errMsg}>{errorMsgNewly}</td></tr> // 리액트는 렌더링할 자식 요소로 문자열 또는 숫자를 기대하며 객체는 유효하지 않다고 판단하여 에러를 발생시킬수 있기 때문에 객체는 JSON.stringify()를 이용한다
+                            <tr><td className={style.errMsg}>{JSON.stringify(errorMsgNewly)}</td></tr>
                         ) : (
                             mbtmiList.length>0 && mbtmiList.map(post => {
                                 return(
