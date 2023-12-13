@@ -51,19 +51,19 @@ const MBTmi = () => {
     const [tmpSearch, setTmpSearch] = useState(null);
     const [activeCategory, setActiveCategory] = useState(null);
 
-
+    // (게시글 상세에서)목록가기 버튼 또는 뒤로가기 클릭시의 동작 로직 고려
     useEffect(() => {
-        // alert('useEffect빈배열 호출!');
+        // alert('초기 useEffect 호출!');
 
         // localStorage에 저장된 페이지 정보를 읽음
         const storedInfo = localStorage.getItem('curPage');
         if(storedInfo) {
             setPage(parseInt(storedInfo, 10)); // 페이지넘버
         }
-
+        
         getWeeklyHotList();
-        // getNewlyMbtmiList(category, type, search, page, sort);
-        getNewlyMbtmiList(null, null, null, null, null);
+        getNewlyMbtmiList(category, type, search, page, sort);
+        // getNewlyMbtmiList(null, null, null, null, null);
     }, []);
 
     const getWeeklyHotList = () => {
