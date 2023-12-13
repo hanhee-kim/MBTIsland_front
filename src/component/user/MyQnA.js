@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "../../css/user/Mypage.module.css";
 import {
   Button,
@@ -11,93 +11,45 @@ import {
   Table,
 } from "reactstrap";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 const MyQnA = (props) => {
+  const [answered, setAnswered] = useState(null);
+  const [page, setPage] = useState(1);
+  const [pageInfo, setPageInfo] = useState({});
+  const [qnaList,setQnaList] = useState([]);
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
   const user = useSelector((state) => state.persistedReducer.user.user);
-  //더미데이터
-  const [qnaList, setQnaList] = useState([
-    {
-      no: 1,
-      title: "fasdasdf",
-      content: "fasdddddddfgsdgfsdfasdfasffasd",
-      writedDate: "2023-11-11T00:00:00",
-      writerId: "",
-      isAnswered: "N",
-    },
-    {
-      no: 2,
-      title: "sdfsdfsdfads",
-      content: "affasfdasfsdfsddfs",
-      writedDate: "2023-11-11T00:00:00",
-      writerId: "",
-      isAnswered: "N",
-    },
-    {
-      no: 3,
-      title: "asdfasd",
-      content: "fdasfdasfdsfa",
-      writedDate: "2023-11-11T00:00:00",
-      writerId: "",
-      isAnswered: "Y",
-    },
-    {
-      no: 4,
-      title: "sfa",
-      content: "fdasfsdafasd",
-      writedDate: "2023-11-11T00:00:00",
-      writerId: "",
-      isAnswered: "Y",
-    },
-    {
-      no: 5,
-      title: "fsdfsda",
-      content: "sfadfsdafsdfsadfasdf",
-      writedDate: "2023-11-11T00:00:00",
-      writerId: "",
-      isAnswered: "N",
-    },
-    {
-      no: 6,
-      title: "",
-      content: "",
-      writedDate: "2023-11-11T00:00:00",
-      writerId: "",
-      isAnswered: "N",
-    },
-    {
-      no: 7,
-      title: "",
-      content: "",
-      writedDate: "2023-11-11T00:00:00",
-      writerId: "",
-      isAnswered: "N",
-    },
-    {
-      no: 8,
-      title: "",
-      content: "",
-      writedDate: "2023-11-11T00:00:00",
-      writerId: "",
-      isAnswered: "N",
-    },
-    {
-      no: 9,
-      title: "",
-      content: "",
-      writedDate: "2023-11-11T00:00:00",
-      writerId: "",
-      isAnswered: "N",
-    },
-    {
-      no: 10,
-      title: "",
-      content: "",
-      writedDate: "2023-11-11T00:00:00",
-      writerId: "",
-      isAnswered: "N",
-    },
-  ]);
+  useEffect(() => {
+    getMyQnaList(user.username ,answered ,page );
+  },[])
+  const getMyQnaList = ( username , answered , page ) => {
+    let defaultUrl = 'http://localhost:8090/questionlistofuser';
 
+        defaultUrl += `?user=${username}`;
+        if (answered !== null) defaultUrl += `${username !== null ? '&' : '?'}answered=${answered}`;
+        if (page !== null) defaultUrl += `${username !== null || answered !== null ? '&' : '?'}page=${page}`;
+        console.log('요청url:' + defaultUrl);
+
+    axios
+    .get(defaultUrl)
+    .then((res) => {
+      let pageInfo = res.data.pageInfo;
+      let list = res.data.questionList;
+      setQnaList([...list]);
+      setPageInfo({...pageInfo});
+      
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
   const openQnaWrite = () => {
     const url = "/qnawrite";
     window.open(
@@ -107,6 +59,42 @@ const MyQnA = (props) => {
     );
     // , "noopener, noreferrer"
   };
+  const handlePageNo = (pageNo) => {
+    setPage(pageNo);
+    console.log('***페이지이동***');
+    getMyQnaList(user.username, answered, pageNo); 
+};
+  // 페이지네이션
+  const PaginationInside = () => {
+    // if(errorMsg) return null;
+    const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
+    for(let i=pageInfo.startPage; i<=pageInfo.endPage; i++) {
+        pageGroup.push(
+            <span key={i} className={`${page===i? style.activePage: ''}`} onClick={()=>handlePageNo(i)}>{i}</span>
+        )
+    }
+    return (
+        <div className={style.paging}>
+            {!(pageInfo.startPage===1) && (
+                <>
+                    <span onClick={()=>handlePageNo(1)}>≪</span>
+                    <span onClick={()=>handlePageNo(pageInfo.startPage-10)}>&lt;</span>
+                </>
+            )}
+            {pageGroup}
+            {!(pageInfo.endPage===pageInfo.allPage) && (
+                <>
+                    <span onClick={()=>handlePageNo(pageInfo.endPage+1)}>&gt;</span>
+                    <span onClick={()=>handlePageNo(pageInfo.allPage)}>≫</span>
+                </>
+            )}
+        </div>
+    );
+}
+//tr 클릭시
+const goQuestionDeatail = (e, no) => {
+  console.log("tr클릭"+no);
+}
 
   return (
     <div className={style.myQnaContainer}>
@@ -120,6 +108,13 @@ const MyQnA = (props) => {
             문의하기
           </Link>
         </Button> */}
+        {(qnaList == null || qnaList == "")?
+        <div className={style.tableDiv}>
+          <div style={{fontSize:'25px',display:'flex',minHeight:"580px",alignItems:'center',}}>
+            <div style={{textAlign:'center',width:'98%',}}>* 문의하신 내용이 없습니다. *</div>
+          </div>
+        </div>:
+        <>
         <div className={style.tableDiv}>
         <Table className="table-hover" style={{ minWidth: "770px" }}>
           <thead>
@@ -141,7 +136,7 @@ const MyQnA = (props) => {
           <tbody>
             {qnaList.map((qna, index) => {
               return (
-                <tr key={index}>
+                <tr key={index} onClick={(e)=>goQuestionDeatail(e,qna.no)}>
                   <td sm={1} className="text-center">
                     {qna.no}
                   </td>
@@ -157,8 +152,8 @@ const MyQnA = (props) => {
                     className="text-center"
                     style={{ minWidth: "105px" }}
                   >
-                    {/* {qna.writedDate} */}
-                    {qna.writedDate.split("T")[0]}
+                    {formatDate(qna.writeDate)}
+                    {/* {qna.writedDate.split("T")[0]} */}
                   </td>
                   <td sm={2} className="text-center">
                     {qna.isAnswered === "N" ? "처리중" : "답변완료"}
@@ -169,22 +164,9 @@ const MyQnA = (props) => {
           </tbody>
         </Table>
         </div>
-        <div className={style.paging}>
-          <span>&lt;</span>
-          <span className={style.activePage} style={{ background: "#f8f8f8" }}>
-            1
-          </span>
-          <span>2</span>
-          <span>3</span>
-          <span>4</span>
-          <span>5</span>
-          <span>6</span>
-          <span>7</span>
-          <span>8</span>
-          <span>9</span>
-          <span>10</span>
-          <span>&gt;</span>
-        </div>
+        {PaginationInside()}
+        </>
+      }
       </div>
     </div>
   );

@@ -12,6 +12,9 @@ export const tokenReducer = (state, action) => {
     case "token":
       newState.token = action.payload;
       break;
+    case "logout":
+      newState.token = '';
+      break;  
     default:
   }
   return newState;
