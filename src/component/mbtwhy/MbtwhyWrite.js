@@ -11,16 +11,19 @@ import style from "../../css/mbtwhy/MbtwhyForm.module.css";
 
 function MbtwhyWrite() {
 
+    const navigate = useNavigate();
+
     // 색상 코드
     const [color, setColor] = useState("#ADB1B0");
 
     // MBTI 유형
     const {mbti} = useParams();
-    
     const [mbtiValue, setMbtiValue] = useState(mbti);
 
+    // 본문
     const [content, setContent] = useState("");
 
+    // MBTI 유형, 본문 값이 바뀔 때마다
     useEffect(() => {
         console.log(mbtiValue);
         console.log(content);
@@ -38,8 +41,9 @@ function MbtwhyWrite() {
         setContent(e.target.value);
     }
 
-    // 게시글 목록 조회
+    // 게시글 작성
     const postMbtwhy = () => {
+        console.log(mbtiValue);
         let defaultUrl = `http://localhost:8090/mbtwhywrite?`;
         if(mbtiValue !== null) defaultUrl += `&mbti=${mbtiValue}`;
         if(content !== null) defaultUrl += `&content=${content}`;
@@ -47,11 +51,8 @@ function MbtwhyWrite() {
         axios.post(defaultUrl)
         .then(res=> {
             console.log(res);
-
-            // let mbtwhyCnt = res.data.mbtwhyCnt;
-
-            // setMbtwhyCnt(mbtwhyCnt);
-
+            let no = res.data.no;
+            navigate(`/mbtwhydetail/${mbtiValue}/${no}/1`);
         })
         .catch(err=> {
             console.log(err);
@@ -126,7 +127,7 @@ function MbtwhyWrite() {
                         placeholder="게시글을 입력해주세요."
                     />
                     <div className={style.postContentDiv}>
-                        <Button style={buttonStyle}>등록</Button>
+                        <Button style={buttonStyle} onClick={()=>postMbtwhy()}>등록</Button>
                     </div>
                 </div>
             </div>
