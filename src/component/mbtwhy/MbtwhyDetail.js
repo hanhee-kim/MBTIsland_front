@@ -6,10 +6,6 @@ import {
     Pagination,
     PaginationItem,
     PaginationLink,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
     Popover,
     PopoverBody,
     Button,
@@ -31,6 +27,12 @@ function MbtwhyDetail() {
 
     // 로그인 유저 정보
     const user = useSelector((state) => state.persistedReducer.user.user);
+    const [userInfo, setUserInfo] = useState({
+        username : "",
+        userNickname : "",
+        userMbti : "",
+        userMbtiColor : ""
+    });
 
     // MBTI 분류, 글 번호, 댓글 페이지 번호
     const {mbti, no, page} = useParams();
@@ -106,7 +108,7 @@ function MbtwhyDetail() {
     // 정렬 드롭다운 open 여부
     const [open, setOpen] = useState(false);
 
-    const [parentCommentNo, setParentCommentNo] = useState(null);
+    const [parentcommentNo, setParentcommentNo] = useState(null);
 
     // 신고 팝오버 열기
     const openReportWrite = (e, report) => {
@@ -142,7 +144,12 @@ function MbtwhyDetail() {
 
     useEffect(() => {
         setMbtiColorTo();
-        // console.log("유즈 이펙트! mbti는 " + mbti + ", page는 " + page + ", search는 " + search + ", no는 " + no + ", sort는 " + sort);
+        setUserInfo({
+            username : user.username,
+            userNickname : user.userNickname,
+            userMbti : user.userMbti,
+            userMbtiColor : user.userMbtiColor
+        });
         getMbtwhyDetail(no, commentPage);
     }, []);
 
@@ -191,23 +198,29 @@ function MbtwhyDetail() {
 
     // 댓글 작성
     const postComment = () => {
-        console.log(comment);
+        // const userInfo = {
+        //     username : user.username,
+        //     userNickname : user.userNickname,
+        //     userMbti : user.userMbti,
+        //     userMbtiColor : user.userMbtiColor
+        // }
         let defaultUrl = `http://localhost:8090/mbtwhydetail?`;
         if(no !== null) defaultUrl += `&no=${no}`;
-        if(user.userRole !== null) defaultUrl += `&user=${user}`;
+        // if(user.userRole !== null) defaultUrl += `&user=${user}`;
         if(comment !== null) defaultUrl += `&comment=${comment}`;
-        defaultUrl += `&parentCommentNo=${parentCommentNo}`
+        defaultUrl += `&parentcommentNo=${parentcommentNo}&commentPage=${commentPage}`
 
-        axios.post(defaultUrl)
+        axios.post(defaultUrl, userInfo)
         .then(res=> {
             console.log(res);
-            let comment = res.data.comment;
+            let comment = res.data.mbtwhyCommentList;
             setComments({...comments, comment});
             // let no = res.data.no;
             // navigate(`/mbtwhydetail/${mbtiValue}/${no}/1`);
         })
         .catch(err=> {
             console.log(err);
+            console.log("스파시바왜안돼");
         })
     };
 
@@ -458,7 +471,7 @@ function MbtwhyDetail() {
                     {PaginationInside()}
 
                     {/* 댓글 달기 */}
-                    {user.userRole === "ROLE_UESR"?
+                    {user.userRole === "ROLE_USER"?
                         <div>
                             <Input
                                 style={inputComment}

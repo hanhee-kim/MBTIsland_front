@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
-
+import { useSelector } from "react-redux";
 import {
     Button,
     Input
@@ -10,6 +10,8 @@ import axios from 'axios';
 import style from "../../css/mbtwhy/MbtwhyForm.module.css";
 
 function MbtwhyWrite() {
+    // 로그인 유저 정보
+    const user = useSelector((state) => state.persistedReducer.user.user);
 
     const navigate = useNavigate();
 
@@ -18,13 +20,14 @@ function MbtwhyWrite() {
 
     // MBTI 유형
     const {mbti} = useParams();
-    const [mbtiValue, setMbtiValue] = useState(mbti);
+    const [mbtiValue, setMbtiValue] = useState(mbti.toUpperCase());
 
     // 본문
     const [content, setContent] = useState("");
 
     // MBTI 유형, 본문 값이 바뀔 때마다
     useEffect(() => {
+        if(!mbti) setMbtiValue("ISTJ");
         console.log(mbtiValue);
         console.log(content);
     }, [mbtiValue, content]);
@@ -48,7 +51,7 @@ function MbtwhyWrite() {
         if(mbtiValue !== null) defaultUrl += `&mbti=${mbtiValue}`;
         if(content !== null) defaultUrl += `&content=${content}`;
 
-        axios.post(defaultUrl)
+        axios.post(defaultUrl, user)
         .then(res=> {
             console.log(res);
             let no = res.data.no;

@@ -24,6 +24,12 @@ function MbtwhyMain() {
         navigate(url);
     }
 
+    // mbtwhywrite 이동
+    const goMbtwhyWrite = () => {
+        let defaultUrl = `/mbtwhywrite`;
+        navigate(defaultUrl);
+    }
+
     return (
         <div className={style.container}>
             {/* 중앙 영역 */}
@@ -33,7 +39,7 @@ function MbtwhyMain() {
                     <h1>MBT-Why</h1>
                     <div>
                         <h6 className={style.pageHeaderContent}>원하는 MBTI 유형에게 질문을 남겨보세요!</h6>
-                        <h6 className={style.pageHeaderWriteBtn}>글 작성</h6>
+                        <h6 className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</h6>
                     </div>
                 </div>
 
