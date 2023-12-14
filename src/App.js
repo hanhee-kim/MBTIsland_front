@@ -43,6 +43,7 @@ import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
 import QuestionDetail from "./component/user/QuestionDetail";
+import SentNoteDetail from "./component/user/SentNoteDetail";
 
 export const persistor = persistStore(store);
 
@@ -113,6 +114,11 @@ function App() {
                 exact
                 path="/notedetail/:noteNo"
                 element={<NoteDetail setIsPopup={setIsPopup} />}
+              />
+              <Route
+                exact
+                path="/sentnotedetail/:noteNo"
+                element={<SentNoteDetail setIsPopup={setIsPopup} />}
               />
               <Route
                 exact

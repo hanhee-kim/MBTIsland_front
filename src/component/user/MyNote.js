@@ -38,6 +38,14 @@ const MyNote = () => {
         "width=650,height=700,location=no,status=no,scrollbars=yes"
       );
     }
+    else if(note.sentUsername == user.username){
+      const url = "/sentnotedetail/"+ note.noteNo;
+      window.open(
+        url,
+        "_blank",
+        "width=650,height=700,location=no,status=no,scrollbars=yes"
+      )
+    }
   };
   const [isRead, setIsRead] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -271,7 +279,7 @@ const MyNote = () => {
                     <td
                       sm={4}
                       className="text-truncate"
-                      style={{ maxWidth: "600px" }}
+                      style={{ maxWidth: "500px" }}
                     >
                       {note.noteContent}
                     </td>

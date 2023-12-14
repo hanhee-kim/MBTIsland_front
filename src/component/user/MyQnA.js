@@ -117,8 +117,14 @@ const MyQnA = (props) => {
       "width=720,height=780,location=no,status=no,scrollbars=yes"
     );
   };
-  const changeFilter = (e) => {
-
+  const changeFilter = (e , answerType) => {
+    
+    // if(answerType === 'All'){
+    //   setAnswered(null);
+    // }else{
+    //   setAnswered(answerType);
+    // }
+    // getMyQnaList(user.username,answered,page);
   }
   return (
     <div className={style.myQnaContainer}>
@@ -148,13 +154,13 @@ const MyQnA = (props) => {
                       답변여부
                     </DropdownToggle>
                     <DropdownMenu>
-                      <DropdownItem onClick={(e) => changeFilter(e, null)}>
+                      <DropdownItem onClick={(e) => changeFilter(e,"All")}>
                         모두
                       </DropdownItem>
-                      <DropdownItem onClick={(e) => changeFilter(e, "Y")}>
+                      <DropdownItem onClick={(e) => changeFilter(e, "N")}>
                         처리중
                       </DropdownItem>
-                      <DropdownItem onClick={(e) => changeFilter(e, "N")}>
+                      <DropdownItem onClick={(e) => changeFilter(e, "Y")}>
                         답변완료
                       </DropdownItem>
                     </DropdownMenu>

@@ -1,30 +1,31 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import style from "../../css/common/common.css";
 import { useParams } from 'react-router';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
-import axios from 'axios';
 
-const NoteDetail = (props) => {
-  const user = useSelector((state) => state.persistedReducer.user.user);
+const SentNoteDetail = (props) => {
   const {noteNo} = useParams();
-  // const [noteType,setNoteType] = useState('');
-
-
   const [note,setNote] = useState({
-      noteNo:0,
-      sentUsername:'',
-      sentUserNick:'',
-      noteContent: '',
-      receiveUsername:'',
-      receiveUserNick:'',
-      sentDate:'',
-      noteIsRead:''
-  })
-  useEffect(() => {
-    props.setIsPopup(true);
-    let userType = "receive";
-    axios
+    noteNo:0,
+    sentUsername:'',
+    sentUserNick:'',
+    noteContent: '',
+    receiveUsername:'',
+    receiveUserNick:'',
+    sentDate:'',
+    noteIsRead:''
+})
+
+const close = (e) => {
+  e.preventDefault();
+  window.close();
+};
+
+useEffect(()=>{
+  props.setIsPopup(true);
+  let userType = "sent";
+  console.log(`http://localhost:8090/notedetail/${noteNo}/${userType}`);
+  axios
       .get(`http://localhost:8090/notedetail/${noteNo}/${userType}`)
       .then((res) => {
         console.log(res);
@@ -34,25 +35,7 @@ const NoteDetail = (props) => {
       .catch((err) => {
         console.log(err);
       });
-    
-  }, [note.noteIsRead]);
-
-  const close = (e) => {
-    e.preventDefault();
-    window.close();
-  };
-
-  const reWrite = (e) => {
-    e.preventDefault();
-    //데이터 전달
-    const url = `/notewrite/${note.sentUsername}/${note.sentUserNick}`;
-    window.open(
-      url,
-      "_blank",
-      "width=650,height=700,location=no,status=no,scrollbars=yes"
-      );
-      window.close();
-  };
+},[])
 
 
   return (
@@ -68,13 +51,13 @@ const NoteDetail = (props) => {
           }}
         >
           <FormGroup row style={{ justifyContent: "center" }}>
-            <h3 style={{ fontSize: "40px" }}>* 받은 쪽지 *</h3>
+            <h3 style={{ fontSize: "40px" }}>* 보낸 쪽지 *</h3>
           </FormGroup>
           <FormGroup style={{ justifyContent: "center" }}>
-            <Label for="sentUserNick" sm={3}>
-              보낸이
+            <Label for="receiveUserNick" sm={3}>
+              받는이
             </Label>
-            <Input type="text" name="sentUserNick" defaultValue={note.sentUserNick} readOnly ></Input>
+            <Input type="text" name="receiveUserNick" defaultValue={note.receiveUserNick} readOnly ></Input>
           </FormGroup>
           <FormGroup>
             <Label for="noteContent" sm={3}>
@@ -96,11 +79,8 @@ const NoteDetail = (props) => {
               justifyContent: "flex-end",
             }}
           >
-            <Button color="light" onClick={close}>
-              취소
-            </Button>
-            <Button color="dark" onClick={reWrite}>
-              답장하기
+            <Button color="dark" onClick={close}>
+              닫기
             </Button>
           </FormGroup>
         </Form>
@@ -109,4 +89,4 @@ const NoteDetail = (props) => {
   );
 };
 
-export default NoteDetail;
+export default SentNoteDetail;

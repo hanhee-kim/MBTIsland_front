@@ -266,6 +266,10 @@ const DefaultMypage = (props) => {
                     type: 'user',
                     payload: res.data
                   });
+                  Swal.fire({
+                    title:'정보수정이 완료되었습니다.',
+                    icon:'success',
+                  })
                 })
                 .catch((err)=>{
                   console.log(err);
@@ -494,7 +498,11 @@ const DefaultMypage = (props) => {
           </Label>
           <Col sm={7}>
           <span> * MBTI는 90일에 한번 수정가능합니다. * </span>
-          <span> - {changeDay} 일 </span>
+          {changeDay > 0 ?
+          <span style={{marginLeft:'20px'}}> - {changeDay} 일 </span>
+          :
+          <span style={{marginLeft:'20px'}}> + {-changeDay} 일 </span>
+          }
           </Col>
         </FormGroup>
         {user.provider === '' || user.provider == null &&
