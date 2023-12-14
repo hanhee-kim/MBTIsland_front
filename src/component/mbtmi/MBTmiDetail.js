@@ -3,10 +3,12 @@ import style from "../../css/mbtmi/MBTmi.module.css";
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate, useParams } from "react-router";
+import { useSelector } from "react-redux";
 
 const MBTmiDetail = () => {
 
-    // 로그인유저 정보
+// /*
+    // 로그인유저 정보 (가정)
     const [loginUser, sestLoginUser] = useState({
         username: "user01",
         userNickname: "닉네임1",
@@ -14,6 +16,14 @@ const MBTmiDetail = () => {
         userMbtiColor: "#648181",
         userRole: "ROLE_USER",
     });
+// */
+
+    // 로그인정보 가져오기
+    const user = useSelector((state) => state.persistedReducer.user.user);
+
+
+
+
 
     const { no, category, type, search, page } = useParams();
     const location = useLocation();
@@ -45,23 +55,14 @@ const MBTmiDetail = () => {
         const months = Math.floor(weeks/4);
         const years = Math.floor(months/12);
 
-        // if(seconds<60) {
-        //     return `${seconds}초 전`;
-        // } 
+        // if(seconds<60) return `${seconds}초 전`;
         // else 
-        if(minutes<60) {
-            return `${minutes}분 전`;
-        } else if(hours<24) {
-            return `${hours}시간 전`;
-        } else if(days<7) {
-            return `${days}일 전`;
-        } else if(weeks<4) {
-            return `${weeks}주 전`;
-        } else if(months<12) {
-            return `${months}달 전`;
-        } else {
-            return `${years}년 전`;
-        }
+        if(minutes<60) return `${minutes}분 전`;
+        else if(hours<24) return `${hours}시간 전`;
+        else if(days<7) return `${days}일 전`;
+        else if(weeks<4) return `${weeks}주 전`;
+        else if(months<12) return `${months}달 전`;
+        else return `${years}년 전`;
     }
     const [mbtmiCommentList, setMbtmiCommentList] = useState([]);
     const [commentPage, setCommentPage] = useState(1); // 댓글목록 페이지 이동번호
@@ -246,6 +247,7 @@ const MBTmiDetail = () => {
                     <div className={style.commentTd3row}>
                         {/* <small>{formatDate(reply.writeDate)}</small> */}
                         <small>{formatDatetimeGap(reply.writeDate)}</small>
+                        <small className={style.commentReportOrDeleteBtn}>신고</small>
                     </div>
                 </td>
             </tr>
