@@ -7,7 +7,7 @@ import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 const NoteDetail = (props) => {
   // const user = useSelector((state) => state.persistedReducer.user.user);
   const {noteNo} = useParams();
-  const formatNo = noteNo.startsWith(':') ? noteNo.substring(1) : noteNo;
+
 
   const [note,setNote] = useState({
       noteNo:0,
@@ -24,8 +24,8 @@ const NoteDetail = (props) => {
     // formatNo가지고 note 가져오기(더미데이터)
     setNote({
       noteNo:1,
-      sentUsername:'158432AE25',
-      sentUserNick:'보노보노',
+      sentUsername:'asdf',
+      sentUserNick:'asdf',
       noteContent: '노트 내용',
       receiveUsername:'123456AA7891011',
       receiveUserNick:'나',
@@ -42,7 +42,7 @@ const NoteDetail = (props) => {
   const reWrite = (e) => {
     e.preventDefault();
     //데이터 전달
-    const url = `/notewrite/:${note.sentUsername}/:${note.sentUserNick}`;
+    const url = `/notewrite/${note.sentUsername}/${note.sentUserNick}`;
     window.open(
       url,
       "_blank",

@@ -1,8 +1,8 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import { useEffect, useState } from "react";
-import persistStore from "redux-persist/es/persistStore";
+import {persistStore} from "redux-persist";
 import store from "./persist-store";
 
 import "./App.css";
@@ -16,6 +16,9 @@ import Mypage from "./component/user/Mypage";
 import QnAWrite from "./component/user/QnAWrite";
 import NoteWrite from "./component/user/NoteWrite";
 import NoteDetail from "./component/user/NoteDetail";
+// import DefaultMypage from "./component/user/DefaultMypage";
+import OAuth2User from "./component/user/OAuth2User";
+import Logout from "./component/user/Logout";
 
 // 하영
 import ScrollReset from "./component/common/ScrollReset";
@@ -28,7 +31,6 @@ import MBTmiForm from "./component/mbtmi/MBTmiForm";
 import Notice from "./component/notice/Notice";
 import NoticeDetail from "./component/notice/NoticeDetail";
 import AdminFrame from "./component/admin/AdminFrame";
-import DefaultMypage from "./component/user/DefaultMypage";
 
 // 인수
 import MbtwhyMain from "./component/mbtwhy/MbtwhyMain";
@@ -40,16 +42,39 @@ import MBattle from "./component/mbattle/MBattle";
 import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
-import OAuth2User from "./component/user/OAuth2User";
 
 export const persistor = persistStore(store);
+
+// App.js 또는 index.js 등에서 초기화할 때
+const initApp = () => {
+  // beforeunload 이벤트 핸들러 등록
+  window.addEventListener('beforeunload', handleBeforeUnload);
+
+  // 나머지 초기화 작업...
+};
+const handleBeforeUnload = () => {
+  // 브라우저 창이 닫힐 때 로컬 스토리지 내용을 지움
+  persistor.purge();
+};
+
 function App() {
   const [isPopup, setIsPopup] = useState(false);
   // useEffect(() => {
   //   window.onbeforeunload = () => {
   //     persistor.purge();
+  //     localStorage.removeItem('token');
+  //     localStorage.removeItem('user');
   //   };
   // }, []);
+  // App 컴포넌트 내부에서 useEffect 등을 사용하여 initApp 호출
+    useEffect(() => {
+      initApp();
+
+      // 컴포넌트가 언마운트될 때 이벤트 핸들러 제거
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }, []);
 
   return (
     <div className="App">
@@ -70,7 +95,7 @@ function App() {
                 <Route exact path=":qna" element={<MyQnA/>}/>
                 <Route exact path=":bookmark" element={<MyBookmark/>}/>
                 <Route exact path=":alarm" element={<MyAlarm/>}/>
-                <Route exact path=":note" element={<MyNote/>}/> */}
+              <Route exact path=":note" element={<MyNote/>}/> */}
               </Route>
               <Route
                 exact
@@ -87,7 +112,13 @@ function App() {
                 path="/notewrite/:receiveName/:receiveNick"
                 element={<NoteWrite setIsPopup={setIsPopup} />}
               />
-              <Route exect path="/oauth/redirect/:token/:loginType" element={<OAuth2User />} />
+              <Route
+                exect
+                path="/oauth/redirect/:token/:loginType"
+                element={<OAuth2User />}
+              />
+              <Route exact path="/logout" element={<Logout />} />
+
               {/* 하영 */}
               <Route exact path="/" element={<Main />} />
               <Route exact path="/mbtmi" element={<MBTmi />} />
