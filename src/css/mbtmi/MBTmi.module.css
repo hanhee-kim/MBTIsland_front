@@ -496,12 +496,12 @@
 } */
 
 /* 작성자 표시태그 */
-.isPostWriter { 
+.isPostWriterComment { 
     font-size: 14px;
     border: 1px solid #8F8F8F;
     padding: 0px 3px 0px 3px;
     border-radius: 4px;
-    margin-left: 10px;
+    margin-left: 8px;
 }
 
 .commentTd2row,
@@ -531,6 +531,7 @@
 }
 .commentReportOrDeleteBtn {
     float: right;
+    cursor: pointer;
 }
 
 /* 로그인한 유저의 댓글 */

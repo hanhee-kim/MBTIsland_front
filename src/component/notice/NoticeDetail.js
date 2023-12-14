@@ -54,28 +54,39 @@ const NoticeDetail = () => {
 
     const hideNotice = () => {
         let noArr = [notice.no];
-        axios.get(`http://localhost:8090/hidenotice/${noArr}`)
-        .then(res => {
-            window.confirm('게시글을 숨김처리하시겠습니까?');
-            alert('완료되었습니다.');
-            goToPreviousList();
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        const isConfirmed =window.confirm('게시글을 숨김처리하시겠습니까?');
+        if(isConfirmed) {
+            axios.get(`http://localhost:8090/hidenotice/${noArr}`)
+            .then(res => {
+                alert('완료되었습니다.');
+                goToPreviousList();
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        } 
+        setOpen(false);
     }
     const deleteNotice = () => {
         let noArr = [notice.no];
-        axios.delete(`http://localhost:8090/deletenotice/${noArr}`)
-        .then(res => {
-            window.confirm('게시글을 삭제하시겠습니까?');
-            alert('완료되었습니다.');
-            goToPreviousList();
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        const isConfirmed =window.confirm('게시글을 삭제하시겠습니까?');
+        if(isConfirmed) {
+            axios.delete(`http://localhost:8090/deletenotice/${noArr}`)
+            .then(res => {
+                alert('완료되었습니다.');
+                goToPreviousList();
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+        setOpen(false);
     }
+    
+    const modifyNotice = () => {
+        console.log('수정 팝오버 버튼 클릭');
+        setOpen(false);
+    };
 
     // 목록으로 가기 버튼
     const navigate = useNavigate();
@@ -97,7 +108,7 @@ const NoticeDetail = () => {
                         <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="Popover1"/>
                         <Popover  className={style.popover} placement="bottom" isOpen={open} target="Popover1" toggle={()=>setOpen(!open)}>
                             <PopoverBody className={style.popoverItem} onClick={()=>hideNotice()}>숨김</PopoverBody>
-                            <PopoverBody className={style.popoverItem}>수정</PopoverBody>
+                            <PopoverBody className={style.popoverItem} onClick={()=>modifyNotice()}>수정</PopoverBody>
                             <PopoverBody className={style.popoverItem} onClick={()=>deleteNotice()}>삭제</PopoverBody>
                         </Popover><br/><br/><br/>
                     </div>

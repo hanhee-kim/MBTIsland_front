@@ -68,20 +68,23 @@ const MBTmiDetail = () => {
     const [commentPage, setCommentPage] = useState(1); // 댓글목록 페이지 이동번호
     const [commentPageInfo, setCommentPageInfo] = useState({}); // 댓글목록 페이지 정보(전체페이지, 현재페이지, 시작페이지번호, 끝페이지번호)
 
+    // 초기 렌더링
     useEffect(()=> {
-        getMbtmiDetail(no);
+        getMbtmiDetail(no, user.username); // #인자 username 추가
 
         // localStorage에 저장된 페이지 정보를 읽음
         const storedInfo = localStorage.getItem('commentCurPage');
         if(storedInfo) {
             setCommentPage(parseInt(storedInfo, 10)); // 페이지넘버 (두번째인자: 10진수임을 의미)
         }
-        getMbtmiCommentList(1);
+
+        getMbtmiCommentList(1, user.username); // #인자 username 추가
         
-        console.log("현재 게시글번호: " + no);
+        console.log("현재 게시글번호: ", no);
+        console.log('### user.username: ', user.username);
     }, []);
 
-    const getMbtmiDetail = () => {
+    const getMbtmiDetail = (no) => {
         let defaultUrl = `http://localhost:8090/mbtmidetail/${no}`;
         axios.get(defaultUrl)
         .then(res=> {
@@ -125,24 +128,6 @@ const MBTmiDetail = () => {
         });
     }
 
-    const deleteMbtmi = (no) => {
-        axios.delete(`http://localhost:8090/deletembtmi/${no}`)
-        .then(res => {
-            window.confirm('게시글을 삭제하시겠습니까?');
-            alert('완료되었습니다.');
-            goToPreviousList();
-        })
-        .catch(err => {
-            console.log(err);
-        })
-    }
-    // 목록으로 가기 버튼
-    const navigate = useNavigate();
-    const goToPreviousList = () => {
-        navigate(-1);
-    }
-
-
     // 팝오버 여닫힘 상태, 함수
     const [popoverStates, setPopoverStates] = useState({popover1:false, popover2:false});
     const togglePopover = (popoverKey) => {
@@ -166,6 +151,53 @@ const MBTmiDetail = () => {
         };
 
     }, []);
+
+    const deleteMbtmi = (no) => {
+        console.log('선택한 게시글번호: ', no);
+        const isConfirmed =window.confirm('게시글을 삭제하시겠습니까?');
+        if(isConfirmed) {
+            axios.delete(`http://localhost:8090/deletembtmi/${no}`)
+            .then(res => {
+                setPopoverStates({popover1:false, popover2:false}); // 팝오버 오픈상태 초기값으로 설정
+                alert('완료되었습니다.');
+                goToPreviousList();
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+    };
+    const modifyMbtmi = (no) => {
+        console.log('수정할 게시글번호: ', no);
+        
+    };
+
+    const deleteComment = (commentNo) => {
+        console.log('선택한 댓글번호: ', commentNo);
+        const isConfirmed =window.confirm('댓글을 삭제하시겠습니까?');
+        if(isConfirmed) {
+            axios.delete(`http://localhost:8090/deletembtmicomment/${commentNo}`)
+            .then(res => {
+                alert('완료되었습니다.');
+
+                // (commnetList state변수를 변경시킴으로써 등의 방법으로)다시그려줄필요?? 알아서되는지? 확인할것
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+    }
+
+    const reportComment = (commentNo) => {
+        console.log('신고할 댓글번호: ', commentNo);
+        // 팝업 열기
+    }
+
+    // 목록으로 가기 버튼
+    const navigate = useNavigate();
+    const goToPreviousList = () => {
+        navigate(-1);
+    }
 
 
     const handlePageNo = (pageNo) => {
@@ -203,9 +235,10 @@ const MBTmiDetail = () => {
 
 
     // 1차댓글
-    const Comment = ({comment, togglePopover}) => {
-        const isLoginUserComment = comment.writerId === loginUser.username;
+    const Comment = ({comment}) => {
+        // const isLoginUserComment = comment.writerId === loginUser.username;
         // const isPostWriterComment = comment.writerId === mbtmi.writerId;
+        const isLoginUserComment = comment.writerId === user.username;
         const isPostWriterComment = comment?.writerId === mbtmi?.writerId; // comment가 null 또는 undefine이 아닌 경우에만 writerId 속성 값을 읽도록하여  Uncaught runtime errors런타임에러 방지
         return (
             <tr key={comment.commentNo} className={`${style.commentTr} ${isLoginUserComment ? style.loginUsersComment : ''}`}>
@@ -222,7 +255,11 @@ const MBTmiDetail = () => {
                         {/* <small>{formatDate(comment.writeDate)}</small> */}
                         <small>{formatDatetimeGap(comment.writeDate)}</small>
                         <small>답글쓰기</small>
-                        <small className={style.commentReportOrDeleteBtn}>신고</small>
+                        {isLoginUserComment? (
+                            <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(comment.commentNo)}>삭제</small>
+                        ) : (
+                            <small className={style.commentReportOrDeleteBtn} onClick={() => reportComment(comment.commentNo)}>신고</small>
+                        )}
                     </div>
                 </td>
             </tr>
@@ -230,8 +267,9 @@ const MBTmiDetail = () => {
     };
     // 2차댓글
     const Reply = ({reply}) => {
-        const isLoginUserComment = reply.writerId === loginUser.username;
+        // const isLoginUserComment = reply.writerId === loginUser.username;
         // const isPostWriterComment = reply.writerId === mbtmi.writerId;
+        const isLoginUserComment = reply.writerId === user.username;
         const isPostWriterComment = reply?.writerId === mbtmi?.writerId; // reply가 null 또는 undefine이 아닌 경우에만 writerId 속성 값을 읽도록하여  Uncaught runtime errors런타임에러 방지
         return (
             <tr key={reply.commentNo} className={`${style.reply} ${isLoginUserComment ? style.loginUsersComment : ''}`}>
@@ -247,7 +285,11 @@ const MBTmiDetail = () => {
                     <div className={style.commentTd3row}>
                         {/* <small>{formatDate(reply.writeDate)}</small> */}
                         <small>{formatDatetimeGap(reply.writeDate)}</small>
-                        <small className={style.commentReportOrDeleteBtn}>신고</small>
+                        {isLoginUserComment? (
+                            <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(reply.commentNo)}>삭제</small>
+                        ) : (
+                            <small className={style.commentReportOrDeleteBtn} onClick={() => reportComment(reply.commentNo)}>신고</small>
+                        )}
                     </div>
                 </td>
             </tr>
@@ -277,10 +319,10 @@ const MBTmiDetail = () => {
                         <img src={"/bookmarkIcon-red.png" } alt="책갈피" className={style.bookmarkIcon} />
                         )}
                     <div className={style.postArea}>
-                        <div>
+                        <div style={{ display: mbtmi.writerId === user.username ? 'block' : 'none' }}>
                             <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>togglePopover("popover1")} id="popover1"/>
                             <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover1} target="popover1" toggle={()=>togglePopover("popover1")}>
-                                <PopoverBody className={style.popoverItem}>수정</PopoverBody>
+                                <PopoverBody className={style.popoverItem} onClick={()=> modifyMbtmi(mbtmi.no)}>수정</PopoverBody>
                                 <PopoverBody className={style.popoverItem} onClick={()=> deleteMbtmi(mbtmi.no)}>삭제</PopoverBody>
                             </Popover><br/><br/><br/>
                         </div>
@@ -317,7 +359,7 @@ const MBTmiDetail = () => {
                             .filter(comment=> comment.parentcommentNo===null)
                             .map(comment => (
                             <React.Fragment key={comment.commentNo}>
-                                <Comment comment={comment} togglePopover={togglePopover} popoverStates={popoverStates} />
+                                <Comment comment={comment} />
 
                                 {mbtmiCommentList // 2차댓글
                                     .filter(reply => reply.parentcommentNo === comment.commentNo)

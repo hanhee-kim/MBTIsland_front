@@ -9,6 +9,11 @@ import { useSelector } from "react-redux";
 
 const MBTmi = () => {
 
+    const [didInitRendered, setDidInitRendered] = useState(false);
+    useEffect(() => {
+        setDidInitRendered(true);
+    }, []);
+
     const [weeklyHotList, setWeeklyHotList] = useState([]);
     const [errorMsgWeekly, setErrorMsgWeekly] = useState(null);
     const [errorMsgNewly, setErrorMsgNewly] = useState(null);
@@ -176,13 +181,16 @@ const MBTmi = () => {
     };
 
     useEffect(() => {
-        // 모든 라디오버튼이 초기값이 아닌 경우에만 실행되도록 if문으로 감싼다 (초기렌더링시에  자동실행되지 않도록)
-        if(Object.values(checkedRadioValues).every(value => value !== '')) {
+        // checkedRadioValues 중 하나라도 초기값(빈문자열)이 아닌 경우에만 실행되도록 if문으로 감싼다 (초기렌더링시에  자동실행되지 않도록)
+        // if (Object.values(checkedRadioValues).some(value => value !== ''))  {
+
+        // 적어도 한번 렌더링 된 이후(초기 렌더링이 아닌 경우) && 하나라도 초기값이 아닌 경우에만 실행되도록 함
+        if (didInitRendered && Object.values(checkedRadioValues).some(value => value !== ''))  {
             console.log('checkedRadioValues: ', checkedRadioValues);
             const onlyValuesExceptKeys = Object.values(checkedRadioValues);
             setType(onlyValuesExceptKeys.join(''));
         }
-    }, [checkedRadioValues]);
+    }, [checkedRadioValues, didInitRendered]);
     useEffect(()=> {
         // type이 초기값이 아닌 경우에만 실행되도록 if문으로 감싼다
         if(type!==null) {
@@ -194,10 +202,23 @@ const MBTmi = () => {
         }
     }, [type]);
 
-    // MBTI필터 리셋 버튼
-    const refreshRadioCheck = () => {
-        console.log('refreshRadioCheck함수 실행!');
-        setCheckedRadioValues({group1: '', group2: '', group3: '', group4: ''});
+    // MBTI필터, 카테고리 리셋 버튼
+    const refreshFilter = (refreshTarget) => {
+        // console.log('refreshRadioCheck함수 실행!');
+        setErrorMsgNewly(null);
+        if(refreshTarget==='typeFilter') {
+            console.log('typeFilter를 리셋');
+            getNewlyMbtmiList(category, null, search, 1, sort);
+            setCheckedRadioValues({group1: '', group2: '', group3: '', group4: ''});
+            setType(null);
+            setPage(1);
+        } else {
+            console.log('categoryFilter를 리셋');
+            getNewlyMbtmiList(null, type, search, 1, sort);
+            setCategory(null);
+            setActiveCategory(null);
+            setPage(1);
+        }
     }
 
     // 정렬값 변경
@@ -304,7 +325,7 @@ const MBTmi = () => {
                         <button className={activeCategory==='회사'? style.activeCategory :''} onClick={() => handleCategoryChange('회사')}>회사</button>
                         <button className={activeCategory==='학교'? style.activeCategory :''} onClick={() => handleCategoryChange('학교')}>학교</button>
                         <button className={activeCategory==='취미'? style.activeCategory :''} onClick={() => handleCategoryChange('취미')}>취미</button>
-                        <img src={"/refreshIcon.png" } alt="" className={style.refreshIcon} onClick={() => handleCategoryChange(null)}/>
+                        <img src={"/refreshIcon.png" } alt="" className={style.refreshIcon} onClick={() => refreshFilter('categlryFilter')}/>
                     </div>
                     <div className={style.mbtiFilterBtns}> 
                         <span>&#128204;</span>&nbsp;&nbsp;
@@ -319,7 +340,7 @@ const MBTmi = () => {
                         &nbsp;&nbsp;+&nbsp;&nbsp;
                         <input type="radio" id="mbtiJ" name="group4" value="J" onChange={(e)=>handleRadioCheck('group4', e.target.value)} checked={checkedRadioValues['group4']==='J'? true: false} /><label htmlFor="mbtiJ" className={style.uncheckedRadioLabel}>J</label>
                         <input type="radio" id="mbtiP" name="group4" value="P" onChange={(e)=>handleRadioCheck('group4', e.target.value)} checked={checkedRadioValues['group4']==='P'? true: false} /><label htmlFor="mbtiP" className={style.uncheckedRadioLabel}>P</label>
-                        <img src={"/refreshIcon.png" } alt="" className={style.refreshIcon}  onClick={()=>refreshRadioCheck()}/>
+                        <img src={"/refreshIcon.png" } alt="" className={style.refreshIcon}  onClick={()=>refreshFilter('typeFilter')}/>
                     </div>
                 </div>
 
