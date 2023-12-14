@@ -105,8 +105,8 @@ const NoticeDetail = () => {
 
                     {/* 로그인유저가 관리자일때만 표시 */}
                     <div>
-                        <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="Popover1"/>
-                        <Popover  className={style.popover} placement="bottom" isOpen={open} target="Popover1" toggle={()=>setOpen(!open)}>
+                        <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="popover1"/>
+                        <Popover  className={style.popover} placement="bottom" isOpen={open} target="popover1" toggle={()=>setOpen(!open)}>
                             <PopoverBody className={style.popoverItem} onClick={()=>hideNotice()}>숨김</PopoverBody>
                             <PopoverBody className={style.popoverItem} onClick={()=>modifyNotice()}>수정</PopoverBody>
                             <PopoverBody className={style.popoverItem} onClick={()=>deleteNotice()}>삭제</PopoverBody>

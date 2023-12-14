@@ -128,28 +128,20 @@ const MBTmiDetail = () => {
         });
     }
 
-    // 팝오버 여닫힘 상태, 함수
-    const [popoverStates, setPopoverStates] = useState({popover1:false, popover2:false});
-    const togglePopover = (popoverKey) => {
-        setPopoverStates((prevState) => ({...prevState, [popoverKey]:!prevState[popoverKey]}));
-    };
-
+    const [open,setOpen]=useState(false);
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
     useEffect(() => {
-
         const clickOutsidePopover = (event) => {
             const popoverElements = document.querySelectorAll(".popover");
             // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
             if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
-                setPopoverStates({popover1: false, popover2: false});
+                setOpen(false);
             } 
         };
-    
         document.addEventListener("mousedown", clickOutsidePopover);
         return () => {
             document.removeEventListener("mousedown", clickOutsidePopover);
         };
-
     }, []);
 
     const deleteMbtmi = (no) => {
@@ -158,7 +150,6 @@ const MBTmiDetail = () => {
         if(isConfirmed) {
             axios.delete(`http://localhost:8090/deletembtmi/${no}`)
             .then(res => {
-                setPopoverStates({popover1:false, popover2:false}); // 팝오버 오픈상태 초기값으로 설정
                 alert('완료되었습니다.');
                 goToPreviousList();
             })
@@ -166,6 +157,7 @@ const MBTmiDetail = () => {
                 console.log(err);
             });
         }
+        setOpen(false);
     };
     const modifyMbtmi = (no) => {
         console.log('수정할 게시글번호: ', no);
@@ -186,18 +178,19 @@ const MBTmiDetail = () => {
                 console.log(err);
             });
         }
-    }
+        setOpen(false);
+    };
 
     const reportComment = (commentNo) => {
         console.log('신고할 댓글번호: ', commentNo);
         // 팝업 열기
-    }
+    };
 
     // 목록으로 가기 버튼
     const navigate = useNavigate();
     const goToPreviousList = () => {
         navigate(-1);
-    }
+    };
 
 
     const handlePageNo = (pageNo) => {
@@ -320,8 +313,8 @@ const MBTmiDetail = () => {
                         )}
                     <div className={style.postArea}>
                         <div style={{ display: mbtmi.writerId === user.username ? 'block' : 'none' }}>
-                            <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>togglePopover("popover1")} id="popover1"/>
-                            <Popover  className={style.popover} placement="bottom" isOpen={popoverStates.popover1} target="popover1" toggle={()=>togglePopover("popover1")}>
+                            <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="popover1"/>
+                            <Popover  className={style.popover} placement="bottom" isOpen={open} target="popover1" toggle={()=>setOpen(!open)}>
                                 <PopoverBody className={style.popoverItem} onClick={()=> modifyMbtmi(mbtmi.no)}>수정</PopoverBody>
                                 <PopoverBody className={style.popoverItem} onClick={()=> deleteMbtmi(mbtmi.no)}>삭제</PopoverBody>
                             </Popover><br/><br/><br/>
