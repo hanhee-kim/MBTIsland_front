@@ -7,16 +7,45 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
+
+
+/* 재사용성을 높이기 위해 외부에 선언한 페이지네이션 */
+const PaginationOutside = ({ pageInfo, handlePageNo }) => {
+    console.log('PaginationOutside에서 출력한 pageInfo : ', pageInfo);
+    const isFirstGroup = pageInfo.startPage===1;
+    const isLastGroup = pageInfo.endPage===pageInfo.allPage;
+    const pageGroup = [];
+    for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
+        pageGroup.push(
+            <span key={i} className={`${pageInfo.curPage===i? style.activePage : ""}`} onClick={() => handlePageNo(i)}>{i}</span>
+        );
+    }
+
+    return (
+        <div className={style.paging}>
+            {!isFirstGroup && (
+                <>
+                    <span onClick={() => handlePageNo(1)}>≪</span>
+                    <span onClick={() => handlePageNo(pageInfo.startPage - 10)}>&lt;</span>
+                </>
+            )}
+            {pageGroup}
+            {!isLastGroup && (
+                <>
+                    <span onClick={() => handlePageNo(pageInfo.endPage + 1)}>&gt;</span>
+                    <span onClick={() => handlePageNo(pageInfo.allPage)}>≫</span>
+                </>
+            )}
+        </div>
+    );
+};
+
+
+
 const MBTmi = () => {
-
-    const [didInitRendered, setDidInitRendered] = useState(false);
-    useEffect(() => {
-        setDidInitRendered(true);
-    }, []);
-
     const [weeklyHotList, setWeeklyHotList] = useState([]);
-    const [errorMsgWeekly, setErrorMsgWeekly] = useState(null);
-    const [errorMsgNewly, setErrorMsgNewly] = useState(null);
+    const [errorMsgWeekly, setErrorMsgWeekly] = useState("");
+    const [errorMsgNewly, setErrorMsgNewly] = useState("");
     // 절대시간
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -50,12 +79,12 @@ const MBTmi = () => {
     const [mbtmiList, setMbtmiList] = useState([]);
     const [page, setPage] = useState(1);
     const [pageInfo, setPageInfo] = useState({});
-    const [category, setCategory] = useState(null);
-    const [sort, setSort] = useState(null);
-    const [type, setType] = useState(null);
-    const [search, setSearch] = useState(null);
-    const [tmpSearch, setTmpSearch] = useState(null);
-    const [activeCategory, setActiveCategory] = useState(null);
+    const [category, setCategory] = useState("");
+    const [sort, setSort] = useState("");
+    const [type, setType] = useState("");
+    const [search, setSearch] = useState("");
+    const [tmpSearch, setTmpSearch] = useState("");
+    const [activeCategory, setActiveCategory] = useState("");
 
     // (게시글 상세에서)목록가기 버튼 또는 뒤로가기 클릭시의 동작 로직 고려
     useEffect(() => {
@@ -78,7 +107,7 @@ const MBTmi = () => {
             // console.log(res);
             let list = res.data.weeklyHotMbtmiList;
             setWeeklyHotList([...list]);
-            setErrorMsgWeekly(null);
+            setErrorMsgWeekly("");
         })
         .catch(err=> {
             console.log(err);
@@ -92,11 +121,11 @@ const MBTmi = () => {
     const getNewlyMbtmiList = (paramCategory, paramType, paramSearch, paramPage, paramSort) => {
         let defaultUrl = 'http://localhost:8090/mbtmilist';
 
-        if (paramCategory !== null) defaultUrl += `?category=${paramCategory}`;
-        if (paramType !== null) defaultUrl += `${paramCategory !== null ? '&' : '?'}type=${paramType}`;
-        if (paramSearch !== null) defaultUrl += `${paramCategory !== null || paramType !== null ? '&' : '?'}search=${paramSearch}`;
-        if (paramPage !== null) defaultUrl += `${paramCategory !== null || paramType !== null || paramSearch !== null ? '&' : '?'}page=${paramPage}`;
-        if (paramSort !== null) defaultUrl += `${paramCategory !== null || paramType !== null || paramSearch !== null || paramPage !== null ? '&' : '?'}sort=${paramSort}`;
+        if (paramCategory !== "") defaultUrl += `?category=${paramCategory}`;
+        if (paramType !== "") defaultUrl += `${paramCategory !== "" ? '&' : '?'}type=${paramType}`;
+        if (paramSearch !== "") defaultUrl += `${paramCategory !== "" || paramType !== "" ? '&' : '?'}search=${paramSearch}`;
+        if (paramPage !== "") defaultUrl += `${paramCategory !== "" || paramType !== "" || paramSearch !== "" ? '&' : '?'}page=${paramPage}`;
+        if (paramSort !== "") defaultUrl += `${paramCategory !== "" || paramType !== "" || paramSearch !== "" || paramPage !== "" ? '&' : '?'}sort=${paramSort}`;
 
         console.log('*** 요청url:' + defaultUrl);
 
@@ -108,7 +137,7 @@ const MBTmi = () => {
             let list = res.data.mbtmiList;
             setMbtmiList([...list]);
             setPageInfo({...pageInfo});
-            setErrorMsgNewly(null);
+            setErrorMsgNewly("");
         })
         .catch(err=> {
             if(err.response && err.response.data) {
@@ -185,15 +214,15 @@ const MBTmi = () => {
         // if (Object.values(checkedRadioValues).some(value => value !== ''))  {
 
         // 적어도 한번 렌더링 된 이후(초기 렌더링이 아닌 경우) && 하나라도 초기값이 아닌 경우에만 실행되도록 함
-        if (didInitRendered && Object.values(checkedRadioValues).some(value => value !== ''))  {
+        if (Object.values(checkedRadioValues).some(value => value !== ''))  {
             console.log('checkedRadioValues: ', checkedRadioValues);
             const onlyValuesExceptKeys = Object.values(checkedRadioValues);
             setType(onlyValuesExceptKeys.join(''));
         }
-    }, [checkedRadioValues, didInitRendered]);
+    }, [checkedRadioValues]);
     useEffect(()=> {
         // type이 초기값이 아닌 경우에만 실행되도록 if문으로 감싼다
-        if(type!==null) {
+        if(type!=="") {
             // console.log("category: ", category);
             console.log("type: ", type);
             // console.log("search: ", search);
@@ -205,18 +234,18 @@ const MBTmi = () => {
     // MBTI필터, 카테고리 리셋 버튼
     const refreshFilter = (refreshTarget) => {
         // console.log('refreshRadioCheck함수 실행!');
-        setErrorMsgNewly(null);
+        setErrorMsgNewly("");
         if(refreshTarget==='typeFilter') {
             console.log('typeFilter를 리셋');
-            getNewlyMbtmiList(category, null, search, 1, sort);
+            getNewlyMbtmiList(category, "", search, 1, sort);
             setCheckedRadioValues({group1: '', group2: '', group3: '', group4: ''});
-            setType(null);
+            setType("");
             setPage(1);
         } else {
             console.log('categoryFilter를 리셋');
-            getNewlyMbtmiList(null, type, search, 1, sort);
-            setCategory(null);
-            setActiveCategory(null);
+            getNewlyMbtmiList("", type, search, 1, sort);
+            setCategory("");
+            setActiveCategory("");
             setPage(1);
         }
     }
@@ -232,7 +261,7 @@ const MBTmi = () => {
 
     // 페이지네이션
     const PaginationInside = () => {
-        if(errorMsgNewly) return null;
+        if(errorMsgNewly!=="") return null;
         const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
         for(let i=pageInfo.startPage; i<=pageInfo.endPage; i++) {
             pageGroup.push(
@@ -274,6 +303,7 @@ const MBTmi = () => {
 
 
     return (
+        
         <>
         <div className={style.container} id="top">
             <section className={style.sectionLeftArea}></section>
@@ -288,7 +318,7 @@ const MBTmi = () => {
                 <div className={style.weeklyHotPosts}>
                     <table className={style.weeklyPostsTable}>
                         <tbody>
-                            {errorMsgWeekly? (
+                            {errorMsgWeekly!==""? (
                                 // <tr><td colSpan="4" className={style.errMsg}>{errorMsgWeekly}</td></tr>
                                 <tr><td colSpan="4" className={style.errMsg}>{JSON.stringify(errorMsgWeekly)}</td></tr>
                             ) : (
@@ -362,7 +392,7 @@ const MBTmi = () => {
                 </div>
                 <table className={style.mbtmiTable}>
                     <tbody>
-                        {errorMsgNewly? (
+                        {errorMsgNewly!==""? (
                             // <tr><td className={style.errMsg}>{errorMsgNewly}</td></tr> // 리액트는 렌더링할 자식 요소로 문자열 또는 숫자를 기대하며 객체는 유효하지 않다고 판단하여 에러를 발생시킬수 있기 때문에 객체는 JSON.stringify()를 이용한다
                             <tr><td className={style.errMsg}>{JSON.stringify(errorMsgNewly)}</td></tr>
                         ) : (
@@ -389,7 +419,8 @@ const MBTmi = () => {
                         )}
                     </tbody>
                 </table>
-                {PaginationInside()}
+                {/* {PaginationInside()} */}
+                <PaginationOutside pageInfo={pageInfo} handlePageNo={handlePageNo} />
             </section>
             <section className={style.sectionRightArea}>
                 <div>

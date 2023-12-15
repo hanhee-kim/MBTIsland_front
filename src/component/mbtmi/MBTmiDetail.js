@@ -5,18 +5,53 @@ import axios from "axios";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useSelector } from "react-redux";
 
+
+/* 재사용성을 높이기 위해 외부에 선언한 페이지네이션 */
+const PaginationOutside = ({ pageInfo, handlePageNo }) => {
+    console.log('PaginationOutside에서 출력한 pageInfo : ', pageInfo);
+    const isFirstGroup = pageInfo.startPage===1;
+    const isLastGroup = pageInfo.endPage===pageInfo.allPage;
+    const pageGroup = [];
+    for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
+        pageGroup.push(
+            <span key={i} className={`${pageInfo.curPage === i ? style.activePage : ""}`} onClick={() => handlePageNo(i)}>{i}</span>
+        );
+    }
+
+    return (
+        <div className={style.paging}>
+            {!isFirstGroup && (
+                <>
+                    <span onClick={() => handlePageNo(1)}>≪</span>
+                    <span onClick={() => handlePageNo(pageInfo.startPage - 10)}>&lt;</span>
+                </>
+            )}
+            {pageGroup}
+            {!isLastGroup && (
+                <>
+                    <span onClick={() => handlePageNo(pageInfo.endPage + 1)}>&gt;</span>
+                    <span onClick={() => handlePageNo(pageInfo.allPage)}>≫</span>
+                </>
+            )}
+        </div>
+    );
+};
+
+
+
+
 const MBTmiDetail = () => {
 
-// /*
+/*
     // 로그인유저 정보 (가정)
-    const [loginUser, sestLoginUser] = useState({
+    const [user, sestUser] = useState({
         username: "user01",
         userNickname: "닉네임1",
         userMbti: "INFP",
         userMbtiColor: "#648181",
         userRole: "ROLE_USER",
     });
-// */
+*/
 
     // 로그인정보 가져오기
     const user = useSelector((state) => state.persistedReducer.user.user);
@@ -72,11 +107,13 @@ const MBTmiDetail = () => {
     useEffect(()=> {
         getMbtmiDetail(no, user.username); // #인자 username 추가
 
+/*
         // localStorage에 저장된 페이지 정보를 읽음
         const storedInfo = localStorage.getItem('commentCurPage');
         if(storedInfo) {
             setCommentPage(parseInt(storedInfo, 10)); // 페이지넘버 (두번째인자: 10진수임을 의미)
         }
+*/
 
         getMbtmiCommentList(1, user.username); // #인자 username 추가
         
@@ -85,6 +122,7 @@ const MBTmiDetail = () => {
     }, []);
 
     const getMbtmiDetail = (no) => {
+        console.log('*********** getMbtmiDetail 호출');
         let defaultUrl = `http://localhost:8090/mbtmidetail/${no}`;
         axios.get(defaultUrl)
         .then(res=> {
@@ -109,6 +147,7 @@ const MBTmiDetail = () => {
     }
 
     const getMbtmiCommentList = (commentPageParam) => {
+        console.log('@getMbtmiCommentList호출');
         let defaultUrl = `http://localhost:8090/mbtmicommentlist/${no}`;
         if(commentPageParam!==1) defaultUrl += `?commentpage=${commentPageParam}`;
 
@@ -116,7 +155,7 @@ const MBTmiDetail = () => {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
+            console.log('댓글목록받아오기요청결과: ', res);
             let mbtmiCommentList = res.data.mbtmiCommentList;
             let commentPageInfo = res.data.pageInfo;
             setMbtmiCommentList([...mbtmiCommentList]);
@@ -168,11 +207,14 @@ const MBTmiDetail = () => {
         console.log('선택한 댓글번호: ', commentNo);
         const isConfirmed =window.confirm('댓글을 삭제하시겠습니까?');
         if(isConfirmed) {
-            axios.delete(`http://localhost:8090/deletembtmicomment/${commentNo}`)
+            axios.get(`http://localhost:8090/deletembtmicomment/${commentNo}`)
             .then(res => {
+                console.log(res);
                 alert('완료되었습니다.');
 
-                // (commnetList state변수를 변경시킴으로써 등의 방법으로)다시그려줄필요?? 알아서되는지? 확인할것
+                // console.log('commentPage: ', commentPage);
+                getMbtmiCommentList(commentPage); // 이 함수를 호출하여 댓글목록 재조회하여 재렌더링 시킨다
+                
             })
             .catch(err => {
                 console.log(err);
@@ -194,13 +236,17 @@ const MBTmiDetail = () => {
 
 
     const handlePageNo = (pageNo) => {
-        // 현재 페이지번호를 localStorage에 저장
-        localStorage.setItem('commentCurPage', pageNo.toString());
+        // 현재 페이지번호를 localStorage에 저장 ---- > 왜 해놨더라....... 필요없는듯
+        // localStorage.setItem('commentCurPage', pageNo.toString());
+
+
         setCommentPage(pageNo);
         getMbtmiCommentList(pageNo);
     };
+
     // 댓글목록 페이지네이션
     const PaginationInside = () => {
+        console.log('%%%PaginationInside렌더링');
         const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
         for(let i=commentPageInfo.startPage; i<=commentPageInfo.endPage; i++) {
             pageGroup.push(
@@ -227,12 +273,18 @@ const MBTmiDetail = () => {
     }
 
 
+
+    const clickEventHandler = () => {
+        console.log('자식컴포넌트에서 발생한 클릭이벤트로 인해 부모컴포넌트에서 정의한 함수가 호출!');
+    }
+
+
     // 1차댓글
     const Comment = ({comment}) => {
         // const isLoginUserComment = comment.writerId === loginUser.username;
         // const isPostWriterComment = comment.writerId === mbtmi.writerId;
         const isLoginUserComment = comment.writerId === user.username;
-        const isPostWriterComment = comment?.writerId === mbtmi?.writerId; // comment가 null 또는 undefine이 아닌 경우에만 writerId 속성 값을 읽도록하여  Uncaught runtime errors런타임에러 방지
+        const isPostWriterComment = comment?.writerId === mbtmi?.writerId; // comment가 null 또는 undefined이 아닌 경우에만 writerId 속성 값을 읽도록하여  Uncaught runtime errors런타임에러 방지
         return (
             <tr key={comment.commentNo} className={`${style.commentTr} ${isLoginUserComment ? style.loginUsersComment : ''}`}>
                 <td>
@@ -241,13 +293,12 @@ const MBTmiDetail = () => {
                         <span>{comment.writerMbti} {comment.writerNickname}</span>
                         {isPostWriterComment && <span className={style.isPostWriterComment}>작성자</span>}
                     </div>
-                    <div className={style.commentTd2row}>
-                        {comment.commentContent}
+                    <div className={`${style.commentTd2row} ${comment.isRemoved==='Y'? style.deletedComment : ''}`} >
+                        {comment.isRemoved==='Y'? '삭제된 댓글입니다' : comment.isBlocked==='Y' ? '관리자에 의해 차단된 댓글입니다' : comment.commentContent}
                     </div>
                     <div className={style.commentTd3row}>
-                        {/* <small>{formatDate(comment.writeDate)}</small> */}
                         <small>{formatDatetimeGap(comment.writeDate)}</small>
-                        <small>답글쓰기</small>
+                        <small onClick={clickEventHandler}>답글쓰기</small>
                         {isLoginUserComment? (
                             <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(comment.commentNo)}>삭제</small>
                         ) : (
@@ -351,17 +402,17 @@ const MBTmiDetail = () => {
                         {mbtmiCommentList // 1차댓글
                             .filter(comment=> comment.parentcommentNo===null)
                             .map(comment => (
-                            <React.Fragment key={comment.commentNo}>
-                                <Comment comment={comment} />
+                                <React.Fragment key={comment.commentNo}>
+                                    <Comment comment={comment}/>
 
-                                {mbtmiCommentList // 2차댓글
-                                    .filter(reply => reply.parentcommentNo === comment.commentNo)
-                                    .map(reply => <Reply key={reply.commentNo} reply={reply} />)}
-                            </React.Fragment>
-                        ))}
+                                    {mbtmiCommentList // 2차댓글
+                                        .filter(reply => reply.parentcommentNo === comment.commentNo)
+                                        .map(reply => <Reply key={reply.commentNo} reply={reply} />)}
+                                </React.Fragment>))}
                         </tbody>
                     </table>
                     {PaginationInside()}
+                    {/* <PaginationOutside pageInfo={commentPageInfo} handlePageNo={handlePageNo} /> */}
                 </div>
 
             </section>

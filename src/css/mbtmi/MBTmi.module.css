@@ -542,6 +542,10 @@
 .reply>td {
     padding-left: 50px !important;
 }
+/* 삭제된 댓글 */
+.deletedComment {
+    color: #a7a7a7;
+}
 
 
 
