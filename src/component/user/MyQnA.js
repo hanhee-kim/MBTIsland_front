@@ -219,7 +219,8 @@ const MyQnA = (props) => {
                         onClick={(e) => goQuestionDeatail(e, qna.no)}
                       >
                         <td sm={1} className="text-center">
-                          {qna.no}
+                          {/* {qna.no} */}
+                          {((page-1)*10)+index+1}
                         </td>
                         <td
                           sm={6}

@@ -47,9 +47,7 @@ const MyNote = () => {
       )
     }
   };
-  const [isRead, setIsRead] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
-  const [filterChange, setFilterChange] = useState("");
   const user = useSelector((state) => state.persistedReducer.user.user);
  
   const getMyNoteList = (username, noteType, readType , page) => {
@@ -72,6 +70,7 @@ const MyNote = () => {
     axios
       .get(defaultUrl)
       .then((res) => {
+        console.log(res);
         let pageInfo = res.data.pageInfo;
         let list = res.data.noteList;
         setNoteList([...list]);
@@ -142,7 +141,7 @@ const MyNote = () => {
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
     console.log("***페이지이동***");
-    // getMyQnaList(user.username, answered, pageNo);
+    getMyNoteList(user.username, noteType ,readType, pageNo);
   };
   return (
     <div className={style.myNoteContainer}>
@@ -175,7 +174,7 @@ const MyNote = () => {
                       읽음여부
                     </DropdownToggle>
                     <DropdownMenu>
-                      <DropdownItem onClick={(e) => changeFilter(e, null)}>
+                      <DropdownItem onClick={(e) => changeFilter(e,null)}>
                         모두
                       </DropdownItem>
                       <DropdownItem onClick={(e) => changeFilter(e, "Y")}>
@@ -202,7 +201,7 @@ const MyNote = () => {
           }
           </div>
         </div>
-        {noteList == null || noteList == '' ? 
+        {noteList == null || noteList === '' ? 
         <>
         <div className={style.tableDiv}>
             <div
@@ -213,7 +212,7 @@ const MyNote = () => {
                 alignItems: "center",
               }}
             >
-              {noteType == 'sent' ?
+              {noteType === 'sent' ?
               <div style={{ textAlign: "center", width: "98%" }}>
                 * 보낸 쪽지가 없습니다. *
               </div> :
@@ -235,7 +234,7 @@ const MyNote = () => {
                 <th scope="col" sm={1}>
                   번호
                 </th>
-                  {noteType == 'sent'?
+                  {noteType === 'sent'?
                 <th scope="col" sm={1}>
                   받는이
                 </th>
@@ -265,9 +264,10 @@ const MyNote = () => {
                     }}
                   >
                     <td sm={1} className="text-center">
-                      {note.noteNo}
+                      {/* {note.noteNo} */}
+                      {((page-1)*10)+index+1}
                     </td>
-                    {noteType == 'sent'?
+                    {noteType === 'sent'?
                     <td sm={1} className="text-center">
                       {note.receiveUserNick}
                     </td>

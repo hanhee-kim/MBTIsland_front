@@ -23,12 +23,13 @@ const Mypage = () => {
       {/* sidebar  유저정보 리덕스에? */}
       <div></div>
       <Aside changePage={changePage} />
+      {(currentPage === "/default" || currentPage === "") ? (
+        <DefaultMypage />):(
+          <Outlet />
+          )
+      }
       
-      <Outlet />
 {/*       
-      {(currentPage === "/default" || currentPage === "") && (
-        <DefaultMypage />
-      )}
       {currentPage === "/mbtwhy" && <MyMbtWhy />}
       {currentPage === "/mbtmi" && <MyMbtmi />}
       {currentPage === "/qna" && <MyQnA />}

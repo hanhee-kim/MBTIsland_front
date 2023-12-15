@@ -207,7 +207,8 @@ const MyMbtWhy = (props) => {
                         />
                       </td>
                       <td sm={1} className="text-center">
-                        {why.no}
+                        {/* {why.no} */}
+                        {((page-1)*10)+index+1}
                       </td>
                       <td sm={2} className="text-center">
                         {why.mbtiCategory}
