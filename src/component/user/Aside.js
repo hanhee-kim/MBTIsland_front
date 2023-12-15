@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import style from "../../css/user/Mypage.module.css";
 import DefaultMypage from "./DefaultMypage";
 import { useSelector } from "react-redux";
@@ -9,14 +9,24 @@ const Aside = (props) => {
   // URL의 path값을 받아올 수 있다.
   const pathName = useLocation().pathname;
   const user = useSelector((state) => state.persistedReducer.user.user);
+  const navigate = useNavigate();
+  // const menus = [
+  //   { name: "프로필", path: "/profile" },
+  //   { name: "MBTWHY", path: "/mbtwhy" },
+  //   { name: "MBTMI", path: "/mbtmi" },
+  //   { name: "문의함", path: "/qna" },
+  //   { name: "북마크", path: "/bookmark" },
+  //   { name: "알림함", path: "/alarm" },
+  //   { name: "쪽지함", path: "/note" },
+  // ];
   const menus = [
-    { name: "프로필", path: "/default" },
-    { name: "MBTWHY", path: "/mbtwhy" },
-    { name: "MBTMI", path: "/mbtmi" },
-    { name: "문의함", path: "/qna" },
-    { name: "북마크", path: "/bookmark" },
-    { name: "알림함", path: "/alarm" },
-    { name: "쪽지함", path: "/note" },
+    { name: "프로필", path: "/mypage/profile" },
+    { name: "MBTWHY", path: "/mypage/mbtwhy" },
+    { name: "MBTMI", path: "/mypage/mbtmi" },
+    { name: "문의함", path: "/mypage/qna" },
+    { name: "북마크", path: "/mypage/bookmark" },
+    { name: "알림함", path: "/mypage/alarm" },
+    { name: "쪽지함", path: "/mypage/note" },
   ];
   const [linkPath, setLinkpath] = useState("");
   //function
@@ -63,6 +73,7 @@ const Aside = (props) => {
   const changePath = (e, path) => {
     console.log("e" + e + " path:" + path);
     changePage(path);
+    navigate(path);
   };
   return (
     <div

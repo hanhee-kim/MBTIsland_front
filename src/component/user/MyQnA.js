@@ -224,7 +224,7 @@ const MyQnA = (props) => {
                         <td
                           sm={6}
                           className="text-truncate"
-                          style={{ maxWidth: "580px" }}
+                          style={{ maxWidth: "450px" }}
                         >
                           {qna.content}
                         </td>

@@ -136,6 +136,21 @@ const MyMbtWhy = (props) => {
 
       })
   };
+  //tr클릭시(해당 상세로 이동)
+  const goMbtwhyDetail = (e,mbtwhy) =>{
+    // path="/mbtwhydetail/:mbti?/:page?/:search?/:no?"
+
+    let defaultUrl = `/mbtwhydetail`;
+        defaultUrl += `/${mbtwhy.mbtiCategory}`;
+        // if(page !== null) defaultUrl += `/${page}`;
+        // if(search) defaultUrl += `/${search}`;
+        // if(sort !== null) defaultUrl += `/${sort}`;
+        defaultUrl += `/${mbtwhy.no}`;
+        navigate(defaultUrl);
+    
+  }
+
+
   return (
     <div className={style.myMbtwhyContainer}>
       <div className={style.myMbtwhyTitle}>* MBT-WHY *</div>
@@ -179,7 +194,7 @@ const MyMbtWhy = (props) => {
               <tbody>
                 {whyList.map((why, index) => {
                   return (
-                    <tr key={index}>
+                    <tr key={index} onClick={(e)=>goMbtwhyDetail(e,why)}>
                       <td sm={1} className="text-center">
                         <input
                           type="checkbox"
