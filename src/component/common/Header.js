@@ -37,7 +37,7 @@ const Header = () => {
           console.log(err);
         });
     }
-  }, [uri]);
+  }, []);
 
   // // 로그인 유저
   // const [loginuser, sestLoginuser] = useState({

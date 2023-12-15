@@ -14,23 +14,24 @@ const OAuth2User = () => {
     dispatch({ type: "token", payload: token });
 
     localStorage.setItem("token", token);
-    // // user 정보
-    // axios
-    // .get("http://localhost:8090/user",{
-    //     headers : {
-    //         Authorization : token,
-    //     }
-    // })
-    // .then(res=> {
-    //     console.log(res);
-    //     console.log("data:"+res.data);
-    //     // setUser(res.data);
-    //     dispatch({type:"user",payload:res.data});
-    // })
-    // .catch(err=> {
-    //     console.log("user가져오기 에러");
-    //     console.log(err);
-    // })
+    // user 정보
+    axios
+    .get("http://localhost:8090/user",{
+        headers : {
+            Authorization : token,
+        }
+    })
+    .then(res=> {
+        console.log(res);
+        console.log("data:"+res.data);
+        // setUser(res.data);
+        dispatch({type:"user",payload:res.data});
+    })
+    .catch(err=> {
+        console.log("user가져오기 에러");
+        console.log(err);
+    })
+    
     console.log("loginType : " + loginType);
     if (loginType === "join") {
       navigate("/addjoin");
