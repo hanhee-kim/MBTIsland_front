@@ -197,16 +197,16 @@ const MyQnA = (props) => {
               <Table className="table-hover" style={{ minWidth: "770px" }}>
                 <thead>
                   <tr row className="text-center">
-                    <th scope="col" sm={1}>
+                    <th scope="col" sm={1} style={{minWidth:'52px'}}>
                       번호
                     </th>
-                    <th scope="col" sm={6}>
+                    <th scope="col" sm={6} style={{minWidth:'400px'}}>
                       내용
                     </th>
-                    <th scope="col" sm={3}>
+                    <th scope="col" sm={3} style={{minWidth:'105px'}}>
                       작성일자
                     </th>
-                    <th scope="col" sm={2}>
+                    <th scope="col" sm={2} style={{minWidth:'76px'}}>
                       답변여부
                     </th>
                   </tr>
@@ -224,7 +224,7 @@ const MyQnA = (props) => {
                         <td
                           sm={6}
                           className="text-truncate"
-                          style={{ maxWidth: "600px" }}
+                          style={{ maxWidth: "580px" }}
                         >
                           {qna.content}
                         </td>

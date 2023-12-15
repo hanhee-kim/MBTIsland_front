@@ -3,153 +3,89 @@ import style from "../../css/user/Mypage.module.css";
 import { Button, Table } from "reactstrap";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 const MyMbtWhy = (props) => {
   const user = useSelector((state) => state.persistedReducer.user.user);
-  const [initData, setInitData] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageInfo, setPageInfo] = useState({});
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+  // navigate
+  const navigate = useNavigate();
+  const [initData, setInitData] = useState(true);
   useEffect(() => {
-    axios
-      .get(`http://localhost:8090/mymbtwhy`, user.username)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    getMyMbtiList(user.username,page);
   }, []);
-  //더미데이터
-  const [whyList] = useState([
-    {
-      no: 1,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ENFP",
-      content: "test1test1teesttest1test1te1test1test1test1test1test1teest1",
-      writeDate: "2023-11-11",
-      viewCnt: 1,
-      recommendCnt: 1,
-      isBlocked: false,
-    },
-    {
-      no: 2,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ISTJ",
-      content: "test1test1test1test1test1test1test1test1test1",
-      writeDate: "2023-10-11",
-      viewCnt: 10,
-      recommendCnt: 10,
-      isBlocked: false,
-    },
-    {
-      no: 3,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ISTJ",
-      content: "test1test1test1test1test1test1test1test1test1",
-      writeDate: "2023-10-11",
-      viewCnt: 10,
-      recommendCnt: 10,
-      isBlocked: false,
-    },
-    {
-      no: 4,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ISTJ",
-      content: "test1test1test1test1test1test1test1test1test1",
-      writeDate: "2023-10-11",
-      viewCnt: 10,
-      recommendCnt: 10,
-      isBlocked: false,
-    },
-    {
-      no: 5,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ISTJ",
-      content: "test1test1test1test1test1test1test1test1test1",
-      writeDate: "2023-10-11",
-      viewCnt: 10,
-      recommendCnt: 10,
-      isBlocked: false,
-    },
-    {
-      no: 6,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ISTJ",
-      content: "test1test1test1test1test1test1test1test1test1",
-      writeDate: "2023-10-11",
-      viewCnt: 10,
-      recommendCnt: 10,
-      isBlocked: false,
-    },
-    {
-      no: 8,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ISTJ",
-      content: "test1test1test1test1test1test1test1test1test1",
-      writeDate: "2023-10-11",
-      viewCnt: 10,
-      recommendCnt: 10,
-      isBlocked: false,
-    },
-    {
-      no: 9,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ISTJ",
-      content: "test1test1test1test1test1test1test1test1test1",
-      writeDate: "2023-10-11",
-      viewCnt: 10,
-      recommendCnt: 10,
-      isBlocked: false,
-    },
-    {
-      no: 16,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ISTJ",
-      content: "test1test1test1test1test1test1test1test1test1",
-      writeDate: "2023-10-11",
-      viewCnt: 10,
-      recommendCnt: 10,
-      isBlocked: false,
-    },
-    {
-      no: 10,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ISTJ",
-      content: "test1test1test1test1test1test1test1test1test1",
-      writeDate: "2023-10-11",
-      viewCnt: 10,
-      recommendCnt: 10,
-      isBlocked: false,
-    },
-  ]);
+
+
+  const getMyMbtiList = (username, page) => {
+    console.log(page);
+    console.log("url:"+`http://localhost:8090/mymbtwhy/${username}/${page}`);
+    axios
+    .get(`http://localhost:8090/mymbtwhy/${username}/${page}`)
+    .then((res) => {
+      console.log(res);
+      setPageInfo(res.data.pageInfo);
+      setMbtwhyList(res.data.myMbtwhyList);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+  const handlePageNo = (pageNo) => {
+    setPage(pageNo);
+    console.log("***페이지이동***");
+    getMyMbtiList(user.username, pageNo);
+    //페이지가 변경되면 checkItems 빈배열로 초기화.
+    setCheckItems([]);
+  };
+  // 페이지네이션
+  const PaginationInside = () => {
+    // if(errorMsg) return null;
+    const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
+    for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
+      pageGroup.push(
+        <span
+          key={i}
+          className={`${page === i ? style.activePage : ""}`}
+          onClick={() => handlePageNo(i)}
+        >
+          {i}
+        </span>
+      );
+    }
+    return (
+      <div className={style.paging}>
+        {!(pageInfo.startPage === 1) && (
+          <>
+            <span onClick={() => handlePageNo(1)}>≪</span>
+            <span onClick={() => handlePageNo(pageInfo.startPage - 10)}>
+              &lt;
+            </span>
+          </>
+        )}
+        {pageGroup}
+        {!(pageInfo.endPage === pageInfo.allPage) && (
+          <>
+            <span onClick={() => handlePageNo(pageInfo.endPage + 1)}>&gt;</span>
+            <span onClick={() => handlePageNo(pageInfo.allPage)}>≫</span>
+          </>
+        )}
+      </div>
+    );
+  };
+  const [arrayItems,setArrayItems] = useState({
+    checkItems: [],
+  })
+
+  const [whyList,setMbtwhyList] = useState([]);
   // 체크된 아이템을 담을 배열
   const [checkItems, setCheckItems] = useState([]);
 
@@ -162,6 +98,7 @@ const MyMbtWhy = (props) => {
       // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
       setCheckItems(checkItems.filter((el) => el !== no));
     }
+    console.log(checkItems)
   };
 
   // 체크박스 전체 선택
@@ -177,7 +114,27 @@ const MyMbtWhy = (props) => {
     }
   };
   const delWhy = () => {
+    let sendArrayItems = checkItems.join(",");
+    console.log(checkItems.type);
+    console.log(checkItems);
+
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
+    axios
+      .delete(`http://localhost:8090/deletembtwhy?sendArrayItems=${sendArrayItems}`)
+      .then((res) => {
+        console.log(res);
+        Swal.fire({
+          title:'삭제 성공!',
+          icon:'success',
+        })
+        setCheckItems([]);
+        
+        getMyMbtiList(user.username,1);
+      })
+      .catch((err) => {
+        console.log(err);
+
+      })
   };
   return (
     <div className={style.myMbtwhyContainer}>
@@ -202,19 +159,19 @@ const MyMbtWhy = (props) => {
                       }
                     />
                   </th>
-                  <th scope="col" sm={1}>
+                  <th scope="col" sm={1} style={{minWidth:'64px'}}>
                     번호
                   </th>
-                  <th scope="col" sm={2}>
+                  <th scope="col" sm={2} style={{minWidth:'85px'}}>
                     받는 MBTI
                   </th>
-                  <th scope="col" sm={4}>
+                  <th scope="col" sm={4} style={{minWidth:'400px'}}>
                     내용
                   </th>
-                  <th scope="col" sm={3}>
+                  <th scope="col" sm={3} style={{minWidth:'112px'}}>
                     작성일
                   </th>
-                  <th scope="col" sm={1}>
+                  <th scope="col" sm={1} style={{minWidth:'64px'}}>
                     댓글수
                   </th>
                 </tr>
@@ -238,7 +195,7 @@ const MyMbtWhy = (props) => {
                         {why.no}
                       </td>
                       <td sm={2} className="text-center">
-                        {why.mbtiType}
+                        {why.mbtiCategory}
                       </td>
                       <td
                         sm={4}
@@ -252,7 +209,7 @@ const MyMbtWhy = (props) => {
                         className="text-center"
                         style={{ minWidth: "105px" }}
                       >
-                        {why.writeDate}
+                        {formatDate(why.writeDate)}
                       </td>
                       <td sm={1} className="text-center">
                         {why.recommendCnt}
@@ -263,25 +220,7 @@ const MyMbtWhy = (props) => {
               </tbody>
             </Table>
           </div>
-          <div className={style.paging}>
-            <span>&lt;</span>
-            <span
-              className={style.activePage}
-              style={{ background: "#f8f8f8" }}
-            >
-              1
-            </span>
-            <span>2</span>
-            <span>3</span>
-            <span>4</span>
-            <span>5</span>
-            <span>6</span>
-            <span>7</span>
-            <span>8</span>
-            <span>9</span>
-            <span>10</span>
-            <span>&gt;</span>
-          </div>
+          {PaginationInside()}
         </div>
       ) : (
         <div
