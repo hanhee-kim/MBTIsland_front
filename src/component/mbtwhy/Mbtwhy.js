@@ -81,11 +81,8 @@ function Mbtwhy() {
     
     // 게시글 목록 조회
     const getMbtwhyList = (pageNo, searchValue, sortType) => {
-        console.log(sortType);
         let defaultUrl = `http://localhost:8090/mbtwhy?mbti=${mbti}`;
         if(page !== null) defaultUrl += `&page=${pageNo}`;
-        console.log(search);
-        console.log(tmpSearch);
         if(search !== null) defaultUrl += `&search=${searchValue}`;
         if(sort !== null) defaultUrl += `&sort=${sortType}`;
 
