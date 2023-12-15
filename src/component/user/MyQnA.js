@@ -16,6 +16,7 @@ import {
 } from "reactstrap";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { wait } from "@testing-library/user-event/dist/utils";
 
 const MyQnA = (props) => {
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -40,6 +41,7 @@ const MyQnA = (props) => {
     defaultUrl += `?user=${username}`;
     if (answered !== null)
       defaultUrl += `${username !== null ? "&" : "?"}answered=${answered}`;
+    
     if (page !== null)
       defaultUrl += `${
         username !== null || answered !== null ? "&" : "?"
@@ -117,14 +119,22 @@ const MyQnA = (props) => {
       "width=720,height=780,location=no,status=no,scrollbars=yes"
     );
   };
-  const changeFilter = (e , answerType) => {
+  const call = (answered) => {
+    console.log(answered);
     
-    // if(answerType === 'All'){
-    //   setAnswered(null);
-    // }else{
-    //   setAnswered(answerType);
-    // }
-    // getMyQnaList(user.username,answered,page);
+  }
+  const changeFilter = (e , answerType) => {
+    console.log(answerType);
+
+    if(answerType === null){
+      setAnswered(null);
+    }else if(answerType === "N"){
+      setAnswered("N");
+    }else if(answerType === "Y"){
+      setAnswered("Y");
+    }
+    getMyQnaList(user.username,answerType,page);
+    // call(answered);
   }
   return (
     <div className={style.myQnaContainer}>
@@ -154,7 +164,7 @@ const MyQnA = (props) => {
                       답변여부
                     </DropdownToggle>
                     <DropdownMenu>
-                      <DropdownItem onClick={(e) => changeFilter(e,"All")}>
+                      <DropdownItem onClick={(e) => changeFilter(e,null)}>
                         모두
                       </DropdownItem>
                       <DropdownItem onClick={(e) => changeFilter(e, "N")}>
