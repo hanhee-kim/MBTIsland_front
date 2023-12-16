@@ -235,10 +235,10 @@ const MyAlarm = () => {
                       className="text-center"
                       style={{ minWidth: "105px" }}
                     >
-                      {formatDate(alarm.updateDate)}
+                      {formatDate(alarm.alarmUpdateDate)}
                     </td>
                     <td sm={1} className="text-center">
-                      {alarm.isRead === "N" ? "안 읽음" : "읽음"}
+                      {alarm.alarmIsRead === "N" ? "안 읽음" : "읽음"}
                     </td>
                   </tr>
                 );
