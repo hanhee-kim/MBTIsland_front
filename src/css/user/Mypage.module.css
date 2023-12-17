@@ -121,6 +121,8 @@
   justify-content: flex-start;
   align-items: center;
   margin-left: 40px;
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
 
 /* MBT-Why Page */
@@ -131,7 +133,8 @@
 .myMbtmiContainer,
 .myQnaContainer ,
 .bookmarkContainer,
-.myNoteContainer
+.myNoteContainer,
+.myAlarmContainer
 {
   font-family: "GangwonEdu_OTFBoldA";
   display: flex;
@@ -139,12 +142,14 @@
   /* height: 787px; */
   flex-direction: column;
   align-items: center;
+  margin-left: 40px;
 }
 .myMbtwhyTitle,
 .myMbtmiTitle,
 .myQnaTitle ,
 .bookmarkTitle,
-.myNoteTitle
+.myNoteTitle,
+.myAlarmTitle
 {
   display: flex;
   /* justify-content: center; */

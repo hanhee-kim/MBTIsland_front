@@ -2,7 +2,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { Provider, useDispatch } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import { useEffect, useState } from "react";
-import {persistStore} from "redux-persist";
+import { persistStore } from "redux-persist";
 import store from "./persist-store";
 
 import "./App.css";
@@ -42,19 +42,30 @@ import MBattle from "./component/mbattle/MBattle";
 import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
+import QuestionDetail from "./component/user/QuestionDetail";
+import SentNoteDetail from "./component/user/SentNoteDetail";
+import DefaultMypage from "./component/user/DefaultMypage";
+import MyMbtWhy from "./component/user/MyMbtWhy";
+import MyMbtmi from "./component/user/MyMbtmi";
+import MyQnA from "./component/user/MyQnA";
+import MyBookmark from "./component/user/MyBookmark";
+import MyAlarm from "./component/user/MyAlarm";
+import MyNote from "./component/user/MyNote";
 
 export const persistor = persistStore(store);
 
 // App.js 또는 index.js 등에서 초기화할 때
 const initApp = () => {
   // beforeunload 이벤트 핸들러 등록
-  window.addEventListener('beforeunload', handleBeforeUnload);
+  window.addEventListener("beforeunload", handleBeforeUnload);
 
   // 나머지 초기화 작업...
 };
 const handleBeforeUnload = () => {
   // 브라우저 창이 닫힐 때 로컬 스토리지 내용을 지움
   persistor.purge();
+  // localStorage.removeItem("token");
+  // localStorage.removeItem("user");
 };
 
 function App() {
@@ -67,14 +78,14 @@ function App() {
   //   };
   // }, []);
   // App 컴포넌트 내부에서 useEffect 등을 사용하여 initApp 호출
-    useEffect(() => {
-      initApp();
+  useEffect(() => {
+    initApp();
 
-      // 컴포넌트가 언마운트될 때 이벤트 핸들러 제거
-      return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
-    }, []);
+    // 컴포넌트가 언마운트될 때 이벤트 핸들러 제거
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   return (
     <div className="App">
@@ -89,14 +100,19 @@ function App() {
               <Route exact path="/join" element={<Join />} />
               <Route exact path="/addjoin" element={<AddJoin />} />
               <Route exact path="/mypage" element={<Mypage />}>
-                {/* <Route exact path=":profile" element={<DefaultMypage/>}/>
-                <Route exact path=":mbtwhy" element={<MyMbtWhy/>}/>
-                <Route exact path=":mbtmi" element={<MyMbtmi/>}/>
-                <Route exact path=":qna" element={<MyQnA/>}/>
-                <Route exact path=":bookmark" element={<MyBookmark/>}/>
-                <Route exact path=":alarm" element={<MyAlarm/>}/>
-              <Route exact path=":note" element={<MyNote/>}/> */}
+                <Route exact path="profile" element={<DefaultMypage/>}/>
+                <Route exact path="mbtwhy" element={<MyMbtWhy/>}/>
+                <Route exact path="mbtmi" element={<MyMbtmi/>}/>
+                <Route exact path="qna" element={<MyQnA/>}/>
+                <Route exact path="bookmark" element={<MyBookmark/>}/>
+                <Route exact path="alarm" element={<MyAlarm/>}/>
+              <Route exact path="note" element={<MyNote/>}/>
               </Route>
+              <Route
+                exact
+                path="/questiondetail/:no"
+                element={<QuestionDetail setIsPopup={setIsPopup} />}
+              />
               <Route
                 exact
                 path="/qnawrite"
@@ -106,6 +122,11 @@ function App() {
                 exact
                 path="/notedetail/:noteNo"
                 element={<NoteDetail setIsPopup={setIsPopup} />}
+              />
+              <Route
+                exact
+                path="/sentnotedetail/:noteNo"
+                element={<SentNoteDetail setIsPopup={setIsPopup} />}
               />
               <Route
                 exact
@@ -122,10 +143,18 @@ function App() {
               {/* 하영 */}
               <Route exact path="/" element={<Main />} />
               <Route exact path="/mbtmi" element={<MBTmi />} />
-              <Route exact path="/mbtmidetail/:no/:category?/:type?/:search?/:page?" element={<MBTmiDetail />} />
+              <Route
+                exact
+                path="/mbtmidetail/:no/:category?/:type?/:search?/:page?"
+                element={<MBTmiDetail />}
+              />
               <Route exact path="/mbtmiform" element={<MBTmiForm />} />
               <Route exact path="/notice" element={<Notice />} />
-              <Route exact path="/noticedetail/:no/:search?/:page?" element={<NoticeDetail />} />
+              <Route
+                exact
+                path="/noticedetail/:no/:search?/:page?"
+                element={<NoticeDetail />}
+              />
               <Route exact path="/adminnotice" element={<AdminFrame />} />
               <Route exact path="/adminnoticeform" element={<AdminFrame />} />
               <Route exact path="/adminqna" element={<AdminFrame />} />
@@ -134,7 +163,11 @@ function App() {
               {/* 인수 */}
               <Route exect path="/mbtwhymain" element={<MbtwhyMain />} />
               <Route exect path="/mbtwhy/:mbti" element={<Mbtwhy />} />
-              <Route exact path="/mbtwhydetail/:mbti?/:page?/:search?/:no?" element={<MbtwhyDetail />} />
+              <Route
+                exact
+                path="/mbtwhydetail/:mbti?/:page?/:search?/:no?"
+                element={<MbtwhyDetail />}
+              />
               <Route exact path="/mbtwhywrite" element={<MbtwhyWrite />} />
               <Route exact path="/mbtwhymodify" element={<MbtwhyModify />} />
               <Route exact path="/mbattle" element={<MBattle />} />
