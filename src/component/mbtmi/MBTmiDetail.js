@@ -1,4 +1,4 @@
-import { Popover, PopoverBody, Table } from "reactstrap";
+import { Button, Input, Popover, PopoverBody, Table } from "reactstrap";
 import style from "../../css/mbtmi/MBTmi.module.css";
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -55,17 +55,13 @@ const MBTmiDetail = () => {
 
     // 로그인정보 가져오기
     const user = useSelector((state) => state.persistedReducer.user.user);
-
-
-
-
-
+    
     const { no, category, type, search, page } = useParams();
     const location = useLocation();
     
     const [mbtmi, setMbtmi] = useState(null);
     const [mbtmiCommentCnt, setMbtmiCommentCnt] = useState(0);
-    const [isRecommended, setIsRecommended] = useState('Y');
+    // const [isRecommended, setIsRecommended] = useState('Y');
     const [isBookmarked, setIsBookmarked] = useState('Y');
     // 절대시간
     const formatDate = (dateString) => {
@@ -99,21 +95,56 @@ const MBTmiDetail = () => {
         else if(months<12) return `${months}달 전`;
         else return `${years}년 전`;
     }
+    
     const [mbtmiCommentList, setMbtmiCommentList] = useState([]);
     const [commentPage, setCommentPage] = useState(1); // 댓글목록 페이지 이동번호
     const [commentPageInfo, setCommentPageInfo] = useState({}); // 댓글목록 페이지 정보(전체페이지, 현재페이지, 시작페이지번호, 끝페이지번호)
+
+    // 댓글 작성
+    const [comment, setComment] = useState("");
+    const [sendUser, setSendUser] = useState({
+        username : user.username,
+        userNickname : user.userNickname,
+        userMbti : user.userMbti,
+        userMbtiColor : user.userMbtiColor
+    });
+    const addComment = (commentContent, parentcommentNo) => {
+        // console.log('등록될댓글내용: ', commentContent);
+        // console.log('부모댓글번호: ', parentcommentNo);
+
+        // let defaultUrl = `http://localhost:8090/mbtmicomment?no=${no}&comment=${parentcommentNo!=='' ? comment : reply}`;
+        let defaultUrl = `http://localhost:8090/mbtmicomment?no=${no}&comment=${commentContent}`;
+        if(parentcommentNo !== '') defaultUrl += `&parentcommentNo=${parentcommentNo}`
+        defaultUrl += `&commentpage=${commentPage}`;
+        console.log('요청url: ', defaultUrl);
+
+        axios.post(defaultUrl, sendUser)
+        .then(res=> {
+            console.log(res);
+            let comments = res.data.mbtmiCommentList;
+            let allPage = res.data.pageInfo.allPage;
+            setMbtmiCommentList([...comments]);
+            setCommentPage(allPage);
+            setComment("");
+        })
+        .catch(err=> {
+            console.log(err);
+        })
+    };
+    
+    
 
     // 초기 렌더링
     useEffect(()=> {
         getMbtmiDetail(no, user.username); // #인자 username 추가
 
-/*
+// /*
         // localStorage에 저장된 페이지 정보를 읽음
         const storedInfo = localStorage.getItem('commentCurPage');
         if(storedInfo) {
             setCommentPage(parseInt(storedInfo, 10)); // 페이지넘버 (두번째인자: 10진수임을 의미)
         }
-*/
+// */
 
         getMbtmiCommentList(1, user.username); // #인자 username 추가
         
@@ -129,16 +160,16 @@ const MBTmiDetail = () => {
             console.log(res);
             let mbtmi = res.data.mbtmi;
             let mbtmiCommentCnt = res.data.mbtmiCommentCnt;
+            let recommendCnt = res.data.mbtmi.recommendCnt;
             // let isRecommended = res.data.isRecommended;
             // let isBookmarked = res.data.isBookmarked;
 
             setMbtmi(mbtmi);
             setMbtmiCommentCnt(mbtmiCommentCnt);
+            setRecommendCount(recommendCnt);
             // setIsRecommended(isRecommended);
             // setIsBookmarked(isBookmarked);
             
-            // let mbtmiCommentList = res.data.mbtmiCommentList;
-            // setMbtmiCommentList(mbtmiCommentList);
         })
         .catch(err=> {
             console.log(err);
@@ -228,18 +259,54 @@ const MBTmiDetail = () => {
         // 팝업 열기
     };
 
+
+    // 추천
+    const [recommend, setRecommend] = useState({
+        username: "",
+        postNo: "",
+        boardType: ""
+    });
+    const [isRecommended, setIsRecommended] = useState(false);
+    const [recommendCount, setRecommendCount] = useState();
+    const mbtmiRecommend = () => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+        setRecommend({
+            username: user.username,
+            postNo: no,
+            boardType: "mbtmi"
+        });
+
+        console.log(recommend.boardType);
+        console.log(recommend.postNo);
+        console.log(recommend.username);
+
+        let defaultUrl = `http://localhost:8090/mbtmirecommend`;
+
+        axios.post(defaultUrl, recommend)
+        .then(res=> {
+            console.log('추천결과: ', res);
+
+            let mbtmiRecommendCount = res.data.mbtmiRecommendCount;
+            setIsRecommended(!isRecommended);
+            setRecommendCount(mbtmiRecommendCount);
+        })
+        .catch(err=> {
+            console.log(err);
+        });
+    };
+
+
+
     // 목록으로 가기 버튼
     const navigate = useNavigate();
     const goToPreviousList = () => {
         navigate(-1);
     };
 
-
     const handlePageNo = (pageNo) => {
-        // 현재 페이지번호를 localStorage에 저장 ---- > 왜 해놨더라....... 필요없는듯
-        // localStorage.setItem('commentCurPage', pageNo.toString());
-
-
         setCommentPage(pageNo);
         getMbtmiCommentList(pageNo);
     };
@@ -281,40 +348,77 @@ const MBTmiDetail = () => {
 
     // 1차댓글
     const Comment = ({comment}) => {
-        // const isLoginUserComment = comment.writerId === loginUser.username;
-        // const isPostWriterComment = comment.writerId === mbtmi.writerId;
-        const isLoginUserComment = comment.writerId === user.username;
+        const isLoginUserComment = comment?.writerId === user.username;
         const isPostWriterComment = comment?.writerId === mbtmi?.writerId; // comment가 null 또는 undefined이 아닌 경우에만 writerId 속성 값을 읽도록하여  Uncaught runtime errors런타임에러 방지
+        const isRemovedOrBlockedComment = comment?.isRemoved === 'Y' || comment?.isBlocked === 'Y';
+
+        const [isReplying, setIsReplying] = useState(false); // 답글쓰기중인지 여부를 저장하여 true일때 input 표시하기 위한 state변수
+        const handleReply = () => {
+            setIsReplying(!isReplying);
+        };
+
+        const [tmpReplyContent, setTmpReplyContent] = useState('');
+        const addReply = (tmpReplyContent) => {
+            console.log('대댓글내용: ', tmpReplyContent);
+            // setReply(tmpReplyContent);
+            // addComment(comment.commentNo);
+            addComment(tmpReplyContent, comment.commentNo);
+        };
+
         return (
-            <tr key={comment.commentNo} className={`${style.commentTr} ${isLoginUserComment ? style.loginUsersComment : ''}`}>
-                <td>
-                    <div className={style.commentTd1row}>
-                        <div className={style.commentProfileColor} style={{ background: comment.writerMbtiColor, borderColor: comment.writerMbtiColor }}/>
-                        <span>{comment.writerMbti} {comment.writerNickname}</span>
-                        {isPostWriterComment && <span className={style.isPostWriterComment}>작성자</span>}
+            <>
+                <tr key={comment.commentNo} className={`${style.commentTr} ${isLoginUserComment ? style.loginUsersComment : ''}`}>
+                    <td>
+                        <div className={style.commentTd1row}>
+                            <div className={style.commentProfileColor} style={{ background: comment.writerMbtiColor, borderColor: comment.writerMbtiColor }}/>
+                            <span>{comment.writerMbti} {comment.writerNickname}</span>
+                            {isPostWriterComment && <span className={style.isPostWriterComment}>작성자</span>}
+                        </div>
+                        <div className={`${style.commentTd2row} ${isRemovedOrBlockedComment? style.deletedComment : ''}`} >
+                            {comment.isRemoved==='Y'? '삭제된 댓글입니다' : comment.isBlocked==='Y' ? '관리자에 의해 차단된 댓글입니다' : comment.commentContent}
+                        </div>
+                        <div className={style.commentTd3row}>
+                            <small>{formatDatetimeGap(comment.writeDate)}</small>
+                            {user.username!=="" && !isRemovedOrBlockedComment && (
+                                <small onClick={handleReply}>답글쓰기</small>
+                            )}
+                            {user.username!=="" && !isRemovedOrBlockedComment && (
+                                isLoginUserComment? (
+                                    <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(comment.commentNo)}>삭제</small>
+                                ) : (
+                                    <small className={style.commentReportOrDeleteBtn} onClick={() => reportComment(comment.commentNo)}>신고</small>
+                                ) 
+                            )}
+                        </div>
+                    </td>
+                </tr>
+                {isReplying && (
+                <tr><td>
+                <div className={`${style.commentWriteArea} ${style.replyWriteArea}`}>
+                    <div>
+                        <span>
+                            <div className={style.profileColor} style={{ background: user.userMbtiColor, borderColor: user.userMbtiColor }}/>&nbsp;
+                            <span>{user.userMbti}&nbsp;{user.userNickname}</span>
+                        </span>
+                        <span>
+                            <button className={style.commentCancelbtn}>취소</button>
+                            <button className={style.commentWritebtn} onClick={()=>addReply(tmpReplyContent)}><img src={"/writebtnIcon.png" } alt="" className={style.writebtnIcon}/>댓글 쓰기</button>
+                        </span>
                     </div>
-                    <div className={`${style.commentTd2row} ${comment.isRemoved==='Y'? style.deletedComment : ''}`} >
-                        {comment.isRemoved==='Y'? '삭제된 댓글입니다' : comment.isBlocked==='Y' ? '관리자에 의해 차단된 댓글입니다' : comment.commentContent}
+                    <div>
+                        <input type="text" className={style.commentInput} placeholder="댓글을 입력해주세요" id="comment" name="comment" onChange={(e)=>setTmpReplyContent(e.target.value)} required="required" value={tmpReplyContent}/>
                     </div>
-                    <div className={style.commentTd3row}>
-                        <small>{formatDatetimeGap(comment.writeDate)}</small>
-                        <small onClick={clickEventHandler}>답글쓰기</small>
-                        {isLoginUserComment? (
-                            <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(comment.commentNo)}>삭제</small>
-                        ) : (
-                            <small className={style.commentReportOrDeleteBtn} onClick={() => reportComment(comment.commentNo)}>신고</small>
-                        )}
-                    </div>
-                </td>
-            </tr>
+                </div>
+                </td></tr>
+                )}
+            </>
         );
     };
     // 2차댓글
     const Reply = ({reply}) => {
-        // const isLoginUserComment = reply.writerId === loginUser.username;
-        // const isPostWriterComment = reply.writerId === mbtmi.writerId;
         const isLoginUserComment = reply.writerId === user.username;
         const isPostWriterComment = reply?.writerId === mbtmi?.writerId; // reply가 null 또는 undefine이 아닌 경우에만 writerId 속성 값을 읽도록하여  Uncaught runtime errors런타임에러 방지
+        const isRemovedOrBlockedComment = reply?.isRemoved === 'Y' || reply?.isBlocked === 'Y';
         return (
             <tr key={reply.commentNo} className={`${style.reply} ${isLoginUserComment ? style.loginUsersComment : ''}`}>
                 <td>
@@ -323,16 +427,17 @@ const MBTmiDetail = () => {
                         <span>{reply.writerMbti} {reply.writerNickname}</span>
                         {isPostWriterComment && <span className={style.isPostWriterComment}>작성자</span>}
                     </div>
-                    <div className={style.commentTd2row}>
-                        {reply.commentContent}
+                    <div className={`${style.commentTd2row} ${isRemovedOrBlockedComment? style.deletedComment : ''}`}>
+                        {reply.isRemoved==='Y'? '삭제된 댓글입니다' : reply.isBlocked==='Y' ? '관리자에 의해 차단된 댓글입니다' : reply.commentContent}
                     </div>
                     <div className={style.commentTd3row}>
-                        {/* <small>{formatDate(reply.writeDate)}</small> */}
                         <small>{formatDatetimeGap(reply.writeDate)}</small>
-                        {isLoginUserComment? (
-                            <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(reply.commentNo)}>삭제</small>
-                        ) : (
-                            <small className={style.commentReportOrDeleteBtn} onClick={() => reportComment(reply.commentNo)}>신고</small>
+                        {user.username!=="" && !isRemovedOrBlockedComment && (
+                            isLoginUserComment? (
+                                <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(reply.commentNo)}>삭제</small>
+                            ) : (
+                                <small className={style.commentReportOrDeleteBtn} onClick={() => reportComment(reply.commentNo)}>신고</small>
+                            ) 
                         )}
                     </div>
                 </td>
@@ -356,7 +461,7 @@ const MBTmiDetail = () => {
 
                 {mbtmi? (
                     <>
-                    <span className={style.currnetCategory}>{mbtmi.category} &gt;</span>
+                    <span className={style.currnetCategory}>&nbsp;{mbtmi.category}&nbsp;</span>
                     {isBookmarked==='N'? (
                         <img src={"/bookmarkIcon-white.png" } alt="책갈피" className={style.bookmarkIcon} />
                         ) : (
@@ -378,12 +483,12 @@ const MBTmiDetail = () => {
                         </h6>
                         <div className={style.postContent} dangerouslySetInnerHTML={{ __html: mbtmi.content }}></div>
                         <p>
-                            {isRecommended==='N'? (
-                            <img src={"/thumbIcon.png" } alt="추천아이콘" className={style.thumbIconDetail} />
+                            {!isRecommended? (
+                            <img src={"/thumbIcon.png" } alt="추천아이콘" className={style.thumbIconDetail} onClick={()=>mbtmiRecommend()}/>
                             ) : (
-                            <img src={"/thumbIcon-full.png" } alt="추천아이콘" className={style.thumbIconDetail} />
+                            <img src={"/thumbIcon-full.png" } alt="추천아이콘" className={style.thumbIconDetail} onClick={()=>mbtmiRecommend()}/>
                             )}
-                            <span>&nbsp;추천&nbsp;{mbtmi.recommentCnt}</span>
+                            <span>&nbsp;추천&nbsp;{recommendCount}</span>
                         </p>
                         <div className={style.postBtns}>
                             <button onClick={goToPreviousList}>목록</button>
@@ -413,7 +518,25 @@ const MBTmiDetail = () => {
                     </table>
                     {PaginationInside()}
                     {/* <PaginationOutside pageInfo={commentPageInfo} handlePageNo={handlePageNo} /> */}
+
+                    {/* 댓글 입력란 */}
+                    {user.userRole === "ROLE_USER" && (
+                        <div className={style.commentWriteArea}>
+                            <div>
+                                <span>
+                                    <div className={style.profileColor} style={{ background: user.userMbtiColor, borderColor: user.userMbtiColor }}/>&nbsp;
+                                    <span>{user.userMbti}&nbsp;{user.userNickname}</span>
+                                </span>
+                                <span>
+                                    <button className={style.commentWritebtn} onClick={()=>addComment(comment, '')}><img src={"/writebtnIcon.png" } alt="" className={style.writebtnIcon}/>댓글 쓰기</button>
+                                </span>
+                            </div>
+                            <div>
+                                <input type="text" className={style.commentInput} placeholder="댓글을 입력해주세요" id="comment" name="comment" onChange={(e)=>setComment(e.target.value)} required="required" value={comment}/>
+                            </div>
+                        </div> )}
                 </div>
+
 
             </section>
             <section className={style.sectionRightArea}>

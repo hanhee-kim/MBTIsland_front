@@ -2,7 +2,7 @@ import { Popover, PopoverBody, Table } from "reactstrap";
 
 import style from "../../css/mbtmi/MBTmi.module.css";
 import React, { useRef, useState } from "react";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -43,6 +43,7 @@ const PaginationOutside = ({ pageInfo, handlePageNo }) => {
 
 
 const MBTmi = () => {
+
     const [weeklyHotList, setWeeklyHotList] = useState([]);
     const [errorMsgWeekly, setErrorMsgWeekly] = useState("");
     const [errorMsgNewly, setErrorMsgNewly] = useState("");
@@ -86,6 +87,7 @@ const MBTmi = () => {
     const [tmpSearch, setTmpSearch] = useState("");
     const [activeCategory, setActiveCategory] = useState("");
 
+
     // (게시글 상세에서)목록가기 버튼 또는 뒤로가기 클릭시의 동작 로직 고려
     useEffect(() => {
         // alert('초기 useEffect 호출!');
@@ -95,7 +97,7 @@ const MBTmi = () => {
         if(storedInfo) {
             setPage(parseInt(storedInfo, 10)); // 페이지넘버
         }
-        
+
         getWeeklyHotList();
         getNewlyMbtmiList(category, type, search, page, sort);
         // getNewlyMbtmiList(null, null, null, null, null);
@@ -170,7 +172,9 @@ const MBTmi = () => {
         };
     }, []);
 
-
+    const goToMbtmiForm = () => {
+        navigate(`/mbtmiform`);
+    };
 
 
     const handlePageNo = (pageNo) => {
@@ -383,7 +387,7 @@ const MBTmi = () => {
                             <PopoverBody className={style.popoverItem} onClick={()=>handleSort("추천순")}>추천순</PopoverBody>
                             {/* <PopoverBody className={style.popoverItem} onClick={()=>handleSort("댓글순")}>댓글순</PopoverBody> */}
                         </Popover>
-                        <button><img src={"/writebtnIcon.png" } alt="" className={style.writebtnIcon} />작성하기</button>
+                        <button onClick={goToMbtmiForm}><img src={"/writebtnIcon.png" } alt="" className={style.writebtnIcon} />작성하기</button>
                     </span>
                     <div className={style.searchBar}>
                         <input type="text" onChange={handleSearchChange}/>
