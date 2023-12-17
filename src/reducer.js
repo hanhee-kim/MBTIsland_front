@@ -1,7 +1,6 @@
 import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
 import { userReducer } from "./reducer/userReducer";
-import { reportReducer } from "./reducer/reportReducer";
 import { tokenReducer } from "./reducer/tokenReducer";
 import storage from "redux-persist/lib/storage";
 
@@ -21,7 +20,12 @@ const reportPersistConfig = {
 };
 
 export const rootReducer = combineReducers({
+<<<<<<< HEAD
   user: persistReducer(userPersistConfig, userReducer),
   token: persistReducer(tokenPersistConfig, tokenReducer),
   report: persistReducer(reportPersistConfig, reportReducer),
+=======
+  user: userReducer,
+  token:tokenReducer,
+>>>>>>> inss
 });

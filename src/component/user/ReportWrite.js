@@ -1,5 +1,4 @@
 import { useReducer } from "react";
-import { reportReducer, initState } from "../../reducer/reportReducer";
 import { useSelector } from "react-redux";
 
 import React, { useEffect, useState } from "react";
