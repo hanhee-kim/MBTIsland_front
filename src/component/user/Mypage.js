@@ -28,14 +28,6 @@ const Mypage = () => {
           <Outlet />
           )
       }
-      
-{/*       
-      {currentPage === "/mbtwhy" && <MyMbtWhy />}
-      {currentPage === "/mbtmi" && <MyMbtmi />}
-      {currentPage === "/qna" && <MyQnA />}
-      {currentPage === "/bookmark" && <MyBookmark/>}
-      {currentPage === "/alarm" && <MyAlarm/>}
-      {currentPage === "/note" && <MyNote/>} */}
       <div></div>
     </div>
   );

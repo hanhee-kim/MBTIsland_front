@@ -231,25 +231,25 @@ const MyNote = () => {
           <Table className="table-hover" style={{ minWidth: "770px" }}>
             <thead>
               <tr row className="text-center">
-                <th scope="col" sm={1}>
+                <th scope="col" sm={1} style={{minWidth:'50px'}}>
                   번호
                 </th>
                   {noteType === 'sent'?
-                <th scope="col" sm={1}>
+                <th scope="col" sm={1} style={{minWidth:'63px'}}>
                   받는이
                 </th>
                 :
-                <th scope="col" sm={1}>
+                <th scope="col" sm={1} style={{minWidth:'63px'}}>
                   보낸이
                 </th>
                   }
-                <th scope="col" sm={4} style={{minWidth:'280px'}}>
+                <th scope="col" sm={4} style={{minWidth:'480px'}}>
                   내용
                 </th>
-                <th scope="col" sm={3}>
+                <th scope="col" sm={3} style={{minWidth:'108px'}}>
                   작성일자
                 </th>
-                <th scope="col" sm={3}>
+                <th scope="col" sm={3} style={{minWidth:'75px'}}>
                   읽음여부
                 </th>
               </tr>

@@ -111,7 +111,7 @@ const MyQnA = (props) => {
   };
   //tr 클릭시
   const goQuestionDeatail = (e, no) => {
-    console.log("tr클릭" + no);
+    // console.log("tr클릭" + no);
     const url = "/questiondetail/" + no;
     window.open(
       url,
