@@ -12,6 +12,13 @@ import style from "../../css/mbtwhy/MbtwhyForm.module.css";
 function MbtwhyWrite() {
     // 로그인 유저 정보
     const user = useSelector((state) => state.persistedReducer.user.user);
+    
+    const [sendUser, setSendUser] = useState({
+        username : user.username,
+        userNickname : user.userNickname,
+        userMbti : user.userMbti,
+        userMbtiColor : user.userMbtiColor
+    });
 
     const navigate = useNavigate();
 
@@ -20,7 +27,7 @@ function MbtwhyWrite() {
 
     // MBTI 유형
     const {mbti} = useParams();
-    const [mbtiValue, setMbtiValue] = useState(mbti.toUpperCase());
+    const [mbtiValue, setMbtiValue] = useState(mbti);
 
     // 본문
     const [content, setContent] = useState("");
@@ -48,10 +55,10 @@ function MbtwhyWrite() {
     const postMbtwhy = () => {
         console.log(mbtiValue);
         let defaultUrl = `http://localhost:8090/mbtwhywrite?`;
-        if(mbtiValue !== null) defaultUrl += `&mbti=${mbtiValue}`;
+        if(mbtiValue !== null) defaultUrl += `mbti=${mbtiValue}`;
         if(content !== null) defaultUrl += `&content=${content}`;
 
-        axios.post(defaultUrl, user)
+        axios.post(defaultUrl, sendUser)
         .then(res=> {
             console.log(res);
             let no = res.data.no;

@@ -56,6 +56,15 @@
     border-radius: 50%;
 }
 
+/* 작성자 표시태그 */
+.isPostWriterComment { 
+    font-size: 14px;
+    border: 1px solid #8F8F8F;
+    padding: 0px 3px 0px 3px;
+    border-radius: 4px;
+    margin-left: 8px;
+}
+
 .commentLowDiv {
     display: flex;
     color: #C5C5C5;
@@ -94,6 +103,7 @@
     display: flex;
     width: 20%;
     justify-content: start;
+    cursor: pointer;
 }
 
 .thumbDiv {
