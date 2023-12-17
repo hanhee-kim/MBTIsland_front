@@ -20,12 +20,12 @@ const reportPersistConfig = {
 };
 
 export const rootReducer = combineReducers({
-<<<<<<< HEAD
+// <<<<<<< HEAD
   user: persistReducer(userPersistConfig, userReducer),
   token: persistReducer(tokenPersistConfig, tokenReducer),
-  report: persistReducer(reportPersistConfig, reportReducer),
-=======
-  user: userReducer,
-  token:tokenReducer,
->>>>>>> inss
+  // report: persistReducer(reportPersistConfig, reportReducer),
+// =======
+  // user: userReducer,
+  // token:tokenReducer,
+// >>>>>>> inss
 });
