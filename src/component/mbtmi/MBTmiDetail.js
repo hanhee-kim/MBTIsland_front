@@ -126,6 +126,8 @@ const MBTmiDetail = () => {
             setMbtmiCommentList([...comments]);
             setCommentPage(allPage);
             setComment("");
+            setMbtmiCommentCnt(mbtmiCommentCnt+1);
+            getMbtmiCommentList(allPage);
         })
         .catch(err=> {
             console.log(err);
@@ -138,37 +140,41 @@ const MBTmiDetail = () => {
     useEffect(()=> {
         getMbtmiDetail(no, user.username); // #인자 username 추가
 
-// /*
+/*
         // localStorage에 저장된 페이지 정보를 읽음
         const storedInfo = localStorage.getItem('commentCurPage');
         if(storedInfo) {
             setCommentPage(parseInt(storedInfo, 10)); // 페이지넘버 (두번째인자: 10진수임을 의미)
         }
-// */
+*/
 
-        getMbtmiCommentList(1, user.username); // #인자 username 추가
+        getMbtmiCommentList(1, user.username);
         
         console.log("현재 게시글번호: ", no);
-        console.log('### user.username: ', user.username);
+        console.log('user.username: ', user.username);
+        console.log('현재 댓글 페이지번호: ' + commentPage);
     }, []);
 
     const getMbtmiDetail = (no) => {
-        console.log('*********** getMbtmiDetail 호출');
         let defaultUrl = `http://localhost:8090/mbtmidetail/${no}`;
+        if(user.username!=="" || user.username!==undefined) defaultUrl += `?username=${user.username}`;
+
         axios.get(defaultUrl)
         .then(res=> {
             console.log(res);
             let mbtmi = res.data.mbtmi;
             let mbtmiCommentCnt = res.data.mbtmiCommentCnt;
             let recommendCnt = res.data.mbtmi.recommendCnt;
-            // let isRecommended = res.data.isRecommended;
+            let isRecommended = res.data.isMbtmiRecommend;
             // let isBookmarked = res.data.isBookmarked;
 
             setMbtmi(mbtmi);
             setMbtmiCommentCnt(mbtmiCommentCnt);
             setRecommendCount(recommendCnt);
-            // setIsRecommended(isRecommended);
+            setIsRecommended(isRecommended);
             // setIsBookmarked(isBookmarked);
+
+            console.log('getMbtmiDetail함수에서 출력한 commentPage: ' + commentPage);
             
         })
         .catch(err=> {
@@ -262,9 +268,9 @@ const MBTmiDetail = () => {
 
     // 추천
     const [recommend, setRecommend] = useState({
-        username: "",
-        postNo: "",
-        boardType: ""
+        username: user.username,
+        postNo: no,
+        boardType: "mbtmi"
     });
     const [isRecommended, setIsRecommended] = useState(false);
     const [recommendCount, setRecommendCount] = useState();
@@ -273,15 +279,8 @@ const MBTmiDetail = () => {
             alert("로그인해주세요.");
             return;
         }
-        setRecommend({
-            username: user.username,
-            postNo: no,
-            boardType: "mbtmi"
-        });
 
-        console.log(recommend.boardType);
-        console.log(recommend.postNo);
-        console.log(recommend.username);
+        console.log('추천값 출력: ', recommend);
 
         let defaultUrl = `http://localhost:8090/mbtmirecommend`;
 
@@ -313,7 +312,7 @@ const MBTmiDetail = () => {
 
     // 댓글목록 페이지네이션
     const PaginationInside = () => {
-        console.log('%%%PaginationInside렌더링');
+        console.log('댓글목록 페이지네이션에서 출력 commentPage: ' + commentPage);
         const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
         for(let i=commentPageInfo.startPage; i<=commentPageInfo.endPage; i++) {
             pageGroup.push(
@@ -339,11 +338,6 @@ const MBTmiDetail = () => {
         );
     }
 
-
-
-    const clickEventHandler = () => {
-        console.log('자식컴포넌트에서 발생한 클릭이벤트로 인해 부모컴포넌트에서 정의한 함수가 호출!');
-    }
 
 
     // 1차댓글
@@ -401,7 +395,7 @@ const MBTmiDetail = () => {
                             <span>{user.userMbti}&nbsp;{user.userNickname}</span>
                         </span>
                         <span>
-                            <button className={style.commentCancelbtn}>취소</button>
+                            <button className={style.commentCancelbtn} onClick={()=>setIsReplying(false)}>취소</button>
                             <button className={style.commentWritebtn} onClick={()=>addReply(tmpReplyContent)}><img src={"/writebtnIcon.png" } alt="" className={style.writebtnIcon}/>댓글 쓰기</button>
                         </span>
                     </div>
@@ -484,9 +478,9 @@ const MBTmiDetail = () => {
                         <div className={style.postContent} dangerouslySetInnerHTML={{ __html: mbtmi.content }}></div>
                         <p>
                             {!isRecommended? (
-                            <img src={"/thumbIcon.png" } alt="추천아이콘" className={style.thumbIconDetail} onClick={()=>mbtmiRecommend()}/>
+                            <img src={"/thumbIcon.png" } alt="" className={style.thumbIconDetail} onClick={()=>mbtmiRecommend()}/>
                             ) : (
-                            <img src={"/thumbIcon-full.png" } alt="추천아이콘" className={style.thumbIconDetail} onClick={()=>mbtmiRecommend()}/>
+                            <img src={"/thumbIcon-full.png" } alt="" className={style.thumbIconDetail} onClick={()=>mbtmiRecommend()}/>
                             )}
                             <span>&nbsp;추천&nbsp;{recommendCount}</span>
                         </p>
