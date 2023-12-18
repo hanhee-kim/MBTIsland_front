@@ -163,12 +163,8 @@ function App() {
               {/* 인수 */}
               <Route exect path="/mbtwhymain" element={<MbtwhyMain />} />
               <Route exect path="/mbtwhy/:mbti" element={<Mbtwhy />} />
-              <Route
-                exact
-                path="/mbtwhydetail/:mbti?/:page?/:search?/:no?"
-                element={<MbtwhyDetail />}
-              />
-              <Route exact path="/mbtwhywrite" element={<MbtwhyWrite />} />
+              <Route exact path="/mbtwhydetail/:mbti/:no/:page" element={<MbtwhyDetail />} />
+              <Route exact path="/mbtwhywrite/:mbti?" element={<MbtwhyWrite />} />
               <Route exact path="/mbtwhymodify" element={<MbtwhyModify />} />
               <Route exact path="/mbattle" element={<MBattle />} />
               <Route exact path="/mbattlewrite" element={<MBattleWrite />} />

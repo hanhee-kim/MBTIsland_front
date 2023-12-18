@@ -18,6 +18,7 @@ const AdminQna = () => {
     const [page, setPage] = useState(1);
     const [pageInfo, setPageInfo] = useState({});
     const [tmpSearch, setTmpSearch] = useState(null);
+    const [username, setUsername] = useState(null);
     const [activeFilter, setActiveFilter] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const formatDate = (dateString) => {
@@ -29,15 +30,16 @@ const AdminQna = () => {
     };
 
     useEffect(() => {
-        getQuestionList(search, answered, page);
+        getQuestionList(search, answered, page, username);
     }, []);
 
-    const getQuestionList = (search, answered, page) => {
+    const getQuestionList = (search, answered, page, username) => {
         let defaultUrl = 'http://localhost:8090/questionlist';
 
         if (search !== null) defaultUrl += `?search=${search}`;
         if (answered !== null) defaultUrl += `${search !== null ? '&' : '?'}answered=${answered}`;
         if (page !== null) defaultUrl += `${search !== null || answered !== null ? '&' : '?'}page=${page}`;
+        if (username !== null) defaultUrl += `${search !== null || answered !== null || page !== null ? '&' : '?'}username=${username}`;
 
         console.log('요청url:' + defaultUrl);
 
@@ -52,6 +54,7 @@ const AdminQna = () => {
             setQuestionCnts({...questionCnts});
             setErrorMsg(null); 
             setAnswered(answered);
+            setUsername(username);
         })
         .catch(err=> {
             console.log(err);
@@ -68,13 +71,13 @@ const AdminQna = () => {
         console.log('***페이지이동***')
         console.log('현재 적용되는 필터값: ' + answered);
         console.log('현재 적용되는 검색어: ' + search);
-        getQuestionList(search, answered, pageNo); 
+        getQuestionList(search, answered, pageNo, username); 
     };
     const handleFilterChange = (answered) => {
         console.log('***필터변경***')
         console.log('현재 적용되는 필터값: ' + answered);
         console.log('현재 적용되는 검색어: ' + search);
-        getQuestionList(search, answered, 1);
+        getQuestionList(search, answered, 1, username);
         setActiveFilter(answered);
     };
     const handleSearchChange = (event) => {
@@ -86,7 +89,7 @@ const AdminQna = () => {
         setSearch(tmpSearch);
         setAnswered(null);
         setActiveFilter(null);
-        getQuestionList(tmpSearch, null, 1);
+        getQuestionList(tmpSearch, null, 1, username);
     };
 
     // 팝오버 오픈 상태
@@ -104,36 +107,10 @@ const AdminQna = () => {
         setOpenList(newOpenList);
     };
 
-    
     const clickPopoverBody = (writerId) => {
-        // alert(writerId);
-
-        let defaultUrl = `http://localhost:8090/questionlistofuser?user=${writerId}`;
-        if (answered !== null) defaultUrl += `&answered=${answered}`;
-        if (page !== null) defaultUrl += `&page=${page}`;
-
-        console.log('요청url:' + defaultUrl);
-
-        axios.get(defaultUrl)
-        .then(res=> {
-            console.log(res);
-            let pageInfo = res.data.pageInfo;
-            let list = res.data.questionList;
-            let questionCnts = res.data.questionCnts;
-            setQuestionList([...list]);
-            setPageInfo({...pageInfo});
-            setQuestionCnts({...questionCnts});
-            setErrorMsg(null); 
-            setAnswered(answered);
-        })
-        .catch(err=> {
-            console.log(err);
-            if(err.response && err.response.data) {
-                console.log('err.response.data: ' + err.response.data);
-                setErrorMsg(err.response.data);
-                setQuestionCnts({'totalCnt':0, 'answeredCnt':0, 'answeredNotCnt':0});
-            }
-        })
+        console.log('모아볼 writerId: ', writerId);
+        getQuestionList(search, null, 1, writerId); // 문의글모아보기 클릭시 검색값은 유지, answered와 page는 초기값으로 목록 요청
+        setUsername(writerId);
     }
 
 
@@ -210,7 +187,8 @@ const AdminQna = () => {
                     </thead>
                     <tbody>
                         {errorMsg? (
-                            <tr><td colSpan="5" className={styleQna.errMsg}>{errorMsg}</td></tr>
+                            // <tr><td colSpan="5" className={styleQna.errMsg}>{errorMsg}</td></tr>
+                            <tr><td colSpan="5" className={style.errMsg}>{JSON.stringify(errorMsg)}</td></tr>
                         ) : (
                             questionList.length>0 && questionList.map((post, index) => {
                                 return (

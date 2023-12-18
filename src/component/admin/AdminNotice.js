@@ -115,27 +115,35 @@ const AdminNotice = () => {
     // 일괄 숨김처리
     const hideNotice = () => {
         console.log('체크된 항목:' + checkItems);
-        axios.get(`http://localhost:8090/hidenotice/${checkItems}`)
-        .then(res => {
-            setCheckItems([]);
-            setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        const isConfirmed =window.confirm('선택 항목을 숨김처리하시겠습니까?');
+        if(isConfirmed) {
+            axios.get(`http://localhost:8090/hidenotice/${checkItems}`)
+            .then(res => {
+                alert('완료되었습니다.');
+                setCheckItems([]);
+                setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        };
     }
 
     // 일괄 삭제처리
     const deleteNotice = () => {
         console.log('체크된 항목:' + checkItems);
-        axios.delete(`http://localhost:8090/deletenotice/${checkItems}`)
-        .then(res => {
-            setCheckItems([]);
-            setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        const isConfirmed =window.confirm('선택 항목을 삭제하시겠습니까?');
+        if(isConfirmed) {
+            axios.delete(`http://localhost:8090/deletenotice/${checkItems}`)
+            .then(res => {
+                alert('완료되었습니다.');
+                setCheckItems([]);
+                setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        };
     }
 
     // 페이지네이션
@@ -200,7 +208,8 @@ const AdminNotice = () => {
                 <table className={style.table}>
                     <tbody>
                         {errorMsg? (
-                            <tr><td colSpan="4" className={style.errMsg}>{errorMsg}</td></tr>
+                            // <tr><td colSpan="4" className={style.errMsg}>{errorMsg}</td></tr>
+                            <tr><td colSpan="4" className={style.errMsg}>{JSON.stringify(errorMsg)}</td></tr>
                         ) : (
                             noticeList.length>0 && noticeList.map(post => {
                                 return (
