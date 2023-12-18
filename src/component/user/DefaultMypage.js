@@ -18,7 +18,7 @@ const DefaultMypage = (props) => {
     fontSize: "20px",
     fontWeight: "500",
     marginTop: "40px",
-    marginBottom:"25px",
+    marginBottom: "25px",
   };
   const mbtiCheckBoxStyle = {
     border: "1px solid gray",
@@ -51,8 +51,8 @@ const DefaultMypage = (props) => {
 
   //state
   const user = useSelector((state) => state.persistedReducer.user.user);
-  const token = useSelector(state=>state.persistedReducer.token.token);
-  const [changeUser,setChangeUser] = useState({...user});
+  const token = useSelector((state) => state.persistedReducer.token.token);
+  const [changeUser, setChangeUser] = useState({ ...user });
   const dispatch = useDispatch();
   const today = new Date();
   const joinDate = new Date(user.joinDate);
@@ -61,11 +61,11 @@ const DefaultMypage = (props) => {
     (today - mbtiChangeDate) / (1000 * 60 * 60 * 24)
   );
   const changeDay = 90 - modifyMbtiDay;
-  const joinDay = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24)+1);
+  const joinDay = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24) + 1);
 
   const mbti = user.userMbti;
   const arrMbti = [...mbti];
-  const [isChangeEmail,setISChageEmail] = useState(false);
+  const [isChangeEmail, setISChageEmail] = useState(false);
   // const [arrMbti, setArrMbti] = useState([...mbti]);
 
   const [mbtiCheckEI, setMbtiCheckEI] = useState(arrMbti[0]);
@@ -77,18 +77,18 @@ const DefaultMypage = (props) => {
   const emailRegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   //수정하기 위한 정보
-   //비밀번호확인값
-   const [passwordCheckValue, setPasswordCheckValue] = useState("");
-   //serverEmailCode
-   const [serverEmailCode, setServerEmailCode] = useState("");
-   //사용자가 작성한 emailCode
-   const [emailCode, setEmailcode] = useState("");  
-   //비밀번호 일치하는지
-   const [isSamePassword, setIsSamePassword] = useState(true);
-   //이메일인증했는지 여부
-   const [isEmailCheck, setIsEmailCheck] = useState(true);
+  //비밀번호확인값
+  const [passwordCheckValue, setPasswordCheckValue] = useState("");
+  //serverEmailCode
+  const [serverEmailCode, setServerEmailCode] = useState("");
+  //사용자가 작성한 emailCode
+  const [emailCode, setEmailcode] = useState("");
+  //비밀번호 일치하는지
+  const [isSamePassword, setIsSamePassword] = useState(true);
+  //이메일인증했는지 여부
+  const [isEmailCheck, setIsEmailCheck] = useState(true);
 
-   //emailCode값 입력할떄
+  //emailCode값 입력할떄
   const changeEmailcode = (e) => {
     setEmailcode(e.target.value);
     if (isEmailCheck) {
@@ -133,7 +133,7 @@ const DefaultMypage = (props) => {
         .catch((err) => {
           console.log(err);
         });
-    }else{
+    } else {
       Swal.fire({
         title: "Email을 올바르게 작성해주세요.",
         icon: "warning",
@@ -158,32 +158,31 @@ const DefaultMypage = (props) => {
     }
   };
 
-  
   const mbtiEIClick = (e, ei) => {
-    if(modifyMbtiDay>=90){
+    if (modifyMbtiDay >= 90) {
       e.stopPropagation();
       setMbtiCheckEI(ei);
     }
   };
 
   const mbtiNSClick = (e, ns) => {
-    if(modifyMbtiDay>=90){
-    e.stopPropagation();
-    setMbtiCheckNS(ns);
+    if (modifyMbtiDay >= 90) {
+      e.stopPropagation();
+      setMbtiCheckNS(ns);
     }
   };
 
   const mbtiTFClick = (e, tf) => {
-    if(modifyMbtiDay>=90){
-    e.stopPropagation();
-    setMbtiCheckTF(tf);
+    if (modifyMbtiDay >= 90) {
+      e.stopPropagation();
+      setMbtiCheckTF(tf);
     }
   };
 
   const mbtiPJClick = (e, pj) => {
-    if(modifyMbtiDay>=90){
-    e.stopPropagation();
-    setMbtiCheckPJ(pj);
+    if (modifyMbtiDay >= 90) {
+      e.stopPropagation();
+      setMbtiCheckPJ(pj);
     }
   };
 
@@ -193,12 +192,9 @@ const DefaultMypage = (props) => {
     // isEmailCheck, setIsEmailCheck
 
     console.log("input:" + e.target.value);
-    setChangeUser(
-          {...user,
-          [e.target.name]: e.target.value}
-        )
-        console.log(e.target.name);
-        console.log(e.target.value);
+    setChangeUser({ ...user, [e.target.name]: e.target.value });
+    console.log(e.target.name);
+    console.log(e.target.value);
     if (isSamePassword) {
       if (e.target.name === "userPassword") {
         setIsSamePassword(false);
@@ -209,7 +205,7 @@ const DefaultMypage = (props) => {
         setIsSamePassword(true);
       }
     }
-    
+
     if (e.target.name === "userEmail") {
       setIsEmailCheck(false);
     }
@@ -217,83 +213,83 @@ const DefaultMypage = (props) => {
   const modifyUser = (e) => {
     e.preventDefault();
     //수정전 mbti도 가지고가서 비교하던지, 여기서 비교하고 수정날짜도 업데이트해서 넘길지
-    //mbti 
+    //mbti
     console.log("수정버튼누름");
     console.log(user.provider);
     let sendUser = {
       ...changeUser,
       userMbti: mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ,
-      beforeMbti:mbti,
+      beforeMbti: mbti,
     };
-    if(!(user.provider === '' || user.provider == null)){
+    if (!(user.provider === "" || user.provider == null)) {
       console.log("소셜로그인 경우");
-      if(nickRegExp.test(changeUser.userNickname)){
+      if (nickRegExp.test(changeUser.userNickname)) {
         axios
-          .post("http://localhost:8090/user/modify",sendUser,{
-            headers : {
-                Authorization : token,
-            }
+          .post("http://localhost:8090/user/modify", sendUser, {
+            headers: {
+              Authorization: token,
+            },
           })
-          .then((res)=>{
+          .then((res) => {
             console.log(res);
           })
-          .catch((err)=>{
+          .catch((err) => {
             console.log(err);
-          })
-        
-      }else{
+          });
+      } else {
         Swal.fire({
           title: "닉네임을 확인해주세요.",
           text: "닉네임은 특수문자 제외 이루어진 2~8자입니다.",
           icon: "warning",
         });
       }
-    }else{  //소셜아닐때 ( 닉네임 , 비밀번호 ,이메일 validation + email인증여부 확인)
-      if(nickRegExp.test(changeUser.userNickname)){
-        if(changeUser.userPassword.length >= 4){
-          if(emailRegExp.test(changeUser.userEmail)){
-            if(isEmailCheck){
+    } else {
+      //소셜아닐때 ( 닉네임 , 비밀번호 ,이메일 validation + email인증여부 확인)
+      if (nickRegExp.test(changeUser.userNickname)) {
+        if (changeUser.userPassword.length >= 4) {
+          if (emailRegExp.test(changeUser.userEmail)) {
+            if (isEmailCheck) {
               //서버에 값 넘기고 변경
               axios
-                .post("http://localhost:8090/user/modify",sendUser,{
-                  headers : {
-                      Authorization : token,
-                  }
+                .post("http://localhost:8090/user/modify", sendUser, {
+                  headers: {
+                    Authorization: token,
+                  },
                 })
-                .then((res)=>{
+                .then((res) => {
                   console.log(res);
                   dispatch({
-                    type: 'user',
-                    payload: res.data
+                    type: "user",
+                    payload: res.data,
                   });
                   Swal.fire({
-                    title:'정보수정이 완료되었습니다.',
-                    icon:'success',
-                  })
+                    title: "정보수정이 완료되었습니다.",
+                    icon: "success",
+                  });
                 })
-                .catch((err)=>{
+                .catch((err) => {
                   console.log(err);
-                })
-            }else{
+                });
+            } else {
               Swal.fire({
                 title: "Email을 인증을 해주세요.",
                 icon: "warning",
               });
             }
-          }else{
+          } else {
             Swal.fire({
               title: "Email을 올바르게 입력해주세요.",
               icon: "warning",
             });
           }
-        }else{
+        } else {
           Swal.fire({
             title: "비밀번호을 확인해주세요.",
             text: "비밀번호는 4~8자로 구성되어야 합니다.",
             icon: "warning",
           });
         }
-      }else{
+      } else {
         Swal.fire({
           title: "닉네임을 확인해주세요.",
           text: "닉네임은 특수문자 제외 이루어진 2~8자입니다.",
@@ -301,9 +297,6 @@ const DefaultMypage = (props) => {
         });
       }
     }
-
-    
-    
   };
   return (
     <div className={style.myProfileContainer}>
@@ -341,53 +334,64 @@ const DefaultMypage = (props) => {
             ></Input>
           </Col>
         </FormGroup>
-        {user.provider === '' || user.provider == null && (
-          <>
-            <FormGroup row>
-              <Label for="userPassword" sm={3}>
-                비밀번호
-              </Label>
-              <Col sm={7}>
-                <Input
-                  type="password"
-                  name="userPassword"
-                  id="userPassword"
-                  maxLength={8}
-                  onChange={change}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row>
-              <Label for="user_password_check" sm={3}>
-                비밀번호 확인
-              </Label>
-              <Col sm={7}>
-                <Input
-                  type="password"
-                  name="user_password_check"
-                  id="user_password_check"
-                  placeholder="PASSWORD를 한번더 입력하세요."
-                  maxLength={8}
-                  onChange={(e)=>passwordCheck(e)}
-                />
-              </Col>
-              {isSamePassword ? (
-                <span
-                  style={{ fontSize: "12px", color: "green", marginLeft: "450px" }}
-                >
-                  비밀번호가 일치합니다
-                </span>
-              ) : (
-                <span
-                  style={{ fontSize: "12px", color: "red", marginLeft: "420px" }}
-                >
-                  비밀번호가 일치하지 않습니다.
-                </span>
-              )}
-              
-            </FormGroup>
-          </>
-        )}
+        {user.provider === "" ||
+          (user.provider == null && (
+            <>
+              <FormGroup row>
+                <Label for="userPassword" sm={3}>
+                  비밀번호
+                </Label>
+                <Col sm={7}>
+                  <Input
+                    type="password"
+                    name="userPassword"
+                    id="userPassword"
+                    defaultValue={changeUser.userPassword}
+                    maxLength={8}
+                    onChange={(e) => change(e)}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label for="user_password_check" sm={3}>
+                  비밀번호 확인
+                </Label>
+                <Col sm={7}>
+                  <Input
+                    type="password"
+                    name="user_password_check"
+                    id="user_password_check"
+                    placeholder="PASSWORD를 한번더 입력하세요."
+                    defaultValue={changeUser.userPassword}
+                    maxLength={8}
+                    onChange={(e) => passwordCheck(e)}
+                  />
+                  {changeUser.userPassword}
+                </Col>
+                {isSamePassword ? (
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      color: "green",
+                      marginLeft: "450px",
+                    }}
+                  >
+                    비밀번호가 일치합니다
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      color: "red",
+                      marginLeft: "420px",
+                    }}
+                  >
+                    비밀번호가 일치하지 않습니다.
+                  </span>
+                )}
+              </FormGroup>
+            </>
+          ))}
 
         <FormGroup row>
           <Label for="userNickname" sm={3}>
@@ -399,7 +403,7 @@ const DefaultMypage = (props) => {
               name="userNickname"
               id="userNickname"
               defaultValue={user.userNickname}
-              onChange={change}
+              onChange={(e) => change(e)}
             ></Input>
           </Col>
         </FormGroup>
@@ -493,70 +497,69 @@ const DefaultMypage = (props) => {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Label sm={3}>
+          <Label sm={3}></Label>
+          <Col sm={7}>
+            <span> * MBTI는 90일에 한번 수정가능합니다. * </span>
+            {changeDay > 0 ? (
+              <span style={{ marginLeft: "20px" }}> - {changeDay} 일 </span>
+            ) : (
+              <span style={{ marginLeft: "20px" }}> + {-changeDay} 일 </span>
+            )}
+          </Col>
+        </FormGroup>
+        {user.provider === "" ||
+          (user.provider == null && (
+            <>
+              <FormGroup row>
+                <Label for="userEmail" sm={3}>
+                  이메일
+                </Label>
+                <Col sm={7}>
+                  <Input
+                    type="text"
+                    name="userEmail"
+                    id="userEmail"
+                    defaultValue={user.userEmail}
+                    onChange={(e) => change(e)}
+                  ></Input>
+                </Col>
 
-          </Label>
-          <Col sm={7}>
-          <span> * MBTI는 90일에 한번 수정가능합니다. * </span>
-          {changeDay > 0 ?
-          <span style={{marginLeft:'20px'}}> - {changeDay} 일 </span>
-          :
-          <span style={{marginLeft:'20px'}}> + {-changeDay} 일 </span>
-          }
-          </Col>
-        </FormGroup>
-        {user.provider === '' || user.provider == null &&
-        <>
-        <FormGroup row>
-          <Label for="userEmail" sm={3}>
-            이메일
-          </Label>
-          <Col sm={7}>
-            <Input
-              type="text"
-              name="userEmail"
-              id="userEmail"
-              defaultValue={user.userEmail}
-              onChange={change}
-            ></Input>
-          </Col>
-          
-           <Col sm={2}>
-            <Button
-              color="white"
-              style={{ border: "1px solid black", fontWeight: "600" }}
-              onClick={(e)=>sendCode(e)}
-            >
-              보내기
-            </Button>
-          </Col>
-        </FormGroup>
-          
-        <FormGroup row>
-          <Label for="join_code" sm={3}>
-            인증코드
-          </Label>
-          <Col sm={7}>
-            <Input
-              type="text"
-              name="join_code"
-              id="join_code"
-              placeholder="인증코드를 입력하세요."
-              onChange={(e) => changeEmailcode(e)}
-            />
-          </Col>
-          <Col sm={2}>
-            <Button
-              color="white"
-              style={{ border: "1px solid black", fontWeight: "600" }}
-              onClick={(e)=>emailConfirm(e)}  
-            >
-              인증
-            </Button>
-          </Col>
-        </FormGroup>
-        </>
-        }
+                <Col sm={2}>
+                  <Button
+                    color="white"
+                    style={{ border: "1px solid black", fontWeight: "600" }}
+                    onClick={(e) => sendCode(e)}
+                  >
+                    보내기
+                  </Button>
+                </Col>
+              </FormGroup>
+
+              <FormGroup row>
+                <Label for="join_code" sm={3}>
+                  인증코드
+                </Label>
+                <Col sm={7}>
+                  <Input
+                    type="text"
+                    name="join_code"
+                    id="join_code"
+                    placeholder="인증코드를 입력하세요."
+                    onChange={(e) => changeEmailcode(e)}
+                  />
+                </Col>
+                <Col sm={2}>
+                  <Button
+                    color="white"
+                    style={{ border: "1px solid black", fontWeight: "600" }}
+                    onClick={(e) => emailConfirm(e)}
+                  >
+                    인증
+                  </Button>
+                </Col>
+              </FormGroup>
+            </>
+          ))}
         <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
           <Button
             color="dark"
@@ -569,7 +572,7 @@ const DefaultMypage = (props) => {
             }}
             type="submit"
             name="submit"
-            onClick={(e)=>modifyUser(e)}
+            onClick={(e) => modifyUser(e)}
           >
             수정
           </Button>
