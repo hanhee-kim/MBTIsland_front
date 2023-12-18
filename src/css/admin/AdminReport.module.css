@@ -1,0 +1,72 @@
+.sectionSearch {
+    width: 900px;
+    text-align: left;
+    margin: 0 auto;
+}
+
+.sortDiv {
+    display: flex;
+    padding: 20px
+}
+
+.boardTable {
+    width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    border-top: 1px solid black;
+    border-collapse: collapse;
+}
+
+.boardTable > thead > tr {
+    border-bottom: 1px solid #444444;
+}
+
+.boardTable > thead > tr > td {
+    padding: 10px;
+}
+
+.boardTable > tbody > tr > td {
+    border-bottom: 1px solid #C5C5C5;
+    padding: 10px;
+}
+
+.boardContent {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    width: 250px;
+}
+
+.pagingLabel {
+    margin: 0 auto;
+    width: 600px;
+}
+
+.detailTable {
+    width: 900px;
+    margin: 0 auto;
+    border: 1px solid #C5C5C5;
+}
+
+.detailTable > tr {
+    border: 1px solid #C5C5C5;
+}
+
+.detailTable > tr > td {
+    border: 1px solid #C5C5C5;
+    padding: 15px;
+}
+
+.detailTable > tr > td:first-child {
+    width: 150px;
+}
+
+.buttonDiv {
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttonDiv > div > Button {
+    margin: 10px;
+}

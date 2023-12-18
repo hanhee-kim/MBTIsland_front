@@ -1,0 +1,124 @@
+/* 관리자페이지 문의 목록 */
+
+.table {
+    width: 900px;
+    /* font-size: 18px; */
+}
+.table>thead>tr>td,
+.table>tbody>tr>td {
+    padding: 15px 10px;
+}
+.table>thead>tr {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+}
+.table>tbody>tr:not(:first-child) {
+    border-top: 1px solid #d9d9d9;
+}
+.table>tbody>tr:last-child {
+    border-bottom: 1px solid black;
+}
+.table>thead,
+.table>tbody>tr>td:not(:nth-child(3)) {
+    text-align: center;
+}
+.table>tbody>tr>td:nth-child(3) {
+    /* 줄바꿈을 막고 생략기호 표시 */
+    display: block;
+    width: 419.41px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 auto;
+    /* background: ghostwhite; */
+}
+.table>tbody>tr>td:nth-child(4):hover {
+    cursor: pointer;
+    text-shadow: 0 0 1.5px rgba(0, 0, 0, 1);
+}
+.table>tbody>tr>td.errMsg {
+    text-align: center;
+    padding: 100px 0;
+}
+
+.completedQna>td:last-child {
+    color: #a5a5a5;
+}
+
+.popoverItem {
+    padding: 10px 15px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bolder;
+}
+
+
+/* 문의글 상세 + 답변 페이지 */
+.postArea {
+    width: 100%;
+    min-height: 300px; /*게시글이 짧더라도 최소 높이 확보*/
+    /* background: seashell;  */
+    padding: 25px;
+
+    margin-top: -25px;
+}
+.postTitle {
+    /* background:lightgoldenrodyellow; */
+    white-space: normal;
+    word-break: keep-all; /* 줄바꿈시 단어 단위 유지 */
+    margin-bottom: 25px;
+}
+.postTitle+span:hover {
+    cursor: pointer;
+    text-shadow: 0 0 1.5px rgba(0, 0, 0, 1);
+}
+.postTitle+span+span {
+    color: #8F8F8F;
+    margin-left: 30px;
+}
+.postContent {
+    /* background: lightblue; */
+    font-size: 18px;
+    width: 100%;
+    padding: 60px 0;
+    white-space: normal;
+    word-break: keep-all; /* 줄바꿈시 단어 단위 유지 */
+}
+
+
+/* 
+부모에 display: flex;
+자식1에 width 지정
+자식2에 flex: 1;
+===> 부모에서 자식1을 뺀 나머지 영역을 자식2가 모두 채움
+*/
+.answerArea {
+    width: 100%;
+    min-height: 300px;
+    /* border: 3px dashed green; */
+    display: flex;
+}
+.answerFormArea {
+    flex: 1;
+
+    /* 자식요소 정렬 정의 */
+    display: flex;
+    flex-direction: column;
+}
+.arrowIcon {
+    width : 45px;
+}
+.answerForm {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.answerFormArea>textarea {
+    padding: 15px;
+    font-size: 18px;
+    border: 1px solid #a5a5a5;
+    border-radius: 8px 8px 0 0;
+}
+/* .answerFormArea>textarea+* {
+    float: right;
+} */

@@ -1,0 +1,207 @@
+/* 드래그 스타일 */
+::selection {
+	background: silver;
+	color: white;
+}
+
+.header {
+    background-color: white;
+    width: 100%;
+    position: fixed;
+    /* position: sticky; */
+    left:0;
+    top:0;
+    z-index:10;
+    border-bottom: 1px solid #999999;
+
+    min-width: 1300px;
+}
+
+.siteTitle {
+    margin-left: 100px;
+}
+.siteTitle,
+.siteTitle:link, 
+.siteTitle:visited, 
+.siteTitle:hover, 
+.siteTitle:active {
+    font-size: 30px;
+    color: black;
+    text-decoration: none;
+}
+.logoIcon {
+    margin-left: 15px;
+    margin-right: 40px;
+    width: 30px;
+}
+
+.navItems {
+    list-style: none;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navItem {
+    display: inline-block;
+    height: 60px;
+    padding: 0 10px;
+    text-align: center;
+    min-width: 60px;
+    line-height: 60px;
+}
+
+.navItem>a {
+    font-size: 20px;
+    font-weight: 600;
+    text-decoration: none;
+    color: black;
+}
+
+.currentBoard {
+    border-bottom: 3px solid #25B2A2;
+}
+
+.afterLogin {
+    /* background: seashell; */
+    width: 300px;
+    height: 65px;
+    margin-right: 120px;
+    height: 100%;
+    margin-top: 17px;
+}
+.afterLogin>div {
+    float: right;
+    /* background: lightcyan; */
+}
+
+.userMbti {
+    display: inline-block;
+    /* background: #BDC9A6; mbti별 색 지정할것 */
+    border-radius: 5px;
+    padding: 1px 6px;
+    font-weight: 600;
+    font-size: 18px;
+    margin-left: 10px;
+}
+.userNickname {
+    display: inline-block;
+    margin-left: 8px;
+    font-weight: 600;
+    font-size: 17px;
+}
+/* 추가정보 버튼 */
+.addJoin{
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+}
+.bellIcon, .messageIcon {
+    margin-right: 20px;
+    width: 20px;
+    margin-top: -5px;
+    cursor: pointer;
+}
+.messageIcon {
+    width: 26px;
+}
+.spannerIcon {
+    width: 21px;
+    margin-top: -7px;
+    margin-left: 10px;
+}
+
+.openPopover {
+    /* background: yellow; */
+    cursor: pointer;
+}
+.popover {
+    width: 100px;
+    text-align: center;
+}
+.popoverItem {
+    cursor: pointer;
+    min-width: 100px;
+    text-align: center;
+    font-weight: bolder;
+}
+
+.separator {
+    margin: 5px 0;
+    min-width: 180px;
+}
+.popoverBellOrMessageItem {
+    /* background-color: lemonchiffon; */
+    text-align: left;
+    max-width: 220px;
+}
+.messageTitle {
+    /* background: ghostwhite; */
+    padding: 2px 0;
+
+    /* 줄바꿈을 막고 생략기호 표시 */
+    display: block;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 auto;
+    cursor: pointer;
+}
+.alertContentAndCnt {
+    /* border: 1px dashed green; */
+    display: flex;
+    justify-content: flex-start;
+    cursor: pointer;
+}
+.alertContent {
+    /* background: lavenderblush; */
+    padding: 2px 0;
+
+    /* 줄바꿈을 막고 생략기호 표시 */
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    max-width: 120px;
+}
+.alertContent+div {
+    padding: 2px 0;
+}
+
+.popoverTopArea, .popoverTopArea:hover {
+    font-weight: bolder;
+    cursor: pointer;
+}
+.popoverBtnArea {
+    width: 100%;
+    /* background-color: aliceblue; */
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+.hasMoreMessages {
+    display: flex;
+    justify-content: center;
+    /* background-color: orange; */
+}
+.readAllBtn {
+    border: 1px solid #a9a9a9;
+    border-radius: 4px;
+    background: none;
+    color: #a9a9a9;
+    font-size: small;
+    cursor: pointer;
+}
+
+.popoverLink
+.popoverLink:link,
+.popoverLink:visited,
+.popoverLink:hover,
+.popoverLink:active {
+    text-decoration: none;
+    color: black;
+}
+
+

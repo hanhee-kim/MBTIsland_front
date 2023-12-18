@@ -1,0 +1,195 @@
+.container {
+    margin-top: 90px;
+}
+
+.sectionCenter {
+    width: 800px;
+    margin: 0 auto;
+}
+
+.pageHeader {
+    display: flex;
+    border-bottom: solid 3px;
+}
+
+.pageHeader > h1 {
+    width: 70%;
+    text-align: left;
+}
+
+.popoverButton {
+    background: none;
+    font-weight: bold;
+    border: 0;
+}
+
+.popoverImg {
+    width: 30px;
+    margin-right: 10px;
+}
+
+.popoverItem {
+    cursor: pointer;
+    min-width: 30px;
+    text-align: center;
+}
+
+.sectionBoard {
+    padding: 25px;
+    border-bottom: solid #C5C5C5 2px;
+    font-weight: bold;
+}
+
+.writerDiv {
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+
+.writerDiv > div {
+    display: flex;
+}
+
+.circleDiv {
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+}
+
+/* 작성자 표시태그 */
+.isPostWriterComment { 
+    font-size: 14px;
+    border: 1px solid #8F8F8F;
+    padding: 0px 3px 0px 3px;
+    border-radius: 4px;
+    margin-left: 8px;
+}
+
+.commentLowDiv {
+    display: flex;
+    color: #C5C5C5;
+    justify-content: space-between;
+}
+
+.viewIcon {
+    height: 20px;
+    margin-left: 30px;
+    margin-right: 5px;
+}
+
+.boardContent {
+    display: flex;
+    overflow: hidden;
+    width: 700px;
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.boardLow {
+    display: flex;
+    color: #C5C5C5;
+    font-size: 20px;
+}
+
+.boardLow > div {
+    display: flex;
+}
+
+.boardLow > div > img {
+    height: 30px;
+}
+
+.bookmarkDiv {
+    display: flex;
+    width: 20%;
+    justify-content: start;
+    cursor: pointer;
+}
+
+.thumbDiv {
+    display: flex;
+    width: 80%;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.listDiv {
+    display: flex;
+    width: 20%;
+    justify-content: end;
+}
+
+.sectionComment {
+    padding: 25px;
+    border-bottom: solid #C5C5C5 1px;
+}
+
+.sectionComment > div{
+    font-weight: bold;
+}
+
+.commentCountDiv {
+    padding: 15px 25px 15px 25px;
+    border-bottom: solid #C5C5C5 2px;
+}
+
+.commentCountDiv > div {
+    font-weight: bold;
+}
+
+.sectionDeletedComment {
+    min-height: 120px;
+    padding: 15px 25px 15px 25px;
+    border-bottom: solid #C5C5C5 2px;
+    color: #C5C5C5;
+    font-size: larger;
+    font-weight: bold;
+    text-align: center;
+    align-items: center;
+    line-height: 120px;
+}
+
+.paging {
+    display: flex;
+    justify-content: center;
+    margin-top: 33px;
+    margin-bottom: 33px;
+}
+
+.paging>span {
+    display: inline-block;
+    margin: 5px;
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    border:0px solid white;
+    text-align: center;
+    cursor: pointer;
+}
+
+.postCommentDiv {
+    padding: 15px;
+    text-align: right;
+}
+
+.sectionPostReply {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sectionReply {
+    display: flex;
+    justify-content: space-between;
+    padding: 25px;
+    border-bottom: solid #C5C5C5 2px;
+}
+
+.sectionReply > div {
+    font-weight: bold;
+}
+
+.replyArrowImg {
+    height: 30px;
+    margin-right: 10px;
+}

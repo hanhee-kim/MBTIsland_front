@@ -1,0 +1,111 @@
+.container {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    margin-top: 90px;
+    margin-bottom: 50px;
+}
+
+.sectionCenter {
+    width: 800px;
+}
+
+.pageHeader {
+    display: block;
+    width: 800px;
+    border-bottom: solid #4D6879 3px;
+}
+
+.pageHeader > h1 {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.pageHeaderLow {
+    display: flex;
+}
+
+.pageHeaderContent {
+    width: 70%;
+    line-height: 42px;
+    text-align: left;
+    color: #C5C5C5;
+}
+
+.pageHeaderWriteBtn {
+    width: 15%;
+    line-height: 42px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.sortImg {
+    height: 30px;
+    margin-right: 10px;
+}
+
+.sectionBoards {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.sectionBoard {
+    width: 370px;
+    /* height: 200px; */
+    margin: 15px;
+    border: solid #C5C5C5 2px;
+    font-weight: bold;
+}
+
+.boardImages {
+    display: flex;
+    height: 140px;
+}
+
+.boardImages > div {
+    width: 185px;
+    border-bottom: solid #C5C5C5 2px;
+}
+
+.boardImages > div > img {
+    height: 140px;
+}
+
+.boardContents {
+    cursor: pointer;
+    text-align: left;
+}
+
+.boardContents > * {
+    color: black;
+}
+
+.boardTitle {
+    margin: 5px;
+    text-align: left;
+    font-size: small;
+    font-weight: bold;
+}
+
+.boardContentsLow {
+    margin: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.boardVotedCount {
+    font-size: small;
+    font-weight: bold;
+    color: #1FAB70;
+}
+
+.pagingLabel {
+    margin: 0 auto;
+    width: 600px;
+}
+
+.sectionSearch {
+    width: 600px;
+    text-align: center;
+    margin: 0 auto;
+}

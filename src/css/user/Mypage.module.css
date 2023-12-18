@@ -1,0 +1,203 @@
+/* Orbit */
+@font-face {
+  font-family: "Orbit-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/Orbit-Regular.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+/* 소요단풍체 */
+@font-face {
+  font-family: "SOYOMapleBoldTTF";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/SOYOMapleBoldTTF.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+/* 스위트 */
+@font-face {
+  font-family: "SUITE-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+/* Intel one mono */
+@font-face {
+  font-family: "intelone-mono-font-family-regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/intelone-mono-font-family-regular.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+/* 강원교육모두체 */
+@font-face {
+  font-family: "GangwonEdu_OTFBoldA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.myPageContainer {
+  margin-top: 64px;
+  display: grid;
+  width: 100%;
+  grid-template-columns: 120px 260px auto 120px;
+  align-items: center;
+  min-height: 800px;
+}
+.sideBar {
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  /* height: 640px; */
+  font-weight: 400;
+  font-family: "GangwonEdu_OTFBoldA";
+  border-radius: 20px;
+  /* margin-top: 40px; */
+}
+
+.sideMenus {
+  text-decoration: none;
+  list-style: none;
+  padding-left: 0;
+}
+.myMenu {
+  list-style: none;
+  text-align: center;
+  line-height: 60px;
+  font-size: 30px;
+}
+.myMenu:hover{
+  cursor: pointer;
+  margin-left: -10px;
+}
+.myMbti {
+  font-size: 40px;
+  stroke: #818181;
+  text-shadow: 3px 2px 8px #6d6d6d;
+  text-indent: 45px;
+}
+.myNick {
+  font-size: 30px;
+  text-align: center;
+}
+/* defaultPage */
+.title {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  font-size: 40px;
+}
+.sectionGr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 80px;
+}
+.section {
+  display: flex;
+  flex-direction: column;
+}
+.sectionTitle {
+  font-size: 20px;
+  text-align: center;
+}
+
+.sectionCnt {
+  display: flex;
+  width: 100px;
+  justify-content: center;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  background-color: lightgrey;
+}
+/* profile */
+.myProfileContainer {
+  font-family: GangwonEdu_OTFBoldA;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 40px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+/* MBT-Why Page */
+/* MbtmiPage */
+/* qna Page */
+
+.myMbtwhyContainer,
+.myMbtmiContainer,
+.myQnaContainer ,
+.bookmarkContainer,
+.myNoteContainer,
+.myAlarmContainer
+{
+  font-family: "GangwonEdu_OTFBoldA";
+  display: flex;
+  /* justify-content: center; */
+  /* height: 787px; */
+  flex-direction: column;
+  align-items: center;
+  margin-left: 40px;
+}
+.myMbtwhyTitle,
+.myMbtmiTitle,
+.myQnaTitle ,
+.bookmarkTitle,
+.myNoteTitle,
+.myAlarmTitle
+{
+  display: flex;
+  /* justify-content: center; */
+  font-size: 40px;
+  /* border-radius: 10px; */
+  /* background-color: #dee2e6; */
+  border-bottom: 2px solid black;
+  width: 800px;
+  margin-top: 20px;
+}
+.tableDiv{
+  min-width: 770px;
+  min-height: 550px; /* 데이터 10개일떄 */
+}
+
+/* pagination */
+/* .page-item.active, .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #000000;
+  border-color: #000000;
+} */
+.paging {
+  display: flex;
+  justify-content: center;
+  margin-top: 33px;
+}
+.paging>span {
+  display: inline-block;
+  margin: 5px;
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  border: 0px solid white;
+  text-align: center;
+  line-height: 32px;
+  cursor: pointer;
+}
+.activePage {
+  border: 1px solid #A3A3A3 !important;
+}
+
+/* qnaModal */
+.qnaModal {
+  height: 700px;
+}
+.qnaModalContent {
+  width: 100%;
+  height: 550px;
+  resize: none;
+}

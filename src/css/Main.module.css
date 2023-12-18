@@ -1,0 +1,153 @@
+.container{
+    padding-top: 62px; /* 배너를 헤더 바로 아래로 붙이기 위함 */
+    /* border: 3px solid blue; */
+	height: auto;
+    min-height: 100%;
+    padding-bottom: 60px; /* 푸터 높이만큼 확보해둠 */
+    
+}
+
+.container>div {
+    display: flex;
+}
+
+.sectionLeftArea,
+.sectionRightArea,
+.section {
+    flex: 1;
+}
+/* .sectionLeftArea,
+.sectionRightArea {
+    background: aliceblue;
+} */
+
+.section {
+    /* border: 1px solid red; */
+    min-height: 600px; /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
+    width: 883px;
+    font-size: 20px;
+}
+
+.boardTitleB {
+    background-color:#F3F3F3;
+    width:883px; 
+    height:110px;
+    border: 1px solid #A6A6A6;
+    border-radius: 10px;
+    padding-left: 35px;
+    padding-top: 20px;
+}
+.boardTitleB>span>p:first-child {
+    font-size: 25px;
+    margin-bottom: 0px;
+} 
+.boardTitleB>span>p+p {
+    font-size: 15px;
+    font-weight: 600;
+} 
+
+/* 플로팅 버튼 */
+.sectionRightArea {
+    display: flex;
+    flex-direction: column-reverse;
+}
+.sectionRightArea>div {
+    /* border: dashed red 3px; */
+    /* padding-right: 100px; */
+    /* position: sticky; */
+    position:fixed;
+    right: 100px;
+    bottom: 40px;
+}
+.movetopIcon {
+    float: right;
+    width: 50px;
+    cursor: pointer;
+}
+
+/* 배너 */
+.bannerArea {
+    /* border: 5px dashed orange; */
+    box-sizing: border-box;
+    height: 300px;
+    width: 100%;
+    margin-bottom: 25px;
+    overflow: hidden;
+
+    object-fit: cover;
+
+    /* position: relative; */
+}
+.bannerImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    /* 이미지 위치 */
+    /* position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); */
+
+    min-width:  1300px;
+    min-height: 280px;
+}
+
+
+
+/* 게시판별 최신글 목록 */
+.newlyPosts {
+    padding: 6px 30px;
+    width: 883px;
+    font-size: 16px;
+    /* background: honeydew; */
+}
+.table {
+    width: 100%;
+    margin-bottom: 15px;
+}
+.table>tbody>tr:not(:first-child) {
+    border-top: 1px solid #9B9B9B;
+}
+.table>tbody>tr>td {
+    padding: 6px;
+}
+.table>tbody>tr>td:nth-child(2)>small {
+    color: #6e6e6e;
+}
+.profileColor {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #F0A4AB;
+    background: #F0A4AB;
+    border-radius: 50%;
+
+    margin-right: 5px;
+}
+
+.table>tbody>tr>td>span:nth-child(2) {
+    margin-left: 5px;
+}
+.table>tbody>tr>td>small {
+    margin: 0 25px;
+}
+
+
+.overflowLong {
+    /* 줄바꿈을 막고 생략기호 표시 */
+    display: inline-block;
+    max-width: 540px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* margin: 0 auto; */
+    /* background: ghostwhite; */
+
+    line-height: 100%;
+}
+
+
+
+
+
