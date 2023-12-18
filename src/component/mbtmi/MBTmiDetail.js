@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 /* 재사용성을 높이기 위해 외부에 선언한 페이지네이션 */
 const PaginationOutside = ({ pageInfo, handlePageNo }) => {
-    console.log('PaginationOutside에서 출력한 pageInfo : ', pageInfo);
+    // console.log('PaginationOutside에서 출력한 pageInfo : ', pageInfo);
     const isFirstGroup = pageInfo.startPage===1;
     const isLastGroup = pageInfo.endPage===pageInfo.allPage;
     const pageGroup = [];
@@ -61,8 +61,6 @@ const MBTmiDetail = () => {
     
     const [mbtmi, setMbtmi] = useState(null);
     const [mbtmiCommentCnt, setMbtmiCommentCnt] = useState(0);
-    // const [isRecommended, setIsRecommended] = useState('Y');
-    const [isBookmarked, setIsBookmarked] = useState('Y');
     // 절대시간
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -150,10 +148,10 @@ const MBTmiDetail = () => {
 
         getMbtmiCommentList(1, user.username);
         
-        console.log("현재 게시글번호: ", no);
+        // console.log("현재 게시글번호: ", no);
         console.log('user.username: ', user.username);
-        console.log('현재 댓글 페이지번호: ' + commentPage);
-    }, []);
+        // console.log('현재 댓글 페이지번호: ' + commentPage);
+    }, [user.username]);
 
     const getMbtmiDetail = (no) => {
         let defaultUrl = `http://localhost:8090/mbtmidetail/${no}`;
@@ -166,15 +164,15 @@ const MBTmiDetail = () => {
             let mbtmiCommentCnt = res.data.mbtmiCommentCnt;
             let recommendCnt = res.data.mbtmi.recommendCnt;
             let isRecommended = res.data.isMbtmiRecommend;
-            // let isBookmarked = res.data.isBookmarked;
+            let isBookmarked = res.data.isMbtmiBookmark;
 
             setMbtmi(mbtmi);
             setMbtmiCommentCnt(mbtmiCommentCnt);
             setRecommendCount(recommendCnt);
             setIsRecommended(isRecommended);
-            // setIsBookmarked(isBookmarked);
+            setIsBookmarked(isBookmarked);
 
-            console.log('getMbtmiDetail함수에서 출력한 commentPage: ' + commentPage);
+            // console.log('getMbtmiDetail함수에서 출력한 commentPage: ' + commentPage);
             
         })
         .catch(err=> {
@@ -184,7 +182,6 @@ const MBTmiDetail = () => {
     }
 
     const getMbtmiCommentList = (commentPageParam) => {
-        console.log('@getMbtmiCommentList호출');
         let defaultUrl = `http://localhost:8090/mbtmicommentlist/${no}`;
         if(commentPageParam!==1) defaultUrl += `?commentpage=${commentPageParam}`;
 
@@ -192,7 +189,7 @@ const MBTmiDetail = () => {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log('댓글목록받아오기요청결과: ', res);
+            // console.log('댓글목록받아오기요청결과: ', res);
             let mbtmiCommentList = res.data.mbtmiCommentList;
             let commentPageInfo = res.data.pageInfo;
             setMbtmiCommentList([...mbtmiCommentList]);
@@ -279,15 +276,12 @@ const MBTmiDetail = () => {
             alert("로그인해주세요.");
             return;
         }
-
-        console.log('추천값 출력: ', recommend);
-
+        // console.log('추천값 출력: ', recommend);
         let defaultUrl = `http://localhost:8090/mbtmirecommend`;
 
         axios.post(defaultUrl, recommend)
         .then(res=> {
-            console.log('추천결과: ', res);
-
+            // console.log('추천결과: ', res);
             let mbtmiRecommendCount = res.data.mbtmiRecommendCount;
             setIsRecommended(!isRecommended);
             setRecommendCount(mbtmiRecommendCount);
@@ -297,6 +291,30 @@ const MBTmiDetail = () => {
         });
     };
 
+    // 북마크
+    const [bookmark, setBookmark] = useState({
+        username: user.username,
+        postNo: no,
+        boardType: "mbtmi"
+    });
+    const [isBookmarked, setIsBookmarked] = useState(false);
+    const mbtmiBookmark = () => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+        console.log('북마크값 출력: ', bookmark);
+        let defaultUrl = `http://localhost:8090/mbtmibookmark`;
+
+        axios.post(defaultUrl, bookmark)
+        .then(res=> {
+            console.log('북마크결과: ', res);
+            setIsBookmarked(!isBookmarked);
+        })
+        .catch(err=> {
+            console.log(err);
+        });
+    }
 
 
     // 목록으로 가기 버튼
@@ -312,7 +330,7 @@ const MBTmiDetail = () => {
 
     // 댓글목록 페이지네이션
     const PaginationInside = () => {
-        console.log('댓글목록 페이지네이션에서 출력 commentPage: ' + commentPage);
+        // console.log('댓글목록 페이지네이션에서 출력 commentPage: ' + commentPage);
         const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
         for(let i=commentPageInfo.startPage; i<=commentPageInfo.endPage; i++) {
             pageGroup.push(
@@ -456,10 +474,10 @@ const MBTmiDetail = () => {
                 {mbtmi? (
                     <>
                     <span className={style.currnetCategory}>&nbsp;{mbtmi.category}&nbsp;</span>
-                    {isBookmarked==='N'? (
-                        <img src={"/bookmarkIcon-white.png" } alt="책갈피" className={style.bookmarkIcon} />
+                    {!isBookmarked? (
+                        <img src={"/bookmarkIcon-white.png" } alt="" className={style.bookmarkIcon} onClick={()=>mbtmiBookmark()}/>
                         ) : (
-                        <img src={"/bookmarkIcon-red.png" } alt="책갈피" className={style.bookmarkIcon} />
+                        <img src={"/bookmarkIcon-red.png" } alt="" className={style.bookmarkIcon} onClick={()=>mbtmiBookmark()}/>
                         )}
                     <div className={style.postArea}>
                         <div style={{ display: mbtmi.writerId === user.username ? 'block' : 'none' }}>
