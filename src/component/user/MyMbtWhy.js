@@ -21,24 +21,25 @@ const MyMbtWhy = (props) => {
   const navigate = useNavigate();
   const [initData, setInitData] = useState(true);
   useEffect(() => {
-    getMyMbtiList(user.username,page);
+    getMyMbtiList(user.username, page);
   }, []);
-
 
   const getMyMbtiList = (username, page) => {
     console.log(page);
-    console.log("url:"+`http://localhost:8090/mymbtwhy/${username}/${page}`);
+    console.log("url:" + `http://localhost:8090/mymbtwhy/${username}/${page}`);
     axios
-    .get(`http://localhost:8090/mymbtwhy/${username}/${page}`)
-    .then((res) => {
-      console.log(res);
-      setPageInfo(res.data.pageInfo);
-      setMbtwhyList(res.data.myMbtwhyList);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
+      .get(`http://localhost:8090/mymbtwhy/${username}/${page}`)
+      .then((res) => {
+        console.log(res);
+        setInitData(true);
+        setPageInfo(res.data.pageInfo);
+        setMbtwhyList(res.data.myMbtwhyList);
+      })
+      .catch((err) => {
+        console.log(err);
+        setInitData(false);
+      });
+  };
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
     console.log("***페이지이동***");
@@ -81,11 +82,11 @@ const MyMbtWhy = (props) => {
       </div>
     );
   };
-  const [arrayItems,setArrayItems] = useState({
+  const [arrayItems, setArrayItems] = useState({
     checkItems: [],
-  })
+  });
 
-  const [whyList,setMbtwhyList] = useState([]);
+  const [whyList, setMbtwhyList] = useState([]);
   // 체크된 아이템을 담을 배열
   const [checkItems, setCheckItems] = useState([]);
 
@@ -98,7 +99,7 @@ const MyMbtWhy = (props) => {
       // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
       setCheckItems(checkItems.filter((el) => el !== no));
     }
-    console.log(checkItems)
+    console.log(checkItems);
   };
 
   // 체크박스 전체 선택
@@ -120,36 +121,35 @@ const MyMbtWhy = (props) => {
 
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     axios
-      .delete(`http://localhost:8090/deletembtwhy?sendArrayItems=${sendArrayItems}`)
+      .delete(
+        `http://localhost:8090/deletembtwhy?sendArrayItems=${sendArrayItems}`
+      )
       .then((res) => {
         console.log(res);
         Swal.fire({
-          title:'삭제 성공!',
-          icon:'success',
-        })
+          title: "삭제 성공!",
+          icon: "success",
+        });
         setCheckItems([]);
-        
-        getMyMbtiList(user.username,1);
+
+        getMyMbtiList(user.username, 1);
       })
       .catch((err) => {
         console.log(err);
-
-      })
+      });
   };
   //tr클릭시(해당 상세로 이동)
-  const goMbtwhyDetail = (e,mbtwhy) =>{
+  const goMbtwhyDetail = (e, mbtwhy) => {
     // path="/mbtwhydetail/:mbti?/:page?/:search?/:no?"
 
     let defaultUrl = `/mbtwhydetail`;
-        defaultUrl += `/${mbtwhy.mbtiCategory}`;
-        // if(page !== null) defaultUrl += `/${page}`;
-        // if(search) defaultUrl += `/${search}`;
-        // if(sort !== null) defaultUrl += `/${sort}`;
-        defaultUrl += `/${mbtwhy.no}`;
-        navigate(defaultUrl);
-    
-  }
-
+    defaultUrl += `/${mbtwhy.mbtiCategory}`;
+    // if(page !== null) defaultUrl += `/${page}`;
+    // if(search) defaultUrl += `/${search}`;
+    // if(sort !== null) defaultUrl += `/${sort}`;
+    defaultUrl += `/${mbtwhy.no}`;
+    navigate(defaultUrl);
+  };
 
   return (
     <div className={style.myMbtwhyContainer}>
@@ -174,19 +174,19 @@ const MyMbtWhy = (props) => {
                       }
                     />
                   </th>
-                  <th scope="col" sm={1} style={{minWidth:'64px'}}>
+                  <th scope="col" sm={1} style={{ minWidth: "64px" }}>
                     번호
                   </th>
-                  <th scope="col" sm={2} style={{minWidth:'85px'}}>
+                  <th scope="col" sm={2} style={{ minWidth: "85px" }}>
                     받는 MBTI
                   </th>
-                  <th scope="col" sm={4} style={{minWidth:'400px'}}>
+                  <th scope="col" sm={4} style={{ minWidth: "400px" }}>
                     내용
                   </th>
-                  <th scope="col" sm={3} style={{minWidth:'112px'}}>
+                  <th scope="col" sm={3} style={{ minWidth: "112px" }}>
                     작성일
                   </th>
-                  <th scope="col" sm={1} style={{minWidth:'64px'}}>
+                  <th scope="col" sm={1} style={{ minWidth: "64px" }}>
                     댓글수
                   </th>
                 </tr>
@@ -194,7 +194,7 @@ const MyMbtWhy = (props) => {
               <tbody>
                 {whyList.map((why, index) => {
                   return (
-                    <tr key={index} onClick={(e)=>goMbtwhyDetail(e,why)}>
+                    <tr key={index} onClick={(e) => goMbtwhyDetail(e, why)}>
                       <td sm={1} className="text-center">
                         <input
                           type="checkbox"
@@ -208,7 +208,7 @@ const MyMbtWhy = (props) => {
                       </td>
                       <td sm={1} className="text-center">
                         {/* {why.no} */}
-                        {((page-1)*10)+index+1}
+                        {(page - 1) * 10 + index + 1}
                       </td>
                       <td sm={2} className="text-center">
                         {why.mbtiCategory}
@@ -239,19 +239,21 @@ const MyMbtWhy = (props) => {
           {PaginationInside()}
         </div>
       ) : (
-        <div
-          name="notDataDiv"
-          style={{
-            minHeight: "700px",
-            padding: "100px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <div style={{ fontSize: "25px" }}>
-            작성한 MBT-WHY 게시글이 없습니다.
+        <>
+          <div
+            name="notDataDiv"
+            style={{
+              minHeight: "700px",
+              padding: "100px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ fontSize: "25px" }}>
+              작성한 MBT-WHY 게시글이 없습니다.
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

@@ -63,7 +63,7 @@ const initApp = () => {
 };
 const handleBeforeUnload = () => {
   // 브라우저 창이 닫힐 때 로컬 스토리지 내용을 지움
-  persistor.purge();
+  // persistor.purge();
   // localStorage.removeItem("token");
   // localStorage.removeItem("user");
 };
@@ -100,13 +100,13 @@ function App() {
               <Route exact path="/join" element={<Join />} />
               <Route exact path="/addjoin" element={<AddJoin />} />
               <Route exact path="/mypage" element={<Mypage />}>
-                <Route exact path="profile" element={<DefaultMypage/>}/>
-                <Route exact path="mbtwhy" element={<MyMbtWhy/>}/>
-                <Route exact path="mbtmi" element={<MyMbtmi/>}/>
-                <Route exact path="qna" element={<MyQnA/>}/>
-                <Route exact path="bookmark" element={<MyBookmark/>}/>
-                <Route exact path="alarm" element={<MyAlarm/>}/>
-              <Route exact path="note" element={<MyNote/>}/>
+                <Route exact path="profile" element={<DefaultMypage />} />
+                <Route exact path="mbtwhy" element={<MyMbtWhy />} />
+                <Route exact path="mbtmi" element={<MyMbtmi />} />
+                <Route exact path="qna" element={<MyQnA />} />
+                <Route exact path="bookmark" element={<MyBookmark />} />
+                <Route exact path="alarm" element={<MyAlarm />} />
+                <Route exact path="note" element={<MyNote />} />
               </Route>
               <Route
                 exact
@@ -163,8 +163,16 @@ function App() {
               {/* 인수 */}
               <Route exect path="/mbtwhymain" element={<MbtwhyMain />} />
               <Route exect path="/mbtwhy/:mbti" element={<Mbtwhy />} />
-              <Route exact path="/mbtwhydetail/:mbti/:no/:page" element={<MbtwhyDetail />} />
-              <Route exact path="/mbtwhywrite/:mbti?" element={<MbtwhyWrite />} />
+              <Route
+                exact
+                path="/mbtwhydetail/:mbti/:no/:page"
+                element={<MbtwhyDetail />}
+              />
+              <Route
+                exact
+                path="/mbtwhywrite/:mbti?"
+                element={<MbtwhyWrite />}
+              />
               <Route exact path="/mbtwhymodify" element={<MbtwhyModify />} />
               <Route exact path="/mbattle" element={<MBattle />} />
               <Route exact path="/mbattlewrite" element={<MBattleWrite />} />

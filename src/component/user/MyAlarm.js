@@ -18,9 +18,9 @@ import { useNavigate } from "react-router";
 const MyAlarm = () => {
   const [page, setPage] = useState(1);
   const [pageInfo, setPageInfo] = useState({});
-  const [type,setType] = useState(null);
+  const [type, setType] = useState(null);
   const [filterChange, setFilterChange] = useState("");
-  const [alarmList,setAlarmList] = useState([]);
+  const [alarmList, setAlarmList] = useState([]);
   const [openDropdown, setOpenDropdown] = useState(false);
   const navigate = useNavigate();
   // 체크된 아이템을 담을 배열
@@ -35,20 +35,20 @@ const MyAlarm = () => {
   };
   const user = useSelector((state) => state.persistedReducer.user.user);
 
-  useEffect(()=>{
-    getMyAlarmList(user.username,type,page);
-  },[])
+  useEffect(() => {
+    getMyAlarmList(user.username, type, page);
+  }, []);
 
-  const getMyAlarmList = (username,type,page) => {
+  const getMyAlarmList = (username, type, page) => {
     let defaultUrl = "http://localhost:8090/alarmList";
     defaultUrl += `?username=${username}`;
-    if(type != null){
+    if (type != null) {
       defaultUrl += `&type=${type}`;
     }
-    if (page !== null || page !== ''){
-      defaultUrl += `&page=${page}`
+    if (page !== null || page !== "") {
+      defaultUrl += `&page=${page}`;
     }
-    console.log("요청url : "+defaultUrl);
+    console.log("요청url : " + defaultUrl);
 
     axios
       .get(defaultUrl)
@@ -62,14 +62,16 @@ const MyAlarm = () => {
       .catch((err) => {
         console.log(err);
         console.log(err.response.data);
-        if(err.response.data.err == "해당 알림없음." || err.response.data.err == "알림에 대한 해당 댓글이 존재하지 않음"){
-          console.log(alarmList)
+        if (
+          err.response.data.err == "해당 알림없음." ||
+          err.response.data.err == "알림에 대한 해당 댓글이 존재하지 않음"
+        ) {
+          console.log(alarmList);
           setAlarmList(err.response.data.alarmList);
         }
-      })
-  }
-  
-  
+      });
+  };
+
   // 체크박스 단일 선택
   const handleSingleCheck = (checked, no) => {
     if (checked) {
@@ -102,100 +104,102 @@ const MyAlarm = () => {
       .put(`http://localhost:8090/updatealarmisread?arrayItems=${arrayItems}`)
       .then((res) => {
         console.log(res);
-        setFilterChange('읽음처리');
+        setFilterChange("읽음처리");
         setCheckItems([]);
         Swal.fire({
-          title:'읽음 처리 성공!',
-          icon:'success',
-        })
-        getMyAlarmList(user.username,type,page);
+          title: "읽음 처리 성공!",
+          icon: "success",
+        });
+        getMyAlarmList(user.username, type, page);
       })
       .catch((err) => {
         console.log(err.response.data);
         let errLog = err.response.data;
         Swal.fire({
-          title:'읽음처리 실패!',
-          text:errLog,
-          icon:'error',
-        })
-      })
-    
+          title: "읽음처리 실패!",
+          text: errLog,
+          icon: "error",
+        });
+      });
   };
   const allRaed = () => {
     axios
-      .put(`http://localhost:8090/updatealarmisreadall?username=${user.username}`)
+      .put(
+        `http://localhost:8090/updatealarmisreadall?username=${user.username}`
+      )
       .then((res) => {
         console.log(res);
-        setFilterChange('모두읽음처리');
+        setFilterChange("모두읽음처리");
         setCheckItems([]);
         Swal.fire({
-          title:'모두 읽음 처리 성공!',
-          icon:'success',
-        })
-        getMyAlarmList(user.username,type,page);
+          title: "모두 읽음 처리 성공!",
+          icon: "success",
+        });
+        getMyAlarmList(user.username, type, page);
       })
       .catch((err) => {
         console.log(err.response.data);
         let errLog = err.response.data;
         Swal.fire({
-          title:'모두 읽음 처리 실패!',
-          text:errLog,
-          icon:'error',
-        })
-      })
+          title: "모두 읽음 처리 실패!",
+          text: errLog,
+          icon: "error",
+        });
+      });
   };
 
   //필터버튼 눌렀을때
   const changeFilter = (e, type) => {
     // type : all / comment / warning / ban / answer
-    if (type === null ) {
+    if (type === null) {
       setType(null);
-    } else{
+    } else {
       setType(type);
     }
     setFilterChange("타입필터적용");
-    getMyAlarmList(user.username,type,page);
+    getMyAlarmList(user.username, type, page);
   };
   //tr클릭시 해당알림의 게시글로 이동할때
   const goDetail = (e, alarm) => {
     //useNavigate();사용해서
     const no = alarm.detailNo;
-    switch(alarm.detailType){
+    switch (alarm.detailType) {
       case "MBTMI":
-        navigate("/mbtmidetail/"+no);
+        navigate("/mbtmidetail/" + no);
         break;
       case "MBTWHY":
-        navigate("/mbtwhydetail/"+no);
+        navigate("/mbtwhydetail/" + no);
         break;
       case "MBATTLE":
-        navigate("/mbattledetail/"+no);
+        navigate("/mbattledetail/" + no);
         break;
       case "NOTE":
         let noteNo = no;
-        const noteUrl = "/notedetail/" +noteNo;
+        const noteUrl = "/notedetail/" + noteNo;
         window.open(
-        noteUrl,
-        "_blank",
-        "width=650,height=700,location=no,status=no,scrollbars=yes"
+          noteUrl,
+          "_blank",
+          "width=650,height=700,location=no,status=no,scrollbars=yes"
         );
         break;
       case "QUESTION":
-      const questionUrl = "/questiondetail/" + no;
-      window.open(
-        questionUrl,
-        "_blank",
-        "width=720,height=780,location=no,status=no,scrollbars=yes"
-      );
-        
+        const questionUrl = "/questiondetail/" + no;
+        window.open(
+          questionUrl,
+          "_blank",
+          "width=720,height=780,location=no,status=no,scrollbars=yes"
+        );
+
         break;
       case "SWAL":
         Swal.fire({
-          title:'',
-          text:'',
-          icon:'',
-        })
+          title: "",
+          text: "",
+          icon: "",
+        });
         break;
-      default:return;
+      default:
+        return;
     }
   };
   // 페이지네이션
@@ -243,153 +247,164 @@ const MyAlarm = () => {
       <div className={style.myAlarmTitle}>* 알림 목록 *</div>
       <div style={{ padding: "20px", marginTop: "10px" }}>
         <div style={{ display: "flex", gap: "10px" }}>
-          
-            <Button
-              color="light"
-              style={{ margin: "10px" , minWidth:'82px'}}
-              onClick={(e)=>readAlarm(e)}
-            >
-              읽음
-            </Button>
-          
-          
-            <Button color="dark" style={{ margin: "10px" , minWidth:'82px' }} onClick={(e)=>allRaed(e)}>
-              모두 읽음
-            </Button>
-          
-          
+          <Button
+            color="light"
+            style={{ margin: "10px", minWidth: "82px" }}
+            onClick={(e) => readAlarm(e)}
+          >
+            읽음
+          </Button>
+
+          <Button
+            color="dark"
+            style={{ margin: "10px", minWidth: "82px" }}
+            onClick={(e) => allRaed(e)}
+          >
+            모두 읽음
+          </Button>
+
           <ButtonDropdown
-                    direction="left"
-                    isOpen={openDropdown}
-                    toggle={() => setOpenDropdown(!openDropdown)}
-                    style={{marginLeft:'470px'}}
-                  >
-                    <DropdownToggle
-                      caret
-                      style={{
-                        backgroundColor: "#fdfdfd00",
-                        height: "35px",
-                        color: "black",
-                        border: "none",
-                      }}
-                      size="lg"
-                    >
-                      타입
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem onClick={(e) => changeFilter(e,null)}>
-                        모두
-                      </DropdownItem>
-                      <DropdownItem onClick={(e) => changeFilter(e,"쪽지")}>
-                        쪽지
-                      </DropdownItem>
-                      <DropdownItem onClick={(e) => changeFilter(e, "댓글")}>
-                        댓글
-                      </DropdownItem>
-                      <DropdownItem onClick={(e) => changeFilter(e, "경고")}>
-                        경고
-                      </DropdownItem>
-                      <DropdownItem onClick={(e) => changeFilter(e, "제재")}>
-                        제재
-                      </DropdownItem>
-                      <DropdownItem onClick={(e) => changeFilter(e, "문의답글")}>
-                        문의답글
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </ButtonDropdown>
-          
+            direction="left"
+            isOpen={openDropdown}
+            toggle={() => setOpenDropdown(!openDropdown)}
+            style={{ marginLeft: "470px" }}
+          >
+            <DropdownToggle
+              caret
+              style={{
+                backgroundColor: "#fdfdfd00",
+                height: "35px",
+                color: "black",
+                border: "none",
+              }}
+              size="lg"
+            >
+              타입
+            </DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem onClick={(e) => changeFilter(e, null)}>
+                모두
+              </DropdownItem>
+              <DropdownItem onClick={(e) => changeFilter(e, "쪽지")}>
+                쪽지
+              </DropdownItem>
+              <DropdownItem onClick={(e) => changeFilter(e, "댓글")}>
+                댓글
+              </DropdownItem>
+              <DropdownItem onClick={(e) => changeFilter(e, "경고")}>
+                경고
+              </DropdownItem>
+              <DropdownItem onClick={(e) => changeFilter(e, "제재")}>
+                제재
+              </DropdownItem>
+              <DropdownItem onClick={(e) => changeFilter(e, "문의답글")}>
+                문의답글
+              </DropdownItem>
+            </DropdownMenu>
+          </ButtonDropdown>
         </div>
-        {alarmList !=null ? 
-        <>
-        
-        <div className={style.tableDiv}>
-          <Table className="table-hover" style={{ minWidth: "770px" }}>
-            <thead>
-              <tr className="text-center">
-                <th scope="col" sm={1}>
-                  <input
-                    type="checkbox"
-                    name="select-all"
-                    onChange={(e) => handleAllCheck(e.target.checked)}
-                    // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
-                    checked={
-                      checkItems.length === alarmList.length ? true : false
-                    }
-                  />
-                </th>
-                <th scope="col" sm={2} style={{minWidth:'110px'}}>
-                  타입
-                </th>
-                <th scope="col" sm={5} style={{minWidth:'400px'}}>
-                  내용
-                </th>
-                <th scope="col" sm={3} style={{minWidth:'110px'}}>
-                  알림 일시
-                </th>
-                <th scope="col" sm={1} style={{minWidth:'95px'}}>
-                  확인
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {alarmList.map((alarm, index) => {
-                return (
-                  <tr
-                    key={index}
-                    onClick={(e) => {
-                      goDetail(e, alarm);
-                    }}
-                  >
-                    <td sm={1} className="text-center">
+        {alarmList != null ? (
+          <>
+            <div className={style.tableDiv}>
+              <Table className="table-hover" style={{ minWidth: "770px" }}>
+                <thead>
+                  <tr className="text-center">
+                    <th scope="col" sm={1}>
                       <input
                         type="checkbox"
-                        name={`select-${alarm.alarmNo}`}
-                        onChange={(e) =>
-                          handleSingleCheck(e.target.checked, alarm.alarmNo)
+                        name="select-all"
+                        onChange={(e) => handleAllCheck(e.target.checked)}
+                        // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
+                        checked={
+                          checkItems.length === alarmList.length ? true : false
                         }
-                        // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
-                        checked={checkItems.includes(alarm.alarmNo) ? true : false}
                       />
-                    </td>
-                    <td sm={2} className="text-center">
-                      [ {alarm.alarmType} ]
-                    </td>
-                    <td
-                      sm={5}
-                      className="text-truncate"
-                      style={{ maxWidth: "400px" }}
-                    >
-                      {alarm.alarmContent}
-                    </td>
-                    <td
-                      sm={3}
-                      className="text-center"
-                      style={{ minWidth: "105px" }}
-                    >
-                      {formatDate(alarm.alarmUpdateDate)}
-                    </td>
-                    <td sm={1} className="text-center">
-                      {alarm.alarmIsRead === "N" ? "안 읽음" : "읽음"}
-                    </td>
+                    </th>
+                    <th scope="col" sm={2} style={{ minWidth: "110px" }}>
+                      타입
+                    </th>
+                    <th scope="col" sm={5} style={{ minWidth: "400px" }}>
+                      내용
+                    </th>
+                    <th scope="col" sm={3} style={{ minWidth: "110px" }}>
+                      알림 일시
+                    </th>
+                    <th scope="col" sm={1} style={{ minWidth: "95px" }}>
+                      확인
+                    </th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        </div>
-        {PaginationInside()}
-        </>
-        :
-        <>
-        <div style={{ textAlign: "center", width: "98%" , minHeight:'580px' , fontSize:'20px' , marginTop:'20px'}}>
-          {type != null ? 
-          <>* {type}에 대한 알림이 존재하지 않습니다. *</>
-          :
-          <>* 알림이 존재하지 않습니다. *</>
-          } 
-        </div>
-        </>
-        }
+                </thead>
+                <tbody>
+                  {alarmList.map((alarm, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        onClick={(e) => {
+                          goDetail(e, alarm);
+                        }}
+                      >
+                        <td sm={1} className="text-center">
+                          <input
+                            type="checkbox"
+                            name={`select-${alarm.alarmNo}`}
+                            onChange={(e) =>
+                              handleSingleCheck(e.target.checked, alarm.alarmNo)
+                            }
+                            // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
+                            checked={
+                              checkItems.includes(alarm.alarmNo) ? true : false
+                            }
+                          />
+                        </td>
+                        <td sm={2} className="text-center">
+                          [ {alarm.alarmType} ]
+                        </td>
+                        <td
+                          sm={5}
+                          className="text-truncate"
+                          style={{ maxWidth: "400px" }}
+                        >
+                          {alarm.alarmContent}
+                        </td>
+                        <td
+                          sm={3}
+                          className="text-center"
+                          style={{ minWidth: "105px" }}
+                        >
+                          {formatDate(alarm.alarmUpdateDate)}
+                        </td>
+                        <td sm={1} className="text-center">
+                          {alarm.alarmIsRead === "N" ? "안 읽음" : "읽음"}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </div>
+            {PaginationInside()}
+          </>
+        ) : (
+          <>
+            <div
+              style={{
+                textAlign: "center",
+                width: "98%",
+                minHeight: "580px",
+                fontSize: "25px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {type != null ? (
+                <div>* {type}에 대한 알림이 존재하지 않습니다. *</div>
+              ) : (
+                <div>* 알림이 존재하지 않습니다. *</div>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
