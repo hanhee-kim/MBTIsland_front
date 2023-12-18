@@ -36,12 +36,12 @@ const MyQnA = (props) => {
     getMyQnaList(user.username, answered, page);
   }, []);
   const getMyQnaList = (username, answered, page) => {
-    let defaultUrl = "http://localhost:8090/questionlistofuser";
+    let defaultUrl = "http://localhost:8090/questionlist";
 
     defaultUrl += `?user=${username}`;
     if (answered !== null)
       defaultUrl += `${username !== null ? "&" : "?"}answered=${answered}`;
-    
+
     if (page !== null)
       defaultUrl += `${
         username !== null || answered !== null ? "&" : "?"
@@ -121,62 +121,64 @@ const MyQnA = (props) => {
   };
   const call = (answered) => {
     console.log(answered);
-    
-  }
-  const changeFilter = (e , answerType) => {
+  };
+  const changeFilter = (e, answerType) => {
     console.log(answerType);
 
-    if(answerType === null){
+    if (answerType === null) {
       setAnswered(null);
-    }else if(answerType === "N"){
+    } else if (answerType === "N") {
       setAnswered("N");
-    }else if(answerType === "Y"){
+    } else if (answerType === "Y") {
       setAnswered("Y");
     }
-    getMyQnaList(user.username,answerType,page);
+    getMyQnaList(user.username, answerType, page);
     // call(answered);
-  }
+  };
   return (
     <div className={style.myQnaContainer}>
       <div className={style.myQnaTitle}>* 문의 내역 *</div>
       <div style={{ padding: "20px", marginTop: "10px" }}>
         <div>
-
-        <Button color="light" style={{ margin: "10px" }} onClick={openQnaWrite}>
-          문의하기
-        </Button>
-        <ButtonDropdown
-                    direction="left"
-                    isOpen={openDropdown}
-                    toggle={() => setOpenDropdown(!openDropdown)}
-                    style={{marginLeft:'530px'}}
-                  >
-                    <DropdownToggle
-                      caret
-                      style={{
-                        backgroundColor: "#fdfdfd00",
-                        height: "35px",
-                        color: "black",
-                        border: "none",
-                      }}
-                      size="lg"
-                    >
-                      답변여부
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem onClick={(e) => changeFilter(e,null)}>
-                        모두
-                      </DropdownItem>
-                      <DropdownItem onClick={(e) => changeFilter(e, "N")}>
-                        처리중
-                      </DropdownItem>
-                      <DropdownItem onClick={(e) => changeFilter(e, "Y")}>
-                        답변완료
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </ButtonDropdown>
+          <Button
+            color="light"
+            style={{ margin: "10px" }}
+            onClick={openQnaWrite}
+          >
+            문의하기
+          </Button>
+          <ButtonDropdown
+            direction="left"
+            isOpen={openDropdown}
+            toggle={() => setOpenDropdown(!openDropdown)}
+            style={{ marginLeft: "530px" }}
+          >
+            <DropdownToggle
+              caret
+              style={{
+                backgroundColor: "#fdfdfd00",
+                height: "35px",
+                color: "black",
+                border: "none",
+              }}
+              size="lg"
+            >
+              답변여부
+            </DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem onClick={(e) => changeFilter(e, null)}>
+                모두
+              </DropdownItem>
+              <DropdownItem onClick={(e) => changeFilter(e, "N")}>
+                처리중
+              </DropdownItem>
+              <DropdownItem onClick={(e) => changeFilter(e, "Y")}>
+                답변완료
+              </DropdownItem>
+            </DropdownMenu>
+          </ButtonDropdown>
         </div>
-        {qnaList == null || qnaList == '' ? (
+        {qnaList == null || qnaList == "" ? (
           <div className={style.tableDiv}>
             <div
               style={{
@@ -197,16 +199,16 @@ const MyQnA = (props) => {
               <Table className="table-hover" style={{ minWidth: "770px" }}>
                 <thead>
                   <tr row className="text-center">
-                    <th scope="col" sm={1} style={{minWidth:'52px'}}>
+                    <th scope="col" sm={1} style={{ minWidth: "52px" }}>
                       번호
                     </th>
-                    <th scope="col" sm={6} style={{minWidth:'400px'}}>
+                    <th scope="col" sm={6} style={{ minWidth: "400px" }}>
                       내용
                     </th>
-                    <th scope="col" sm={3} style={{minWidth:'105px'}}>
+                    <th scope="col" sm={3} style={{ minWidth: "105px" }}>
                       작성일자
                     </th>
-                    <th scope="col" sm={2} style={{minWidth:'76px'}}>
+                    <th scope="col" sm={2} style={{ minWidth: "76px" }}>
                       답변여부
                     </th>
                   </tr>
@@ -220,7 +222,7 @@ const MyQnA = (props) => {
                       >
                         <td sm={1} className="text-center">
                           {/* {qna.no} */}
-                          {((page-1)*10)+index+1}
+                          {(page - 1) * 10 + index + 1}
                         </td>
                         <td
                           sm={6}
