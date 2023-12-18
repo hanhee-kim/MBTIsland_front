@@ -7,7 +7,7 @@ import axios from "axios";
 
 const QnAWrite = (props) => {
   const user = useSelector((state) => state.persistedReducer.user.user);
-  
+
   useEffect(() => {
     props.setIsPopup(true);
     // props.setCurLocation("qnawrite");
@@ -19,8 +19,10 @@ const QnAWrite = (props) => {
     isAnswered: "N",
   });
   const changeQna = (e) => {
-    setQuestion({ ...question, [e.target.name]: e.target.value });
-    setQuestion({...question,writerId: user.username,})
+    let name = e.target.name;
+    let value = e.target.value;
+    console.log(name + value);
+    setQuestion({ ...question, writerId: user.username, [name]: value });
     console.log(question);
   };
 
@@ -34,8 +36,8 @@ const QnAWrite = (props) => {
     console.log(user.username);
     //데이터 전달
     axios
-      .post("http://localhost:8090/questionwrite",question)
-      .then((res)=>{
+      .post("http://localhost:8090/questionwrite", question)
+      .then((res) => {
         console.log(res);
         Swal.fire({
           title: "문의가 등록되었습니다.",
@@ -44,7 +46,7 @@ const QnAWrite = (props) => {
           window.close();
         });
       })
-      .catch((err)=>{
+      .catch((err) => {
         console.log(err);
         Swal.fire({
           title: "문의 등록에 실패했습니다.",
@@ -52,8 +54,7 @@ const QnAWrite = (props) => {
         }).then(function () {
           window.close();
         });
-      })
-    
+      });
   };
 
   return (
@@ -75,7 +76,12 @@ const QnAWrite = (props) => {
             <Label for="title" sm={3}>
               제목
             </Label>
-            <Input type="text" name="title" onChange={(e)=>changeQna(e)}></Input>
+            <Input
+              id="title"
+              type="text"
+              name="title"
+              onChange={(e) => changeQna(e)}
+            ></Input>
           </FormGroup>
           <FormGroup>
             <Label for="content" sm={3}>
@@ -84,7 +90,7 @@ const QnAWrite = (props) => {
             <Input
               type="textarea"
               name="content"
-              onChange={(e)=>changeQna(e)}
+              onChange={(e) => changeQna(e)}
               style={{ minHeight: "250px", resize: "none" }}
             ></Input>
           </FormGroup>
@@ -96,10 +102,10 @@ const QnAWrite = (props) => {
               justifyContent: "flex-end",
             }}
           >
-            <Button color="light" onClick={(e)=>close(e)}>
+            <Button color="light" onClick={(e) => close(e)}>
               취소
             </Button>
-            <Button color="dark" onClick={(e)=>submit(e)}>
+            <Button color="dark" onClick={(e) => submit(e)}>
               등록
             </Button>
           </FormGroup>

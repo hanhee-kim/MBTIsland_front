@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import style from "../../css/user/Mypage.module.css";
 import { Button, Table } from "reactstrap";
+import { useNavigate } from "react-router";
 // import { useSelector } from "react-redux";
 
 const MyMbtmi = (props) => {
   // const user = useSelector((state) => state.persistedReducer.user.user);
-  //더미데이터(갯수는 5개가 이쁜듯한데...?)
+  const [page, setPage] = useState(1);
+  const [pageInfo, setPageInfo] = useState({});
+  // navigate
+  const navigate = useNavigate();
   const [tmiList] = useState([
     {
       no: 1,
@@ -24,159 +28,8 @@ const MyMbtmi = (props) => {
       recommendCnt: 1,
       isBlocked: false,
     },
-    {
-      no: 3,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ENFP",
-      title: "제목",
-      category: "잡담",
-      content:
-        "test1test1teest1test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test1te1test1test1test1test1test1teest1",
-      fileIndexs: "1,2,3,4",
-      writeDate: "2023-11-11",
-      viewCnt: 1,
-      recommendCnt: 1,
-      isBlocked: false,
-    },
-    {
-      no: 5,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ENFP",
-      title: "제목",
-      category: "잡담",
-      content:
-        "test1test1teest1test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test1te1test1test1test1test1test1teest1",
-      fileIndexs: "1,2,3,4",
-      writeDate: "2023-11-11",
-      viewCnt: 1,
-      recommendCnt: 1,
-      isBlocked: false,
-    },
-    {
-      no: 6,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ENFP",
-      title: "제목",
-      category: "잡담",
-      content:
-        "test1test1teest1test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test1te1test1test1test1test1test1teest1",
-      fileIndexs: "1,2,3,4",
-      writeDate: "2023-11-11",
-      viewCnt: 1,
-      recommendCnt: 1,
-      isBlocked: false,
-    },
-    {
-      no: 7,
-      writerId: "test1",
-      writerNickname: "test1",
-      writerMbti: "test1",
-      writerMbtiColor: "#FFD966",
-      mbtiType: "ENFP",
-      title: "제목",
-      category: "잡담",
-      content:
-        "test1test1teest1test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test1te1test1test1test1test1test1teest1",
-      fileIndexs: "1,2,3,4",
-      writeDate: "2023-11-11",
-      viewCnt: 1,
-      recommendCnt: 1,
-      isBlocked: false,
-    },
-    // {
-    //   no: 8,
-    //   writerId: "test1",
-    //   writerNickname: "test1",
-    //   writerMbti: "test1",
-    //   writerMbtiColor: "#FFD966",
-    //   mbtiType: "ENFP",
-    //   title: "제dddddddddddddddddddddddddddddddddddddddddddddddddddddddd목",
-    //   category: "잡담",
-    //   content:
-    //     "test1test1teest1test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test1te1test1test1test1test1test1teest1",
-    //   fileIndexs: "1,2,3,4",
-    //   writeDate: "2023-11-11",
-    //   viewCnt: 1,
-    //   recommendCnt: 1,
-    //   isBlocked: false,
-    // },
-    // {
-    //   no: 9,
-    //   writerId: "test1",
-    //   writerNickname: "test1",
-    //   writerMbti: "test1",
-    //   writerMbtiColor: "#FFD966",
-    //   mbtiType: "ENFP",
-    //   title: "제dddddddddddddddddddddddddddddddddddddddddddddddddddddddd목",
-    //   category: "잡담",
-    //   content:
-    //     "test1test1teest1test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test1te1test1test1test1test1test1teest1",
-    //   fileIndexs: "1,2,3,4",
-    //   writeDate: "2023-11-11",
-    //   viewCnt: 1,
-    //   recommendCnt: 1,
-    //   isBlocked: false,
-    // },
-    // {
-    //   no: 10,
-    //   writerId: "test1",
-    //   writerNickname: "test1",
-    //   writerMbti: "test1",
-    //   writerMbtiColor: "#FFD966",
-    //   mbtiType: "ENFP",
-    //   title: "제dddddddddddddddddddddddddddddddddddddddddddddddddddddddd목",
-    //   category: "잡담",
-    //   content:
-    //     "test1test1teest1test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test1te1test1test1test1test1test1teest1",
-    //   fileIndexs: "1,2,3,4",
-    //   writeDate: "2023-11-11",
-    //   viewCnt: 1,
-    //   recommendCnt: 1,
-    //   isBlocked: false,
-    // },
-    // {
-    //   no: 12,
-    //   writerId: "test1",
-    //   writerNickname: "test1",
-    //   writerMbti: "test1",
-    //   writerMbtiColor: "#FFD966",
-    //   mbtiType: "ENFP",
-    //   title: "제dddddddddddddddddddddddddddddddddddddddddddddddddddddddd목",
-    //   category: "잡담",
-    //   content:
-    //     "test1test1teest1test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test1te1test1test1test1test1test1teest1",
-    //   fileIndexs: "1,2,3,4",
-    //   writeDate: "2023-11-11",
-    //   viewCnt: 1,
-    //   recommendCnt: 1,
-    //   isBlocked: false,
-    // },
-    // {
-    //   no: 13,
-    //   writerId: "test1",
-    //   writerNickname: "test1",
-    //   writerMbti: "test1",
-    //   writerMbtiColor: "#FFD966",
-    //   mbtiType: "ENFP",
-    //   title: "제dddddddddddddddddddddddddddddddddddddddddddddddddddddddd목",
-    //   category: "잡담",
-    //   content:
-    //     "test1test1teest1test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test11test1test1test1test1te1test1test1test1test1test1teest1",
-    //   fileIndexs: "1,2,3,4",
-    //   writeDate: "2023-11-11",
-    //   viewCnt: 1,
-    //   recommendCnt: 1,
-    //   isBlocked: false,
-    // },
+    
+    
   ]);
   // 체크된 아이템을 담을 배열
   const [checkItems, setCheckItems] = useState([]);

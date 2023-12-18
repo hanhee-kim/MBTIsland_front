@@ -1,5 +1,5 @@
 .container {
-    margin-top: 53px;
+    margin-top: 90px;
 }
 
 .sectionCenter {
@@ -9,25 +9,29 @@
 
 .pageHeader {
     display: flex;
-    border-bottom: solid #4D6879 3px;
+    border-bottom: solid 3px;
 }
-
-/* .dropDownStyle {
-    margin: 0 auto;
-    border: none;
-    box-shadow: none;
-    background-color: white;
-    color: black;
-} */
 
 .pageHeader > h1 {
     width: 70%;
     text-align: left;
 }
 
-.dropDownImg {
+.popoverButton {
+    background: none;
+    font-weight: bold;
+    border: 0;
+}
+
+.popoverImg {
     width: 30px;
     margin-right: 10px;
+}
+
+.popoverItem {
+    cursor: pointer;
+    min-width: 30px;
+    text-align: center;
 }
 
 .sectionBoard {
@@ -50,6 +54,15 @@
     width: 23px;
     height: 23px;
     border-radius: 50%;
+}
+
+/* 작성자 표시태그 */
+.isPostWriterComment { 
+    font-size: 14px;
+    border: 1px solid #8F8F8F;
+    padding: 0px 3px 0px 3px;
+    border-radius: 4px;
+    margin-left: 8px;
 }
 
 .commentLowDiv {
@@ -90,12 +103,14 @@
     display: flex;
     width: 20%;
     justify-content: start;
+    cursor: pointer;
 }
 
 .thumbDiv {
     display: flex;
     width: 80%;
     justify-content: center;
+    cursor: pointer;
 }
 
 .listDiv {
@@ -134,9 +149,23 @@
     line-height: 120px;
 }
 
-.pagingLabel {
-    margin: 0 auto;
-    width: 600px;
+.paging {
+    display: flex;
+    justify-content: center;
+    margin-top: 33px;
+    margin-bottom: 33px;
+}
+
+.paging>span {
+    display: inline-block;
+    margin: 5px;
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    border:0px solid white;
+    text-align: center;
+    cursor: pointer;
 }
 
 .postCommentDiv {

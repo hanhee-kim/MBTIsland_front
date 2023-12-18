@@ -37,8 +37,7 @@ const Header = () => {
           console.log(err);
         });
     }
-  }, [uri]);
-  // }, []);
+  }, []);
 
   // // 로그인 유저
   // const [loginuser, sestLoginuser] = useState({
@@ -241,7 +240,7 @@ const Header = () => {
               >
                 <PopoverBody className={style.popoverBellOrMessageItem}>
                   {/* 미확인 알림 수 표시 */}
-                  <Link to={"/mypage"} className={style.popoverLink}>
+                  <Link to={"/mypage/profile"} className={style.popoverLink}>
                     <div className={style.popoverTopArea}>
                       <span>새로운 알림 ({alertNotRead.length})</span>&nbsp;
                       <span>&gt;</span>
