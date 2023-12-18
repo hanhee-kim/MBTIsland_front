@@ -14,8 +14,10 @@ import {
 import axios from 'axios';
 
 function MbtwhyDetail() {
-    // 로그인 유저 정보
+    // 로그인 유저 정보]
     const user = useSelector((state) => state.persistedReducer.user.user);
+    // const [user, setUser] = useState(userSelect);
+
     const [sendUser, setSendUser] = useState({
         username : user.username,
         userNickname : user.userNickname,
@@ -29,40 +31,41 @@ function MbtwhyDetail() {
     // Mbtwhy 게시글 목록
     const [mbtwhy, setMbtwhy] = useState({});
 
+    // 상단 mbti 색상
     const [mbtiColor, setMbtiColor] = useState("");
 
-    const setMbtiColorTo = () => {
-        if(mbti==="istj") {
+    const setMbtiColorTo = (mbti) => {
+        if(mbti==="ISTJ") {
             setMbtiColor("#C5C5C5");
-        } else if (mbti==="isfj") {
+        } else if (mbti==="ISFJ") {
             setMbtiColor("#F2DCB3");
-        } else if (mbti==="infj") {
+        } else if (mbti==="INFJ") {
             setMbtiColor("#EAEFF9");
-        } else if (mbti==="intj") {
+        } else if (mbti==="INTJ") {
             setMbtiColor("#D8D4EA");
-        } else if (mbti==="istp") {
+        } else if (mbti==="ISTP") {
             setMbtiColor("#4D6879");
-        } else if (mbti==="isfp") {
+        } else if (mbti==="ISFP") {
             setMbtiColor("#BDC9A6");
-        } else if (mbti==="infp") {
+        } else if (mbti==="INFP") {
             setMbtiColor("#648181");
-        } else if (mbti==="intp") {
+        } else if (mbti==="INTP") {
             setMbtiColor("#9BB7D4");
-        } else if (mbti==="estp") {
+        } else if (mbti==="ESTP") {
             setMbtiColor("#D8927A");
-        } else if (mbti==="esfp") {
+        } else if (mbti==="ESFP") {
             setMbtiColor("#F0A4AB");
-        } else if (mbti==="enfp") {
+        } else if (mbti==="ENFP") {
             setMbtiColor("#FFD966");
-        } else if (mbti==="entp") {
+        } else if (mbti==="ENTP") {
             setMbtiColor("#B6634A");
-        } else if (mbti==="estj") {
+        } else if (mbti==="ESTJ") {
             setMbtiColor("#596D55");
-        } else if (mbti==="esfj") {
+        } else if (mbti==="ESFJ") {
             setMbtiColor("#E6D0CE");
-        } else if (mbti==="enfj") {
+        } else if (mbti==="ENFJ") {
             setMbtiColor("#82B8AD");
-        } else if (mbti==="entj") {
+        } else if (mbti==="ENTJ") {
             setMbtiColor("#35598F");
         }
     };
@@ -91,11 +94,11 @@ function MbtwhyDetail() {
     // 댓글 목록
     const [comments, setComments] = useState([]);
 
+    // 댓글 수
+    const [commentCount, setCommentCount] = useState(0);
+
     // 정렬 드롭다운 open 여부
     const [open, setOpen] = useState(false);
-
-    // 부모 댓글 번호
-    const [parentcommentNo, setParentcommentNo] = useState(null);
 
     // 댓글 작성 상태값
     const [inputCommentValue, setInputCommentValue] = useState('');
@@ -103,13 +106,11 @@ function MbtwhyDetail() {
     // 답글 작성 상태값
     const [inputReplyValue, setInputReplyValue] = useState('');
 
-    const [isReplyVisible, setIsReplyVisible] = useState(false);
-
     // 추천 정보 (사용자 아이디, 글 번호, 게시판 유형)
     const [recommend, setRecommend] = useState({
-        username: "",
-        postNo: "",
-        boardType: ""
+        username: user.username,
+        postNo: no,
+        boardType: "mbtwhy"
     });
 
     // 추천 여부
@@ -120,9 +121,9 @@ function MbtwhyDetail() {
 
     // 북마크 정보 (사용자 아이디, 글 번호, 게시판 유형)
     const [bookmark, setBookmark] = useState({
-        username: "",
-        postNo: "",
-        boardType: ""
+        username: user.username,
+        postNo: no,
+        boardType: "mbtwhy"
     });
 
     // 북마크 여부
@@ -172,9 +173,9 @@ function MbtwhyDetail() {
     }
 
     // 신고 팝오버 열기
-    const openReportWrite = (e, report) => {
+    const openReportWrite = (report, reportedTable) => {
         setOpen(!open);
-        const url = "/reportwrite/" + report.writerId + '/' + e.target.name;
+        const url = "/reportwrite/" + report.writerId + '/' + reportedTable;
         window.open(
           url,
           "_blank",
@@ -204,18 +205,21 @@ function MbtwhyDetail() {
     }, []);
 
     useEffect(() => {
-        setMbtiColorTo();
+        setMbtiColorTo(mbti.toUpperCase());
         // setSendUser({
         //     username : user.username,
         //     userNickname : user.userNickname,
         //     userMbti : user.userMbti,
         //     userMbtiColor : user.userMbtiColor
         // });
-
-        console.log(user.username);
         getMbtwhyDetail(no);
         getMbtwhyCommentList(commentPage);
     }, []);
+
+    // useEffect(() => {
+    //     console.log("user 값 설정");
+    //     setUser(userSelect);
+    // }, [userSelect]);
 
     // 게시글 상세보기 조회
     const getMbtwhyDetail = (no) => {
@@ -277,16 +281,22 @@ function MbtwhyDetail() {
         .then(res=> {
             let pageInfo = res.data.pageInfo;
             let mbtwhyCommentList = res.data.mbtwhyCommentList;
+            let mbtwhyCommentCount = res.data.mbtwhyCommentCount;
 
             // 댓글 set
             setComments([...mbtwhyCommentList]);
             
-            // let btn = [];
-            // for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-            //     btn.push(i)
-            // }
-            // setCommentPage(btn);
+            // 댓글 개수 set
+            setCommentCount(mbtwhyCommentCount);
+
+            // 댓글 페이징 정보 set
             setCommentPageInfo({...pageInfo});
+            let btn = [];
+            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
+                btn.push(i)
+            }
+            // setCommentPage(btn);
+            setCommentPage(commentPage);
         })
         .catch(err=> {
             console.log(err);
@@ -300,13 +310,8 @@ function MbtwhyDetail() {
         setInputCommentValue(e.target.value);
     };
 
-    // 답글 상태 값 변경
-    const replyChange = (e) => {
-        setInputReplyValue(e.target.value);
-    };
-
     // 댓글 작성
-    const postComment = (commentValue) => {
+    const postComment = (commentValue, parentcommentNo) => {
         if(user.userMbti !== mbti.toUpperCase()) {
             console.log(user.userMbti);
             console.log(mbti);
@@ -316,17 +321,18 @@ function MbtwhyDetail() {
         }
 
         let defaultUrl = `http://localhost:8090/mbtwhycomment?no=${no}&comment=${commentValue}`;
-        if(parentcommentNo !== null) defaultUrl += `&parentcommentNo=${parentcommentNo}`
-        defaultUrl += `&commentPage=${commentPage}`;
+        if(parentcommentNo !== "") defaultUrl += `&parentcommentNo=${parentcommentNo}`
+        // defaultUrl += `&commentPage=${commentPage}`;
 
         axios.post(defaultUrl, sendUser)
         .then(res=> {
-            console.log(res);
-            let comments = res.data.mbtwhyCommentList;
-            setComments([...comments]);
+            // console.log(res);
+            // let comments = res.data.mbtwhyCommentList;
+            // setComments([...comments]);
             // let no = res.data.no;
             // navigate(`/mbtwhydetail/${mbtiValue}/${no}/1`);
             setInputCommentValue("");
+            getMbtwhyCommentList(commentPage);
         })
         .catch(err=> {
             console.log(err);
@@ -339,16 +345,6 @@ function MbtwhyDetail() {
             alert("로그인해주세요.");
             return;
         }
-
-        setRecommend({
-            username: user.username,
-            postNo: no,
-            boardType: "mbtwhy"
-        });
-
-        console.log(recommend.boardType);
-        console.log(recommend.postNo);
-        console.log(recommend.username);
 
         let defaultUrl = `http://localhost:8090/mbtwhyrecommend`;
 
@@ -367,16 +363,6 @@ function MbtwhyDetail() {
             alert("로그인해주세요.");
             return;
         }
-
-        setBookmark({
-            username: user.username,
-            postNo: no,
-            boardType: "mbtwhy"
-        });
-
-        console.log(recommend.boardType);
-        console.log(recommend.postNo);
-        console.log(recommend.username);
 
         let defaultUrl = `http://localhost:8090/mbtwhybookmark`;
 
@@ -420,12 +406,7 @@ function MbtwhyDetail() {
             });
         }
         setOpen(false);
-    }
-
-    const openReply = (no) => {
-        setIsReplyVisible(!isReplyVisible);
-        setParentcommentNo(no);
-    }
+    }    
 
     // Toggle 핸들링
     const handleToggle = () => {
@@ -433,10 +414,11 @@ function MbtwhyDetail() {
     };
 
     // commentPage 핸들링
-    const handleCommentPageNo = (CommentPageNo) => {
-        setCommentPage(CommentPageNo);
+    const handleCommentPageNo = (commentPageNo) => {
+        setCommentPage(commentPageNo);
+        console.log(commentPageNo);
         
-        getMbtwhyCommentList(CommentPageNo); // setCommentPage(pageNo)는 업데이트가 지연되기 때문에, state인 page가 아니라 전달인자 pageNo로 요청해야함
+        getMbtwhyCommentList(commentPageNo); // setCommentPage(pageNo)는 업데이트가 지연되기 때문에, state인 page가 아니라 전달인자 pageNo로 요청해야함
     };
 
     const navigate = useNavigate();
@@ -486,46 +468,92 @@ function MbtwhyDetail() {
 
     // 댓글 컴포넌트
     const Comment = ({comment}) => {
-        const isLoginUser = user.username !== ""; // 로그인한 유저
+        const isLoginUser = user.username !== "" || user.username !== undefined; // 로그인한 유저
         const isCommentWritter = comment.writerId === user.username; // 댓글 작성 유저
         const isPostWriter = comment?.writerId === mbtwhy?.writerId; // 게시글 작성 유저
+        // console.log("isLoginUser : " + isLoginUser);
+        // console.log(user.username);
+
+        // 답글창 상태
+        const [isReplyVisible, setIsReplyVisible] = useState(false);
+
+        // 답글창 열기
+        const handleReply = () => {
+            setIsReplyVisible(!isReplyVisible);
+            setTmpReplyContent("");
+        };
+
+        // 답글 내용
+        const [tmpReplyContent, setTmpReplyContent] = useState("");
+        const addReply = (tmpReplyContent) => {
+            postComment(tmpReplyContent, comment.commentNo);
+        };
 
         return (
             <React.Fragment>
-
-            <div key={comment.commentNo} className={style.sectionComment} style={isCommentWritter?{backgroundColor:"#F8F8F8"}:{}}>
-                <div className={style.writerDiv}>
-                    <div>
-                        <div className={style.circleDiv} style={{backgroundColor:`${comment.writerMbtiColor}`}}></div>&nbsp;&nbsp;&nbsp;
-                        {comment.writerMbti}&nbsp;&nbsp;&nbsp;
-                        {comment.writerNickname}
-                        {isPostWriter && <div className={style.isPostWriterComment}>작성자</div>}
+                <div key={comment.commentNo} className={style.sectionComment} style={isCommentWritter?{backgroundColor:"#F8F8F8"}:{}}>
+                    <div className={style.writerDiv}>
+                        <div>
+                            <div className={style.circleDiv} style={{backgroundColor:`${comment.writerMbtiColor}`}}></div>&nbsp;&nbsp;&nbsp;
+                            {comment.writerMbti}&nbsp;&nbsp;&nbsp;
+                            {comment.writerNickname}
+                            {isPostWriter && <div className={style.isPostWriterComment}>작성자</div>}
+                        </div>
                     </div>
-                </div>
-                <div className={style.boardContent}>
-                    {comment.commentContent}
-                </div>
-                <div className={style.commentLowDiv}>
-                    <div>
-                        {formatDatetimeGap(comment.writeDate)}&nbsp;&nbsp;&nbsp;
-                        {isLoginUser?
-                            <Button style={replyButtonStyle} onClick={()=>openReply(comment.commentNo)}>답글</Button>
-                            :<></>
-                        }
-                    </div>
-                    {isCommentWritter?
-                        <Button style={replyButtonStyle} onClick={()=>deleteComment(comment.commentNo)}>삭제</Button>
-                        :(isLoginUser?
-                            <Button style={replyButtonStyle} name="mbtwhycomment" onClick={(e)=>{openReportWrite(e, comment)}}>신고</Button>
-                            :<></>
+                    <div className={style.boardContent}>
+                        {comment.isRemoved==="Y"?
+                            <div className={style.noComment}>삭제된 댓글입니다.</div>
+                            :(comment.isBlocked==="Y"?
+                                <div className={style.noComment}>차단된 댓글입니다.</div>
+                                :<React.Fragment>
+                                    {comment.commentContent}
+                                </React.Fragment>
                             )
                         }
+                    </div>
+                    {comment.isRemoved==="Y" || comment.isBlocked==="Y"?
+                        <div className={style.commentLowDiv}>{formatDatetimeGap(comment.writeDate)}</div>
+                        :<div className={style.commentLowDiv}>
+                            <div>
+                                {formatDatetimeGap(comment.writeDate)}&nbsp;&nbsp;&nbsp;
+                                {isLoginUser?
+                                    <Button style={replyButtonStyle} onClick={()=>handleReply()}>답글</Button>
+                                    :<></>
+                                }
+                            </div>
+                            {isCommentWritter?
+                                <Button style={replyButtonStyle} onClick={()=>deleteComment(comment.commentNo)}>삭제</Button>
+                                :(isLoginUser?
+                                    <Button style={replyButtonStyle} onClick={(e)=>{openReportWrite(comment, "mbtwhycomment")}}>신고</Button>
+                                    :<></>
+                                )
+                            }
+                        </div>
+                    }
                 </div>
-            </div>
-            {
-                isReplyVisible &&
-                <InputReplySection />
-            }
+                {isReplyVisible &&
+                    <div>
+                        <div className={style.sectionPostReply}>
+                            <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
+                            <Input
+                                style={inputReply}
+                                type="textarea"
+                                id="reply"
+                                name="reply"
+                                onChange={(e)=>setTmpReplyContent(e.target.value)}
+                                cols="40"
+                                rows="15"
+                                required="required"
+                                value={tmpReplyContent}
+                                placeholder="답글을 입력해주세요."
+                            />
+                        </div>
+                        <div className={style.postCommentDiv}>
+                            <Button style={buttonStyle} onClick={()=>addReply(tmpReplyContent)}>등록</Button>
+                            <Button style={buttonStyle} onClick={()=>handleReply()}>취소</Button>
+                        </div>
+                    </div>
+                }
             </React.Fragment>
 
         );
@@ -533,8 +561,12 @@ function MbtwhyDetail() {
 
     // 답글 컴포넌트
     const Reply = ({reply}) => {
+        const isLoginUser = user.username !== ""; // 로그인한 유저
+        const isCommentWritter = reply.writerId === user.username; // 댓글 작성 유저
+        const isPostWriter = reply?.writerId === mbtwhy?.writerId; // 게시글 작성 유저
+        
         return (
-            <div key={reply.commentNo} className={style.sectionReply} style={{display:"flex"}}>
+            <div key={reply.commentNo} className={style.sectionReply} style={isCommentWritter?{backgroundColor:"#F8F8F8"}:{}}>
                 <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
                 <div>
                     <div className={style.writerDiv}>
@@ -542,48 +574,68 @@ function MbtwhyDetail() {
                             <div className={style.circleDiv} style={{backgroundColor:`${reply.writerMbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
                             {reply.writerMbti}&nbsp;&nbsp;&nbsp;
                             {reply.writerNickname}
+                            {isPostWriter && <div className={style.isPostWriterComment}>작성자</div>}
                         </div>
                     </div>
                     <div className={style.boardContent}>
-                        {reply.commentContent}
+                        {reply.isRemoved==="Y"?
+                            <div className={style.noComment}>삭제된 댓글입니다.</div>
+                            :(reply.isBlocked==="Y"?
+                                <div className={style.noComment}>차단된 댓글입니다.</div>
+                                :<React.Fragment>
+                                    {reply.commentContent}
+                                </React.Fragment>
+                            )
+                        }
                     </div>
-                    <div className={style.commentLowDiv}>
-                        <div>
-                            {formatDatetimeGap(reply.writeDate)}
+                    
+                    {reply.isRemoved==="Y" || reply.isBlocked==="Y"?
+                        <div className={style.commentLowDiv}>{formatDatetimeGap(reply.writeDate)}</div>
+                        :<div className={style.commentLowDiv}>
+                            <div>
+                                {formatDatetimeGap(reply.writeDate)}
+                            </div>
+                            {isCommentWritter?
+                                <Button style={replyButtonStyle} onClick={()=>deleteComment(reply.commentNo)}>삭제</Button>
+                                :(isLoginUser?
+                                    <Button style={replyButtonStyle} onClick={(e)=>{openReportWrite(reply,"mbtwhycomment")}}>신고</Button>
+                                    :<></>
+                                )
+                            }
                         </div>
-                        <Button style={replyButtonStyle} name="mbtwhycomment" onClick={(e)=>{openReportWrite(e, reply)}}>신고</Button>
-                    </div>
+                    }
+                    
                 </div>
             </div>
         );
     };
 
     // 답글 작성 컴포넌트
-    const InputReplySection= () => {
-        return (
-            <div>
-                <div className={style.sectionPostReply}>
-                    <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
-                    <Input
-                        style={inputReply}
-                        type="textarea"
-                        id="reply"
-                        name="reply"
-                        onChange={replyChange}
-                        cols="40"
-                        rows="15"
-                        required="required"
-                        value={inputReplyValue}
-                        placeholder="답글을 입력해주세요."
-                    />
-                </div>
-                <div className={style.postCommentDiv}>
-                    <Button style={buttonStyle} onClick={()=>postComment(inputReplyValue)}>등록</Button>
-                    <Button style={buttonStyle} onClick={setParentcommentNo(null)}>취소</Button>
-                </div>
-            </div>
-        )
-    }
+    // const InputReplySection= () => {
+    //     return (
+    //         <div>
+    //             <div className={style.sectionPostReply}>
+    //                 <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
+    //                 <Input
+    //                     style={inputReply}
+    //                     type="textarea"
+    //                     id="reply"
+    //                     name="reply"
+    //                     onChange={replyChange}
+    //                     cols="40"
+    //                     rows="15"
+    //                     required="required"
+    //                     value={inputReplyValue}
+    //                     placeholder="답글을 입력해주세요."
+    //                 />
+    //             </div>
+    //             <div className={style.postCommentDiv}>
+    //                 <Button style={buttonStyle} onClick={()=>postComment(inputReplyValue)}>등록</Button>
+    //                 <Button style={buttonStyle} onClick={()=>closeReply()}>취소</Button>
+    //             </div>
+    //         </div>
+    //     )
+    // }
 
     const buttonStyle = {
         background:"none",
@@ -633,17 +685,15 @@ function MbtwhyDetail() {
                             {user.username !== ""?
                                 <React.Fragment>
                                     <button onClick={()=>setOpen(!open)} id="Popover1" className={style.popoverButton}><img className={style.popoverImg} src="/popover-icon.png" alt=""/></button>
-                                    <Popover placement="bottom" isOpen={open} target="Popover1" toggle={()=>handleToggle()}>
+                                    <Popover placement="bottom" isOpen={open} name="mbtwhy" target="Popover1" toggle={()=>handleToggle()}>
                                         {mbtwhy.writerId === user.username?
                                             <React.Fragment>
                                                 <PopoverBody className={style.popoverItem} onClick={()=>deleteMbtwhy(no)}>삭제</PopoverBody>
                                                 <PopoverBody className={style.popoverItem}>수정</PopoverBody>
                                             </React.Fragment>
                                             :(user.username !== ""?
-                                            <React.Fragment>
-                                                    <PopoverBody className={style.popoverItem} onClick={(e)=>openReportWrite(e, mbtwhy)}>신고</PopoverBody>
-                                                </React.Fragment>
-                                            :<React.Fragment></React.Fragment>
+                                                <PopoverBody className={style.popoverItem} onClick={(e)=>openReportWrite(mbtwhy, "mbtwhy")}>신고</PopoverBody>
+                                                :<React.Fragment></React.Fragment>
                                             )
                                         }
                                     </Popover>
@@ -652,7 +702,7 @@ function MbtwhyDetail() {
                             }
                         </div>
                         <div style={{color:"#C5C5C5"}}>
-                            {formatDate(mbtwhy.writeDate)}
+                            {formatDatetimeGap(mbtwhy.writeDate)}
                             <img className={style.viewIcon} src="/viewIcon-bold.png" alt=""></img>
                             {mbtwhy.viewCnt}
                         </div>
@@ -682,7 +732,8 @@ function MbtwhyDetail() {
                     <div className={style.commentCountDiv}>
                         <div>
                             댓글&nbsp;
-                            {mbtwhy.commentCnt}
+                            {commentCount}
+                            {/* {mbtwhy.commentCnt} */}
                         </div>
                     </div>
                 </div>
@@ -780,7 +831,7 @@ function MbtwhyDetail() {
                                 placeholder="댓글을 입력해주세요."
                             />
                             <div className={style.postCommentDiv}>
-                                <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue)}>등록</Button>
+                                <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue, "")}>등록</Button>
                             </div>
                         </div>
                     :<></>}
