@@ -5,7 +5,7 @@ import styleFrame from "../../css/admin/AdminFrame.module.css";
 import style from "../../css/admin/AdminNotice.module.css";
 import styleQna from "../../css/admin/AdminQna.module.css";
 import React, { useEffect, useState } from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import AdminNav from "./AdminNav";
 import axios from "axios";
 
@@ -116,19 +116,19 @@ const AdminQna = () => {
 
 
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
-    // useEffect(() => {
-    //     const clickOutsidePopover = (event) => {
-    //         const popoverElements = document.querySelectorAll(".popover");
-    //         // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
-    //         if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
-    //             setOpen(false);
-    //         } 
-    //     };
-    //     document.addEventListener("mousedown", clickOutsidePopover);
-    //     return () => {
-    //         document.removeEventListener("mousedown", clickOutsidePopover);
-    //     };
-    // }, []);
+    useEffect(() => {
+        const clickOutsidePopover = (event) => {
+            const popoverElements = document.querySelectorAll(".popover");
+            // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
+            if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
+                setOpenList(questionList.map(() => false));
+            } 
+        };
+        document.addEventListener("mousedown", clickOutsidePopover);
+        return () => {
+            document.removeEventListener("mousedown", clickOutsidePopover);
+        };
+    }, []);
 
 
     // 페이지네이션
@@ -158,6 +158,13 @@ const AdminQna = () => {
             </div>
         );
     }
+
+    // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
+    const navigate = useNavigate();
+    const goToAdminQnaForm = (postNo) => {
+        const linkTo = `/adminqnaform/${postNo}`;
+        navigate(linkTo); // 리다이렉트
+    };
 
     return (
         <>
@@ -195,7 +202,7 @@ const AdminQna = () => {
                                 <tr key={post.no} className={post.isAnswered==='Y'? styleQna.completedQna : ''}>
                                     <td>{post.no}</td>
                                     <td>{formatDate(post.writeDate)}</td>
-                                    <td>{post.title}</td>
+                                    <td onClick={()=> goToAdminQnaForm(post.no)}>{post.title}</td>
                                     <td onClick={() => togglePopover(index)} id={`popover${index}`}>{post.writerId}</td>
                                     <Popover className={styleQna.popover} placement="bottom" isOpen={openList[index]} target={`popover${index}`} toggle={() => togglePopover(index)}>
                                         <PopoverBody className={styleQna.popoverItem} onClick={() => clickPopoverBody(post.writerId)}>문의글 모아보기</PopoverBody>

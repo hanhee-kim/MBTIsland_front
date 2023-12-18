@@ -7,11 +7,13 @@ import styleQna from "../../css/admin/AdminQna.module.css";
 import React, { useEffect, useState } from "react";
 import {Link} from "react-router-dom";
 import AdminNav from "./AdminNav";
+import { useParams } from 'react-router';
 
 const AdminQnaForm = () => {
 
-    const [open,setOpen]=useState(false);
+    const { postNo } = useParams();
 
+    const [open,setOpen]=useState(false);
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
     useEffect(() => {
         const clickOutsidePopover = (event) => {

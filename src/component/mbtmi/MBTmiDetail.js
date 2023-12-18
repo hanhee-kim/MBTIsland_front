@@ -148,10 +148,11 @@ const MBTmiDetail = () => {
 
         getMbtmiCommentList(1, user.username);
         
-        // console.log("현재 게시글번호: ", no);
+        console.log("현재 게시글번호: ", no);
         console.log('user.username: ', user.username);
         // console.log('현재 댓글 페이지번호: ' + commentPage);
-    }, [user.username]);
+    // }, [user.username]);
+    }, []);
 
     const getMbtmiDetail = (no) => {
         let defaultUrl = `http://localhost:8090/mbtmidetail/${no}`;
@@ -257,12 +258,6 @@ const MBTmiDetail = () => {
         setOpen(false);
     };
 
-    const reportComment = (commentNo) => {
-        console.log('신고할 댓글번호: ', commentNo);
-        // 팝업 열기
-    };
-
-
     // 추천
     const [recommend, setRecommend] = useState({
         username: user.username,
@@ -314,6 +309,21 @@ const MBTmiDetail = () => {
         .catch(err=> {
             console.log(err);
         });
+    }
+
+    // 신고 팝업
+    const openReportWrite = (reportTarget, targetType) => {
+        console.log('신고할 reportTarget: ', reportTarget);
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+        const url = "/reportwrite/" + reportTarget.writerId + '/' + targetType;
+        window.open(
+            url,
+            "_blank",
+            "width=650,height=450,location=no,status=no,scrollbars=yes"
+        );
     }
 
 
@@ -398,7 +408,7 @@ const MBTmiDetail = () => {
                                 isLoginUserComment? (
                                     <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(comment.commentNo)}>삭제</small>
                                 ) : (
-                                    <small className={style.commentReportOrDeleteBtn} onClick={() => reportComment(comment.commentNo)}>신고</small>
+                                    <small className={style.commentReportOrDeleteBtn} onClick={()=>openReportWrite(comment, 'mbtmiComment')}>신고</small>
                                 ) 
                             )}
                         </div>
@@ -448,7 +458,7 @@ const MBTmiDetail = () => {
                             isLoginUserComment? (
                                 <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(reply.commentNo)}>삭제</small>
                             ) : (
-                                <small className={style.commentReportOrDeleteBtn} onClick={() => reportComment(reply.commentNo)}>신고</small>
+                                <small className={style.commentReportOrDeleteBtn} onClick={()=>openReportWrite(reply, 'mbtmiComment')}>신고</small>
                             ) 
                         )}
                     </div>
@@ -490,7 +500,8 @@ const MBTmiDetail = () => {
                         <h2 className={style.postTitle}>{mbtmi.title}</h2>
                         <div className={style.profileColor} style={{ background: mbtmi.writerMbtiColor, borderColor: mbtmi.writerMbtiColor }}/>&nbsp;
                         <span>{mbtmi.writerMbti}&nbsp;{mbtmi.writerNickname}</span>
-                        <h6>{formatDate(mbtmi.writeDate)}
+                        {/* <h6>{formatDate(mbtmi.writeDate)} */}
+                        <h6>&nbsp;{formatDatetimeGap(mbtmi.writeDate)}
                             <span><img src={"/viewIcon.png" } alt="조회" className={style.viewIcon} />&nbsp;{mbtmi.viewCnt}</span>
                         </h6>
                         <div className={style.postContent} dangerouslySetInnerHTML={{ __html: mbtmi.content }}></div>
@@ -504,7 +515,7 @@ const MBTmiDetail = () => {
                         </p>
                         <div className={style.postBtns}>
                             <button onClick={goToPreviousList}>목록</button>
-                            <button><img src={"/reportIcon.png" } alt="신고아이콘" className={style.reportIcon} />&nbsp;신고</button>
+                            <button onClick={()=>openReportWrite(mbtmi, 'mbtmi')}><img src={"/reportIcon.png" } alt="" className={style.reportIcon} />&nbsp;신고</button>
                         </div>
                     </div>
                     </>

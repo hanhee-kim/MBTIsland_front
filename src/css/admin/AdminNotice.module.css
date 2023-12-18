@@ -21,6 +21,7 @@
     text-overflow: ellipsis;
     margin: 0 auto;
     /* background: ghostwhite; */
+    cursor: pointer;
 }
 
 .table>tbody>tr>td.errMsg {

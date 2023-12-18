@@ -63,7 +63,7 @@ const initApp = () => {
 };
 const handleBeforeUnload = () => {
   // 브라우저 창이 닫힐 때 로컬 스토리지 내용을 지움
-  persistor.purge();
+  // persistor.purge();
   // localStorage.removeItem("token");
   // localStorage.removeItem("user");
 };
