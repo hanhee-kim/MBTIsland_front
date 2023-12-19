@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import { index } from "d3-array";
+import axios from "axios";
 
 const Main = () => {
   // //token정보
@@ -98,6 +99,63 @@ const Main = () => {
     },
   ]);
 
+
+  const [mbtmiList, setMbtmiList] = useState([]); // mbtmi 최신글목록
+  const [mbtwhyList, setMbtwhyList] = useState([]); // mbtwhy 최신글목록
+  const [mbattleList, setMbattleList] = useState([]); // mbattle 최신글목록
+  // 상대시간(시간차)
+  const formatDatetimeGap = (dateString) => {
+    const date = new Date(dateString);
+    const currentDate = new Date();
+    const datetimeGap = currentDate - date;
+    const seconds = Math.floor(datetimeGap/1000);
+    const minutes = Math.floor(seconds/60);
+    const hours = Math.floor(minutes/60);
+    const days = Math.floor(hours/24);
+    const weeks = Math.floor(days/7);
+    const months = Math.floor(weeks/4);
+    const years = Math.floor(months/12);
+
+    // if(seconds<60) return `${seconds}초 전`;
+    // else 
+    if(minutes<60) return `${minutes}분 전`;
+    else if(hours<24) return `${hours}시간 전`;
+    else if(days<7) return `${days}일 전`;
+    else if(weeks<4) return `${weeks}주 전`;
+    else if(months<12) return `${months}달 전`;
+    else return `${years}년 전`;
+}
+
+  useEffect(()=> {
+    getMbtmiList();
+    getMbtwhyList();
+    // getMbattleList();
+
+  }, []);
+
+  const getMbtmiList = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8090/mbtmilist`);
+      // console.log('getMbtmiList 요청결과: ', response);
+      let mbtmiList = response.data.mbtmiList;
+      setMbtmiList([...mbtmiList]);
+    } catch (error) {
+      console.error('오류내용: ', error);
+    }
+  }
+  const getMbtwhyList = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8090/mbtwhy`);
+      console.log('getMbtwhyList 요청결과: ', response);
+      let mbtwhyList = response.data.mbtwhyList;
+      setMbtwhyList([...mbtwhyList]);
+    } catch (error) {
+      console.error('오류내용: ', error);
+    }
+  }
+
+
+
   return (
     <>
       <div className={style.container} id="top">
@@ -121,24 +179,23 @@ const Main = () => {
             <div className={style.newlyPosts}>
               <table className={style.table}>
                 <tbody>
-                  {mbtmiListByPaging.length > 0 &&
-                    mbtmiListByPaging.map((post) => {
-                      return (
-                        <tr key={post.postNo}>
-                          <td>
-                            <span className={style.overflowLong}>
-                              {post.title}
-                            </span>
-                            <span>[{post.commentCnt}]</span>
-                            <small>{post.writedate}</small>
-                            <div className={style.profileColor} />
-                            <span>
-                              {post.writerMbti}&nbsp;{post.writerNickname}
-                            </span>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                  {mbtmiList.length>0 && mbtmiList.slice(0,5).map((post)=> {
+                    return (
+                      <tr key={post.no}>
+                        <td>
+                          <span className={style.overflowLong}>
+                            {post.title}
+                          </span>
+                          <span>[{post.commentCnt}]</span>
+                          <small>{formatDatetimeGap(post.writeDate)}</small>
+                          <div className={style.profileColor} />
+                          <span>
+                            {post.writerMbti}&nbsp;{post.writerNickname}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -153,7 +210,24 @@ const Main = () => {
             <div className={style.newlyPosts}>
               <table className={style.table}>
                 <tbody>
-                  {mbtmiListByPaging.length > 0 &&
+                {mbtwhyList.length>0 && mbtwhyList.slice(0,5).map((post)=> {
+                    return (
+                      <tr key={post.no}>
+                        <td>
+                          <span className={style.overflowLong}>
+                            {post.content}
+                          </span>
+                          <span>[{post.commentCnt}]</span>
+                          <small>{formatDatetimeGap(post.writeDate)}</small>
+                          <div className={style.profileColor} />
+                          <span>
+                            {post.writerMbti}&nbsp;{post.writerNickname}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  {/* {mbtmiListByPaging.length > 0 &&
                     mbtmiListByPaging.map((post) => {
                       return (
                         <tr key={post.postNo}>
@@ -170,7 +244,7 @@ const Main = () => {
                           </td>
                         </tr>
                       );
-                    })}
+                    })} */}
                 </tbody>
               </table>
             </div>
