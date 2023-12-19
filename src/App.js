@@ -158,7 +158,7 @@ function App() {
                 element={<NoticeDetail />}
               />
               <Route exact path="/adminnotice" element={<AdminFrame />} />
-              <Route exact path="/adminnoticeform" element={<AdminFrame />} />
+              <Route exact path="/adminnoticeform/:no?" element={<AdminFrame />} />
               {/* 중첩 라우팅 */}
               <Route path="/adminqna" element={<AdminFrame />}>
                 <Route path="/adminqna/form/:no" element={<AdminQnaForm />} />

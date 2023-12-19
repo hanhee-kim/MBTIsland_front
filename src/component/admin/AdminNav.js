@@ -19,7 +19,7 @@ const AdminNav = () => {
                     <NavLink tag={Link} to="/adminnotice" className={uri.includes("/adminnotice") && !uri.includes("form")? `${style.navLink} ${style.navActive}` :style.navLink}>공지사항 목록</NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink tag={Link} to="/adminnoticeform" className={uri.includes("/adminnoticeform")? `${style.navLink} ${style.navActive}` :style.navLink}>공지 등록/수정</NavLink>
+                    <NavLink tag={Link} to="/adminnoticeform" className={uri.includes("/adminnoticeform")? `${style.navLink} ${style.navActive}` :style.navLink}>공지 등록ꞏ수정</NavLink>
                 </NavItem>
                 <NavItem>
                     <NavLink tag={Link} to="/adminreport" className={uri.includes("/adminreport")? `${style.navLink} ${style.navActive}` :style.navLink}>신고 게시글</NavLink>

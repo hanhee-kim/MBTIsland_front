@@ -30,7 +30,7 @@ const AdminFrame = () => {
                 <AdminNav/>
             </section>
             <section className={styleFrame.section}>
-                {uri==='/adminnoticeform'? <AdminNoticeForm/>:
+                {uri.includes('/adminnoticeform')? <AdminNoticeForm/>:
                     uri==='/adminnotice'? <AdminNotice/>:
                     uri==='/adminqna'? <AdminQna/>:
                     // uri==='/adminqnaform'? <AdminQnaForm />: // App.js에 등록된 중첩라우팅, Outlet 이용

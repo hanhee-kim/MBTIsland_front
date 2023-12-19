@@ -137,8 +137,13 @@
     /* border: 1px solid green; */
     width: 900px;
 }
-.noticeForm>li {
+.noticeForm li {
     list-style-type: none;
+
+    display: inline;
+}
+.titleAndDate>span {
+    float: right;
 }
 .formtitle {
     width: 100%;

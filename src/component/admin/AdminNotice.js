@@ -178,9 +178,10 @@ const AdminNotice = () => {
     const navigate = useNavigate();
     const makeFlexibleLink = (post) => {
         // alert('no, search, page: ' + post.no + ", " + search + ", " + page);
-        const linkTo = `/noticedetail/${post.no}` +
-                        (search ? `/${search}` : '') +
-                        (page ? `/${page}` : '');
+        // const linkTo = `/noticedetail/${post.no}` +
+        //                 (search ? `/${search}` : '') +
+        //                 (page ? `/${page}` : ''); // 일반 공지사항상세 컴포넌트
+        const linkTo = `/adminnoticeform/${post.no}`; // 관리자페이지의 공지사항폼 컴포넌트
         navigate(linkTo, {replace:false});
     }
 
