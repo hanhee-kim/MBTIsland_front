@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from "react-redux";
-import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
+import { useSelector, useDispatch } from "react-redux";
 import {
     Pagination,
     PaginationItem,
@@ -12,6 +11,8 @@ import {
     Input
 } from "reactstrap";
 import axios from 'axios';
+
+import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
 
 function MbtwhyDetail() {
     // 로그인 유저 정보]
@@ -28,7 +29,7 @@ function MbtwhyDetail() {
     // MBTI 분류, 글 번호, 댓글 페이지 번호
     const {mbti, no, page} = useParams();
 
-    // Mbtwhy 게시글 목록
+    // Mbtwhy 게시글
     const [mbtwhy, setMbtwhy] = useState({});
 
     // 상단 mbti 색상
@@ -171,15 +172,57 @@ function MbtwhyDetail() {
             return `${years}년 전`;
         }
     }
-
+    
+    const dispatch = useDispatch();
+    
     // 신고 팝오버 열기
     const openReportWrite = (report, reportedTable) => {
         setOpen(!open);
-        const url = "/reportwrite/" + report.writerId + '/' + reportedTable;
+
+        let reportData = {};
+        if(reportedTable === "mbtwhy") {
+            reportData = {
+                // no:0,
+                reportType: "게시글",
+                tableType: reportedTable,
+                reportedPostNo: report.no,
+                // reportedCommentNo:, // 댓글 아니므로 댓글 번호 없음
+                reportedId: report.writerId,
+                // reportedTitle:, // 제목 없음
+                reportedContent: report.content,
+                // fileIdxs: "", // 파일 없음
+                reporterId: user.username,
+                // reportDate: "", // 백에서 지정
+                reportReason: "광고", // 신고 창에서 변경 (기본값 광고)
+                isCompleted: "N",
+                isWarned: "N"
+            };
+        } else if(reportedTable === "mbtwhycomment") {
+            reportData = {
+                // no:0,
+                reportType: "댓글",
+                tableType: reportedTable,
+                reportedPostNo: mbtwhy.no,
+                reportedCommentNo: report.no,
+                reportedId: report.writerId,
+                // reportedTitle:, // 제목 없음
+                reportedContent: report.commentContent,
+                // fileIdxs: "", // 파일 없음
+                reporterId: user.username,
+                // reportDate: "", // 백에서 지정
+                reportReason: "광고", // 신고 창에서 지정 (기본값 광고)
+                isCompleted: "N",
+                isWarned: "N"
+            };
+        }
+
+        const serializedReportData = encodeURIComponent(JSON.stringify(reportData));
+
+        const url = `/reportwrite?data=${serializedReportData}`;
         window.open(
-          url,
-          "_blank",
-          "width=650,height=450,location=no,status=no,scrollbars=yes"
+            url,
+            "_blank",
+            "width=650,height=450,location=no,status=no,scrollbars=yes"
         );
     };
 
@@ -212,7 +255,7 @@ function MbtwhyDetail() {
         //     userMbti : user.userMbti,
         //     userMbtiColor : user.userMbtiColor
         // });
-        getMbtwhyDetail(no);
+        getMbtwhyDetail();
         getMbtwhyCommentList(commentPage);
     }, []);
 
@@ -222,7 +265,7 @@ function MbtwhyDetail() {
     // }, [userSelect]);
 
     // 게시글 상세보기 조회
-    const getMbtwhyDetail = (no) => {
+    const getMbtwhyDetail = () => {
         let defaultUrl = `http://localhost:8090/mbtwhydetail?`;
         // if(page !== null) defaultUrl += `&page=${page}`;
         // if(search !== null) defaultUrl += `&search=${search}`;
@@ -267,6 +310,7 @@ function MbtwhyDetail() {
         })
         .catch(err=> {
             console.log(err);
+            setMbtwhy({});
             setComments([]);
             setCommentPageInfo({});
         });
@@ -313,8 +357,6 @@ function MbtwhyDetail() {
     // 댓글 작성
     const postComment = (commentValue, parentcommentNo) => {
         if(user.userMbti !== mbti.toUpperCase()) {
-            console.log(user.userMbti);
-            console.log(mbti);
             alert(mbti.toUpperCase() + " 유형만 댓글을 작성할 수 있습니다.");
             setInputCommentValue("");
             return;
@@ -336,7 +378,7 @@ function MbtwhyDetail() {
         })
         .catch(err=> {
             console.log(err);
-        })
+        });
     };
 
     // 게시글 추천
@@ -373,10 +415,10 @@ function MbtwhyDetail() {
     };
 
     // 게시글 삭제
-    const deleteMbtwhy = (no) => {
+    const mbtwhyDelete = () => {
         const isConfirmed = window.confirm("게시글을 삭제하시겠습니까?");
         if(isConfirmed) {
-            axios.delete(`http://localhost:8090/deletembtwhy/${no}`)
+            axios.delete(`http://localhost:8090/mbtwhydelete/${no}`)
             .then(res => {
                 alert('완료되었습니다.');
                 goToPreviousList();
@@ -388,11 +430,16 @@ function MbtwhyDetail() {
         setOpen(false);
     }
 
+    // 게시글 수정
+    const goMbtwhyModify = () => {
+        navigate(`/mbtwhymodify/${no}`);
+    }
+
     // 댓글 삭제
-    const deleteComment = (commentNo) => {
+    const commentDelete = (commentNo) => {
         const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
         if(isConfirmed) {
-            axios.get(`http://localhost:8090/deletembtwhycomment/${commentNo}`)
+            axios.get(`http://localhost:8090/mbtwhycommentdelete/${commentNo}`)
             .then(res => {
                 console.log(res);
                 alert('완료되었습니다.');
@@ -435,7 +482,7 @@ function MbtwhyDetail() {
 
         // 뒤로가기
         // store에 Mbtwhy 페이징, 검색, 정렬값 저장하여 목록으로 돌아갈 때 사용하기
-        navigate(-1);
+        navigate(`/mbtwhy/${mbti}`);
     };
 
     // 페이지네이션
@@ -471,6 +518,7 @@ function MbtwhyDetail() {
         const isLoginUser = user.username !== "" || user.username !== undefined; // 로그인한 유저
         const isCommentWritter = comment.writerId === user.username; // 댓글 작성 유저
         const isPostWriter = comment?.writerId === mbtwhy?.writerId; // 게시글 작성 유저
+        const isComment = comment.parentcommentNo===null; // 댓글 유무 (답글이 아닌 경우)
         // console.log("isLoginUser : " + isLoginUser);
         // console.log(user.username);
 
@@ -491,48 +539,98 @@ function MbtwhyDetail() {
 
         return (
             <React.Fragment>
-                <div key={comment.commentNo} className={style.sectionComment} style={isCommentWritter?{backgroundColor:"#F8F8F8"}:{}}>
-                    <div className={style.writerDiv}>
-                        <div>
-                            <div className={style.circleDiv} style={{backgroundColor:`${comment.writerMbtiColor}`}}></div>&nbsp;&nbsp;&nbsp;
-                            {comment.writerMbti}&nbsp;&nbsp;&nbsp;
-                            {comment.writerNickname}
-                            {isPostWriter && <div className={style.isPostWriterComment}>작성자</div>}
-                        </div>
-                    </div>
-                    <div className={style.boardContent}>
-                        {comment.isRemoved==="Y"?
-                            <div className={style.noComment}>삭제된 댓글입니다.</div>
-                            :(comment.isBlocked==="Y"?
-                                <div className={style.noComment}>차단된 댓글입니다.</div>
-                                :<React.Fragment>
-                                    {comment.commentContent}
-                                </React.Fragment>
-                            )
-                        }
-                    </div>
-                    {comment.isRemoved==="Y" || comment.isBlocked==="Y"?
-                        <div className={style.commentLowDiv}>{formatDatetimeGap(comment.writeDate)}</div>
-                        :<div className={style.commentLowDiv}>
-                            <div>
-                                {formatDatetimeGap(comment.writeDate)}&nbsp;&nbsp;&nbsp;
-                                {isLoginUser?
-                                    <Button style={replyButtonStyle} onClick={()=>handleReply()}>답글</Button>
-                                    :<></>
+                <div key={comment.commentNo} className={isComment?style.sectionComment:style.sectionReply} style={isCommentWritter?{backgroundColor:"#F8F8F8"}:{}}>
+                    {isComment?
+                        <React.Fragment>
+                            <div className={style.writerDiv}>
+                                <div>
+                                    <div className={style.circleDiv} style={{backgroundColor:`${comment.writerMbtiColor}`}}></div>&nbsp;&nbsp;&nbsp;
+                                    {comment.writerMbti}&nbsp;&nbsp;&nbsp;
+                                    {comment.writerNickname}
+                                    {isPostWriter && <div className={style.isPostWriterComment}>작성자</div>}
+                                </div>
+                            </div>
+                            <div className={style.boardContent}>
+                                {comment.isRemoved==="Y"?
+                                    <div className={style.noComment}>삭제된 댓글입니다.</div>
+                                    :(comment.isBlocked==="Y"?
+                                        <div className={style.noComment}>차단된 댓글입니다.</div>
+                                        :<React.Fragment>
+                                            {comment.commentContent}
+                                        </React.Fragment>
+                                    )
                                 }
                             </div>
-                            {isCommentWritter?
-                                <Button style={replyButtonStyle} onClick={()=>deleteComment(comment.commentNo)}>삭제</Button>
-                                :(isLoginUser?
-                                    <Button style={replyButtonStyle} onClick={(e)=>{openReportWrite(comment, "mbtwhycomment")}}>신고</Button>
-                                    :<></>
-                                )
+                            {comment.isRemoved==="Y" || comment.isBlocked==="Y"?
+                                <div className={style.commentLowDiv}>{formatDatetimeGap(comment.writeDate)}</div>
+                                :<div className={style.commentLowDiv}>
+                                    <div>
+                                        {formatDatetimeGap(comment.writeDate)}&nbsp;&nbsp;&nbsp;
+                                        {isLoginUser?
+                                            <Button style={replyButtonStyle} onClick={()=>handleReply()}>답글</Button>
+                                            :<></>
+                                        }
+                                    </div>
+                                    {isLoginUser?
+                                        <React.Fragment>
+                                            {isCommentWritter?
+                                                <Button style={replyButtonStyle} onClick={()=>commentDelete(comment.commentNo)}>삭제</Button>
+                                                :<Button style={replyButtonStyle} onClick={()=>{openReportWrite(comment, "mbtwhycomment")}}>신고</Button>
+                                            }
+                                        </React.Fragment>
+                                        :<></>
+                                    }
+                                </div>
                             }
-                        </div>
+                            
+                        </React.Fragment>
+                        :<React.Fragment>
+                            <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
+                            <div>
+                                <div className={style.writerDiv}>
+                                    <div>
+                                        <div className={style.circleDiv} style={{backgroundColor:`${comment.writerMbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
+                                        {comment.writerMbti}&nbsp;&nbsp;&nbsp;
+                                        {comment.writerNickname}
+                                        {isPostWriter && <div className={style.isPostWriterComment}>작성자</div>}
+                                    </div>
+                                </div>
+                                <div className={style.boardContent}>
+                                    {comment.isRemoved==="Y"?
+                                        <div className={style.noComment}>삭제된 댓글입니다.</div>
+                                        :(comment.isBlocked==="Y"?
+                                            <div className={style.noComment}>차단된 댓글입니다.</div>
+                                            :<React.Fragment>
+                                                {comment.commentContent}
+                                            </React.Fragment>
+                                        )
+                                    }
+                                </div>
+                                
+                                {comment.isRemoved==="Y" || comment.isBlocked==="Y"?
+                                    <div className={style.commentLowDiv}>{formatDatetimeGap(comment.writeDate)}</div>
+                                    :<div className={style.commentLowDiv}>
+                                        <div>
+                                            {formatDatetimeGap(comment.writeDate)}
+                                        </div>
+                                        {isLoginUser?
+                                        <React.Fragment>
+                                            {isCommentWritter?
+                                                <Button style={replyButtonStyle} onClick={()=>commentDelete(comment.commentNo)}>삭제</Button>
+                                                :<Button style={replyButtonStyle} onClick={()=>{openReportWrite(comment, "mbtwhycomment")}}>신고</Button>
+                                            }
+                                        </React.Fragment>
+                                        :<></>
+                                    }
+                                    </div>
+                                }
+                                
+                            </div>
+                        </React.Fragment>
                     }
                 </div>
                 {isReplyVisible &&
-                    <div>
+                    <div className={style.sectionComment}>
                         <div className={style.sectionPostReply}>
                             <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
                             <Input
@@ -560,55 +658,55 @@ function MbtwhyDetail() {
     };
 
     // 답글 컴포넌트
-    const Reply = ({reply}) => {
-        const isLoginUser = user.username !== ""; // 로그인한 유저
-        const isCommentWritter = reply.writerId === user.username; // 댓글 작성 유저
-        const isPostWriter = reply?.writerId === mbtwhy?.writerId; // 게시글 작성 유저
+    // const Reply = ({reply}) => {
+    //     const isLoginUser = user.username !== ""; // 로그인한 유저
+    //     const isCommentWritter = reply.writerId === user.username; // 댓글 작성 유저
+    //     const isPostWriter = reply?.writerId === mbtwhy?.writerId; // 게시글 작성 유저
         
-        return (
-            <div key={reply.commentNo} className={style.sectionReply} style={isCommentWritter?{backgroundColor:"#F8F8F8"}:{}}>
-                <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
-                <div>
-                    <div className={style.writerDiv}>
-                        <div>
-                            <div className={style.circleDiv} style={{backgroundColor:`${reply.writerMbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
-                            {reply.writerMbti}&nbsp;&nbsp;&nbsp;
-                            {reply.writerNickname}
-                            {isPostWriter && <div className={style.isPostWriterComment}>작성자</div>}
-                        </div>
-                    </div>
-                    <div className={style.boardContent}>
-                        {reply.isRemoved==="Y"?
-                            <div className={style.noComment}>삭제된 댓글입니다.</div>
-                            :(reply.isBlocked==="Y"?
-                                <div className={style.noComment}>차단된 댓글입니다.</div>
-                                :<React.Fragment>
-                                    {reply.commentContent}
-                                </React.Fragment>
-                            )
-                        }
-                    </div>
+    //     return (
+    //         <div key={reply.commentNo} className={style.sectionReply} style={isCommentWritter?{backgroundColor:"#F8F8F8"}:{}}>
+    //             <img className={style.replyArrowImg} src="/replyArrow.png" alt=""></img>
+    //             <div>
+    //                 <div className={style.writerDiv}>
+    //                     <div>
+    //                         <div className={style.circleDiv} style={{backgroundColor:`${reply.writerMbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
+    //                         {reply.writerMbti}&nbsp;&nbsp;&nbsp;
+    //                         {reply.writerNickname}
+    //                         {isPostWriter && <div className={style.isPostWriterComment}>작성자</div>}
+    //                     </div>
+    //                 </div>
+    //                 <div className={style.boardContent}>
+    //                     {reply.isRemoved==="Y"?
+    //                         <div className={style.noComment}>삭제된 댓글입니다.</div>
+    //                         :(reply.isBlocked==="Y"?
+    //                             <div className={style.noComment}>차단된 댓글입니다.</div>
+    //                             :<React.Fragment>
+    //                                 {reply.commentContent}
+    //                             </React.Fragment>
+    //                         )
+    //                     }
+    //                 </div>
                     
-                    {reply.isRemoved==="Y" || reply.isBlocked==="Y"?
-                        <div className={style.commentLowDiv}>{formatDatetimeGap(reply.writeDate)}</div>
-                        :<div className={style.commentLowDiv}>
-                            <div>
-                                {formatDatetimeGap(reply.writeDate)}
-                            </div>
-                            {isCommentWritter?
-                                <Button style={replyButtonStyle} onClick={()=>deleteComment(reply.commentNo)}>삭제</Button>
-                                :(isLoginUser?
-                                    <Button style={replyButtonStyle} onClick={(e)=>{openReportWrite(reply,"mbtwhycomment")}}>신고</Button>
-                                    :<></>
-                                )
-                            }
-                        </div>
-                    }
+    //                 {reply.isRemoved==="Y" || reply.isBlocked==="Y"?
+    //                     <div className={style.commentLowDiv}>{formatDatetimeGap(reply.writeDate)}</div>
+    //                     :<div className={style.commentLowDiv}>
+    //                         <div>
+    //                             {formatDatetimeGap(reply.writeDate)}
+    //                         </div>
+    //                         {isCommentWritter?
+    //                             <Button style={replyButtonStyle} onClick={()=>deleteComment(reply.commentNo)}>삭제</Button>
+    //                             :(isLoginUser?
+    //                                 <Button style={replyButtonStyle} onClick={(e)=>{openReportWrite(reply,"mbtwhycomment")}}>신고</Button>
+    //                                 :<></>
+    //                             )
+    //                         }
+    //                     </div>
+    //                 }
                     
-                </div>
-            </div>
-        );
-    };
+    //             </div>
+    //         </div>
+    //     );
+    // };
 
     // 답글 작성 컴포넌트
     // const InputReplySection= () => {
@@ -688,11 +786,11 @@ function MbtwhyDetail() {
                                     <Popover placement="bottom" isOpen={open} name="mbtwhy" target="Popover1" toggle={()=>handleToggle()}>
                                         {mbtwhy.writerId === user.username?
                                             <React.Fragment>
-                                                <PopoverBody className={style.popoverItem} onClick={()=>deleteMbtwhy(no)}>삭제</PopoverBody>
-                                                <PopoverBody className={style.popoverItem}>수정</PopoverBody>
+                                                <PopoverBody className={style.popoverItem} onClick={()=>mbtwhyDelete()}>삭제</PopoverBody>
+                                                <PopoverBody className={style.popoverItem} onClick={()=>goMbtwhyModify()}>수정</PopoverBody>
                                             </React.Fragment>
                                             :(user.username !== ""?
-                                                <PopoverBody className={style.popoverItem} onClick={(e)=>openReportWrite(mbtwhy, "mbtwhy")}>신고</PopoverBody>
+                                                <PopoverBody className={style.popoverItem} onClick={()=>openReportWrite(mbtwhy, "mbtwhy")}>신고</PopoverBody>
                                                 :<React.Fragment></React.Fragment>
                                             )
                                         }
@@ -744,14 +842,14 @@ function MbtwhyDetail() {
                     {/* 댓글 목록 */}
                     <div>
                         {comments
-                            .filter(comment=> comment.parentcommentNo===null)
+                            // .filter(comment=> comment.parentcommentNo===null)
                             .map(comment => {
                                 return (
                                     <React.Fragment key={comment.commentNo}>
                                         <Comment comment={comment} key={comment.commentNo}/>
-                                            {comments
+                                            {/* {comments
                                                 .filter(reply => reply.parentcommentNo === comment.commentNo)
-                                                .map(reply =><Reply reply={reply} key={reply.commentNo}/>)}
+                                                .map(reply =><Reply reply={reply} key={reply.commentNo}/>)} */}
                                     </React.Fragment>
                                 );
                             })
@@ -776,7 +874,7 @@ function MbtwhyDetail() {
                                 <div>
                                     {replyComment.date}
                                 </div>
-                                <Button style={replyButtonStyle} name="mbtwhycomment" onClick={(e)=>{openReportWrite(e, replyComment)}}>신고</Button>
+                                <Button style={replyButtonStyle} name="mbtwhycomment" onClick={()=>{openReportWrite(e, replyComment)}}>신고</Button>
                             </div>
                         </div>
                     </div> */}

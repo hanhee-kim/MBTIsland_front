@@ -20,8 +20,6 @@ function MbtwhyWrite() {
         userMbtiColor : user.userMbtiColor
     });
 
-    const navigate = useNavigate();
-
     // 색상 코드
     const [mbtiColor, setMbtiColor] = useState("#ADB1B0");
 
@@ -46,6 +44,12 @@ function MbtwhyWrite() {
         setMbtiValue(optionValue);
     };
 
+    // 선택 옵션 변경
+    const getSelectedOption = (optionValue) => (
+        mbti === optionValue? "selected" : ""
+    );
+
+    // MBTI 색상 변경
     const setMbtiColorTo = (mbtiValue) => {
         console.log("MBTI 선택 박스 변경값 : " + mbtiValue);
         if(mbtiValue==="istj") {
@@ -86,12 +90,10 @@ function MbtwhyWrite() {
     // 내용 변경
     const contentChange = (e) => {
         setContent(e.target.value);
-    }
+    };
 
-    const getSelectedOption = (optionValue) => (
-        mbti === optionValue? "selected" : ""
-    );
-
+    const navigate = useNavigate();
+    
     // 게시글 작성
     const postMbtwhy = () => {
         console.log(mbtiValue);
@@ -114,18 +116,18 @@ function MbtwhyWrite() {
         display:"flex",
         borderBottom:"solid 3px",
         borderColor:mbtiColor
-    }
+    };
 
     const inputContent = {
         height:"400px",
         resize:"none"
-    }
+    };
 
     const buttonStyle = {
         background:"white",
         color:"black",
         border:"1px solid lightgray"
-    }
+    };
     
     return (
         <div className={style.container}>

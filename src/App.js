@@ -165,7 +165,7 @@ function App() {
               <Route exect path="/mbtwhy/:mbti" element={<Mbtwhy />} />
               <Route exact path="/mbtwhydetail/:mbti/:no/:page" element={<MbtwhyDetail />} />
               <Route exact path="/mbtwhywrite/:mbti?" element={<MbtwhyWrite />} />
-              <Route exact path="/mbtwhymodify" element={<MbtwhyModify />} />
+              <Route exact path="/mbtwhymodify/:no" element={<MbtwhyModify />} />
               <Route exact path="/mbattle" element={<MBattle />} />
               <Route exact path="/mbattlewrite" element={<MBattleWrite />} />
               <Route exact path="/mbattledetail" element={<MBattleDetail />} />
@@ -175,7 +175,7 @@ function App() {
               <Route exact path="/adminbandetail" element={<AdminFrame />} />
               <Route
                 exact
-                path="/reportwrite/:reportedId/:reportedTable"
+                path="/reportwrite"
                 element={<ReportWrite setIsPopup={setIsPopup} />}
               />
             </Routes>
