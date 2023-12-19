@@ -42,17 +42,6 @@ const PaginationOutside = ({ pageInfo, handlePageNo }) => {
 
 const MBTmiDetail = () => {
 
-/*
-    // 로그인유저 정보 (가정)
-    const [user, sestUser] = useState({
-        username: "user01",
-        userNickname: "닉네임1",
-        userMbti: "INFP",
-        userMbtiColor: "#648181",
-        userRole: "ROLE_USER",
-    });
-*/
-
     // 로그인정보 가져오기
     const user = useSelector((state) => state.persistedReducer.user.user);
     
@@ -190,7 +179,7 @@ const MBTmiDetail = () => {
 
         axios.get(defaultUrl)
         .then(res=> {
-            // console.log('댓글목록받아오기요청결과: ', res);
+            console.log('댓글목록받아오기요청결과: ', res);
             let mbtmiCommentList = res.data.mbtmiCommentList;
             let commentPageInfo = res.data.pageInfo;
             setMbtmiCommentList([...mbtmiCommentList]);
@@ -311,14 +300,56 @@ const MBTmiDetail = () => {
         });
     }
 
-    // 신고 팝업
-    const openReportWrite = (reportTarget, targetType) => {
-        console.log('신고할 reportTarget: ', reportTarget);
+    // 신고 팝업창
+    const openReportWrite = (reportTarget, reportTargetFrom) => {
+        console.log('신고할 reportTarget: ', reportTarget, ", reportTargetFrom: ", reportTargetFrom);
         if(!user.username) {
             alert("로그인해주세요.");
             return;
         }
-        const url = "/reportwrite/" + reportTarget.writerId + '/' + targetType;
+
+        let reportData = {};
+        if(reportTargetFrom === "mbtmi") {
+            reportData = {
+                // no:0,
+                reportType: "게시글",
+                tableType: reportTargetFrom,
+                reportedPostNo: reportTarget.no,
+                // reportedCommentNo:, // 댓글 아니므로 댓글 번호 없음
+                reportedId: reportTarget.writerId,
+                // reportedTitle:, // 제목 없음
+                reportedContent: reportTarget.content,
+                // fileIdxs: "", // 파일 없음
+                reporterId: user.username,
+                // reportDate: "", // 백에서 지정
+                reportReason: "광고", // 신고 창에서 변경 (기본값 광고)
+                isCompleted: "N",
+                isWarned: "N"
+            };
+        } else if(reportTargetFrom === "mbtmicomment") {
+            reportData = {
+                // no:0,
+                reportType: "댓글",
+                tableType: reportTargetFrom,
+                reportedPostNo: mbtmi.no,
+                reportedCommentNo: reportTarget.no,
+                reportedId: reportTarget.writerId,
+                // reportedTitle:, // 제목 없음
+                reportedContent: reportTarget.commentContent,
+                // fileIdxs: "", // 파일 없음
+                reporterId: user.username,
+                // reportDate: "", // 백에서 지정
+                reportReason: "광고", // 신고 창에서 지정 (기본값 광고)
+                isCompleted: "N",
+                isWarned: "N"
+            };
+        }
+
+        const serializedReportData = encodeURIComponent(JSON.stringify(reportData));
+
+        // const url = "/reportwrite/" + reportTarget.writerId + '/' + reportTargetFrom;
+        const url = `/reportwrite?data=${serializedReportData}`;
+
         window.open(
             url,
             "_blank",
@@ -408,7 +439,7 @@ const MBTmiDetail = () => {
                                 isLoginUserComment? (
                                     <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(comment.commentNo)}>삭제</small>
                                 ) : (
-                                    <small className={style.commentReportOrDeleteBtn} onClick={()=>openReportWrite(comment, 'mbtmiComment')}>신고</small>
+                                    <small className={style.commentReportOrDeleteBtn} onClick={()=>{openReportWrite(comment, "mbtmicomment")}}>신고</small>
                                 ) 
                             )}
                         </div>
@@ -458,7 +489,7 @@ const MBTmiDetail = () => {
                             isLoginUserComment? (
                                 <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(reply.commentNo)}>삭제</small>
                             ) : (
-                                <small className={style.commentReportOrDeleteBtn} onClick={()=>openReportWrite(reply, 'mbtmiComment')}>신고</small>
+                                <small className={style.commentReportOrDeleteBtn} name="mbtmicomment" onClick={(e)=>{openReportWrite(e, reply)}}>신고</small>
                             ) 
                         )}
                     </div>
@@ -515,7 +546,7 @@ const MBTmiDetail = () => {
                         </p>
                         <div className={style.postBtns}>
                             <button onClick={goToPreviousList}>목록</button>
-                            <button onClick={()=>openReportWrite(mbtmi, 'mbtmi')}><img src={"/reportIcon.png" } alt="" className={style.reportIcon} />&nbsp;신고</button>
+                            <button onClick={()=>openReportWrite(mbtmi, "mbtmi")}><img src={"/reportIcon.png" } alt="" className={style.reportIcon} />&nbsp;신고</button>
                         </div>
                     </div>
                     </>
@@ -527,7 +558,9 @@ const MBTmiDetail = () => {
                     <h6>&nbsp;&nbsp;{mbtmiCommentCnt}개의 댓글</h6>
                     <table>
                         <tbody>
-                        {mbtmiCommentList // 1차댓글
+                        {/* 백엔드 쿼리dsl의 정렬조건으로 no오름차순 단독 지정하여 가져온 리스트를 중첩된 구조로 렌더링하는 코드로,
+                             n페이지의 0번째 행이 대댓글인 경우 렌더링이 되지 않는 문제 존재  */}
+                        {/* {mbtmiCommentList // 1차댓글
                             .filter(comment=> comment.parentcommentNo===null)
                             .map(comment => (
                                 <React.Fragment key={comment.commentNo}>
@@ -536,7 +569,18 @@ const MBTmiDetail = () => {
                                     {mbtmiCommentList // 2차댓글
                                         .filter(reply => reply.parentcommentNo === comment.commentNo)
                                         .map(reply => <Reply key={reply.commentNo} reply={reply} />)}
-                                </React.Fragment>))}
+                                </React.Fragment>))} */}
+                        
+                        {/* 백엔드 쿼리dsl의 정렬조건으로 no보다 우선시되는 parentcommentNo를 추가하여 화면에 표시될 (중첩)구조로 가져온 리스트를 단순 렌더링 */}
+                        {mbtmiCommentList.map((comment) => (
+                            <React.Fragment key={comment.commentNo}>
+                                {/* 1차댓글 or 2차댓글 여부에 따라 서로 다른 컴포넌트로 렌더링 */}
+                                {(comment.parentcommentNo === null && (
+                                <Comment comment={comment} />
+                                )) || (<Reply reply={comment} />)}
+                            </React.Fragment>
+                        ))}
+
                         </tbody>
                     </table>
                     {PaginationInside()}
