@@ -279,8 +279,8 @@ function MbtwhyDetail() {
             // let pageInfo = res.data.pageInfo;
             // let mbtwhyCommentList = res.data.mbtwhyCommentList;
             let mbtwhy = res.data.mbtwhy;
-            let isMbtwhyRecommend = res.data.isMbtwhyRecommend;
-            let isMbtwhyBookmark = res.data.isMbtwhyBookmark;
+            let isMbtwhyRecommended = res.data.isMbtwhyRecommended;
+            let isMbtwhyBookmarked = res.data.isMbtwhyBookmarked;
 
             // 게시글 set
             setMbtwhy(mbtwhy);
@@ -290,13 +290,13 @@ function MbtwhyDetail() {
             setRecommendCount(mbtwhy.recommendCnt);
 
             // 로그인한 유저에게 추천되어 있다면 (추천 데이터 존재한다면, isMbtwhyRecommend === true)
-            if(isMbtwhyRecommend) {
+            if(isMbtwhyRecommended) {
                 // 추천 여부의 초기값인 false를 true로
                 setIsRecommended(!isRecommended);
             }
 
             // 로그인한 유저에게 북마크되어 있다면 (북마크 데이터 존재한다면, isMbtwhyBookmark === true)
-            if(isMbtwhyBookmark) {
+            if(isMbtwhyBookmarked) {
                 // 북마크 여부의 초기값인 false를 true로
                 setIsBookmarked(!isBookmarked);
             }

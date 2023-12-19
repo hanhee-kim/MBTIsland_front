@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { useSelector } from "react-redux";
+import { Link, useParams } from 'react-router-dom';
 import {
     Pagination,
     PaginationItem,
@@ -27,6 +28,21 @@ import axios from 'axios';
 import style from "../../css/mbattle/MBattleDetail.module.css";
 
 function MBattleDetail() {
+    // 로그인 유저 정보
+    const user = useSelector((state) => state.persistedReducer.user.user);
+
+    // Mbattle 게시글
+    const [mbattle, setMbattle] = useState({});
+
+    // 글 번호, 댓글 페이지 번호
+    const {no, page} = useParams();
+
+    // 투표 여부
+    const [isVoted, setIsVoted] = useParams(false);
+
+    // 북마크 여부
+    const [isBookmarked, setIsBookmarked] = useState(false);
+
     const [board, setBoard] = useState(
         {
             num:1,
@@ -145,29 +161,48 @@ function MBattleDetail() {
 
     // pageChange 함수를 호출한 페이징 영역에서 페이징 항목(1, 2, 3...)들을 인자로 받아옴
     const pageChange = (repage) => {
-        reqBoardList(repage);
+        // getMbattleDetail();
     };
 
     // url에 파라미터로 줄 변수 repage
-    const reqBoardList = (repage) => {
-        // if(!repage) repage = 1;
-        axios.get(`http://localhost:8090/mbattledetail/${repage}`)
+    const getMbattleDetail = () => {
+        let defaultUrl = `http://localhost:8090/mbattledetail/${no}`;
+        defaultUrl += `&username=${user.username}`;
+
+        axios.get(defaultUrl)
         .then(res=> {
             console.log(res);
-            let pageInfo = res.data.pageInfo;
-            let list = res.data.commentList;
+            let mbattle = res.data.mbattle;
+            let isMbattleVoted = res.data.isMbattleVoted;
+            let isMbattleBookmarked = res.data.isMbattleBookmarked;
 
-            setComments([...list]);
-            
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
+            // 게시글 set
+            setMbattle(mbattle);
+
+            // 로그인한 유저에게 투표되어 있다면 (투표 데이터 존재한다면)
+            if(isMbattleVoted) {
+                setIsVoted(!isVoted);
             }
-            setPageBtn(btn);
-            setPageInfo({...pageInfo});
+
+            if(isMbattleBookmarked) {
+                setIsBookmarked(!isBookmarked);
+            }
+
+            // let pageInfo = res.data.pageInfo;
+            // let list = res.data.commentList;
+
+            // setComments([...list]);
+            
+            // let btn = [];
+            // for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
+            //     btn.push(i)
+            // }
+            // setPageBtn(btn);
+            // setPageInfo({...pageInfo});
         })
         .catch(err=> {
             console.log(err);
+            setMbattle({});
         })
     };
 
