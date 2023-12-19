@@ -110,11 +110,20 @@ const MBTmiDetail = () => {
             console.log(res);
             let comments = res.data.mbtmiCommentList;
             let allPage = res.data.pageInfo.allPage;
+            let mbtmiCommentCnt = res.data.mbtmiCommentCnt;
+            let CommentPageInfo = res.data.pageInfo;
+            setCommentPageInfo(CommentPageInfo);
+
+            // 대댓글 등록의 경우 대댓글이 등록완료된 페이지로 재렌더링하도록 해야함 ***
+            // const indexOfNewComment = comments.findIndex(comment => comment.commentNo === res.data.mbtmiCommentCnt);
+            // const newCommentPage = Math.ceil((indexOfNewComment + 1) / commentPageInfo.pageSize);
+            // setCommentPage(newCommentPage);
+
             setMbtmiCommentList([...comments]);
-            setCommentPage(allPage);
+            setCommentPage(allPage); // ***
             setComment("");
             setMbtmiCommentCnt(mbtmiCommentCnt+1);
-            getMbtmiCommentList(allPage);
+            getMbtmiCommentList(allPage); // ***
         })
         .catch(err=> {
             console.log(err);
