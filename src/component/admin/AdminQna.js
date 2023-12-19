@@ -12,7 +12,6 @@ import axios from "axios";
 const AdminQna = () => {
 
     const location = useLocation();
-
     const [questionList, setQuestionList] = useState([]);
     const [questionCnts, setQuestionCnts] = useState({'totalCnt':0, 'answeredCnt':0, 'answeredNotCnt':0});
     const [search, setSearch] = useState(null);
@@ -124,6 +123,9 @@ const AdminQna = () => {
         console.log('모아볼 writerId: ', writerId);
         getQuestionList(search, null, 1, writerId); // 문의글모아보기 클릭시 검색값은 유지, answered와 page는 초기값으로 목록 요청
         setUsername(writerId);
+        setActiveFilter(null);
+        setAnswered(null);
+        setPage(1);
     }
 
 

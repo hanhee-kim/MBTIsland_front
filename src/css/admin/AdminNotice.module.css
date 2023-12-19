@@ -154,6 +154,9 @@
     border-radius: 8px;
     padding: 15px;
     resize: none;
+    height: 571.78px;
+    /* background: seashell; */
+    border: 0.5px solid gray;
 }
 .formBtns {
     float: right;

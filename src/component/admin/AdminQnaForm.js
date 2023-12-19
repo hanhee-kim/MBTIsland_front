@@ -70,6 +70,11 @@ const AdminQnaForm = () => {
         navigate(`/adminqna?writerId=${writerId}`); // 파라미터와 함께 목록컴포넌트로 이동
     }
 
+     // 이전(목록이동) 버튼
+    const goToPreviousList = () => {
+        navigate(`/adminqna`);
+    }
+
     const addPost = async () => {
         console.log('답변 등록 버튼 클릭');
         try {
@@ -98,7 +103,9 @@ const AdminQnaForm = () => {
     return (
         <>
         <div>
-            <div className={styleFrame.sectionTitle}>1:1 문의 답변</div>
+            <div className={styleFrame.sectionTitle}>1:1 문의 답변
+                <button className={styleQna.prevBtn} onClick={goToPreviousList}>이전</button>
+            </div>
 
                 {question? (
                     <div className={styleFrame.sectionContents}>
@@ -113,14 +120,14 @@ const AdminQnaForm = () => {
                         </div>
                         <div className={styleQna.answerArea}>
                             <div className={styleQna.arrowIconArea}>
-                            <img src={"/answerArrowIcon.png" } alt="검색" className={styleQna.arrowIcon} />
+                            <img src={"/answerArrowIcon.png" } alt="" className={styleQna.arrowIcon} />
                             </div>
                             <div className={styleQna.answerFormArea}>
                                 {answer? (
                                 <div className={styleQna.existAnswer}>
                                     <span>{answer.title}</span>
                                     <small>{answer.isRead}</small>
-                                    <span>{formatDate(question.writeDate)}</span>
+                                    <span>{formatDate(answer.writeDate)}</span>
                                     <hr/>
                                     {answer.content}
                                 </div>
