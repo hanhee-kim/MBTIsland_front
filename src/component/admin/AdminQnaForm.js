@@ -119,6 +119,7 @@ const AdminQnaForm = () => {
                                 {answer? (
                                 <div className={styleQna.existAnswer}>
                                     <span>{answer.title}</span>
+                                    <small>{answer.isRead}</small>
                                     <span>{formatDate(question.writeDate)}</span>
                                     <hr/>
                                     {answer.content}

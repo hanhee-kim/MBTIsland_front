@@ -132,7 +132,7 @@
 .existAnswer>span:first-child {
     margin-left: 10px;
 }
-.existAnswer>span:nth-child(2) {
+.existAnswer>span:nth-child(3) {
     float: right;
     margin-right: 15px;
 }
