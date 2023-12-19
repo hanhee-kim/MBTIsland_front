@@ -51,6 +51,8 @@ import MyQnA from "./component/user/MyQnA";
 import MyBookmark from "./component/user/MyBookmark";
 import MyAlarm from "./component/user/MyAlarm";
 import MyNote from "./component/user/MyNote";
+import AdminQna from "./component/admin/AdminQna";
+import AdminQnaForm from "./component/admin/AdminQnaForm";
 
 export const persistor = persistStore(store);
 
@@ -157,8 +159,10 @@ function App() {
               />
               <Route exact path="/adminnotice" element={<AdminFrame />} />
               <Route exact path="/adminnoticeform" element={<AdminFrame />} />
-              <Route exact path="/adminqna" element={<AdminFrame />} />
-              <Route exact path="/adminqnaform" element={<AdminFrame />} />
+              {/* 중첩 라우팅 */}
+              <Route path="/adminqna" element={<AdminFrame />}>
+                <Route path="/adminqna/form/:no" element={<AdminQnaForm />} />
+              </Route>
 
               {/* 인수 */}
               <Route exect path="/mbtwhymain" element={<MbtwhyMain />} />
