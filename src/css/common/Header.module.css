@@ -51,7 +51,7 @@
     line-height: 60px;
 }
 
-.navItem>a {
+.navItem a {
     font-size: 20px;
     font-weight: 600;
     text-decoration: none;
