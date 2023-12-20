@@ -3,9 +3,13 @@ import React, { useEffect, useState } from "react";
 import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import { Popover, PopoverBody, PopoverHeader } from "reactstrap";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const NoticeDetail = () => {
     
+    // 로그인정보 가져오기
+    const user = useSelector((state) => state.persistedReducer.user.user);
+
     const { no, search, page } = useParams();
     const location = useLocation();
 
@@ -82,11 +86,6 @@ const NoticeDetail = () => {
         }
         setOpen(false);
     }
-    
-    const modifyNotice = () => {
-        console.log('수정 팝오버 버튼 클릭');
-        setOpen(false);
-    };
 
     // 목록으로 가기 버튼
     const navigate = useNavigate();
@@ -104,14 +103,15 @@ const NoticeDetail = () => {
                 <div className={style.postArea}>
 
                     {/* 로그인유저가 관리자일때만 표시 */}
-                    <div>
-                        <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="popover1"/>
-                        <Popover  className={style.popover} placement="bottom" isOpen={open} target="popover1" toggle={()=>setOpen(!open)}>
-                            <PopoverBody className={style.popoverItem} onClick={()=>hideNotice()}>숨김</PopoverBody>
-                            <PopoverBody className={style.popoverItem} onClick={()=>modifyNotice()}>수정</PopoverBody>
-                            <PopoverBody className={style.popoverItem} onClick={()=>deleteNotice()}>삭제</PopoverBody>
-                        </Popover><br/><br/><br/>
-                    </div>
+                    {user.username!=="" && user.userRole==='ROLE_ADMIN' && (
+                        <div>
+                            <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="popover1"/>
+                            <Popover  className={style.popover} placement="bottom" isOpen={open} target="popover1" toggle={()=>setOpen(!open)}>
+                                <PopoverBody className={style.popoverItem} onClick={()=>hideNotice()}>숨김</PopoverBody>
+                                <PopoverBody className={style.popoverItem} onClick={()=>deleteNotice()}>삭제</PopoverBody>
+                            </Popover><br/><br/><br/>
+                        </div>
+                    )}
                     
                     {notice? (
                         <>

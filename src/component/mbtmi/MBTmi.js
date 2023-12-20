@@ -423,8 +423,8 @@ const MBTmi = () => {
                         )}
                     </tbody>
                 </table>
-                {/* {PaginationInside()} */}
-                <PaginationOutside pageInfo={pageInfo} handlePageNo={handlePageNo} />
+                {PaginationInside()}
+                {/* <PaginationOutside pageInfo={pageInfo} handlePageNo={handlePageNo} /> */}
             </section>
             <section className={style.sectionRightArea}>
                 <div>

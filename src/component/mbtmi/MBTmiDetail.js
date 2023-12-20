@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 /* 재사용성을 높이기 위해 외부에 선언한 페이지네이션 */
 const PaginationOutside = ({ pageInfo, handlePageNo }) => {
-    console.log('PaginationOutside에서 출력한 pageInfo : ', pageInfo);
+    // console.log('PaginationOutside에서 출력한 pageInfo : ', pageInfo);
     const isFirstGroup = pageInfo.startPage===1;
     const isLastGroup = pageInfo.endPage===pageInfo.allPage;
     const pageGroup = [];
@@ -42,17 +42,6 @@ const PaginationOutside = ({ pageInfo, handlePageNo }) => {
 
 const MBTmiDetail = () => {
 
-/*
-    // 로그인유저 정보 (가정)
-    const [user, sestUser] = useState({
-        username: "user01",
-        userNickname: "닉네임1",
-        userMbti: "INFP",
-        userMbtiColor: "#648181",
-        userRole: "ROLE_USER",
-    });
-*/
-
     // 로그인정보 가져오기
     const user = useSelector((state) => state.persistedReducer.user.user);
     
@@ -61,8 +50,6 @@ const MBTmiDetail = () => {
     
     const [mbtmi, setMbtmi] = useState(null);
     const [mbtmiCommentCnt, setMbtmiCommentCnt] = useState(0);
-    // const [isRecommended, setIsRecommended] = useState('Y');
-    const [isBookmarked, setIsBookmarked] = useState('Y');
     // 절대시간
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -123,11 +110,20 @@ const MBTmiDetail = () => {
             console.log(res);
             let comments = res.data.mbtmiCommentList;
             let allPage = res.data.pageInfo.allPage;
+            let mbtmiCommentCnt = res.data.mbtmiCommentCnt;
+            let CommentPageInfo = res.data.pageInfo;
+            setCommentPageInfo(CommentPageInfo);
+
+            // 대댓글 등록의 경우 대댓글이 등록완료된 페이지로 재렌더링하도록 해야함 ***
+            // const indexOfNewComment = comments.findIndex(comment => comment.commentNo === res.data.mbtmiCommentCnt);
+            // const newCommentPage = Math.ceil((indexOfNewComment + 1) / commentPageInfo.pageSize);
+            // setCommentPage(newCommentPage);
+
             setMbtmiCommentList([...comments]);
-            setCommentPage(allPage);
+            setCommentPage(allPage); // ***
             setComment("");
             setMbtmiCommentCnt(mbtmiCommentCnt+1);
-            getMbtmiCommentList(allPage);
+            getMbtmiCommentList(allPage); // ***
         })
         .catch(err=> {
             console.log(err);
@@ -152,7 +148,8 @@ const MBTmiDetail = () => {
         
         console.log("현재 게시글번호: ", no);
         console.log('user.username: ', user.username);
-        console.log('현재 댓글 페이지번호: ' + commentPage);
+        // console.log('현재 댓글 페이지번호: ' + commentPage);
+    // }, [user.username]);
     }, []);
 
     const getMbtmiDetail = (no) => {
@@ -166,15 +163,15 @@ const MBTmiDetail = () => {
             let mbtmiCommentCnt = res.data.mbtmiCommentCnt;
             let recommendCnt = res.data.mbtmi.recommendCnt;
             let isRecommended = res.data.isMbtmiRecommend;
-            // let isBookmarked = res.data.isBookmarked;
+            let isBookmarked = res.data.isMbtmiBookmark;
 
             setMbtmi(mbtmi);
             setMbtmiCommentCnt(mbtmiCommentCnt);
             setRecommendCount(recommendCnt);
             setIsRecommended(isRecommended);
-            // setIsBookmarked(isBookmarked);
+            setIsBookmarked(isBookmarked);
 
-            console.log('getMbtmiDetail함수에서 출력한 commentPage: ' + commentPage);
+            // console.log('getMbtmiDetail함수에서 출력한 commentPage: ' + commentPage);
             
         })
         .catch(err=> {
@@ -184,7 +181,6 @@ const MBTmiDetail = () => {
     }
 
     const getMbtmiCommentList = (commentPageParam) => {
-        console.log('@getMbtmiCommentList호출');
         let defaultUrl = `http://localhost:8090/mbtmicommentlist/${no}`;
         if(commentPageParam!==1) defaultUrl += `?commentpage=${commentPageParam}`;
 
@@ -260,12 +256,6 @@ const MBTmiDetail = () => {
         setOpen(false);
     };
 
-    const reportComment = (commentNo) => {
-        console.log('신고할 댓글번호: ', commentNo);
-        // 팝업 열기
-    };
-
-
     // 추천
     const [recommend, setRecommend] = useState({
         username: user.username,
@@ -279,15 +269,12 @@ const MBTmiDetail = () => {
             alert("로그인해주세요.");
             return;
         }
-
-        console.log('추천값 출력: ', recommend);
-
+        // console.log('추천값 출력: ', recommend);
         let defaultUrl = `http://localhost:8090/mbtmirecommend`;
 
         axios.post(defaultUrl, recommend)
         .then(res=> {
-            console.log('추천결과: ', res);
-
+            // console.log('추천결과: ', res);
             let mbtmiRecommendCount = res.data.mbtmiRecommendCount;
             setIsRecommended(!isRecommended);
             setRecommendCount(mbtmiRecommendCount);
@@ -297,6 +284,87 @@ const MBTmiDetail = () => {
         });
     };
 
+    // 북마크
+    const [bookmark, setBookmark] = useState({
+        username: user.username,
+        postNo: no,
+        boardType: "mbtmi"
+    });
+    const [isBookmarked, setIsBookmarked] = useState(false);
+    const mbtmiBookmark = () => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+        console.log('북마크값 출력: ', bookmark);
+        let defaultUrl = `http://localhost:8090/mbtmibookmark`;
+
+        axios.post(defaultUrl, bookmark)
+        .then(res=> {
+            console.log('북마크결과: ', res);
+            setIsBookmarked(!isBookmarked);
+        })
+        .catch(err=> {
+            console.log(err);
+        });
+    }
+
+    // 신고 팝업창
+    const openReportWrite = (reportTarget, reportTargetFrom) => {
+        console.log('신고할 reportTarget: ', reportTarget, ", reportTargetFrom: ", reportTargetFrom);
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+
+        let reportData = {};
+        if(reportTargetFrom === "mbtmi") {
+            reportData = {
+                // no:0,
+                reportType: "게시글",
+                tableType: reportTargetFrom,
+                reportedPostNo: reportTarget.no,
+                // reportedCommentNo:, // 댓글 아니므로 댓글 번호 없음
+                reportedId: reportTarget.writerId,
+                // reportedTitle:, // 제목 없음
+                reportedContent: reportTarget.content,
+                // fileIdxs: "", // 파일 없음
+                reporterId: user.username,
+                // reportDate: "", // 백에서 지정
+                reportReason: "광고", // 신고 창에서 변경 (기본값 광고)
+                isCompleted: "N",
+                isWarned: "N"
+            };
+        } else if(reportTargetFrom === "mbtmicomment") {
+            reportData = {
+                // no:0,
+                reportType: "댓글",
+                tableType: reportTargetFrom,
+                reportedPostNo: mbtmi.no,
+                reportedCommentNo: reportTarget.no,
+                reportedId: reportTarget.writerId,
+                // reportedTitle:, // 제목 없음
+                reportedContent: reportTarget.commentContent,
+                // fileIdxs: "", // 파일 없음
+                reporterId: user.username,
+                // reportDate: "", // 백에서 지정
+                reportReason: "광고", // 신고 창에서 지정 (기본값 광고)
+                isCompleted: "N",
+                isWarned: "N"
+            };
+        }
+
+        const serializedReportData = encodeURIComponent(JSON.stringify(reportData));
+
+        // const url = "/reportwrite/" + reportTarget.writerId + '/' + reportTargetFrom;
+        const url = `/reportwrite?data=${serializedReportData}`;
+
+        window.open(
+            url,
+            "_blank",
+            "width=650,height=450,location=no,status=no,scrollbars=yes"
+        );
+    }
 
 
     // 목록으로 가기 버튼
@@ -312,7 +380,7 @@ const MBTmiDetail = () => {
 
     // 댓글목록 페이지네이션
     const PaginationInside = () => {
-        console.log('댓글목록 페이지네이션에서 출력 commentPage: ' + commentPage);
+        // console.log('댓글목록 페이지네이션에서 출력 commentPage: ' + commentPage);
         const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
         for(let i=commentPageInfo.startPage; i<=commentPageInfo.endPage; i++) {
             pageGroup.push(
@@ -380,7 +448,7 @@ const MBTmiDetail = () => {
                                 isLoginUserComment? (
                                     <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(comment.commentNo)}>삭제</small>
                                 ) : (
-                                    <small className={style.commentReportOrDeleteBtn} onClick={() => reportComment(comment.commentNo)}>신고</small>
+                                    <small className={style.commentReportOrDeleteBtn} onClick={()=>{openReportWrite(comment, "mbtmicomment")}}>신고</small>
                                 ) 
                             )}
                         </div>
@@ -430,7 +498,7 @@ const MBTmiDetail = () => {
                             isLoginUserComment? (
                                 <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(reply.commentNo)}>삭제</small>
                             ) : (
-                                <small className={style.commentReportOrDeleteBtn} onClick={() => reportComment(reply.commentNo)}>신고</small>
+                                <small className={style.commentReportOrDeleteBtn} name="mbtmicomment" onClick={(e)=>{openReportWrite(e, reply)}}>신고</small>
                             ) 
                         )}
                     </div>
@@ -456,10 +524,10 @@ const MBTmiDetail = () => {
                 {mbtmi? (
                     <>
                     <span className={style.currnetCategory}>&nbsp;{mbtmi.category}&nbsp;</span>
-                    {isBookmarked==='N'? (
-                        <img src={"/bookmarkIcon-white.png" } alt="책갈피" className={style.bookmarkIcon} />
+                    {!isBookmarked? (
+                        <img src={"/bookmarkIcon-white.png" } alt="" className={style.bookmarkIcon} onClick={()=>mbtmiBookmark()}/>
                         ) : (
-                        <img src={"/bookmarkIcon-red.png" } alt="책갈피" className={style.bookmarkIcon} />
+                        <img src={"/bookmarkIcon-red.png" } alt="" className={style.bookmarkIcon} onClick={()=>mbtmiBookmark()}/>
                         )}
                     <div className={style.postArea}>
                         <div style={{ display: mbtmi.writerId === user.username ? 'block' : 'none' }}>
@@ -472,7 +540,8 @@ const MBTmiDetail = () => {
                         <h2 className={style.postTitle}>{mbtmi.title}</h2>
                         <div className={style.profileColor} style={{ background: mbtmi.writerMbtiColor, borderColor: mbtmi.writerMbtiColor }}/>&nbsp;
                         <span>{mbtmi.writerMbti}&nbsp;{mbtmi.writerNickname}</span>
-                        <h6>{formatDate(mbtmi.writeDate)}
+                        {/* <h6>{formatDate(mbtmi.writeDate)} */}
+                        <h6>&nbsp;{formatDatetimeGap(mbtmi.writeDate)}
                             <span><img src={"/viewIcon.png" } alt="조회" className={style.viewIcon} />&nbsp;{mbtmi.viewCnt}</span>
                         </h6>
                         <div className={style.postContent} dangerouslySetInnerHTML={{ __html: mbtmi.content }}></div>
@@ -486,7 +555,7 @@ const MBTmiDetail = () => {
                         </p>
                         <div className={style.postBtns}>
                             <button onClick={goToPreviousList}>목록</button>
-                            <button><img src={"/reportIcon.png" } alt="신고아이콘" className={style.reportIcon} />&nbsp;신고</button>
+                            <button onClick={()=>openReportWrite(mbtmi, "mbtmi")}><img src={"/reportIcon.png" } alt="" className={style.reportIcon} />&nbsp;신고</button>
                         </div>
                     </div>
                     </>
@@ -498,7 +567,9 @@ const MBTmiDetail = () => {
                     <h6>&nbsp;&nbsp;{mbtmiCommentCnt}개의 댓글</h6>
                     <table>
                         <tbody>
-                        {mbtmiCommentList // 1차댓글
+                        {/* 백엔드 쿼리dsl의 정렬조건으로 no오름차순 단독 지정하여 가져온 리스트를 중첩된 구조로 렌더링하는 코드로,
+                             n페이지의 0번째 행이 대댓글인 경우 렌더링이 되지 않는 문제 존재  */}
+                        {/* {mbtmiCommentList // 1차댓글
                             .filter(comment=> comment.parentcommentNo===null)
                             .map(comment => (
                                 <React.Fragment key={comment.commentNo}>
@@ -507,7 +578,18 @@ const MBTmiDetail = () => {
                                     {mbtmiCommentList // 2차댓글
                                         .filter(reply => reply.parentcommentNo === comment.commentNo)
                                         .map(reply => <Reply key={reply.commentNo} reply={reply} />)}
-                                </React.Fragment>))}
+                                </React.Fragment>))} */}
+                        
+                        {/* 백엔드 쿼리dsl의 정렬조건으로 no보다 우선시되는 parentcommentNo를 추가하여 화면에 표시될 (중첩)구조로 가져온 리스트를 단순 렌더링 */}
+                        {mbtmiCommentList.map((comment) => (
+                            <React.Fragment key={comment.commentNo}>
+                                {/* 1차댓글 or 2차댓글 여부에 따라 서로 다른 컴포넌트로 렌더링 */}
+                                {(comment.parentcommentNo === null && (
+                                <Comment comment={comment} />
+                                )) || (<Reply reply={comment} />)}
+                            </React.Fragment>
+                        ))}
+
                         </tbody>
                     </table>
                     {PaginationInside()}

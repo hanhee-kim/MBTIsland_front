@@ -19,6 +19,15 @@ import NoteDetail from "./component/user/NoteDetail";
 // import DefaultMypage from "./component/user/DefaultMypage";
 import OAuth2User from "./component/user/OAuth2User";
 import Logout from "./component/user/Logout";
+import SentNoteDetail from "./component/user/SentNoteDetail";
+import DefaultMypage from "./component/user/DefaultMypage";
+import MyMbtWhy from "./component/user/MyMbtWhy";
+import MyMbtmi from "./component/user/MyMbtmi";
+import MyQnA from "./component/user/MyQnA";
+import MyBookmark from "./component/user/MyBookmark";
+import MyAlarm from "./component/user/MyAlarm";
+import MyNote from "./component/user/MyNote";
+import QuestionDetail from "./component/user/QuestionDetail";
 
 // 하영
 import ScrollReset from "./component/common/ScrollReset";
@@ -31,6 +40,7 @@ import MBTmiForm from "./component/mbtmi/MBTmiForm";
 import Notice from "./component/notice/Notice";
 import NoticeDetail from "./component/notice/NoticeDetail";
 import AdminFrame from "./component/admin/AdminFrame";
+import AdminQnaForm from "./component/admin/AdminQnaForm";
 
 // 인수
 import MbtwhyMain from "./component/mbtwhy/MbtwhyMain";
@@ -42,15 +52,6 @@ import MBattle from "./component/mbattle/MBattle";
 import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
-import QuestionDetail from "./component/user/QuestionDetail";
-import SentNoteDetail from "./component/user/SentNoteDetail";
-import DefaultMypage from "./component/user/DefaultMypage";
-import MyMbtWhy from "./component/user/MyMbtWhy";
-import MyMbtmi from "./component/user/MyMbtmi";
-import MyQnA from "./component/user/MyQnA";
-import MyBookmark from "./component/user/MyBookmark";
-import MyAlarm from "./component/user/MyAlarm";
-import MyNote from "./component/user/MyNote";
 
 export const persistor = persistStore(store);
 
@@ -156,9 +157,11 @@ function App() {
                 element={<NoticeDetail />}
               />
               <Route exact path="/adminnotice" element={<AdminFrame />} />
-              <Route exact path="/adminnoticeform" element={<AdminFrame />} />
-              <Route exact path="/adminqna" element={<AdminFrame />} />
-              <Route exact path="/adminqnaform" element={<AdminFrame />} />
+              <Route exact path="/adminnoticeform/:no?" element={<AdminFrame />} />
+              {/* 중첩 라우팅 */}
+              <Route path="/adminqna" element={<AdminFrame />}>
+                <Route path="/adminqna/form/:no" element={<AdminQnaForm />} />
+              </Route>
 
               {/* 인수 */}
               <Route exect path="/mbtwhymain" element={<MbtwhyMain />} />

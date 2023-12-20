@@ -5,12 +5,13 @@ import styleFrame from "../../css/admin/AdminFrame.module.css";
 import style from "../../css/admin/AdminNotice.module.css";
 import styleQna from "../../css/admin/AdminQna.module.css";
 import React, { useEffect, useState } from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import AdminNav from "./AdminNav";
 import axios from "axios";
 
 const AdminQna = () => {
 
+    const location = useLocation();
     const [questionList, setQuestionList] = useState([]);
     const [questionCnts, setQuestionCnts] = useState({'totalCnt':0, 'answeredCnt':0, 'answeredNotCnt':0});
     const [search, setSearch] = useState(null);
@@ -30,8 +31,19 @@ const AdminQna = () => {
     };
 
     useEffect(() => {
-        getQuestionList(search, answered, page, username);
-    }, []);
+
+        // AdminQnaForm.js에서 특정유저의 문의글모아보기 클릭시 파라미터와 함께 navigate됨
+        const searchParams = new URLSearchParams(location.search);
+        const writerId = searchParams.get('writerId');
+        if (writerId) {
+            console.log(`모아볼 아이디: ${writerId}`);
+            getQuestionList(search, null, 1, writerId);
+            setUsername(writerId);
+
+        } else {
+            getQuestionList(search, answered, page, username);
+        }
+    }, [location.search]);
 
     const getQuestionList = (search, answered, page, username) => {
         let defaultUrl = 'http://localhost:8090/questionlist';
@@ -107,28 +119,31 @@ const AdminQna = () => {
         setOpenList(newOpenList);
     };
 
-    const clickPopoverBody = (writerId) => {
+    const getQuestionListOfWriterId = (writerId) => {
         console.log('모아볼 writerId: ', writerId);
         getQuestionList(search, null, 1, writerId); // 문의글모아보기 클릭시 검색값은 유지, answered와 page는 초기값으로 목록 요청
         setUsername(writerId);
+        setActiveFilter(null);
+        setAnswered(null);
+        setPage(1);
     }
 
 
 
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
-    // useEffect(() => {
-    //     const clickOutsidePopover = (event) => {
-    //         const popoverElements = document.querySelectorAll(".popover");
-    //         // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
-    //         if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
-    //             setOpen(false);
-    //         } 
-    //     };
-    //     document.addEventListener("mousedown", clickOutsidePopover);
-    //     return () => {
-    //         document.removeEventListener("mousedown", clickOutsidePopover);
-    //     };
-    // }, []);
+    useEffect(() => {
+        const clickOutsidePopover = (event) => {
+            const popoverElements = document.querySelectorAll(".popover");
+            // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
+            if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
+                setOpenList(questionList.map(() => false));
+            } 
+        };
+        document.addEventListener("mousedown", clickOutsidePopover);
+        return () => {
+            document.removeEventListener("mousedown", clickOutsidePopover);
+        };
+    }, []);
 
 
     // 페이지네이션
@@ -158,6 +173,13 @@ const AdminQna = () => {
             </div>
         );
     }
+
+    // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
+    const navigate = useNavigate();
+    const goToAdminQnaForm = (postNo) => {
+        const linkTo = `/adminqna/form/${postNo}`;
+        navigate(linkTo); // 리다이렉트
+    };
 
     return (
         <>
@@ -195,10 +217,10 @@ const AdminQna = () => {
                                 <tr key={post.no} className={post.isAnswered==='Y'? styleQna.completedQna : ''}>
                                     <td>{post.no}</td>
                                     <td>{formatDate(post.writeDate)}</td>
-                                    <td>{post.title}</td>
+                                    <td onClick={()=> goToAdminQnaForm(post.no)}>{post.title}</td>
                                     <td onClick={() => togglePopover(index)} id={`popover${index}`}>{post.writerId}</td>
                                     <Popover className={styleQna.popover} placement="bottom" isOpen={openList[index]} target={`popover${index}`} toggle={() => togglePopover(index)}>
-                                        <PopoverBody className={styleQna.popoverItem} onClick={() => clickPopoverBody(post.writerId)}>문의글 모아보기</PopoverBody>
+                                        <PopoverBody className={styleQna.popoverItem} onClick={() => getQuestionListOfWriterId(post.writerId)}>문의글 모아보기</PopoverBody>
                                     </Popover>
                                     <td>{post.isAnswered==='N'? ('미처리') : ('처리')}</td>
                                 </tr>
