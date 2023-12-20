@@ -13,21 +13,25 @@ function MBattleWrite() {
     // 로그인 유저 정보
     const user = useSelector((state) => state.persistedReducer.user.user);
 
+    const imgBoxRef1 = useRef();
+    const imgBoxRef2 = useRef();
+    const navigate = useNavigate();
+    
+    // mbattle 게시글
     const [mbattle, setMbattle] = useState({
         title:"",
         voteItem1:"",
         voteItem2:"",
-        file1Idx:"",
-        file2Idx:"",
+        file1idx:"",
+        file2idx:"",
         writerId: user.username,
         writerNickname: user.userNickname,
         writerMbti: user.userMbti,
         writerMbtiColor: user.userMbtiColor
     });
 
-    const imgBoxRef1 = useRef();
-    const imgBoxRef2 = useRef();
-    const navigate = useNavigate();
+    // 파일 목록
+    const [files, setFiles] = useState([]);
 
     // mbattle 필드값 변경
     const change = (e) => {
@@ -46,17 +50,18 @@ function MBattleWrite() {
             // files 배열에 추가
             // 얕은 복사로 추가할 파일을 배열에 넣음
             setMbattle({...mbattle, [name]:value});
+            setFiles([...files, e.target.files[0]]);
         }
     
         // 기존 img 태그 영역의 이미지를 변경하는 코드
         // 파라미터 e에서 file 경로를 가져옴
         if(e.target.files!==null) {
             const imageSrc = URL.createObjectURL(e.target.files[0]); // img 태그에서 가리키는 imgBoxRef에 file 경로 설정
-            if(name==="file1") {
+            if(name==="file1idx") {
                 imgBoxRef1.current.src = imageSrc;
                 imgBoxRef1.current.width = 290;
                 imgBoxRef1.current.height = 290;
-            } else if(name==="file2") {
+            } else if(name==="file2idx") {
                 imgBoxRef2.current.src = imageSrc;
                 imgBoxRef2.current.width = 300;
                 imgBoxRef2.current.height = 300;
@@ -133,7 +138,7 @@ function MBattleWrite() {
                         <div>
                             <div className={style.inputFileDiv} onClick={()=>document.getElementById("file1Idx").click()} >
                                 <img src="/attachIcon.png" alt="" ref={imgBoxRef1} width="200px" height="200px"/>
-                                    <Input type="file" id="file1Idx" name="file1Idx" accept="image/*" onChange={fileChange} hidden/>
+                                    <Input type="file" id="file1idx" name="file1idx" accept="image/*" onChange={fileChange} hidden/>
                             </div>
                             항목1
                             <Input 
@@ -152,7 +157,7 @@ function MBattleWrite() {
                         <div>
                             <div className={style.inputFileDiv} onClick={()=>document.getElementById("file2Idx").click()}>
                                 <img src="/attachIcon.png" alt="" ref={imgBoxRef2} width="200px" height="200px"/>
-                                    <Input type="file" id="file2Idx" name="file2Idx" accept="image/*" onChange={fileChange} hidden/>
+                                    <Input type="file" id="file2idx" name="file2idx" accept="image/*" onChange={fileChange} hidden/>
                             </div>
                             항목2
                             <Input 

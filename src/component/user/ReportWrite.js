@@ -95,7 +95,7 @@ const ReportWrite = (props) => {
               sm={5}
               type="select"
               name="reportType"
-              onChange={(e)=>setReport({...report,reportType:e.target.value})}
+              onChange={(e)=>setReport({...report, reportReason:e.target.value})}
               style={{ width: "150px"}}
             >
               <option>광고</option>
