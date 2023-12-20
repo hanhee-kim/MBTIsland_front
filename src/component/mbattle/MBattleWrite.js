@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from 'react-router';
+import { useSelector } from "react-redux";
 import {
     Button,
     Input
@@ -9,16 +10,31 @@ import axios from 'axios';
 import style from "../../css/mbattle/MBattleForm.module.css";
 
 function MBattleWrite() {
-    const [board, setBoard] = useState({title:'',subject1:'',subject2:'',file1:'',file2:''});
+    // 로그인 유저 정보
+    const user = useSelector((state) => state.persistedReducer.user.user);
+
+    const [mbattle, setMbattle] = useState({
+        title:"",
+        voteItem1:"",
+        voteItem2:"",
+        file1Idx:"",
+        file2Idx:"",
+        writerId: user.username,
+        writerNickname: user.userNickname,
+        writerMbti: user.userMbti,
+        writerMbtiColor: user.userMbtiColor
+    });
+
     const imgBoxRef1 = useRef();
     const imgBoxRef2 = useRef();
     const navigate = useNavigate();
 
+    // mbattle 필드값 변경
     const change = (e) => {
         const name = e.target.name;
         const value = e.target.value;
-        setBoard({...board, [name]:value});
-    }
+        setMbattle({...mbattle, [name]:value});
+    };
 
     // 파일이 변경될 때 호출
     const fileChange = (e) => {
@@ -29,7 +45,7 @@ function MBattleWrite() {
         if(e.target.files.length > 0) {
             // files 배열에 추가
             // 얕은 복사로 추가할 파일을 배열에 넣음
-            setBoard({...board, [name]:value});
+            setMbattle({...mbattle, [name]:value});
         }
     
         // 기존 img 태그 영역의 이미지를 변경하는 코드
@@ -46,23 +62,17 @@ function MBattleWrite() {
                 imgBoxRef2.current.height = 300;
             }
         }
+    };
 
-    }
-    const submit = (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append("title", board.title);
-        formData.append("subject1", board.subject1);
-        formData.append("subject2", board.subject1);
-        formData.append("file1", board.file1);
-        formData.append("file2", board.file2);
+    // 게시글 작성
+    const postMbattle = () => {
         // formData.append("file", files);
     
-        axios.post("http://localhost:8090/mbattlewrite/", formData)
+        axios.post("http://localhost:8090/mbattlewrite/", mbattle)
         .then(res=> {
             console.log(res);
-            let boardNum = res.data;
-            navigate(`/detailform/after-modify/${boardNum}`);
+            let no = res.data.no;
+            navigate(`/mbattledetail/${no}/1`);
         })
         .catch(err=> {
             console.log(err);
@@ -74,20 +84,20 @@ function MBattleWrite() {
         height:"50px",
         resize:"none",
         margin:"0 auto"
-    }
+    };
 
     const inputSubject = {
         width:"300px",
         height:"100px",
         resize:"none"
-    }
+    };
 
     const buttonStyle = {
         background:"white",
         color:"black",
         border:"1px solid lightgray",
         margin:"10px"
-    }
+    };
     
     return (
         <div className={style.container}>
@@ -114,54 +124,54 @@ function MBattleWrite() {
                         cols="40"
                         rows="15"
                         required="required"
-                        value={board.title}
+                        value={mbattle.title}
                         placeholder="제목을 입력해주세요."
                     />
 
                     {/* 사진, 주제 작성 */}
                     <div className={style.sectionSubject}>
                         <div>
-                            <div className={style.inputFileDiv} onClick={()=>document.getElementById("file1").click()} >
+                            <div className={style.inputFileDiv} onClick={()=>document.getElementById("file1Idx").click()} >
                                 <img src="/attachIcon.png" alt="" ref={imgBoxRef1} width="200px" height="200px"/>
-                                    <Input type="file" id="file1" name="file1" accept="image/*" onChange={fileChange} hidden/>
+                                    <Input type="file" id="file1Idx" name="file1Idx" accept="image/*" onChange={fileChange} hidden/>
                             </div>
                             항목1
                             <Input 
                                 style={inputSubject}
                                 type="textarea"
-                                id="subject1"
-                                name="subject1"
+                                id="voteItem1"
+                                name="voteItem1"
                                 onChange={change}
                                 cols="40"
                                 rows="15"
                                 required="required"
-                                value={board.subject1}
+                                value={mbattle.voteItem1}
                                 placeholder="주제를 입력해주세요."
                             />
                         </div>
                         <div>
-                            <div className={style.inputFileDiv} onClick={()=>document.getElementById("file2").click()}>
+                            <div className={style.inputFileDiv} onClick={()=>document.getElementById("file2Idx").click()}>
                                 <img src="/attachIcon.png" alt="" ref={imgBoxRef2} width="200px" height="200px"/>
-                                    <Input type="file" id="file2" name="file2" accept="image/*" onChange={fileChange} hidden/>
+                                    <Input type="file" id="file2Idx" name="file2Idx" accept="image/*" onChange={fileChange} hidden/>
                             </div>
-                            항목1
+                            항목2
                             <Input 
                                 style={inputSubject}
                                 type="textarea"
-                                id="subject2"
-                                name="subject2"
+                                id="voteItem2"
+                                name="voteItem2"
                                 onChange={change}
                                 cols="40"
                                 rows="15"
                                 required="required"
-                                value={board.subject2}
+                                value={mbattle.voteItem2}
                                 placeholder="주제를 입력해주세요."
                             />
                         </div>
                     </div>
 
                     <div className={style.ButtonDiv}>
-                        <Button style={buttonStyle} onClick={submit}>등록</Button>
+                        <Button style={buttonStyle} onClick={()=>postMbattle()}>등록</Button>
                         <Button style={buttonStyle} href="mbattle">취소</Button>
                     </div>
                 </div>

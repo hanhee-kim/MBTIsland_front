@@ -116,13 +116,13 @@ function App() {
               <Route exact path="/join" element={<Join />} />
               <Route exact path="/addjoin" element={<AddJoin />} />
               <Route exact path="/mypage" element={<Mypage />}>
-                <Route exact path="profile" element={<DefaultMypage/>}/>
-                <Route exact path="mbtwhy" element={<MyMbtWhy/>}/>
-                <Route exact path="mbtmi" element={<MyMbtmi/>}/>
-                <Route exact path="qna" element={<MyQnA/>}/>
-                <Route exact path="bookmark" element={<MyBookmark/>}/>
-                <Route exact path="alarm" element={<MyAlarm/>}/>
-              <Route exact path="note" element={<MyNote/>}/>
+                <Route exact path="profile" element={<DefaultMypage />} />
+                <Route exact path="mbtwhy" element={<MyMbtWhy />} />
+                <Route exact path="mbtmi" element={<MyMbtmi />} />
+                <Route exact path="qna" element={<MyQnA />} />
+                <Route exact path="bookmark" element={<MyBookmark />} />
+                <Route exact path="alarm" element={<MyAlarm />} />
+                <Route exact path="note" element={<MyNote />} />
               </Route>
               <Route
                 exact
@@ -183,17 +183,17 @@ function App() {
               <Route exect path="/mbtwhy/:mbti" element={<Mbtwhy />} />
               <Route exact path="/mbtwhydetail/:mbti/:no/:page" element={<MbtwhyDetail />} />
               <Route exact path="/mbtwhywrite/:mbti?" element={<MbtwhyWrite />} />
-              <Route exact path="/mbtwhymodify" element={<MbtwhyModify />} />
+              <Route exact path="/mbtwhymodify/:no" element={<MbtwhyModify />} />
               <Route exact path="/mbattle" element={<MBattle />} />
               <Route exact path="/mbattlewrite" element={<MBattleWrite />} />
-              <Route exact path="/mbattledetail" element={<MBattleDetail />} />
+              <Route exact path="/mbattledetail/:no/:page" element={<MBattleDetail />} />
               <Route exact path="/adminreport" element={<AdminFrame />} />
               <Route exact path="/adminreportdetail" element={<AdminFrame />} />
               <Route exact path="/adminban" element={<AdminFrame />} />
               <Route exact path="/adminbandetail" element={<AdminFrame />} />
               <Route
                 exact
-                path="/reportwrite/:reportedId/:reportedTable"
+                path="/reportwrite"
                 element={<ReportWrite setIsPopup={setIsPopup} />}
               />
             </Routes>
