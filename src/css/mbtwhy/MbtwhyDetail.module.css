@@ -149,6 +149,10 @@
     line-height: 120px;
 }
 
+.noComment {
+    color: #C5C5C5;
+}
+
 .paging {
     display: flex;
     justify-content: center;

@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Link, useParams } from 'react-router-dom';
 import {
     Pagination,
     PaginationItem,
@@ -27,23 +28,38 @@ import axios from 'axios';
 import style from "../../css/mbattle/MBattleDetail.module.css";
 
 function MBattleDetail() {
-    const [board, setBoard] = useState(
-        {
-            num:1,
-            mbti:"INTP",
-            color:"#9BB7D4",
-            writer:"마춤뻡파괴왕",
-            date:"1일전",
-            title:"똥맛 카레 vs 카레맛 똥",
-            subject1:"똥맛 카레",
-            subject2:"카레맛 똥",
-            file1:"",
-            file2:"",
-            commentCount:2,
-            likeCount:1,
-            viewCount:23
-        }
-    );
+    // 로그인 유저 정보
+    const user = useSelector((state) => state.persistedReducer.user.user);
+
+    // Mbattle 게시글
+    const [mbattle, setMbattle] = useState({});
+
+    // 글 번호, 댓글 페이지 번호
+    const {no, page} = useParams();
+
+    // 투표 여부
+    const [isVoted, setIsVoted] = useState(false);
+
+    // 북마크 여부
+    const [isBookmarked, setIsBookmarked] = useState(false);
+
+    // const [board, setBoard] = useState(
+    //     {
+    //         num:1,
+    //         mbti:"INTP",
+    //         color:"#9BB7D4",
+    //         writer:"마춤뻡파괴왕",
+    //         date:"1일전",
+    //         title:"똥맛 카레 vs 카레맛 똥",
+    //         subject1:"똥맛 카레",
+    //         subject2:"카레맛 똥",
+    //         file1:"",
+    //         file2:"",
+    //         commentCount:2,
+    //         likeCount:1,
+    //         viewCount:23
+    //     }
+    // );
 
     const [comments, setComments] = useState([
         {
@@ -145,29 +161,52 @@ function MBattleDetail() {
 
     // pageChange 함수를 호출한 페이징 영역에서 페이징 항목(1, 2, 3...)들을 인자로 받아옴
     const pageChange = (repage) => {
-        reqBoardList(repage);
+        // getMbattleDetail();
     };
 
+    useEffect(()=> {
+        getMbattleDetail();
+    }, []);
+
     // url에 파라미터로 줄 변수 repage
-    const reqBoardList = (repage) => {
-        // if(!repage) repage = 1;
-        axios.get(`http://localhost:8090/mbattledetail/${repage}`)
+    const getMbattleDetail = () => {
+        let defaultUrl = `http://localhost:8090/mbattledetail/${no}`;
+        defaultUrl += `&username=${user.username}`;
+
+        axios.get(defaultUrl)
         .then(res=> {
             console.log(res);
-            let pageInfo = res.data.pageInfo;
-            let list = res.data.commentList;
+            let mbattle = res.data.mbattle;
+            let isMbattleVoted = res.data.isMbattleVoted;
+            let isMbattleBookmarked = res.data.isMbattleBookmarked;
 
-            setComments([...list]);
-            
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
+            // 게시글 set
+            setMbattle(mbattle);
+
+            // 로그인한 유저에게 투표되어 있다면 (투표 데이터 존재한다면)
+            if(isMbattleVoted) {
+                setIsVoted(!isVoted);
             }
-            setPageBtn(btn);
-            setPageInfo({...pageInfo});
+
+            if(isMbattleBookmarked) {
+                setIsBookmarked(!isBookmarked);
+            }
+
+            // let pageInfo = res.data.pageInfo;
+            // let list = res.data.commentList;
+
+            // setComments([...list]);
+            
+            // let btn = [];
+            // for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
+            //     btn.push(i)
+            // }
+            // setPageBtn(btn);
+            // setPageInfo({...pageInfo});
         })
         .catch(err=> {
             console.log(err);
+            setMbattle({});
         })
     };
 
@@ -184,11 +223,6 @@ function MBattleDetail() {
 
     const random = (e) => {
 
-    };
-
-    const submit = (e) => {
-
-        e.preventDefault();
     };
 
     const dropDownStyle = {
@@ -236,10 +270,10 @@ function MBattleDetail() {
                 {/* 수직 중간 영역 */}
                 <div>
                 {/* 게시글 영역 */}
-                    <div key={board.num} className={style.sectionBoard}>
-                        <Link to={"/detailform/only-detail/" + board.num}></Link>
+                    <div key={mbattle.no} className={style.sectionBoard}>
+                        {/* <Link to={"/detailform/only-detail/" + mbattle.no}></Link> */}
                         <div className={style.boardTitle}>
-                            <h1>{board.title}</h1>
+                            <h1>{mbattle.title}</h1>
                             <div> 
                                 <img src="/randomIcon.png" height="30px" alt="" onClick={random} />
                                 <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
@@ -262,14 +296,14 @@ function MBattleDetail() {
                             
                         </div>
                         <div className={style.writerDiv}>
-                            <div className={style.circleDiv} style={{backgroundColor:`${board.color}`}}> </div>&nbsp;&nbsp;&nbsp;
-                            {board.mbti}&nbsp;&nbsp;&nbsp;
-                            {board.writer}
+                            <div className={style.circleDiv} style={{backgroundColor:`${mbattle.mbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
+                            {mbattle.mbtiCategori}&nbsp;&nbsp;&nbsp;
+                            {mbattle.writerId}
                         </div>
                         <div style={{color:"#C5C5C5"}}>
-                            {board.date}
+                            {mbattle.writeDate}
                             <img className={style.viewIcon} src="/viewIcon-bold.png" alt=""></img>
-                            {board.viewCount}
+                            {mbattle.viewCnt}
                         </div>
 
                         {/* 투표 영역 */}
@@ -337,32 +371,30 @@ function MBattleDetail() {
                         </div>
 
                         <div>
-                        <BarChart
-                            width={430}
-                            height={170}
-                            data={data}
-                            layout="vertical">
-                            <XAxis type="number" orientation="top"/>
-                            <YAxis type="category" dataKey="currency" axisLine={false} dx={-5} tickLine={false} 
-                                style={{ fill: "#285A64" }} />
-                            <Bar background dataKey="uv" fill="#285A64" barSize={{ height: 300 }}>
-                                
-                            </Bar>
-                        </BarChart>
+                            <BarChart
+                                width={430}
+                                height={170}
+                                data={data}
+                                layout="vertical">
+                                <XAxis type="number" orientation="top"/>
+                                <YAxis type="category" dataKey="currency" axisLine={false} dx={-5} tickLine={false} 
+                                    style={{ fill: "#285A64" }} />
+                                <Bar background dataKey="uv" fill="#285A64" barSize={{ height: 300 }}>
+                                    
+                                </Bar>
+                            </BarChart>
                         </div>
-
-
 
                         <div className={style.boardLow}>
                             <div className={style.bookmarkDiv}>
                                 <img src="/bookmark.png" alt=""></img>&nbsp;
                                 
                             </div>
-                            <div className={style.thumbDiv}>
+                            {/* <div className={style.thumbDiv}>
                                 <img src="/thumbIcon.png" alt=""></img>&nbsp;
                                 추천&nbsp;
-                                {board.likeCount}
-                            </div>
+                                {mbattle.likeCount}
+                            </div> */}
                             <div className={style.listDiv}>
                                 <Button style={buttonStyle}>목록</Button>
                             </div>
@@ -371,7 +403,7 @@ function MBattleDetail() {
                     <div className={style.commentCountDiv}>
                         <div>
                             댓글&nbsp;
-                            {board.commentCount}
+                            {/* {mbattle.commentCount} */}
                         </div>
                     </div>
                 </div>

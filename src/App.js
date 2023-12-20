@@ -163,27 +163,19 @@ function App() {
               {/* 인수 */}
               <Route exect path="/mbtwhymain" element={<MbtwhyMain />} />
               <Route exect path="/mbtwhy/:mbti" element={<Mbtwhy />} />
-              <Route
-                exact
-                path="/mbtwhydetail/:mbti/:no/:page"
-                element={<MbtwhyDetail />}
-              />
-              <Route
-                exact
-                path="/mbtwhywrite/:mbti?"
-                element={<MbtwhyWrite />}
-              />
-              <Route exact path="/mbtwhymodify" element={<MbtwhyModify />} />
+              <Route exact path="/mbtwhydetail/:mbti/:no/:page" element={<MbtwhyDetail />} />
+              <Route exact path="/mbtwhywrite/:mbti?" element={<MbtwhyWrite />} />
+              <Route exact path="/mbtwhymodify/:no" element={<MbtwhyModify />} />
               <Route exact path="/mbattle" element={<MBattle />} />
               <Route exact path="/mbattlewrite" element={<MBattleWrite />} />
-              <Route exact path="/mbattledetail" element={<MBattleDetail />} />
+              <Route exact path="/mbattledetail/:no/:page" element={<MBattleDetail />} />
               <Route exact path="/adminreport" element={<AdminFrame />} />
               <Route exact path="/adminreportdetail" element={<AdminFrame />} />
               <Route exact path="/adminban" element={<AdminFrame />} />
               <Route exact path="/adminbandetail" element={<AdminFrame />} />
               <Route
                 exact
-                path="/reportwrite/:reportedId/:reportedTable"
+                path="/reportwrite"
                 element={<ReportWrite setIsPopup={setIsPopup} />}
               />
             </Routes>
