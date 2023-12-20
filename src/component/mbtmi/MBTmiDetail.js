@@ -231,9 +231,11 @@ const MBTmiDetail = () => {
         }
         setOpen(false);
     };
+
+    // 수정 버튼 클릭시
     const modifyMbtmi = (no) => {
-        console.log('수정할 게시글번호: ', no);
-        
+        // console.log('수정할 게시글번호: ', no);
+        navigate(`/mbtmiform/${no}`)
     };
 
     const deleteComment = (commentNo) => {
@@ -312,7 +314,7 @@ const MBTmiDetail = () => {
     // 첫번째 인자가 reportedId인거?? targetNo(PK)이 아니라?? 
     // 신고 팝업창
     const openReportWrite = (reportTarget, reportTargetFrom) => {
-        console.log('신고할 reportTarget: ', reportTarget, ", reportTargetFrom: ", reportTargetFrom);
+        console.log('신고대상 reportTarget(객체): ', reportTarget, ", reportTargetFrom(테이블명): ", reportTargetFrom);
         if(!user.username) {
             alert("로그인해주세요.");
             return;
@@ -365,7 +367,7 @@ const MBTmiDetail = () => {
             "_blank",
             "width=650,height=450,location=no,status=no,scrollbars=yes"
         );
-    }
+    };
 
 
     // 목록으로 가기 버튼
@@ -499,7 +501,7 @@ const MBTmiDetail = () => {
                             isLoginUserComment? (
                                 <small className={style.commentReportOrDeleteBtn} onClick={() => deleteComment(reply.commentNo)}>삭제</small>
                             ) : (
-                                <small className={style.commentReportOrDeleteBtn} name="mbtmicomment" onClick={(e)=>{openReportWrite(e, reply)}}>신고</small>
+                                <small className={style.commentReportOrDeleteBtn} name="mbtmicomment" onClick={(e)=>{openReportWrite(reply, "mbtmicomment")}}>신고</small>
                             ) 
                         )}
                     </div>

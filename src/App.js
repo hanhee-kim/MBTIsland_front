@@ -149,7 +149,8 @@ function App() {
                 path="/mbtmidetail/:no/:category?/:type?/:search?/:page?"
                 element={<MBTmiDetail />}
               />
-              <Route exact path="/mbtmiform" element={<MBTmiForm />} />
+              {/* <Route exact path="/mbtmiform" element={<MBTmiForm />} /> */}
+              <Route exact path="/mbtmiform/:no?" element={<MBTmiForm />} />
               <Route exact path="/notice" element={<Notice />} />
               <Route
                 exact

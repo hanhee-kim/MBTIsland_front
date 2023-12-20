@@ -18,7 +18,7 @@ const AdminNoticeForm = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [notice, setNotice] = useState(null); // 작성된 공지사항 객체
-    const [modifying, setModifying] = useState(false);
+    const [modifying, setModifying] = useState(false); // 수정모드 여부
     const [itsDetail, setItsDetail] = useState(false);
     const formatDate = (dateString) => {
         const date = new Date(dateString);
