@@ -1,5 +1,5 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { Provider, useDispatch } from "react-redux";
+import { Routes, Route, BrowserRouter, useNavigate } from "react-router-dom";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import { useEffect, useState } from "react";
 import { persistStore } from "redux-persist";
@@ -52,6 +52,7 @@ import MBattle from "./component/mbattle/MBattle";
 import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
+import CheckAbnormalAccess from "./component/common/CheckAbnormalAccess";
 
 export const persistor = persistStore(store);
 
@@ -88,12 +89,26 @@ function App() {
     };
   }, []);
 
+
+/*
+  // 관리자 로그인되지 않은 상태로 관리자페이지 url요청시(비정상 접근 처리)
+  const user = useSelector((state) => state.persistedReducer.user.user); // 로그인정보 (Provider로 감싸져 리덕스스토어가 제공되는 컴포넌트내에서 요청 가능)
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user.userRole !== "ROLE_ADMIN") {
+      alert("잘못된 요청입니다.");
+      navigate(-1);
+    }
+  }, [user.userRole, navigate]);
+*/
+
   return (
     <div className="App">
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <BrowserRouter>
             <ScrollReset />
+            <CheckAbnormalAccess/>
             {!isPopup && <Header />}
             <Routes>
               {/* 한희 */}

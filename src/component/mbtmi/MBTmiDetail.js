@@ -122,7 +122,7 @@ const MBTmiDetail = () => {
             setMbtmiCommentList([...comments]);
             setCommentPage(allPage); // ***
             setComment("");
-            setMbtmiCommentCnt(mbtmiCommentCnt+1);
+            setMbtmiCommentCnt(mbtmiCommentCnt);
             getMbtmiCommentList(allPage); // ***
         })
         .catch(err=> {
@@ -309,6 +309,7 @@ const MBTmiDetail = () => {
         });
     }
 
+    // 첫번째 인자가 reportedId인거?? targetNo(PK)이 아니라?? 
     // 신고 팝업창
     const openReportWrite = (reportTarget, reportTargetFrom) => {
         console.log('신고할 reportTarget: ', reportTarget, ", reportTargetFrom: ", reportTargetFrom);
