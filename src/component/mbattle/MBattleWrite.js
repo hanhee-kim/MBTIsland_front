@@ -154,12 +154,12 @@ function MBattleWrite() {
                                 <img src="/attachIcon.png" alt="" ref={imgBoxRef2} width="200px" height="200px"/>
                                     <Input type="file" id="file2Idx" name="file2Idx" accept="image/*" onChange={fileChange} hidden/>
                             </div>
-                            항목1
+                            항목2
                             <Input 
                                 style={inputSubject}
                                 type="textarea"
-                                id="subject2"
-                                name="subject2"
+                                id="voteItem2"
+                                name="voteItem2"
                                 onChange={change}
                                 cols="40"
                                 rows="15"
