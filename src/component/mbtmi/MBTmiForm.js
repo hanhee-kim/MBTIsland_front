@@ -21,34 +21,13 @@ const MBTmiForm = () => {
     const [mbtmi, setMbtmi] = useState(null);
 
 
-    // MBTmiDetail.js의 수정버튼을 통해 진입하여 파라미터 no과 함께 호출된 경우
-    useEffect(()=> {
-        if(no) {
-            getMbtmiDetail(no);
-            setModifying(true);
-        } 
-        // else {
-        //     setModifying(false);
-        // }
-    }, [no]);
-    const getMbtmiDetail = (no) => {
-        let defaultUrl = `http://localhost:8090/mbtmidetail/${no}`;
-        // if(user.username!=="" || user.username!==undefined) defaultUrl += `?username=${user.username}`;
-        axios.get(defaultUrl)
-        .then(res=> {
-            console.log('getMbtmiDetail 요청결과: ', res);
-            let mbtmi = res.data.mbtmi;
-            let prevCategory = res.data.mbtmi.category;
-            setMbtmi(mbtmi);
-            setTitle(mbtmi.title);
-            setContent(mbtmi.content);
-            setActiveCategory(prevCategory);
-        })
-        .catch(err=> {
-            console.log(err);
-        });
-    }
-    
+
+    // 취소 버튼
+    const goToPreviousList = () => {
+        navigate(-1);
+    };
+
+    // 카테고리 선택
     const handleCategoryChange = (categoryParam) => {
         setSelectCategory(categoryParam);
         setActiveCategory(categoryParam);
@@ -57,11 +36,6 @@ const MBTmiForm = () => {
     //     setActiveCategory(selectCategory);
     // }, [selectCategory]);
 
-
-    // 취소 버튼
-    const goToPreviousList = () => {
-        navigate(-1);
-    };
 
     // 등록 폼에서 저장 버튼 클릭시
     const addPost = async () => {
@@ -102,6 +76,37 @@ const MBTmiForm = () => {
         }
     }
 
+
+    
+    // MBTmiDetail.js의 수정버튼을 통해 진입하여 파라미터 no과 함께 호출된 경우
+    useEffect(()=> {
+        if(no) {
+            getMbtmiDetail(no);
+            setModifying(true);
+        } 
+        // else {
+        //     setModifying(false);
+        // }
+    }, [no]);
+    const getMbtmiDetail = (no) => {
+        let defaultUrl = `http://localhost:8090/mbtmidetail/${no}`;
+        // if(user.username!=="" || user.username!==undefined) defaultUrl += `?username=${user.username}`;
+        axios.get(defaultUrl)
+        .then(res=> {
+            console.log('getMbtmiDetail 요청결과: ', res);
+            let mbtmi = res.data.mbtmi;
+            let prevCategory = res.data.mbtmi.category;
+            setMbtmi(mbtmi);
+            setTitle(mbtmi.title);
+            setContent(mbtmi.content);
+            setActiveCategory(prevCategory);
+            setSelectCategory(prevCategory);
+        })
+        .catch(err=> {
+            console.log(err);
+        });
+    }
+    
     // 수정 폼에서의 저장 버튼 클릭시
     const modifyPost = async () => {
         try {
@@ -173,6 +178,7 @@ const MBTmiForm = () => {
                 ) : (
                     // 수정 폼
                     <form className={style.mbtmiForm}>
+                    {console.log('selectCategory: ', selectCategory, ", mbtmi: ", mbtmi, ", activeCategory: ", activeCategory)}
                         <li>카테고리</li>
                         <div className={style.categoryBtns}>
                             <label className={activeCategory==='잡담'? style.activeCategory :''} onClick={() => handleCategoryChange('잡담')}>잡담</label>
