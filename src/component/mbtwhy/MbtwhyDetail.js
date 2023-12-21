@@ -268,7 +268,7 @@ function MbtwhyDetail() {
         // if(sort !== null) defaultUrl += `&sort=${sort}`;
         if(no !== null) defaultUrl += `no=${no}`;
         // if(commentPage !== null) defaultUrl += `&commentPage=${commentPage}`;
-        defaultUrl += `&username=${user.username}`;
+        if(user.username!=="") defaultUrl += `&username=${user.username}`;
         
         axios.get(defaultUrl)
         .then(res=> {
@@ -369,7 +369,7 @@ function MbtwhyDetail() {
     // 댓글 목록 조회
     const getMbtwhyCommentList = (commentPage) => {
         let defaultUrl = `http://localhost:8090/mbtwhycommentlist/${no}`;
-        if(commentPage !== 1) defaultUrl += `?&commentPage=${commentPage}`; 
+        if(commentPage !== 1) defaultUrl += `?commentPage=${commentPage}`; 
         
         axios.get(defaultUrl)
         .then(res=> {
@@ -906,7 +906,7 @@ function MbtwhyDetail() {
                     {/* 삭제된 댓글 */}
 
                     {/* 페이징 영역 */}
-                    <PaginationInside />
+                    {comments.length===0?<></>:<PaginationInside/>}
 
                     {/* 댓글 달기 */}
                     {user.userRole === "ROLE_USER"?

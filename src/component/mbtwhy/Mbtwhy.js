@@ -16,25 +16,15 @@ function Mbtwhy() {
     // 로그인 유저 정보]
     const user = useSelector((state) => state.persistedReducer.user.user);
 
-    // 인기 게시글 더미 데이터
+    // 인기 게시글
     const [hotMbtwhy, setHotMbtwhy] = useState({});
 
     // Mbtwhy 게시글 목록
     const [mbtwhyList, setMbtwhyList] = useState([]);
 
-    // Mbtwhy 게시글 수
-    // const [mbtwhyCnt, setMbtwhyCnt] = useState(0);
-
     // URL 파라미터
     // MBTI 유형, 페이지 번호, 정렬 옵션, 검색 값
     const {mbti} = useParams();
-    // const formatMbti = mbti.startsWith(':') ? mbti.substring(1) : mbti;
-    // const formatPage = page.startsWith(':') ? page.substring(1) : page;
-    // const formatSort = sort.startsWith(':') ? sort.substring(1) : sort;
-    // const formatSearch = search.startsWith(':') ? search.substring(1) : search;
-
-    // const [mbti, setMbti] = useState(mbtiType);
-    // console.log(mbti);
 
     // 페이징 상태 값
     const [page, setPage] = useState(1);
@@ -95,7 +85,6 @@ function Mbtwhy() {
         }
     }
     
-
     // navigate
     const navigate = useNavigate();
 
@@ -108,11 +97,6 @@ function Mbtwhy() {
     // mbtwhydetail 이동
     const goMbtwhyDetail = (no) => {
         let defaultUrl = `/mbtwhydetail/${mbti}/${no}/1`;
-        // if(mbti !== null) defaultUrl += `/${mbti}`;
-        // if(no !== null) defaultUrl += `/${no}`;
-        // if(page !== null) defaultUrl += `/${page}`;
-        // if(sort !== null) defaultUrl += `/${sort}`;
-        // if(search) defaultUrl += `/${search}`;
 
         navigate(defaultUrl);
     }
@@ -126,36 +110,30 @@ function Mbtwhy() {
     }
     
     // 게시글 목록 조회
-    const getMbtwhyList = (pageNo, searchValue, sortType) => {
-        let defaultUrl = `http://localhost:8090/mbtwhy?mbti=${mbti}`;
-        if(page !== null) defaultUrl += `&page=${pageNo}`;
-        if(search !== null) defaultUrl += `&search=${searchValue}`;
-        if(sort !== null) defaultUrl += `&sort=${sortType}`;
+    const getMbtwhyList = (page, search, sort) => {
+        let defaultUrl = `http://localhost:8090/mbtwhy?mbti=${mbti}&page=${page}`;
+        if(search !== "") defaultUrl += `&search=${search}`;
+        if(sort !== "") defaultUrl += `&sort=${sort}`;
 
         axios.get(defaultUrl)
         .then(res=> {
             let pageInfo = res.data.pageInfo;
-            let list = res.data.mbtwhyList;
-            let mbtwhyHot = res.data.mbtwhyHot;
+            let mbtwhyList = res.data.mbtwhyList;
+            let hotMbtwhy = res.data.hotMbtwhy;
             // let mbtwhyCnt = res.data.mbtwhyCnt;
 
-            setMbtwhyList([...list]);
-            setHotMbtwhy({...mbtwhyHot});
+            setMbtwhyList([...mbtwhyList]);
+            setHotMbtwhy({...hotMbtwhy});
             // setMbtwhyCnt(mbtwhyCnt);
             
             setPageInfo({...pageInfo});
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
-            }
-            // setPage(btn);
-            setPage(pageNo);
+            setPage(page);
         })
         .catch(err=> {
             console.log(err);
             setMbtwhyList([]);
-            setPageInfo({});
             setHotMbtwhy({});
+            setPageInfo({});
             // setMbtwhyCnt(0);
         })
     };
@@ -262,7 +240,7 @@ function Mbtwhy() {
         setOpen(!open);
         getMbtwhyList(page, search, sortType);
         // getMbtwhyList();
-    }
+    };
 
     // Toggle 핸들링
     const handleToggle = () => {
@@ -294,13 +272,13 @@ function Mbtwhy() {
                 )}
             </div>
         );
-    }
+    };
 
     const buttonStyle = {
         background:"white",
         color:"black",
         border:"1px solid lightgray"
-    }
+    };
 
     return (
         <div className={style.container}>
@@ -395,7 +373,7 @@ function Mbtwhy() {
                 </div>
 
                 {/* 페이징 영역 */}
-                {mbtwhyList.length===0?<></>:PaginationInside()}
+                {mbtwhyList.length===0?<></>:<PaginationInside/>}
 
                 {/* 검색 영역 */}
                 <FormGroup row className={style.sectionSearch}>

@@ -1,14 +1,12 @@
-import { useState } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import {
     Pagination,
     PaginationItem,
     PaginationLink,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
+    Popover,
+    PopoverBody,
     FormGroup,
     Col,
     Input,
@@ -21,140 +19,75 @@ function MBattle() {
     // 로그인 유저 정보]
     const user = useSelector((state) => state.persistedReducer.user.user);
 
-    const [boards, setBoard] = useState([
-        {
-            num:1,
-            title:"깻잎 떼주는 남친",
-            voteCount:12
-        },
-        {
-            num:2,
-            title:"똥맛 카레 vs 카레맛 똥",
-            voteCount:25
-        },
-        {
-            num:3,
-            title:"탕수육 부먹 or 찍먹",
-            voteCount:43
-        },        
-        {
-            num:4,
-            title:"퇴사 고?",
-            voteCount:27
-        }
-    ]);
+    // 인기 게시글
+    const [hotMbattleList, setHotMbattleList] = useState([]);
 
-    const [hotBoards, setHotBoards] = useState([
-        {
-            no:1,
-            title:"탕수육 부먹 or 찍먹",
-            voteCount:43
-        },
-        {
-            noiuiu:2,
-            title:"퇴사 고?",
-            voteCount:27
-        }
-    ]);
+    // Mbtwhy 게시글 목록
+    const [mbattleList, setMbattleList] = useState([]);
 
     // 페이징 상태 값
-    const [pageBtn, setPageBtn] = useState([]);
+    const [page, setPage] = useState(1);
     const [pageInfo, setPageInfo] = useState({});
 
+    // 검색 값
+    const [search, setSearch] = useState('');
+
+    // 임시 검색 값
+    const [tmpSearch, setTmpSearch] = useState(null);
+
+    // 정렬 값
+    const [sort, setSort] = useState("최신순");
+    
     // 정렬 드롭다운 open 여부
     const [open, setOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState('최신순'); // 기본 선택값
 
-    // 검색이 되었는지 여부
-    // 검색되면 true로
-    const [isSearch, setIsSearch] = useState(false);
-
-    const [type, setType] = useState('');
-    const [keyword, setKeyword] = useState('');
-
-    const handleToggle = () => {
-        setOpen(!open);
+    // 절대시간
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}`;
     };
+        
+    // 상대시간(시간차)
+    const formatDatetimeGap = (dateString) => {
+        const date = new Date(dateString);
+        const currentDate = new Date();
+        const datetimeGap = currentDate - date;
+        const seconds = Math.floor(datetimeGap/1000);
+        const minutes = Math.floor(seconds/60);
+        const hours = Math.floor(minutes/60);
+        const days = Math.floor(hours/24);
+        const weeks = Math.floor(days/7);
+        const months = Math.floor(weeks/4);
+        const years = Math.floor(months/12);
     
-    const handleSelect = (option) => {
-        setSelectedOption(option);
-        setOpen(false);
-    };
-
-    // pageChange 함수를 호출한 페이징 영역에서 페이징 항목(1, 2, 3...)들을 인자로 받아옴
-    const pageChange = (repage) => {
-        // 검색되었다면 (isSearch가 true인 경우)
-        if(isSearch) reqBoardSearch(repage);
-        // 검색되지 않았다면 (isSearch가 false인 경우)
-        else reqBoardList(repage);
-    };
-    
-    // url에 파라미터로 줄 변수 repage
-    const reqBoardList = (repage) => {
-        // if(!repage) repage = 1;
-        axios.get(`http://localhost:8090/mbattle/${repage}`)
-        .then(res=> {
-            console.log(res);
-            let pageInfo = res.data.pageInfo;
-            let list = res.data.boardList;
-
-            setBoard([...list]);
-            
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
-            }
-            setPageBtn(btn);
-            setPageInfo({...pageInfo});
-
-            // 검색이 아닌, 페이징된 상태이므로
-            // 검색 여부를 위한 isSearch 변수를 false로
-            setIsSearch(false);
-        })
-        .catch(err=> {
-            console.log(err);
-        })
-    };
-
-    const searchSubmit = () => {
-        reqBoardSearch(1);
-    };
-
-    // 페이지 별 검색
-    const reqBoardSearch = (repage) => {
-        if(type==='') {
-            alert('검색 타입을 선택하세요.');
-            return;
+        // if(seconds<60) {
+        //     return `${seconds}초 전`;
+        // } 
+        // else 
+        if(minutes<60) {
+            return `${minutes}분 전`;
+        } else if(hours<24) {
+            return `${hours}시간 전`;
+        } else if(days<7) {
+            return `${days}일 전`;
+        } else if(weeks<4) {
+            return `${weeks}주 전`;
+        } else if(months<12) {
+            return `${months}달 전`;
+        } else {
+            return `${years}년 전`;
         }
+    }
 
-        axios.get(`http://localhost:8090/boardsearch/${repage}/${type}/${keyword}`)
-        .then(res=> {
-            console.log(res);
-
-            let pageInfo = res.data.pageInfo;
-            let list = res.data.boardList;
-
-            setBoard([...list]);
-            
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
-            }
-            setPageBtn(btn);
-            setPageInfo({...pageInfo});
-
-            // 검색이 아닌, 페이징된 상태이므로
-            // 검색 여부를 위한 isSearch 변수를 false로
-            setIsSearch(true);
-        })
-        .catch(err=> {
-            console.log(err);
-        });
-    };
-
+    // navigate
     const navigate = useNavigate();
-
-    // 글 작성
+    
+    // mbattlewrite 이동
     const goMbattleWrite = () => {
         navigate("/mbattlewrite");
     };
@@ -162,6 +95,127 @@ function MBattle() {
     // mbattleDetail 이동
     const goMbattleDetail = (no) => {
         navigate(`/mbattledetail/${no}/1`);
+    };
+    
+    // 게시글 목록 조회
+    const getMbattleList = (pageNo, searchValue, sortType) => {
+        let defaultUrl = `http://localhost:8090/mbattle/${pageNo}/${searchValue}/${sortType}`;
+
+        axios.get(defaultUrl)
+        .then(res=> {
+            console.log(res);
+            let pageInfo = res.data.pageInfo;
+            let mbattleList = res.data.mbattleList;
+            let hotMbattleList = res.data.hotMbattleList;
+
+            setMbattleList([...mbattleList]);
+            setHotMbattleList([...hotMbattleList]);
+            
+            setPageInfo({...pageInfo});
+            setPage(pageNo);
+        })
+        .catch(err=> {
+            console.log(err);
+            setMbattleList([]);
+            setHotMbattleList([]);
+            setPageInfo({});
+        })
+    };
+
+    // 팝오버 바깥 영역 클릭 시 모든 팝오버 닫기
+    const clickOutsidePopover = (e) => {
+        const popoverElements = document.querySelectorAll(".popover");
+
+        if(e && e.target) {
+            // 조건식
+            // 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어 있지 않다면
+            if(Array.from(popoverElements).every((popover) => !popover.contains(e.target))) {
+                setOpen(false);
+            }
+        }
+    };
+
+    // 팝오버 바깥 영역 클릭 감지
+    useEffect(() => {
+        clickOutsidePopover();
+        document.addEventListener("mousedown", clickOutsidePopover);
+        return () => {
+            document.removeEventListener("mousedown", clickOutsidePopover);
+        };
+    }, []);
+
+    // 의존성 배열에 mbti 추가
+    // 의존성 배열 안에 추가된 변수가 변경될 때, useEffect 콜백 실행
+    useEffect(() => {
+        const searchInput = document.getElementById("searchInput");
+        searchInput.value = null;
+
+        setPage(1);
+        setSearch("")
+        setSort("최신순");
+        getMbattleList(1, "", "최신순");
+    }, []);
+
+    // 검색값 탐지
+    const handleSearchChange = (e) => {
+        const searchTerm = e.target.value;
+        setTmpSearch(searchTerm);
+    };
+
+    // 검색
+    const handleSearch = () => {
+        setSearch(tmpSearch);
+        setPage(1);
+        // 실 검색값은 search이지만
+        // 검색은 tmpSearch
+        getMbattleList(1, tmpSearch, sort);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // page 핸들링
+    const handlePage = (pageNo) => {
+        setPage(pageNo);
+        getMbattleList(pageNo, search, sort);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // 팝오버 sort 핸들링
+    const handleSort = (sortType) => {
+        setSort(sortType);
+        setOpen(!open);
+        getMbattleList(page, search, sortType);
+    };
+
+    // Toggle 핸들링
+    const handleToggle = () => {
+        setOpen(!open);
+    };
+
+    // 페이지네이션
+    const PaginationInside = () => {
+        const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
+        for(let i=pageInfo.startPage; i<=pageInfo.endPage; i++) {
+            pageGroup.push(
+                <span key={i} className={`${page===i? style.activePage: ''}`} onClick={()=>handlePage(i)}>{i}</span>
+            )
+        }
+        return (
+            <div className={style.paging}>
+                {!(pageInfo.startPage===1) && (
+                    <>
+                        <span onClick={()=>handlePage(1)}>≪</span>
+                        <span onClick={()=>handlePage(pageInfo.startPage-10)}>&lt;</span>
+                    </>
+                )}
+                {pageGroup}
+                {!(pageInfo.endPage===pageInfo.allPage) && (
+                    <>
+                        <span onClick={()=>handlePage(pageInfo.endPage+1)}>&gt;</span>
+                        <span onClick={()=>handlePage(pageInfo.allPage)}>≫</span>
+                    </>
+                )}
+            </div>
+        );
     };
 
     const sortStyle = {
@@ -198,17 +252,12 @@ function MBattle() {
                         <div className={style.pageHeaderContent}>MBTI 유형 별 성향을 알아보세요!</div>
                         <div style={{display:"flex"}}>
                             {user.username!==undefined?<div className={style.pageHeaderWriteBtn} onClick={()=>goMbattleWrite()}>글 작성</div>:<></>}
-                            <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                <DropdownToggle style={sortStyle}>
-                                    <img className={style.sortImg} src="/sortIcon.png" alt=""></img>
-                                    {selectedOption}
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem onClick={() => handleSelect('최신순')}>최신순</DropdownItem>
-                                    <DropdownItem onClick={() => handleSelect('조회순')}>조회순</DropdownItem>
-                                    <DropdownItem onClick={() => handleSelect('투표순')}>투표순</DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
+                            <button className={style.popoverButton} onClick={()=>setOpen(!open)} id="Popover1"><img src={"/sortIcon.png" } alt="" className={style.sortImg} />{!sort? "최신순" : sort}</button>
+                            <Popover placement="bottom" isOpen={open} target="Popover1" toggle={()=>handleToggle()}>
+                                <PopoverBody className={style.popoverItem} onClick={()=>handleSort("최신순")}>최신순</PopoverBody>
+                                <PopoverBody className={style.popoverItem} onClick={()=>handleSort("조회순")}>조회순</PopoverBody>
+                                <PopoverBody className={style.popoverItem} onClick={()=>handleSort("투표순")}>투표순</PopoverBody>
+                            </Popover>
                         </div>
                     </div>
                 </div>
@@ -216,9 +265,9 @@ function MBattle() {
 
                 {/* 인기 게시글 영역 */}
                 <div className={style.sectionBoards}>
-                    {hotBoards.length !== 0 && hotBoards.map(hotBoard => {
+                    {hotMbattleList.length !== 0 && hotMbattleList.map(hotMbattle => {
                         return (
-                            <div key={hotBoard.no} className={style.sectionBoard}>
+                            <div key={hotMbattle.no} className={style.sectionBoard}>
                                 <div className={style.boardImages}>
                                     <div>
                                         <img src="/thumbIcon.png" alt=""></img>
@@ -227,13 +276,13 @@ function MBattle() {
                                         <img src="/thumbIcon.png" alt=""></img>
                                     </div>
                                 </div>
-                                <div className={style.boardContents} onClick={()=>goMbattleDetail(hotBoard.no)}>
+                                <div className={style.boardContents} onClick={()=>goMbattleDetail(hotMbattle.no)}>
                                     <div className={style.boardTitle}>
-                                        {hotBoard.title}
+                                        {hotMbattle.title}
                                     </div>
                                     <div className={style.boardContentsLow}>
                                         <div className={style.boardVotedCount}>
-                                            {hotBoard.voteCount}명 투표
+                                            {hotMbattle.voteCount}명 투표
                                             &#128293;
                                         </div>&nbsp;&nbsp;
                                         <div>
@@ -250,9 +299,9 @@ function MBattle() {
 
                 {/* 게시글 영역 */}
                 <div className={style.sectionBoards}>
-                    {boards.length !== 0 && boards.map(board => {
+                    {mbattleList.length !== 0? mbattleList.map(mbattle => {
                         return (
-                            <div key={board.num} className={style.sectionBoard}>
+                            <div key={mbattle.no} className={style.sectionBoard}>
                                 <div className={style.boardImages}>
                                     <div>
                                         <img src="/thumbIcon.png" alt=""></img>
@@ -262,78 +311,46 @@ function MBattle() {
                                     </div>
                                 </div>
                                 <div className={style.boardContents}>
-                                    <Link to={"/detailform/only-detail/" + board.num} style={{textDecoration:"none"}}>
-                                        <div className={style.boardTitle}>
-                                            주제:{board.title}
+                                    <div className={style.boardTitle}>
+                                        주제:{mbattle.title}
+                                    </div>
+                                    <div className={style.boardContentsLow}>
+                                        <div className={style.boardVotedCount}>
+                                            {mbattle.voteCount}명 투표
+                                        </div>&nbsp;&nbsp;
+                                        <div>
+                                            <Button style={boardVoteButton}>투표하기</Button>
+                                            {/* <Button>투표완료</Button> */}
                                         </div>
-                                        <div className={style.boardContentsLow}>
-                                            <div className={style.boardVotedCount}>
-                                                {board.voteCount}명 투표
-                                            </div>&nbsp;&nbsp;
-                                            <div>
-                                                <Button style={boardVoteButton}>투표하기</Button>
-                                                {/* <Button>투표완료</Button> */}
-                                            </div>
-                                        </div>
-                                    </Link>
+                                    </div>
                                 </div>
                             </div>
                         )
-                    })}
+                    }):
+                    <div className={style.noMbattle}>
+                        <h3>게시글이 없습니다.</h3>
+                    </div>}
                 </div>
                 {/* 게시글 영역 */}
 
                 {/* 페이징 영역 */}
-                <Pagination aria-label="Page navigation example" className={style.pagingLabel}>
-                    {
-                        pageInfo.curPage===1?
-                        <PaginationItem disabled>
-                            <PaginationLink previous href="#" />
-                        </PaginationItem>:
-                        <PaginationItem>
-                            {/* <PaginationLink previous href={"/list/" + (pageInfo.curPage - 1)} /> */}
-                            <PaginationLink previous onClick={()=>pageChange(pageInfo.curPage-1)}/>
-                        </PaginationItem>
-                    }
-
-                    {                   
-                        pageBtn.map(item=>{
-                            return(
-                                <PaginationItem key={item} className={item===pageInfo.curPage? 'active':''}>
-                                    {/* <PaginationLink href={"/list/" + item}> */}
-                                    {/* 고유한 id를 넘겨줌 */}
-                                    <PaginationLink onClick={() => pageChange(item)}>
-                                        {item}
-                                    </PaginationLink>
-                                </PaginationItem>                            
-                            )
-                        })
-                    }
-
-                    {
-                        <PaginationItem disabled={pageInfo.curPage === pageInfo.endPage}>
-                            {/* <PaginationLink next href={"/list/" + (pageInfo.curPage + 1)}/> */}
-                            <PaginationLink next onClick={()=>pageChange(pageInfo.curPage+1)}/>
-                        </PaginationItem>
-                    }
-                </Pagination>
-                {/* 페이징 영역 */}
+                {mbattleList.length===0?<></>:<PaginationInside/>}
 
                 {/* 검색 영역 */}
                 <FormGroup row className={style.sectionSearch}>
                     <Col sm={3}>
-                        {/* <Input type='select' name="type" onChange={(e)=>setType(e.target.value)}>
-                            <option value='content'>제목</option>
-                            <option value='comment'>내용</option>
-                            <option value='content&comment'>제목 + 내용</option>
-                            <option value='writer'>댓글</option>
+                        {/* <Input type='select' name="type">
+                            <option value='content'>내용</option>
+                            <option value='comment'>댓글</option>
+                            <option value='content&comment'>내용 + 댓글</option>
+                            <option value='writer'>작성자</option>
                         </Input> */}
                     </Col>
                     <Col sm={6}>
-                        <Input type="text" name="keyword" onChange={(e)=>setKeyword(e.target.value)}/>
+                        <Input type="text" id="searchInput" onChange={handleSearchChange}/>
                     </Col>
                     <Col sm={3}>
-                        <Button style={buttonStyle} onClick={searchSubmit}>검색</Button>
+                        <Button style={buttonStyle} onClick={()=>handleSearch()}>검색</Button>
                     </Col>
                 </FormGroup>
                 {/* 검색 영역 */}

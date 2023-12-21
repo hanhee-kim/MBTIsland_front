@@ -261,7 +261,7 @@ function MBattleDetail() {
     // url에 파라미터로 줄 변수 repage
     const getMbattleDetail = () => {
         let defaultUrl = `http://localhost:8090/mbattledetail/${no}`;
-        defaultUrl += `&username=${user.username}`;
+        defaultUrl += `?username=${user.username}`;
 
         axios.get(defaultUrl)
         .then(res=> {
@@ -440,7 +440,7 @@ function MBattleDetail() {
         const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
         for(let i=commentPageInfo.startPage; i<=commentPageInfo.endPage; i++) {
             pageGroup.push(
-                <span key={i} className={`${page===i? style.activePage: ''}`} onClick={()=>handleCommentPageNo(i)}>{i}</span>
+                <span key={i} className={`${commentPage===i? style.activePage: ''}`} onClick={()=>handleCommentPageNo(i)}>{i}</span>
             )
         }
         return (
@@ -552,7 +552,6 @@ function MBattleDetail() {
                 <div>
                 {/* 게시글 영역 */}
                     <div key={mbattle.no} className={style.sectionBoard}>
-                        {/* <Link to={"/detailform/only-detail/" + mbattle.no}></Link> */}
                         <div className={style.boardTitle}>
                             <h1>{mbattle.title}</h1>
                             <div> 
@@ -575,19 +574,10 @@ function MBattleDetail() {
                                 :<></>
                                 }
                             </div>
-                            {/* <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                <DropdownToggle style={dropDownStyle}>
-                                    <img className={style.dropDownImg} src="/popover-icon.png"></img>
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem>삭제</DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown> */}
-                            
                         </div>
                         <div className={style.writerDiv}>
-                            <div className={style.circleDiv} style={{backgroundColor:`${mbattle.mbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
-                            {mbattle.mbtiCategori}&nbsp;&nbsp;&nbsp;
+                            <div className={style.circleDiv} style={{backgroundColor:`${mbattle.writerMbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
+                            {mbattle.writerMbti}&nbsp;&nbsp;&nbsp;
                             {mbattle.writerId}
                         </div>
                         <div style={{color:"#C5C5C5"}}>
@@ -600,10 +590,15 @@ function MBattleDetail() {
                         <div className={style.sectionVote}>
                             <div>
                                 <div className={style.subject}>
-                                    {mbattle.fileIdx1!==null?<img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx1}`} alt=''/>:<></>}
-                                    <h4>{mbattle.voteItem1}</h4>
+                                    {mbattle.fileIdx1!==null?
+                                        <React.Fragment>
+                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
+                                            <h4>{mbattle.voteItem1}</h4>
+                                        </React.Fragment>
+                                        :<div className={style.voteItemDiv}><h4>{mbattle.voteItem1}</h4></div>
+                                    }
                                 </div>
-                                {user.username!==""?
+                                {user.userRole === "ROLE_USER"?
                                     <div className={style.voteButtonDiv}>
                                         <Button style={boardVoteButton}>투표하기</Button>
                                     </div>
@@ -615,15 +610,19 @@ function MBattleDetail() {
                             </div>
                             <div>
                                 <div className={style.subject}>
-                                    {mbattle.fileIdx2!==null?<img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx1}`} alt=''/>:<></>}
-                                    <h4>{mbattle.voteItem2}</h4>
-                                </div>
-                                {user.username!==""?
-                                    <div className={style.voteButtonDiv}>
-                                        <Button style={boardVoteButton}>투표하기</Button>
+                                    {mbattle.fileIdx2!==null?
+                                        <React.Fragment>
+                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
+                                            <h4>{mbattle.voteItem2}</h4>
+                                        </React.Fragment>
+                                        :<div className={style.voteItemDiv}><h4>{mbattle.voteItem2}</h4></div>
+                                    }
+                                    <div>
                                     </div>
-                                    :<></>
-                                }
+                                </div>
+                                <div className={style.voteButtonDiv}>
+                                    <Button style={boardVoteButton}>투표하기</Button>
+                                </div>
                             </div>
                         </div>
 
@@ -689,11 +688,6 @@ function MBattleDetail() {
                                     :<img src="/bookmarked.png" alt=""/>
                                 }
                             </div>
-                            {/* <div className={style.thumbDiv}>
-                                <img src="/thumbIcon.png" alt=""></img>&nbsp;
-                                추천&nbsp;
-                                {mbattle.likeCount}
-                            </div> */}
                             <div className={style.listDiv}>
                                 <Button style={buttonStyle} onClick={()=>goToPreviousList()}>목록</Button>
                             </div>
@@ -702,6 +696,7 @@ function MBattleDetail() {
                     <div className={style.commentCountDiv}>
                         <div>
                             댓글&nbsp;
+                            {commentCount}
                             {/* {mbattle.commentCount} */}
                         </div>
                     </div>
@@ -728,7 +723,7 @@ function MBattleDetail() {
                     </div>
 
                     {/* 페이징 영역 */}
-                    <PaginationInside />
+                    {comments.length===0?<></>:<PaginationInside/>}
 
                     {/* 댓글 달기 */}
                     {user.userRole === "ROLE_USER"?
