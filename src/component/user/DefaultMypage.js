@@ -54,10 +54,8 @@ const DefaultMypage = (props) => {
   const token = useSelector((state) => state.persistedReducer.token.token);
   const [pwInput, setPwInput] = useState(false);
   const [changeUser, setChangeUser] = useState({
-    username: user.username,
+    ...user,
     userPassword: "",
-    userNickname: user.userNickname,
-    userEmail: user.userEmail,
   });
   const dispatch = useDispatch();
   const today = new Date();
@@ -253,7 +251,7 @@ const DefaultMypage = (props) => {
       }
     } else {
       //소셜아닐때 ( 닉네임 , 비밀번호(변경했다면) ,이메일 validation + email인증여부 확인)
-      console.log(changeUser.userNickname);
+      console.log(changeUser);
       if (nickRegExp.test(changeUser.userNickname)) {
         if (emailRegExp.test(changeUser.userEmail)) {
           if (isEmailCheck) {
@@ -312,18 +310,18 @@ const DefaultMypage = (props) => {
         });
       }
 
-      axios
-        .post("http://localhost:8090/user/modify", sendUser, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      // axios
+      //   .post("http://localhost:8090/user/modify", sendUser, {
+      //     headers: {
+      //       Authorization: token,
+      //     },
+      //   })
+      //   .then((res) => {
+      //     console.log(res);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
 
       //   if (nickRegExp.test(changeUser.userNickname)) {
       //     if (changeUser.userPassword.length >= 4) {
