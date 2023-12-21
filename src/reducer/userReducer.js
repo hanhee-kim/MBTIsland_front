@@ -22,6 +22,7 @@ const initState = {
     provider: "",
     providerId: "",
   },
+  totalboardCnt:0,
 };
 
 // const userPersistConfig = {
@@ -38,8 +39,11 @@ export const userReducer = (currentState, action) => {
     case "user":
       newState.user = { ...newState.user, ...action.payload };
       break;
+    case "totalCnt":
+      newState.user = { ...newState.user, ...action.payload };  
+      break;
     case "logout":
-      newState.user = {};
+      newState.user = {...action.payload};
       break;
     default:
   }

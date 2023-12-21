@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "../../css/user/Mypage.module.css";
 import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 const DefaultMypage = (props) => {
   //---css
@@ -48,11 +49,23 @@ const DefaultMypage = (props) => {
     borderColor: "gray",
   };
   //css---
-
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8090/mypage/${user.username}`)
+      .then((res) => {
+        console.log(res);
+        setTotalCnt(res.data.totalCnt);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  },[])
   //state
   const user = useSelector((state) => state.persistedReducer.user.user);
   const token = useSelector((state) => state.persistedReducer.token.token);
+  const navigate = useNavigate();
   const [pwInput, setPwInput] = useState(false);
+  const [totalCnt,setTotalCnt] = useState(0);
   const [changeUser, setChangeUser] = useState({
     ...user,
     userPassword: "",
@@ -216,6 +229,47 @@ const DefaultMypage = (props) => {
       setIsEmailCheck(false);
     }
   };
+  //탈퇴버튼 눌렀을때
+  const leaveUser = (e) => {
+    e.preventDefault();
+    Swal.fire({
+      title:"정말 탈퇴하시겠습니까?",
+      html:
+        '작성 게시물은 탈퇴해도 사라지지 않습니다.<br>'+
+         'MBTIsland의 소유입니다. <br> ',
+        // + '탈퇴 후 3개월 이내에 복구가 가능합니다.',
+      icon:'warning',
+      showCancelButton: true,  
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "탈퇴",
+      cancelButtonText:'취소',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .get(`http://localhost:8090/leaveuser`,{
+              headers : {
+                  Authorization : token,
+              }
+          })
+            .then((res) => {
+              console.log(res);
+
+
+              Swal.fire({
+                title: "탈퇴완료되었습니다!",
+                text: "MBTIsland는 언제나 여러분을 기다리겠습니다.",
+                icon: "success"
+              });
+              navigate("/logout");
+            })
+            .catch((err) => {
+              console.log(err);
+            })
+        }
+      })
+  }
+  //수정버튼 눌렀을때
   const modifyUser = (e) => {
     e.preventDefault();
     //수정전 mbti도 가지고가서 비교하던지, 여기서 비교하고 수정날짜도 업데이트해서 넘길지
@@ -324,7 +378,7 @@ const DefaultMypage = (props) => {
         </div>
         <div className={style.section}>
           <div className={style.sectionTitle}>작성글수</div>
-          <div className={style.sectionCnt}>몇 개</div>
+          <div className={style.sectionCnt}>{totalCnt} 개</div>
         </div>
       </div>
       <Form style={formStyle}>
@@ -575,6 +629,22 @@ const DefaultMypage = (props) => {
             </>
           ))}
         <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
+        <Button
+            color="light"
+            style={{
+              borderRadius: "10px",
+              marginRight: "40px",
+              marginTop: "25px",
+              width: "80px",
+              fontSize: "20px",
+              color:"gray",
+            }}
+            type="submit"
+            name="submit"
+            onClick={(e) => leaveUser(e)}
+          >
+            탈퇴
+          </Button>
           <Button
             color="dark"
             style={{

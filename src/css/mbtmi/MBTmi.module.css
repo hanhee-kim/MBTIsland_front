@@ -421,6 +421,7 @@
     padding: 60px 0  80px 0; /* top right bottom left */
     white-space: normal;
     word-break: keep-all; /* 줄바꿈시 단어 단위 유지 */
+    /* word-break: auto-phrase; 띄어쓰기하지 않을 시 */
 }
 .postContent+p {
     /* background-color:lavender; */

@@ -13,12 +13,35 @@ const MyMbtmi = (props) => {
   const [pageInfo, setPageInfo] = useState({});
   // navigate
   const navigate = useNavigate();
-  const [tmiList] = useState([]);
+  const [tmiList,setTmiList] = useState([]);
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
   //서버와 통신할 메소드 정의
-  const getMyMbtmiList = () => {};
+  const getMyMbtmiList = (username,page) => {
+    console.log(page);
+    console.log("url:" + `http://localhost:8090/mbtmilist?username=${username}&page=${page}`);
+
+    axios
+      .get(`http://localhost:8090/mbtmilist?username=${username}&page=${page}`)
+      .then((res) => {
+        console.log(res);
+        setInitData(true);
+        setPageInfo(res.data.pageInfo);
+        setTmiList(res.data.mbtmiList);
+      })
+      .catch((err) => {
+        console.log(err);
+        setInitData(false);
+      });
+  };
   useEffect(() => {
     //tmi controller + 변수 담아 맵핑
-    getMyMbtmiList();
+    getMyMbtmiList(user.username,page);
   }, []);
   // 체크된 아이템을 담을 배열
   const [checkItems, setCheckItems] = useState([]);
@@ -55,7 +78,7 @@ const MyMbtmi = (props) => {
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     axios
       .delete(
-        `http://localhost:8090/deletembtmi?sendArrayItems=${sendArrayItems}`
+        `http://localhost:8090/deletembtmilist?sendArrayItems=${sendArrayItems}`
       )
       .then((res) => {
         console.log(res);
@@ -65,7 +88,7 @@ const MyMbtmi = (props) => {
         });
         setCheckItems([]);
 
-        // getMyMbtmiList(user.username, 1);
+        getMyMbtmiList(user.username, 1);
       })
       .catch((err) => {
         console.log(err);
@@ -78,9 +101,11 @@ const MyMbtmi = (props) => {
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
     console.log("***페이지이동***");
+    getMyMbtmiList(user.username,pageNo);
     // getMyMbtmiList(user.username, pageNo);
     //페이지가 변경되면 checkItems 빈배열로 초기화.
     setCheckItems([]);
+
   };
   // 페이지네이션
   const PaginationInside = () => {
@@ -148,7 +173,7 @@ const MyMbtmi = (props) => {
                     <th scope="col" sm={2}>
                       카테고리
                     </th>
-                    <th scope="col" sm={4}>
+                    <th scope="col" sm={4} style={{ minWidth: "200px" }}>
                       제목
                     </th>
                     <th scope="col" sm={3}>
@@ -162,7 +187,7 @@ const MyMbtmi = (props) => {
                 <tbody>
                   {tmiList.map((tmi, index) => {
                     return (
-                      <tr key={index} onClick={(e) => goMyMbtmiDetail(e, tmi)}>
+                      <tr key={index}>
                         <td sm={1} className="text-center">
                           <input
                             type="checkbox"
@@ -174,16 +199,17 @@ const MyMbtmi = (props) => {
                             checked={checkItems.includes(tmi.no) ? true : false}
                           />
                         </td>
-                        <td sm={1} className="text-center">
+                        <td sm={1} className="text-center" onClick={(e) => goMyMbtmiDetail(e, tmi)}>
                           {tmi.no}
                         </td>
-                        <td sm={2} className="text-center">
+                        <td sm={2} className="text-center" onClick={(e) => goMyMbtmiDetail(e, tmi)}>
                           [ {tmi.category} ]
                         </td>
                         <td
                           sm={4}
                           className="text-truncate"
                           style={{ maxWidth: "400px" }}
+                          onClick={(e) => goMyMbtmiDetail(e, tmi)}
                         >
                           {tmi.title}
                         </td>
@@ -191,10 +217,11 @@ const MyMbtmi = (props) => {
                           sm={3}
                           className="text-center"
                           style={{ minWidth: "105px" }}
+                          onClick={(e) => goMyMbtmiDetail(e, tmi)}
                         >
-                          {tmi.writeDate}
+                          {formatDate(tmi.writeDate)}
                         </td>
-                        <td sm={1} className="text-center">
+                        <td sm={1} className="text-center" onClick={(e) => goMyMbtmiDetail(e, tmi)}>
                           {tmi.recommendCnt}
                         </td>
                       </tr>
@@ -203,7 +230,7 @@ const MyMbtmi = (props) => {
                 </tbody>
               </Table>
             </div>
-            {}
+            {PaginationInside()}
           </div>
         </>
       ) : (
