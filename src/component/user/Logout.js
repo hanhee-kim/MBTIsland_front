@@ -19,7 +19,7 @@ const Logout = () => {
     // dispatch({ type: "logout", payload: "" });
     // dispatch({ type: "logout", payload: {} });
     localStorage.removeItem("token");
-    // persistor.purge();
+    persistor.purge();
     // navigate("/login");
     handleLogout();
   }, []);
