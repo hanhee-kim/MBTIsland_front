@@ -89,7 +89,7 @@ const MyAlarm = () => {
     if (checked) {
       // 전체 선택 클릭 시 데이터의 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트
       const noArray = [];
-      alarmList.forEach((el) => noArray.push(el.no));
+      alarmList.forEach((el) => noArray.push(el.alarmNo));
       setCheckItems(noArray);
     } else {
       // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
@@ -339,9 +339,7 @@ const MyAlarm = () => {
                     return (
                       <tr
                         key={index}
-                        onClick={(e) => {
-                          goDetail(e, alarm);
-                        }}
+                        
                       >
                         <td sm={1} className="text-center">
                           <input
@@ -356,13 +354,18 @@ const MyAlarm = () => {
                             }
                           />
                         </td>
-                        <td sm={2} className="text-center">
+                        <td sm={2} className="text-center" onClick={(e) => {
+                          goDetail(e, alarm);
+                        }}>
                           [ {alarm.alarmType} ]
                         </td>
                         <td
                           sm={5}
                           className="text-truncate"
                           style={{ maxWidth: "400px" }}
+                          onClick={(e) => {
+                            goDetail(e, alarm);
+                          }}
                         >
                           {alarm.alarmContent}
                         </td>
@@ -370,10 +373,15 @@ const MyAlarm = () => {
                           sm={3}
                           className="text-center"
                           style={{ minWidth: "105px" }}
+                          onClick={(e) => {
+                            goDetail(e, alarm);
+                          }}
                         >
                           {formatDate(alarm.alarmUpdateDate)}
                         </td>
-                        <td sm={1} className="text-center">
+                        <td sm={1} className="text-center" onClick={(e) => {
+                          goDetail(e, alarm);
+                        }}>
                           {alarm.alarmIsRead === "N" ? "안 읽음" : "읽음"}
                         </td>
                       </tr>

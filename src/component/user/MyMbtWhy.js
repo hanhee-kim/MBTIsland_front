@@ -82,9 +82,6 @@ const MyMbtWhy = (props) => {
       </div>
     );
   };
-  const [arrayItems, setArrayItems] = useState({
-    checkItems: [],
-  });
 
   const [whyList, setMbtwhyList] = useState([]);
   // 체크된 아이템을 담을 배열
@@ -194,7 +191,7 @@ const MyMbtWhy = (props) => {
               <tbody>
                 {whyList.map((why, index) => {
                   return (
-                    <tr key={index} onClick={(e) => goMbtwhyDetail(e, why)}>
+                    <tr key={index} >
                       <td sm={1} className="text-center">
                         <input
                           type="checkbox"
@@ -206,17 +203,18 @@ const MyMbtWhy = (props) => {
                           checked={checkItems.includes(why.no) ? true : false}
                         />
                       </td>
-                      <td sm={1} className="text-center">
+                      <td sm={1} className="text-center" onClick={(e) => goMbtwhyDetail(e, why)}>
                         {/* {why.no} */}
                         {(page - 1) * 10 + index + 1}
                       </td>
-                      <td sm={2} className="text-center">
+                      <td sm={2} className="text-center" onClick={(e) => goMbtwhyDetail(e, why)}>
                         {why.mbtiCategory}
                       </td>
                       <td
                         sm={4}
                         className="text-truncate"
                         style={{ maxWidth: "600px" }}
+                        onClick={(e) => goMbtwhyDetail(e, why)}
                       >
                         {why.content}
                       </td>
@@ -224,10 +222,11 @@ const MyMbtWhy = (props) => {
                         sm={3}
                         className="text-center"
                         style={{ minWidth: "105px" }}
+                        onClick={(e) => goMbtwhyDetail(e, why)}
                       >
                         {formatDate(why.writeDate)}
                       </td>
-                      <td sm={1} className="text-center">
+                      <td sm={1} className="text-center" onClick={(e) => goMbtwhyDetail(e, why)}>
                         {why.recommendCnt}
                       </td>
                     </tr>
