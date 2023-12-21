@@ -52,7 +52,13 @@ const DefaultMypage = (props) => {
   //state
   const user = useSelector((state) => state.persistedReducer.user.user);
   const token = useSelector((state) => state.persistedReducer.token.token);
-  const [changeUser, setChangeUser] = useState({ ...user });
+  const [pwInput, setPwInput] = useState(false);
+  const [changeUser, setChangeUser] = useState({
+    username: user.username,
+    userPassword: "",
+    userNickname: user.userNickname,
+    userEmail: user.userEmail,
+  });
   const dispatch = useDispatch();
   const today = new Date();
   const joinDate = new Date(user.joinDate);
@@ -190,9 +196,11 @@ const DefaultMypage = (props) => {
   const change = (e) => {
     // isSamePassword, setIsSamePassword
     // isEmailCheck, setIsEmailCheck
-
+    if (e.target.name == "userPassword") {
+      setPwInput(true);
+    }
     console.log("input:" + e.target.value);
-    setChangeUser({ ...user, [e.target.name]: e.target.value });
+    setChangeUser({ ...changeUser, [e.target.name]: e.target.value });
     console.log(e.target.name);
     console.log(e.target.value);
     if (isSamePassword) {
@@ -244,58 +252,130 @@ const DefaultMypage = (props) => {
         });
       }
     } else {
-      //소셜아닐때 ( 닉네임 , 비밀번호 ,이메일 validation + email인증여부 확인)
+      //소셜아닐때 ( 닉네임 , 비밀번호(변경했다면) ,이메일 validation + email인증여부 확인)
+      console.log(changeUser.userNickname);
       if (nickRegExp.test(changeUser.userNickname)) {
-        if (changeUser.userPassword.length >= 4) {
-          if (emailRegExp.test(changeUser.userEmail)) {
-            if (isEmailCheck) {
-              //서버에 값 넘기고 변경
-              axios
-                .post("http://localhost:8090/user/modify", sendUser, {
-                  headers: {
-                    Authorization: token,
-                  },
-                })
-                .then((res) => {
-                  console.log(res);
-                  dispatch({
-                    type: "user",
-                    payload: res.data,
-                  });
-                  Swal.fire({
-                    title: "정보수정이 완료되었습니다.",
-                    icon: "success",
-                  });
-                })
-                .catch((err) => {
-                  console.log(err);
+        if (emailRegExp.test(changeUser.userEmail)) {
+          if (isEmailCheck) {
+            if (pwInput) {
+              if (changeUser.userPassword.length < 4) {
+                //비밀번호값 변경했는데 길이가 4 미만일때
+                Swal.fire({
+                  title: "비밀번호을 확인해주세요.",
+                  text: "비밀번호는 4~8자로 구성되어야 합니다.",
+                  icon: "warning",
                 });
-            } else {
-              Swal.fire({
-                title: "Email을 인증을 해주세요.",
-                icon: "warning",
-              });
+                return;
+              }
             }
+            //여기서 데이터 전송
+            axios
+              .post("http://localhost:8090/user/modify", sendUser, {
+                headers: {
+                  Authorization: token,
+                },
+              })
+              .then((res) => {
+                console.log(res);
+                dispatch({
+                  type: "user",
+                  payload: res.data,
+                });
+                Swal.fire({
+                  title: "정보수정이 완료되었습니다.",
+                  icon: "success",
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           } else {
+            //email 체크 안했을떄(이메일값 변경 후 인증코드 인증안했을때)
             Swal.fire({
-              title: "Email을 올바르게 입력해주세요.",
+              title: "Email을 인증을 해주세요.",
               icon: "warning",
             });
           }
         } else {
+          //email유효성 걸릴때
           Swal.fire({
-            title: "비밀번호을 확인해주세요.",
-            text: "비밀번호는 4~8자로 구성되어야 합니다.",
+            title: "Email을 올바르게 입력해주세요.",
             icon: "warning",
           });
         }
       } else {
+        //닉네임유효성 걸릴때
         Swal.fire({
           title: "닉네임을 확인해주세요.",
           text: "닉네임은 특수문자 제외 이루어진 2~8자입니다.",
           icon: "warning",
         });
       }
+
+      axios
+        .post("http://localhost:8090/user/modify", sendUser, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      //   if (nickRegExp.test(changeUser.userNickname)) {
+      //     if (changeUser.userPassword.length >= 4) {
+      //       if (emailRegExp.test(changeUser.userEmail)) {
+      //         if (isEmailCheck) {
+      //           //서버에 값 넘기고 변경
+      // axios
+      //   .post("http://localhost:8090/user/modify", sendUser, {
+      //     headers: {
+      //       Authorization: token,
+      //     },
+      //   })
+      //   .then((res) => {
+      //     console.log(res);
+      //     dispatch({
+      //       type: "user",
+      //       payload: res.data,
+      //     });
+      //     Swal.fire({
+      //       title: "정보수정이 완료되었습니다.",
+      //       icon: "success",
+      //     });
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+      //         } else {
+      // Swal.fire({
+      //   title: "Email을 인증을 해주세요.",
+      //   icon: "warning",
+      // });
+      //         }
+      //       } else {
+      // Swal.fire({
+      //   title: "Email을 올바르게 입력해주세요.",
+      //   icon: "warning",
+      // });
+      //       }
+      //     } else {
+      // Swal.fire({
+      //   title: "비밀번호을 확인해주세요.",
+      //   text: "비밀번호는 4~8자로 구성되어야 합니다.",
+      //   icon: "warning",
+      // });
+      //     }
+      //   } else {
+      // Swal.fire({
+      //   title: "닉네임을 확인해주세요.",
+      //   text: "닉네임은 특수문자 제외 이루어진 2~8자입니다.",
+      //   icon: "warning",
+      // });
+      //   }
     }
   };
   return (
@@ -346,7 +426,8 @@ const DefaultMypage = (props) => {
                     type="password"
                     name="userPassword"
                     id="userPassword"
-                    defaultValue={changeUser.userPassword}
+                    // defaultValue={changeUser.userPassword}
+                    minLength={4}
                     maxLength={8}
                     onChange={(e) => change(e)}
                   />
@@ -362,7 +443,7 @@ const DefaultMypage = (props) => {
                     name="user_password_check"
                     id="user_password_check"
                     placeholder="PASSWORD를 한번더 입력하세요."
-                    defaultValue={changeUser.userPassword}
+                    // defaultValue={changeUser.userPassword}
                     maxLength={8}
                     onChange={(e) => passwordCheck(e)}
                   />
