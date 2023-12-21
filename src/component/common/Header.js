@@ -39,21 +39,6 @@ const Header = () => {
     }
   }, []);
 
-  // // 로그인 유저
-  // const [loginuser, sestLoginuser] = useState({
-  //     username: "userid0123",
-  //     userNickname: "낭만냥냥",
-  //     userMbti: "INFP",
-  //     userMbtiColor: "#BDC9A6",
-  //     userRole: "USER",
-
-  //     // username: "admin01",
-  //     // userNickname: "관리자1",
-  //     // userMbti: "",
-  //     // userMbtiColor: "",
-  //     // userRole: "ADMIN",
-  // });
-
   // 팝오버 여닫힘 상태
   const [popoverStates, setPopoverStates] = useState({
     popoverUser: false,

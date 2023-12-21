@@ -36,7 +36,23 @@
     border-radius: 10px;
     padding-left: 35px;
     padding-top: 20px;
+    cursor: pointer;
 }
+
+.section a,
+.section a:link, 
+.section a:visited, 
+.section a:hover, 
+.section a:active,
+.boardTitleB,
+.boardTitleB:link, 
+.boardTitleB:visited, 
+.boardTitleB:hover, 
+.boardTitleB:active {
+    color: black;
+    text-decoration: none;
+}
+
 .boardTitleB>span>p:first-child {
     font-size: 25px;
     margin-bottom: 0px;

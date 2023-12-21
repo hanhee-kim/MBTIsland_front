@@ -48,6 +48,49 @@ function Mbtwhy() {
     
     // 정렬 드롭다운 open 여부
     const [open, setOpen] = useState(false);
+
+    // 절대시간
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}`;
+    };
+        
+    // 상대시간(시간차)
+    const formatDatetimeGap = (dateString) => {
+        const date = new Date(dateString);
+        const currentDate = new Date();
+        const datetimeGap = currentDate - date;
+        const seconds = Math.floor(datetimeGap/1000);
+        const minutes = Math.floor(seconds/60);
+        const hours = Math.floor(minutes/60);
+        const days = Math.floor(hours/24);
+        const weeks = Math.floor(days/7);
+        const months = Math.floor(weeks/4);
+        const years = Math.floor(months/12);
+    
+        // if(seconds<60) {
+        //     return `${seconds}초 전`;
+        // } 
+        // else 
+        if(minutes<60) {
+            return `${minutes}분 전`;
+        } else if(hours<24) {
+            return `${hours}시간 전`;
+        } else if(days<7) {
+            return `${days}일 전`;
+        } else if(weeks<4) {
+            return `${weeks}주 전`;
+        } else if(months<12) {
+            return `${months}달 전`;
+        } else {
+            return `${years}년 전`;
+        }
+    }
     
 
     // navigate
@@ -88,21 +131,22 @@ function Mbtwhy() {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.mbtwhyList;
             let mbtwhyHot = res.data.mbtwhyHot;
             // let mbtwhyCnt = res.data.mbtwhyCnt;
 
             setMbtwhyList([...list]);
-            setPageInfo({...pageInfo});
             setHotMbtwhy({...mbtwhyHot});
             // setMbtwhyCnt(mbtwhyCnt);
             
+            setPageInfo({...pageInfo});
             let btn = [];
             for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
                 btn.push(i)
             }
+            // setPage(btn);
+            setPage(pageNo);
         })
         .catch(err=> {
             console.log(err);
@@ -141,7 +185,6 @@ function Mbtwhy() {
         const searchInput = document.getElementById("searchInput");
         searchInput.value = null;
 
-        console.log("ㅋㅋ");
         setMbtiColorTo();
         setPage(1);
         setSearch("")
@@ -285,7 +328,7 @@ function Mbtwhy() {
                                 {hotMbtwhy.writerNickname}
                             </div>
                             <div className={style.boardDate}>
-                                {hotMbtwhy.writeDate}
+                                {formatDatetimeGap(hotMbtwhy.writeDate)}
                             </div>
                             <div className={style.boardContent}>
                                 {hotMbtwhy.content}
@@ -310,7 +353,7 @@ function Mbtwhy() {
 
                 {/* 게시글 영역 */}
                 <div className={style.sectionBoards}>
-                    {mbtwhyList.length !== 0 && mbtwhyList.map(mbtwhy => {
+                    {mbtwhyList.length !== 0? mbtwhyList.map(mbtwhy => {
                         return (
                             <div className={style.sectionBoard} key={mbtwhy.no} onClick={()=>goMbtwhyDetail(mbtwhy.no)}>
                                 <div className={style.boardWriter}>
@@ -319,7 +362,7 @@ function Mbtwhy() {
                                     {mbtwhy.writerNickname}
                                 </div>
                                 <div className={style.boardDate}>
-                                    {mbtwhy.writeDate}
+                                    {formatDatetimeGap(mbtwhy.writeDate)}
                                 </div>
                                 <div className={style.boardContent}>
                                     {mbtwhy.content}
@@ -340,7 +383,10 @@ function Mbtwhy() {
                                 </div>
                             </div>
                         )
-                    })}
+                    }):
+                    <div className={style.noMbtwhy}>
+                        <h3>게시글이 없습니다.</h3>
+                    </div>}
                 </div>
 
                 {/* 페이징 영역 */}

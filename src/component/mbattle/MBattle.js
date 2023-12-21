@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     Pagination,
     PaginationItem,
@@ -149,6 +149,13 @@ function MBattle() {
         });
     };
 
+    const navigate = useNavigate();
+
+    // 글 작성
+    const goMbattleWrite = () => {
+        navigate("/mbattlewrite");
+    };
+
     const sortStyle = {
         width:"15%",
         margin:"0 auto",
@@ -157,20 +164,20 @@ function MBattle() {
         backgroundColor:"white",
         color:"black",
         fontWeight:"bold"
-    }
+    };
 
     const buttonStyle = {
         background:"white",
         color:"black",
         border:"1px solid lightgray"
-    }
+    };
 
     const boardVoteButton = {
         fontWeight:"bold",
         fontSize:"small",
         backgroundColor:"#1FAB70",
         lineHeight:"10px"
-    }
+    };
 
     return (
         <div className={style.container}>
@@ -181,7 +188,7 @@ function MBattle() {
                     <h1>M-Battle</h1>
                     <div className={style.pageHeaderLow}>
                         <div className={style.pageHeaderContent}>MBTI 유형 별 성향을 알아보세요!</div>
-                        <div className={style.pageHeaderWriteBtn}>글 작성</div>
+                        <div className={style.pageHeaderWriteBtn} onClick={()=>goMbattleWrite()}>글 작성</div>
                         <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
                             <DropdownToggle style={sortStyle}>
                                 <img className={style.sortImg} src="/sortIcon.png" alt=""></img>
@@ -308,12 +315,12 @@ function MBattle() {
                 {/* 검색 영역 */}
                 <FormGroup row className={style.sectionSearch}>
                     <Col sm={3}>
-                        <Input type='select' name="type" onChange={(e)=>setType(e.target.value)}>
+                        {/* <Input type='select' name="type" onChange={(e)=>setType(e.target.value)}>
                             <option value='content'>제목</option>
                             <option value='comment'>내용</option>
                             <option value='content&comment'>제목 + 내용</option>
                             <option value='writer'>댓글</option>
-                        </Input>
+                        </Input> */}
                     </Col>
                     <Col sm={6}>
                         <Input type="text" name="keyword" onChange={(e)=>setKeyword(e.target.value)}/>

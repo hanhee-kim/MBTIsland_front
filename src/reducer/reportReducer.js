@@ -1,4 +1,6 @@
 import React from "react";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 export const initState = {
     report : {
@@ -27,11 +29,12 @@ export const reportReducer = (currentState, action) => {
     const newState = {...currentState};
 
     switch(action.type) {
-        case "신고타입":
+        // case "신고타입":
+        case "report":
             //스테이트 변경
             newState.report = {...newState.report,...action.payload};
             break;
-          default:
+        default:
     }
 
     return newState;

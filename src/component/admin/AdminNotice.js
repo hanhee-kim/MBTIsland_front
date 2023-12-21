@@ -174,6 +174,17 @@ const AdminNotice = () => {
         );
     }
 
+    // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
+    const navigate = useNavigate();
+    const makeFlexibleLink = (post) => {
+        // alert('no, search, page: ' + post.no + ", " + search + ", " + page);
+        // const linkTo = `/noticedetail/${post.no}` +
+        //                 (search ? `/${search}` : '') +
+        //                 (page ? `/${page}` : ''); // 일반 공지사항상세 컴포넌트
+        const linkTo = `/adminnoticeform/${post.no}`; // 관리자페이지의 공지사항폼 컴포넌트
+        navigate(linkTo, {replace:false});
+    }
+
     return (
         <>
         <div>
@@ -219,7 +230,7 @@ const AdminNotice = () => {
                                                             onChange={(e)=>handleSingleCheck(e.target.checked, post.no)}
                                                             checked={checkItems.includes(post.no)? true: false}/> 
                                     </td>
-                                    <td>{post.title}</td>
+                                    <td onClick={()=>makeFlexibleLink(post)}>{post.title}</td>
                                     <td>{formatDate(post.writeDate)}</td>
                                     <td>
                                         {post.isHidden==='N'? (

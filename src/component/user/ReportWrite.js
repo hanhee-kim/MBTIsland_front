@@ -9,17 +9,22 @@ import { Input } from 'reactstrap';
 import { Label } from 'reactstrap';
 import { Form } from 'reactstrap';
 import Swal from "sweetalert2";
+import axios from 'axios';
 
 const ReportWrite = (props) => {
-  const {reportedId, reportedTable} = useParams();
-  const formatReportedId = reportedId.startsWith(':') ? reportedId.substring(1) : reportedId;
-  const formatReportedITable = reportedTable.startsWith(':') ? reportedTable.substring(1) : reportedTable;
+  // 신고 정보 props
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const serializedReportData = urlParams.get('data');
+  const reportData = JSON.parse(decodeURIComponent(serializedReportData));
+  // 로그인 유저 정보]
+  // const user = useSelector((state) => state.persistedReducer.user.user);
 
-  const [report,setReport] = useState({
-    reportedId:formatReportedId,
-    reportedTable:formatReportedITable,
-    reportType:""
-  });
+  // const {reportedId, reportedTable} = useParams();
+  // const formatReportedId = reportedId.startsWith(':') ? reportedId.substring(1) : reportedId;
+  // const formatReportedITable = reportedTable.startsWith(':') ? reportedTable.substring(1) : reportedTable;
+
+  const [report,setReport] = useState(reportData);
   
   useEffect(() => {
     props.setIsPopup(true);
@@ -30,17 +35,36 @@ const ReportWrite = (props) => {
     window.close();
   };
   
-  const send = (e) => {
-    e.preventDefault();
-    
-    // report send
-    Swal.fire({
-      title: "신고 완료",
-      icon: "success",
-    }).then(function () {
-      window.close();
+  const sendReport = () => {
+    let defaultUrl = `http://localhost:8090/report`;
+    axios.post(defaultUrl, report)
+    .then(res=> {
+      Swal.fire({
+        title: "신고 완료",
+        icon: "success",
+      }).then(function () {
+        window.close();
+      });
+    })
+    .catch(err=> {
+      console.log(err);
+      Swal.fire({
+        title: "신고 실패",
+        icon: "fail",
+      }).then(function () {
+        window.close();
+      });
     });
   };
+
+  // const changeReportReason = (e) => {
+  //   console.log(e.target.value);
+  //   setReport({...report,reportType:e.target.value});
+  // };
+
+  useEffect(()=> {
+    console.log("신고 정보:", report);
+  }, [report]);
 
   return (
   <div>
@@ -61,7 +85,7 @@ const ReportWrite = (props) => {
             <Label for="sentUserNick" sm={3}>
               작성자
             </Label>
-            <Input type="text" name="reportedId" value={report.reportedId} readOnly style={{ width: "150px"}}></Input>
+            <Input type="text" name="reportedId" value={report.reporterId} readOnly style={{ width: "150px"}}></Input>
           </FormGroup>
           <FormGroup style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
             <Label for="reportType" sm={3}>
@@ -71,7 +95,7 @@ const ReportWrite = (props) => {
               sm={5}
               type="select"
               name="reportType"
-              onChange={(e)=>setReport({...report,reportType:e.target.value})}
+              onChange={(e)=>setReport({...report, reportReason:e.target.value})}
               style={{ width: "150px"}}
             >
               <option>광고</option>
@@ -91,7 +115,7 @@ const ReportWrite = (props) => {
             <Button color="light" onClick={close}>
               취소
             </Button>
-            <Button color="dark" onClick={send}>
+            <Button color="dark" onClick={()=>sendReport()}>
               신고
             </Button>
           </FormGroup>
