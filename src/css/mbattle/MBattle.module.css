@@ -19,24 +19,25 @@
 .pageHeader > h1 {
     text-align: left;
     margin-bottom: 15px;
+    cursor: default;
 }
 
-.pageHeaderLow {
+.pageHeader > div {
     display: flex;
+    justify-content: space-between;
 }
 
 .pageHeaderContent {
-    width: 70%;
     line-height: 42px;
     text-align: left;
     color: #C5C5C5;
+    cursor: default;
 }
 
 .pageHeaderWriteBtn {
-    width: 15%;
-    line-height: 42px;
-    cursor: pointer;
+    margin: auto 10px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .sortImg {

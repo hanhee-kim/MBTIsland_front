@@ -15,6 +15,7 @@
 .pageHeader > h1 {
     width: 70%;
     text-align: left;
+    cursor: default;
 }
 
 .popoverButton {
@@ -135,6 +136,7 @@
 
 .commentCountDiv > div {
     font-weight: bold;
+    cursor: default;
 }
 
 .sectionDeletedComment {
@@ -166,10 +168,14 @@
     font-size: 18px;
     width: 32px;
     height: 32px;
-    line-height: 32px;
+    /* line-height: 32px; */
     border:0px solid white;
     text-align: center;
     cursor: pointer;
+}
+
+.activePage {
+    border: 1px solid #A3A3A3 !important;
 }
 
 .postCommentDiv {

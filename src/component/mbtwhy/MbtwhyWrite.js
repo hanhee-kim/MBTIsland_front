@@ -96,7 +96,11 @@ function MbtwhyWrite() {
     
     // 게시글 작성
     const postMbtwhy = () => {
-        console.log(mbtiValue);
+        if(content === "") {
+            alert("내용을 입력해주세요.");
+            return;
+        }
+        
         let defaultUrl = `http://localhost:8090/mbtwhywrite?`;
         if(mbtiValue !== null) defaultUrl += `mbti=${mbtiValue.toUpperCase()}`;
         if(content !== null) defaultUrl += `&content=${content}`;
@@ -115,7 +119,8 @@ function MbtwhyWrite() {
     const pageHeader = {
         display:"flex",
         borderBottom:"solid 3px",
-        borderColor:mbtiColor
+        borderColor:mbtiColor,
+        cursor:"default"
     };
 
     const inputContent = {

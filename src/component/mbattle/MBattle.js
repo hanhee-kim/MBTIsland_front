@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
 import {
     Pagination,
     PaginationItem,
@@ -17,6 +18,8 @@ import axios from 'axios';
 import style from "../../css/mbattle/MBattle.module.css";
 
 function MBattle() {
+    // 로그인 유저 정보]
+    const user = useSelector((state) => state.persistedReducer.user.user);
 
     const [boards, setBoard] = useState([
         {
@@ -43,12 +46,12 @@ function MBattle() {
 
     const [hotBoards, setHotBoards] = useState([
         {
-            num:1,
+            no:1,
             title:"탕수육 부먹 or 찍먹",
             voteCount:43
         },
         {
-            num:2,
+            noiuiu:2,
             title:"퇴사 고?",
             voteCount:27
         }
@@ -156,6 +159,11 @@ function MBattle() {
         navigate("/mbattlewrite");
     };
 
+    // mbattleDetail 이동
+    const goMbattleDetail = (no) => {
+        navigate(`/mbattledetail/${no}/1`);
+    };
+
     const sortStyle = {
         width:"15%",
         margin:"0 auto",
@@ -186,22 +194,23 @@ function MBattle() {
                 {/* 게시판 헤더 영역 */}
                 <div className={style.pageHeader}>
                     <h1>M-Battle</h1>
-                    <div className={style.pageHeaderLow}>
+                    <div>
                         <div className={style.pageHeaderContent}>MBTI 유형 별 성향을 알아보세요!</div>
-                        <div className={style.pageHeaderWriteBtn} onClick={()=>goMbattleWrite()}>글 작성</div>
-                        <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                            <DropdownToggle style={sortStyle}>
-                                <img className={style.sortImg} src="/sortIcon.png" alt=""></img>
-                                {selectedOption}
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem onClick={() => handleSelect('최신순')}>최신순</DropdownItem>
-                                <DropdownItem onClick={() => handleSelect('조회순')}>조회순</DropdownItem>
-                                <DropdownItem onClick={() => handleSelect('투표순')}>투표순</DropdownItem>
-                            </DropdownMenu>
-                        </ButtonDropdown>
+                        <div style={{display:"flex"}}>
+                            {user.username!==undefined?<div className={style.pageHeaderWriteBtn} onClick={()=>goMbattleWrite()}>글 작성</div>:<></>}
+                            <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
+                                <DropdownToggle style={sortStyle}>
+                                    <img className={style.sortImg} src="/sortIcon.png" alt=""></img>
+                                    {selectedOption}
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={() => handleSelect('최신순')}>최신순</DropdownItem>
+                                    <DropdownItem onClick={() => handleSelect('조회순')}>조회순</DropdownItem>
+                                    <DropdownItem onClick={() => handleSelect('투표순')}>투표순</DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
+                        </div>
                     </div>
-
                 </div>
                 {/* 게시판 헤더 영역 */}
 
@@ -209,7 +218,7 @@ function MBattle() {
                 <div className={style.sectionBoards}>
                     {hotBoards.length !== 0 && hotBoards.map(hotBoard => {
                         return (
-                            <div key={hotBoard.num} className={style.sectionBoard}>
+                            <div key={hotBoard.no} className={style.sectionBoard}>
                                 <div className={style.boardImages}>
                                     <div>
                                         <img src="/thumbIcon.png" alt=""></img>
@@ -218,22 +227,20 @@ function MBattle() {
                                         <img src="/thumbIcon.png" alt=""></img>
                                     </div>
                                 </div>
-                                <div className={style.boardContents}>
-                                    <Link to={"/detailform/only-detail/" + hotBoard.num} style={{textDecoration:"none"}}>
-                                        <div className={style.boardTitle}>
-                                            {hotBoard.title}
+                                <div className={style.boardContents} onClick={()=>goMbattleDetail(hotBoard.no)}>
+                                    <div className={style.boardTitle}>
+                                        {hotBoard.title}
+                                    </div>
+                                    <div className={style.boardContentsLow}>
+                                        <div className={style.boardVotedCount}>
+                                            {hotBoard.voteCount}명 투표
+                                            &#128293;
+                                        </div>&nbsp;&nbsp;
+                                        <div>
+                                            <Button style={boardVoteButton}>투표하기</Button>
+                                            {/* <Button>투표완료</Button> */}
                                         </div>
-                                        <div className={style.boardContentsLow}>
-                                            <div className={style.boardVotedCount}>
-                                                {hotBoard.voteCount}명 투표
-                                                &#128293;
-                                            </div>&nbsp;&nbsp;
-                                            <div>
-                                                <Button style={boardVoteButton}>투표하기</Button>
-                                                {/* <Button>투표완료</Button> */}
-                                            </div>
-                                        </div>
-                                    </Link>
+                                    </div>
                                 </div>
                             </div>
                         )
