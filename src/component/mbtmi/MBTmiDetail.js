@@ -102,7 +102,7 @@ const MBTmiDetail = () => {
         // let defaultUrl = `http://localhost:8090/mbtmicomment?no=${no}&comment=${parentcommentNo!=='' ? comment : reply}`;
         let defaultUrl = `http://localhost:8090/mbtmicomment?no=${no}&comment=${commentContent}`;
         if(parentcommentNo !== '') defaultUrl += `&parentcommentNo=${parentcommentNo}`
-        defaultUrl += `&commentpage=${commentPage}`;
+        defaultUrl += `&commentpage=${commentPage}`; // 3페이지에서 대댓글 작성시 url에 파라미터가로 3페이지가 붙음
         console.log('요청url: ', defaultUrl);
 
         axios.post(defaultUrl, sendUser)
@@ -114,16 +114,24 @@ const MBTmiDetail = () => {
             let CommentPageInfo = res.data.pageInfo;
             setCommentPageInfo(CommentPageInfo);
 
-            // 대댓글 등록의 경우 대댓글이 등록완료된 페이지로 재렌더링하도록 해야함 ***
-            // const indexOfNewComment = comments.findIndex(comment => comment.commentNo === res.data.mbtmiCommentCnt);
-            // const newCommentPage = Math.ceil((indexOfNewComment + 1) / commentPageInfo.pageSize);
-            // setCommentPage(newCommentPage);
-
+            if(parentcommentNo!=='') { // 2차댓글 작성의 경우
+                let writtenCommentNo = res.data.writtenCommentNo;
+                const isWrittenCommentIsInCurrentPage = comments.some(comment => comment.commentNo === writtenCommentNo); 
+                // 현재페이지번호를 인자로하여 불러온 길이 배열 comments 안에 방금작성된 새댓글이 존재하는지 여부
+                if (!isWrittenCommentIsInCurrentPage) { // 배열 안에 없다면(등록시 페이지가 3->4페이지에 등록되게 된 경우) 1증가한 페이지번호로 목록이 렌더링되게 함
+                    getMbtmiCommentList(commentPage+1);
+                    setCommentPage(commentPage+1);
+                }
+            } else { // 1차댓글 작성의 경우 항상 끝 페이지번호로 목록이 렌더링되게 함
+                setCommentPage(allPage);
+                getMbtmiCommentList(allPage);
+            }
+            
             setMbtmiCommentList([...comments]);
-            setCommentPage(allPage); // ***
             setComment("");
             setMbtmiCommentCnt(mbtmiCommentCnt);
-            getMbtmiCommentList(allPage); // ***
+            // setCommentPage(allPage); // ***
+            // getMbtmiCommentList(allPage); // ***
         })
         .catch(err=> {
             console.log(err);
@@ -311,10 +319,9 @@ const MBTmiDetail = () => {
         });
     }
 
-    // 첫번째 인자가 reportedId인거?? targetNo(PK)이 아니라?? 
     // 신고 팝업창
     const openReportWrite = (reportTarget, reportTargetFrom) => {
-        console.log('신고대상 reportTarget(객체): ', reportTarget, ", reportTargetFrom(테이블명): ", reportTargetFrom);
+        // console.log('신고대상 reportTarget(객체): ', reportTarget, ", reportTargetFrom(테이블명): ", reportTargetFrom);
         if(!user.username) {
             alert("로그인해주세요.");
             return;
