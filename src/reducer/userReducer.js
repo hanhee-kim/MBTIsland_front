@@ -39,7 +39,7 @@ export const userReducer = (currentState, action) => {
       newState.user = { ...newState.user, ...action.payload };
       break;
     case "logout":
-      newState.user = {};
+      newState.user = {...action.payload};
       break;
     default:
   }

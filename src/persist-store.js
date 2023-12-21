@@ -20,6 +20,7 @@ const persistConfig = {
   key: "root",
   storage,
   //whiteList: ,
+  autoRehydrate: false,
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
