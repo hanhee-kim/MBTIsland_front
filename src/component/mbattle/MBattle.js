@@ -2,9 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import {
-    Pagination,
-    PaginationItem,
-    PaginationLink,
     Popover,
     PopoverBody,
     FormGroup,
@@ -46,6 +43,11 @@ function MBattle() {
     
     // mbattlewrite 이동
     const goMbattleWrite = () => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+
         navigate("/mbattlewrite");
     };
 
@@ -76,9 +78,9 @@ function MBattle() {
         })
         .catch(err=> {
             console.log(err);
-            setMbattleList([]);
-            setHotMbattleList([]);
-            setPageInfo({});
+            // setMbattleList([]);
+            // setHotMbattleList([]);
+            // setPageInfo({});
         })
     };
 
@@ -201,7 +203,7 @@ function MBattle() {
                     <div>
                         <div className={style.pageHeaderContent}>MBTI 유형 별 성향을 알아보세요!</div>
                         <div style={{display:"flex"}}>
-                            {user.username!==undefined?<div className={style.pageHeaderWriteBtn} onClick={()=>goMbattleWrite()}>글 작성</div>:<></>}
+                            <div className={style.pageHeaderWriteBtn} onClick={()=>goMbattleWrite()}>글 작성</div>
                             <button className={style.popoverButton} onClick={()=>setOpen(!open)} id="Popover1"><img src={"/sortIcon.png" } alt="" className={style.sortImg} />{!sort? "최신순" : sort}</button>
                             <Popover placement="bottom" isOpen={open} target="Popover1" toggle={()=>handleToggle()}>
                                 <PopoverBody className={style.popoverItem} onClick={()=>handleSort("최신순")}>최신순</PopoverBody>
@@ -219,12 +221,18 @@ function MBattle() {
                         return (
                             <div key={hotMbattle.no} className={style.sectionBoard}>
                                 <div className={style.boardImages}>
-                                    <div>
-                                        <img src="/thumbIcon.png" alt=""></img>
-                                    </div>
-                                    <div>
-                                        <img src="/thumbIcon.png" alt=""></img>
-                                    </div>
+                                    {hotMbattle.fileIdx1 !== null?
+                                        <div>
+                                            <img src={`http://localhost:8090/mbattleimg/${hotMbattle.fileIdx1}`} alt=''/>
+                                        </div>
+                                        :<div className={style.voteItemDiv}>{hotMbattle.voteItem1}</div>
+                                    }
+                                    {hotMbattle.fileIdx2 !== null?
+                                        <div>
+                                            <img src={`http://localhost:8090/mbattleimg/${hotMbattle.fileIdx2}`} alt=''/>
+                                        </div>
+                                        :<div className={style.voteItemDiv}>{hotMbattle.voteItem2}</div>
+                                    }
                                 </div>
                                 <div className={style.boardContents} onClick={()=>goMbattleDetail(hotMbattle.no)}>
                                     <div className={style.boardTitle}>
@@ -232,7 +240,7 @@ function MBattle() {
                                     </div>
                                     <div className={style.boardContentsLow}>
                                         <div className={style.boardVotedCount}>
-                                            {hotMbattle.voteCount}명 투표
+                                            {hotMbattle.voteCnt}명 투표
                                             &#128293;
                                         </div>&nbsp;&nbsp;
                                         <div>
@@ -253,20 +261,26 @@ function MBattle() {
                         return (
                             <div key={mbattle.no} className={style.sectionBoard}>
                                 <div className={style.boardImages}>
-                                    <div>
-                                        <img src="/thumbIcon.png" alt=""></img>
-                                    </div>
-                                    <div>
-                                        <img src="/thumbIcon.png" alt=""></img>
-                                    </div>
+                                    {mbattle.fileIdx1 !== null?
+                                        <div>
+                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
+                                        </div>
+                                        :<div className={style.voteItemDiv}>{mbattle.voteItem1}</div>
+                                    }
+                                    {mbattle.fileIdx2 !== null?
+                                        <div>
+                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx2}`} alt=''/>
+                                        </div>
+                                        :<div className={style.voteItemDiv}>{mbattle.voteItem2}</div>
+                                    }
                                 </div>
-                                <div className={style.boardContents}>
+                                <div className={style.boardContents} onClick={()=>goMbattleDetail(mbattle.no)}>
                                     <div className={style.boardTitle}>
-                                        주제:{mbattle.title}
+                                        {mbattle.title}
                                     </div>
                                     <div className={style.boardContentsLow}>
                                         <div className={style.boardVotedCount}>
-                                            {mbattle.voteCount}명 투표
+                                            {mbattle.voteCnt}명 투표
                                         </div>&nbsp;&nbsp;
                                         <div>
                                             <Button style={boardVoteButton}>투표하기</Button>

@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    ButtonDropdown,
     Popover,
     PopoverBody,
     Button,
@@ -61,15 +57,25 @@ function MBattleDetail() {
     // 댓글 작성 상태값
     const [inputCommentValue, setInputCommentValue] = useState('');
 
-    // 투표 여부
-    const [isVoted, setIsVoted] = useState(false);
-
-    // 투표 정보 (글 번호, 투표자 아이디, 투표 항목)
-    // 투표 시 백으로 보낼 데이터
-    const [vote, setVote] = useState({
+    // 투표 데이터 (글 번호, 투표자 아이디, 투표 항목)
+    const [voter, setVoter] = useState({
         mbattleNo: no,
         voterId: user.username,
         voteItem: ""
+    });
+
+    // 투표 결과 데이터 (글 번호, 투표 항목, I, E, S, N, T, F, J, P)
+    const [result, setResult] = useState({
+        mbattleNo: no,
+        voteItem: "",
+        I: "",
+        E: "",
+        S: "",
+        N: "",
+        T: "",
+        F: "",
+        J: "",
+        P: ""
     });
 
     // 북마크 여부
@@ -195,7 +201,7 @@ function MBattleDetail() {
     useEffect(()=> {
         getMbattleDetail();
         getMbattleCommentList(commentPage);
-    }, []);
+    }, [voter]);
 
     // 댓글 상태 값 변경
     const commentChange = (e) => {
@@ -209,6 +215,12 @@ function MBattleDetail() {
 
     // 신고 팝오버 열기
     const openReportWrite = (report, reportedTable) => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            setOpen(!open);
+            return;
+        }
+        
         setOpen(!open);
 
         let reportData = {};
@@ -265,7 +277,6 @@ function MBattleDetail() {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
             let mbattle = res.data.mbattle;
             let mbattleVoter = res.data.mbattleVoter;
             let isMbattleBookmarked = res.data.isMbattleBookmarked;
@@ -275,7 +286,7 @@ function MBattleDetail() {
 
             // 로그인한 유저에게 투표되어 있다면 (투표 데이터 존재한다면)
             if(mbattleVoter!==null) {
-                setIsVoted(!isVoted);
+                setVoter(mbattleVoter);
             }
 
             if(isMbattleBookmarked) {
@@ -317,6 +328,11 @@ function MBattleDetail() {
 
     // 게시글 삭제
     const mbattleDelete = () => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+        
         const isConfirmed = window.confirm("게시글을 삭제하시겠습니까?");
         if(isConfirmed) {
             axios.delete(`http://localhost:8090/mbattledelete/${no}`)
@@ -331,10 +347,26 @@ function MBattleDetail() {
         setOpen(false);
     };
 
-    // 게시글 수정
-    const goMbattleModify = () => {
-        navigate(`/mbattlemodify/${no}`);
-    };
+    // 투표
+    const voteItem = (vote) => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+
+        setVoter({...voter, voteItem:vote});
+        console.log(voter);
+
+        // let defaultUrl = `http://localhost:8090/mbattlevote/${no}/${vote}/${user.username}/${user.userMbti}`
+        let defaultUrl = `http://localhost:8090/mbattlevote/${user.userMbti}`
+        axios.post(defaultUrl, voter)
+        .then(res=> {
+            
+        })
+        .catch(err=> {
+            console.log(err);
+        })
+    }
 
     // 댓글 목록 조회
     const getMbattleCommentList = (commentPage) => {
@@ -404,11 +436,6 @@ function MBattleDetail() {
         setOpen(false);
     };
 
-    // 랜덤 mbattleDetail 이동 
-    const goRandomMbattleDetail = (e) => {
-
-    };
-
     // commentPage 핸들링
     const handleCommentPageNo = (commentPageNo) => {
         setCommentPage(commentPageNo);
@@ -432,6 +459,21 @@ function MBattleDetail() {
         // 뒤로가기
         // store에 Mbtwhy 페이징, 검색, 정렬값 저장하여 목록으로 돌아갈 때 사용하기
         navigate("/mbattle");
+    };
+
+    // 랜덤 mbattleDetail 이동 
+    const goRandomMbattleDetail = (e) => {
+        let randomNo = 0;
+        axios.get("http://localhost:8090/mbattlerandom")
+        .then(res=> {
+            randomNo = res.data.randomNo;
+            navigate(`/mbattledetail/${randomNo}/1`);
+            navigate(0);
+            console.log(randomNo);
+        })
+        .catch(err=> {
+            console.log(err);
+        });
     };
 
     // 페이지네이션
@@ -513,6 +555,79 @@ function MBattleDetail() {
         );
     };
 
+    // 결과 통계 컴포넌트
+    const Result = () => {
+        return(
+            <React.Fragment>
+                <div style={{width:"600px", height:"400px"}}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                            data={data}
+                            margin={{
+                                top: 5,
+                                right: 30,
+                                left: 20,
+                                bottom: 5
+                            }}
+                        >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="uv" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+                        <Bar dataKey="pv" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+                <div style={{width:"600px", height:"400px"}}>
+                    <ResponsiveContainer>
+                        <BarChart data={data} layout="vertical">
+                            <YAxis type="name"/>
+                            <XAxis type="number" orientation="top" stroke="#285A64"/>
+                            <Bar dataKey="uv" fill="#8884d8" background={{ fill: '#eee' }} barSize={{height:"10px"}}/>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+                <div style={{width:"600px", height:"400px"}}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart width={150} height={40} data={data} layout="vertical">
+                            <YAxis/>
+                            <Bar dataKey="uv" fill="#8884d8" background={{ fill: '#eee' }}/>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+
+                <div>
+                    <BarChart
+                        width={430}
+                        height={170}
+                        data={data}
+                        layout="vertical">
+                        <XAxis type="number" orientation="top"/>
+                        <YAxis type="category" dataKey="currency" axisLine={false} dx={-5} tickLine={false} 
+                            style={{ fill: "#285A64" }} />
+                        <Bar background dataKey="uv" fill="#285A64" barSize={{ height: 300 }}>
+                            
+                        </Bar>
+                    </BarChart>
+                </div>
+
+                <div className={style.boardLow}>
+                    <div className={style.bookmarkDiv} onClick={()=>mbattleBookmark()}>
+                        {!isBookmarked?
+                            <img src="/bookmark.png" alt=""/>
+                            :<img src="/bookmarked.png" alt=""/>
+                        }
+                    </div>
+                    <div className={style.listDiv}>
+                        <Button style={buttonStyle} onClick={()=>goToPreviousList()}>목록</Button>
+                    </div>
+                </div>
+            </React.Fragment>
+        )
+    };
+
     const buttonStyle = {
         background:"none",
         color:"black",
@@ -555,7 +670,7 @@ function MBattleDetail() {
                         <div className={style.boardTitle}>
                             <h1>{mbattle.title}</h1>
                             <div> 
-                                <img src="/randomIcon.png" height="30px" alt="" onClick={()=>goRandomMbattleDetail()} />
+                                <img className={style.randomIcon} src="/randomIcon.png" height="30px" alt="" onClick={()=>goRandomMbattleDetail()} />
                                 {user.username !== ""?
                                     <React.Fragment>
                                         <button onClick={()=>setOpen(!open)} id="Popover1" className={style.popoverButton}><img className={style.popoverImg} src="/popover-icon.png" alt=""/></button>
@@ -581,7 +696,7 @@ function MBattleDetail() {
                             {mbattle.writerId}
                         </div>
                         <div style={{color:"#C5C5C5"}}>
-                            {mbattle.writeDate}
+                            {formatDatetimeGap(mbattle.writeDate)}
                             <img className={style.viewIcon} src="/viewIcon-bold.png" alt=""></img>
                             {mbattle.viewCnt}
                         </div>
@@ -595,14 +710,16 @@ function MBattleDetail() {
                                             <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
                                             <h4>{mbattle.voteItem1}</h4>
                                         </React.Fragment>
-                                        :<div className={style.voteItemDiv}><h4>{mbattle.voteItem1}</h4></div>
+                                        :<div className={style.voteItemDiv}><h1>{mbattle.voteItem1}</h1></div>
                                     }
                                 </div>
-                                {user.userRole === "ROLE_USER"?
+                                {voter.voterId===user.username && voter.voteItem===1?
                                     <div className={style.voteButtonDiv}>
-                                        <Button style={boardVoteButton}>투표하기</Button>
+                                        <Button style={boardVoteButton}>투표완료</Button>
                                     </div>
-                                    :<></>
+                                    :<div className={style.voteButtonDiv}>
+                                        <Button style={boardVoteButton} onClick={()=>voteItem(1)}>투표하기</Button>
+                                    </div>
                                 }
                             </div>
                             <div style={{margin:"30px"}}>
@@ -615,83 +732,24 @@ function MBattleDetail() {
                                             <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx2}`} alt=''/>
                                             <h4>{mbattle.voteItem2}</h4>
                                         </React.Fragment>
-                                        :<div className={style.voteItemDiv}><h4>{mbattle.voteItem2}</h4></div>
+                                        :<div className={style.voteItemDiv}><h1>{mbattle.voteItem2}</h1></div>
                                     }
                                     <div>
                                     </div>
                                 </div>
-                                <div className={style.voteButtonDiv}>
-                                    <Button style={boardVoteButton}>투표하기</Button>
-                                </div>
+                                {voter.voterId===user.username && voter.voteItem===2?
+                                    <div className={style.voteButtonDiv}>
+                                        <Button style={boardVoteButton}>투표완료</Button>
+                                    </div>
+                                    :<div className={style.voteButtonDiv}>
+                                        <Button style={boardVoteButton} onClick={()=>voteItem(2)}>투표하기</Button>
+                                    </div>
+                                }
                             </div>
                         </div>
 
                         {/* 통계 영역 */}
-                        <div style={{width:"600px", height:"400px"}}>
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart
-                                    data={data}
-                                    margin={{
-                                        top: 5,
-                                        right: 30,
-                                        left: 20,
-                                        bottom: 5
-                                    }}
-                                >
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Bar dataKey="uv" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
-                                <Bar dataKey="pv" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                        <div style={{width:"600px", height:"400px"}}>
-                            <ResponsiveContainer>
-                                <BarChart data={data} layout="vertical">
-                                    <YAxis type="name"/>
-                                    <XAxis type="number" orientation="top" stroke="#285A64"/>
-                                    <Bar dataKey="uv" fill="#8884d8" background={{ fill: '#eee' }} barSize={{height:"10px"}}/>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                        <div style={{width:"600px", height:"400px"}}>
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart width={150} height={40} data={data} layout="vertical">
-                                    <YAxis/>
-                                    <Bar dataKey="uv" fill="#8884d8" background={{ fill: '#eee' }}/>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-
-                        <div>
-                            <BarChart
-                                width={430}
-                                height={170}
-                                data={data}
-                                layout="vertical">
-                                <XAxis type="number" orientation="top"/>
-                                <YAxis type="category" dataKey="currency" axisLine={false} dx={-5} tickLine={false} 
-                                    style={{ fill: "#285A64" }} />
-                                <Bar background dataKey="uv" fill="#285A64" barSize={{ height: 300 }}>
-                                    
-                                </Bar>
-                            </BarChart>
-                        </div>
-
-                        <div className={style.boardLow}>
-                            <div className={style.bookmarkDiv} onClick={()=>mbattleBookmark()}>
-                                {!isBookmarked?
-                                    <img src="/bookmark.png" alt=""/>
-                                    :<img src="/bookmarked.png" alt=""/>
-                                }
-                            </div>
-                            <div className={style.listDiv}>
-                                <Button style={buttonStyle} onClick={()=>goToPreviousList()}>목록</Button>
-                            </div>
-                        </div>
+                        {!voter}
                     </div>
                     <div className={style.commentCountDiv}>
                         <div>
@@ -726,25 +784,23 @@ function MBattleDetail() {
                     {comments.length===0?<></>:<PaginationInside/>}
 
                     {/* 댓글 달기 */}
-                    {user.userRole === "ROLE_USER"?
-                        <div>
-                            <Input
-                                style={inputComment}
-                                type="textarea"
-                                id="comment"
-                                name="comment"
-                                onChange={commentChange}
-                                cols="40"
-                                rows="15"
-                                required="required"
-                                value={inputCommentValue}
-                                placeholder="댓글을 입력해주세요."
-                            />
-                            <div className={style.postCommentDiv}>
-                                <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue, "")}>등록</Button>
-                            </div>
+                    <div>
+                        <Input
+                            style={inputComment}
+                            type="textarea"
+                            id="comment"
+                            name="comment"
+                            onChange={commentChange}
+                            cols="40"
+                            rows="15"
+                            required="required"
+                            value={inputCommentValue}
+                            placeholder="댓글을 입력해주세요."
+                        />
+                        <div className={style.postCommentDiv}>
+                            <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue, "")}>등록</Button>
                         </div>
-                    :<></>}
+                    </div>
 
                 </div>
                 {/* 댓글 영역 */}

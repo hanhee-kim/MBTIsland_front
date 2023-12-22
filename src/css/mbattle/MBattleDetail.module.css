@@ -61,6 +61,10 @@
     justify-content: space-between;
 }
 
+.randomIcon {
+    cursor: pointer;
+}
+
 .writerDiv {
     display: flex;
     margin-bottom: 10px;
@@ -105,12 +109,8 @@
 .subject > img {
     width: 300px;
     height: 300px;
-    filter: brightness(0.4);
+    filter: brightness(0.5);
 }
-
-/* .subject > div {
-    height: 300px;
-} */
 
 .subject > h4 {
     text-align: center;
@@ -118,7 +118,7 @@
 	top: 50%;
 	left: 50%;
     transform: translate( -50%, -50% );
-    color: lightgray;
+    color: white;
 }
 
 .voteItemDiv {
@@ -128,7 +128,7 @@
     height: 300px;
 }
 
-.voteItemDiv > h4 {
+.voteItemDiv > h1 {
     text-align: center;
 	position: absolute;
 	top: 50%;

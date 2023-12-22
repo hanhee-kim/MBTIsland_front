@@ -103,6 +103,11 @@ function Mbtwhy() {
 
     // mbtwhywrite 이동
     const goMbtwhyWrite = () => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+
         let defaultUrl = `/mbtwhywrite`;
         if(mbti !== null) defaultUrl += `/${mbti}`;
         
@@ -288,7 +293,7 @@ function Mbtwhy() {
                 <div className={style.pageHeader} style={{borderColor:`${mbtiColor}`}}>
                     <h1>{mbti}</h1>
                     <div style={{display:"flex"}}>
-                        {user.username!==undefined?<div className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</div>:<></>}
+                        <div className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</div>
                         <button className={style.popoverButton} onClick={()=>setOpen(!open)} id="Popover1"><img src={"/sortIcon.png" } alt="" className={style.sortImg} />{!sort? "최신순" : sort}</button>
                         <Popover placement="bottom" isOpen={open} target="Popover1" toggle={()=>handleToggle()}>
                             <PopoverBody className={style.popoverItem} onClick={()=>handleSort("최신순")}>최신순</PopoverBody>

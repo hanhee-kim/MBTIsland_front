@@ -70,21 +70,6 @@ function MbtwhyDetail() {
         }
     };
 
-    // mbti 값
-    // const [mbti, setMbti] = useState(mbtiValue);
-
-    // 페이지 값
-    // const [page, setPage] = useState(pageValue);
-
-    // 검색 값
-    // const [search, setSearch] = useState(searchValue);
-
-    // 정렬 값
-    // const [sort, setSort] = useState(sortValue);
-
-    // Mbtwhy 게시글 번호 값
-    // const [no, setNo] = useState(noValue);
-
     // 댓글 페이지 번호
     const [commentPage, setCommentPage] = useState(1);
     
@@ -197,6 +182,12 @@ function MbtwhyDetail() {
 
     // 신고 팝오버 열기
     const openReportWrite = (report, reportedTable) => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            setOpen(!open);
+            return;
+        }
+
         setOpen(!open);
 
         let reportData = {};
@@ -395,16 +386,25 @@ function MbtwhyDetail() {
 
     // 댓글 작성
     const postComment = (commentValue, parentcommentNo) => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            setInputCommentValue("");
+            return;
+        }
         
-        if(user.userMbti !== mbti.toUpperCase()) {
+        // 로그인한 유저의 MBTI 유형이 맞지 않고, 로그인한 유저가 게시글 작성자가 아닐 경우
+        if(user.userMbti !== mbti.toUpperCase() && user.username !== mbtwhy.writerId) {
             alert(mbti.toUpperCase() + " 유형만 댓글을 작성할 수 있습니다.");
             setInputCommentValue("");
+            setOpen(!open);
             return;
         }
 
         let defaultUrl = `http://localhost:8090/mbtwhycomment?no=${no}&comment=${commentValue}`;
         if(parentcommentNo !== "") defaultUrl += `&parentcommentNo=${parentcommentNo}`
         defaultUrl += `&commentPage=${commentPage}`;
+
+        console.log(sendUser);
 
         axios.post(defaultUrl, sendUser)
         .then(res=> {
@@ -422,6 +422,8 @@ function MbtwhyDetail() {
                     getMbtwhyCommentList(commentPage+1);
                     setCommentPage(commentPage+1);
                 }
+                getMbtwhyCommentList(allPage);
+                setCommentPage(allPage);
             } else {
                 getMbtwhyCommentList(allPage);
                 setCommentPage(allPage);
@@ -438,6 +440,11 @@ function MbtwhyDetail() {
 
     // 댓글 삭제
     const commentDelete = (commentNo) => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+
         const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
         if(isConfirmed) {
             axios.get(`http://localhost:8090/mbtwhycommentdelete/${commentNo}`)
@@ -531,6 +538,8 @@ function MbtwhyDetail() {
         const [tmpReplyContent, setTmpReplyContent] = useState("");
         const addReply = (tmpReplyContent) => {
             postComment(tmpReplyContent, comment.commentNo);
+            // setTmpReplyContent("");
+            handleReply();
         };
 
         return (
