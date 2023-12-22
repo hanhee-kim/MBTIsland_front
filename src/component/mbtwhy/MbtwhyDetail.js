@@ -395,6 +395,7 @@ function MbtwhyDetail() {
 
     // 댓글 작성
     const postComment = (commentValue, parentcommentNo) => {
+        
         if(user.userMbti !== mbti.toUpperCase()) {
             alert(mbti.toUpperCase() + " 유형만 댓글을 작성할 수 있습니다.");
             setInputCommentValue("");
@@ -407,7 +408,6 @@ function MbtwhyDetail() {
 
         axios.post(defaultUrl, sendUser)
         .then(res=> {
-            console.log("ㅇㄹㄴ", res);
             let mbtwhyCommentList = res.data.mbtwhyCommentList;
             let allPage = res.data.pageInfo.allPage;
             let mbtwhyCommentCount = res.data.mbtwhyCommentCount;
@@ -909,25 +909,23 @@ function MbtwhyDetail() {
                     {comments.length===0?<></>:<PaginationInside/>}
 
                     {/* 댓글 달기 */}
-                    {user.userRole === "ROLE_USER"?
-                        <div>
-                            <Input
-                                style={inputComment}
-                                type="textarea"
-                                id="comment"
-                                name="comment"
-                                onChange={commentChange}
-                                cols="40"
-                                rows="15"
-                                required="required"
-                                value={inputCommentValue}
-                                placeholder="댓글을 입력해주세요."
-                            />
-                            <div className={style.postCommentDiv}>
-                                <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue, "")}>등록</Button>
-                            </div>
+                    <div>
+                        <Input
+                            style={inputComment}
+                            type="textarea"
+                            id="comment"
+                            name="comment"
+                            onChange={commentChange}
+                            cols="40"
+                            rows="15"
+                            required="required"
+                            value={inputCommentValue}
+                            placeholder="댓글을 입력해주세요."
+                        />
+                        <div className={style.postCommentDiv}>
+                            <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue, "")}>등록</Button>
                         </div>
-                    :<></>}
+                    </div>
 
                 </div>
                 {/* 댓글 영역 */}

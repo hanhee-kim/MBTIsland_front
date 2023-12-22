@@ -41,49 +41,6 @@ function MBattle() {
     // 정렬 드롭다운 open 여부
     const [open, setOpen] = useState(false);
 
-    // 절대시간
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}`;
-    };
-        
-    // 상대시간(시간차)
-    const formatDatetimeGap = (dateString) => {
-        const date = new Date(dateString);
-        const currentDate = new Date();
-        const datetimeGap = currentDate - date;
-        const seconds = Math.floor(datetimeGap/1000);
-        const minutes = Math.floor(seconds/60);
-        const hours = Math.floor(minutes/60);
-        const days = Math.floor(hours/24);
-        const weeks = Math.floor(days/7);
-        const months = Math.floor(weeks/4);
-        const years = Math.floor(months/12);
-    
-        // if(seconds<60) {
-        //     return `${seconds}초 전`;
-        // } 
-        // else 
-        if(minutes<60) {
-            return `${minutes}분 전`;
-        } else if(hours<24) {
-            return `${hours}시간 전`;
-        } else if(days<7) {
-            return `${days}일 전`;
-        } else if(weeks<4) {
-            return `${weeks}주 전`;
-        } else if(months<12) {
-            return `${months}달 전`;
-        } else {
-            return `${years}년 전`;
-        }
-    }
-
     // navigate
     const navigate = useNavigate();
     
@@ -98,21 +55,24 @@ function MBattle() {
     };
     
     // 게시글 목록 조회
-    const getMbattleList = (pageNo, searchValue, sortType) => {
-        let defaultUrl = `http://localhost:8090/mbattle/${pageNo}/${searchValue}/${sortType}`;
+    const getMbattleList = (page, search, sort) => {
+        let defaultUrl = `http://localhost:8090/mbattle?page=${page}`;
+        if(search !== "") defaultUrl += `&search=${search}`;
+        if(sort !== "") defaultUrl += `&sort=${sort}`;
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
+            console.log("ㅋㅋ", res);
             let pageInfo = res.data.pageInfo;
             let mbattleList = res.data.mbattleList;
             let hotMbattleList = res.data.hotMbattleList;
+            console.log("게시글 목록 개수: " + mbattleList.length);
 
             setMbattleList([...mbattleList]);
             setHotMbattleList([...hotMbattleList]);
             
             setPageInfo({...pageInfo});
-            setPage(pageNo);
+            setPage(page);
         })
         .catch(err=> {
             console.log(err);
@@ -216,16 +176,6 @@ function MBattle() {
                 )}
             </div>
         );
-    };
-
-    const sortStyle = {
-        width:"15%",
-        margin:"0 auto",
-        border:"none",
-        boxShadow:"none",
-        backgroundColor:"white",
-        color:"black",
-        fontWeight:"bold"
     };
 
     const buttonStyle = {

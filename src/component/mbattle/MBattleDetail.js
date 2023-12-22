@@ -339,7 +339,7 @@ function MBattleDetail() {
     // 댓글 목록 조회
     const getMbattleCommentList = (commentPage) => {
         let defaultUrl = `http://localhost:8090/mbattlecommentlist/${no}`;
-        if(commentPage !== 1) defaultUrl += `?&commentPage=${commentPage}`; 
+        if(commentPage !== 1) defaultUrl += `?commentPage=${commentPage}`; 
         
         axios.get(defaultUrl)
         .then(res=> {
@@ -612,7 +612,7 @@ function MBattleDetail() {
                                 <div className={style.subject}>
                                     {mbattle.fileIdx2!==null?
                                         <React.Fragment>
-                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
+                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx2}`} alt=''/>
                                             <h4>{mbattle.voteItem2}</h4>
                                         </React.Fragment>
                                         :<div className={style.voteItemDiv}><h4>{mbattle.voteItem2}</h4></div>
