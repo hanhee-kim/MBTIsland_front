@@ -8,6 +8,7 @@ import {
 import axios from 'axios';
 
 import style from "../../css/mbtwhy/MbtwhyForm.module.css";
+import { urlroot } from "../../config";
 
 function MbtwhyModify() {
     // 로그인 유저 정보
@@ -75,7 +76,7 @@ function MbtwhyModify() {
 
     // Mbtwhy 게시글 조회
     const getMbtwhy = () => {
-        let defaultUrl = `http://localhost:8090/getmbtwhymodify/${no}`;
+        let defaultUrl = `${urlroot}/getmbtwhymodify/${no}`;
         axios.get(defaultUrl)
         .then(res => {
             let mbtiCategory = res.data.mbtiCategory;
@@ -97,7 +98,7 @@ function MbtwhyModify() {
             return;
         }
 
-        let defaultUrl = `http://localhost:8090/mbtwhymodify/${no}/${content}`;
+        let defaultUrl = `${urlroot}/mbtwhymodify/${no}/${content}`;
         axios.post(defaultUrl)
         .then(res => {
             console.log(res);

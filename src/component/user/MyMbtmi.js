@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { urlroot } from "../../config";
 
 const MyMbtmi = (props) => {
   const user = useSelector((state) => state.persistedReducer.user.user);
@@ -24,10 +25,10 @@ const MyMbtmi = (props) => {
   //서버와 통신할 메소드 정의
   const getMyMbtmiList = (username,page) => {
     console.log(page);
-    console.log("url:" + `http://localhost:8090/mbtmilist?username=${username}&page=${page}`);
+    console.log("url:" + `${urlroot}/mbtmilist?username=${username}&page=${page}`);
 
     axios
-      .get(`http://localhost:8090/mbtmilist?username=${username}&page=${page}`)
+      .get(`${urlroot}/mbtmilist?username=${username}&page=${page}`)
       .then((res) => {
         console.log(res);
         setInitData(true);
@@ -78,7 +79,7 @@ const MyMbtmi = (props) => {
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     axios
       .delete(
-        `http://localhost:8090/deletembtmilist?sendArrayItems=${sendArrayItems}`
+        `${urlroot}/deletembtmilist?sendArrayItems=${sendArrayItems}`
       )
       .then((res) => {
         console.log(res);

@@ -6,6 +6,7 @@ import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { urlroot } from "../../config";
 
 
 
@@ -43,6 +44,9 @@ const PaginationOutside = ({ pageInfo, handlePageNo }) => {
 
 
 const MBTmi = () => {
+
+    // 로그인정보 가져오기
+    const user = useSelector((state) => state.persistedReducer.user.user);
 
     const [weeklyHotList, setWeeklyHotList] = useState([]);
     const [errorMsgWeekly, setErrorMsgWeekly] = useState("");
@@ -104,7 +108,7 @@ const MBTmi = () => {
     }, []);
 
     const getWeeklyHotList = () => {
-        axios.get(`http://localhost:8090/weeklyhotmbtmi`)
+        axios.get(`${urlroot}/weeklyhotmbtmi`)
         .then(res=> {
             // console.log(res);
             let list = res.data.weeklyHotMbtmiList;
@@ -121,7 +125,7 @@ const MBTmi = () => {
     }
 
     const getNewlyMbtmiList = (paramCategory, paramType, paramSearch, paramPage, paramSort) => {
-        let defaultUrl = 'http://localhost:8090/mbtmilist';
+        let defaultUrl = `${urlroot}/mbtmilist`;
 
         if (paramCategory !== "") defaultUrl += `?category=${paramCategory}`;
         if (paramType !== "") defaultUrl += `${paramCategory !== "" ? '&' : '?'}type=${paramType}`;
@@ -173,6 +177,10 @@ const MBTmi = () => {
     }, []);
 
     const goToMbtmiForm = () => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
         navigate(`/mbtmiform`);
     };
 

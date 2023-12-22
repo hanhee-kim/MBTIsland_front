@@ -1,21 +1,12 @@
 import { Table } from "reactstrap";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
 
 import style from "../../css/mbtwhy/MbtwhyMain.module.css"
 
 function MbtwhyMain() {
-    const cardStyle = {
-        display:"flex",
-        width:"170px",
-        height:"125px",
-        margin:"10px",
-        border:"solid lightgray 2px",
-        borderRadius:"20px",
-        justifyContent:"center",
-        flexDirection:"column",
-        color:"black",
-        cursor:"pointer"
-    };
+    // 로그인 유저 정보]
+    const user = useSelector((state) => state.persistedReducer.user.user);
 
     const navigate = useNavigate();
 
@@ -30,6 +21,19 @@ function MbtwhyMain() {
         navigate(defaultUrl);
     }
 
+    const cardStyle = {
+        display:"flex",
+        width:"170px",
+        height:"125px",
+        margin:"10px",
+        border:"solid lightgray 2px",
+        borderRadius:"20px",
+        justifyContent:"center",
+        flexDirection:"column",
+        color:"black",
+        cursor:"pointer"
+    };
+
     return (
         <div className={style.container}>
             {/* 중앙 영역 */}
@@ -39,7 +43,7 @@ function MbtwhyMain() {
                     <h1>MBT-Why</h1>
                     <div>
                         <h6 className={style.pageHeaderContent}>원하는 MBTI 유형에게 질문을 남겨보세요!</h6>
-                        <h6 className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</h6>
+                        {user.username!==undefined?<div className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</div>:<></>}
                     </div>
                 </div>
 

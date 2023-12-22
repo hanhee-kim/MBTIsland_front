@@ -4,6 +4,7 @@ import style from "../../css/common/common.css";
 import { useParams } from 'react-router';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 const NoteDetail = (props) => {
   const user = useSelector((state) => state.persistedReducer.user.user);
@@ -25,7 +26,7 @@ const NoteDetail = (props) => {
     props.setIsPopup(true);
     let userType = "receive";
     axios
-      .get(`http://localhost:8090/notedetail/${noteNo}/${userType}`)
+      .get(`${urlroot}/notedetail/${noteNo}/${userType}`)
       .then((res) => {
         console.log(res);
         setNote(res.data);

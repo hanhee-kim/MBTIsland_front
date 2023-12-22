@@ -4,6 +4,7 @@ import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import { Popover, PopoverBody, PopoverHeader } from "reactstrap";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { urlroot } from "../../config";
 
 const NoticeDetail = () => {
     
@@ -29,7 +30,7 @@ const NoticeDetail = () => {
     }, [no]);
 
     const getNoticeDetail = (no) => {
-        axios.get(`http://localhost:8090/noticedetail/${no}`)
+        axios.get(`${urlroot}/noticedetail/${no}`)
         .then(res=> {
             console.log(res);
             let notice = res.data.notice;
@@ -60,7 +61,7 @@ const NoticeDetail = () => {
         let noArr = [notice.no];
         const isConfirmed =window.confirm('게시글을 숨김처리하시겠습니까?');
         if(isConfirmed) {
-            axios.get(`http://localhost:8090/hidenotice/${noArr}`)
+            axios.get(`${urlroot}/hidenotice/${noArr}`)
             .then(res => {
                 alert('완료되었습니다.');
                 goToPreviousList();
@@ -75,7 +76,7 @@ const NoticeDetail = () => {
         let noArr = [notice.no];
         const isConfirmed =window.confirm('게시글을 삭제하시겠습니까?');
         if(isConfirmed) {
-            axios.delete(`http://localhost:8090/deletenotice/${noArr}`)
+            axios.delete(`${urlroot}/deletenotice/${noArr}`)
             .then(res => {
                 alert('완료되었습니다.');
                 goToPreviousList();

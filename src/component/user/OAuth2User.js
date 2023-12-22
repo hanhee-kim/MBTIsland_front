@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import { urlroot } from "../../config";
 
 const OAuth2User = () => {
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const OAuth2User = () => {
     localStorage.setItem("token", token);
     // user 정보
     axios
-    .get("http://localhost:8090/user",{
+    .get(`${urlroot}/user`,{
         headers : {
             Authorization : token,
         }

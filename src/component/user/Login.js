@@ -18,6 +18,7 @@ import {
 import localStorage from "redux-persist/es/storage";
 import Swal from "sweetalert2";
 // import { useNavigate } from "react-router-dom";
+import { urlroot } from "../../config";
 
 const Login = () => {
   // css
@@ -83,7 +84,7 @@ const Login = () => {
   const login = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:8090/login", user)
+      .post(`${urlroot}/login`, user)
       .then((res) => {
         console.log(res.headers.authorization);
         dispatch({ type: "token", payload: res.headers.authorization });
@@ -122,7 +123,7 @@ const Login = () => {
       let sendFindForm = { ...findForm };
 
       axios
-        .post("http://localhost:8090/find", sendFindForm)
+        .post(`${urlroot}/find`, sendFindForm)
         .then((res) => {
           console.log(res);
           if (res.data === "해당 Email 존재하지 않음.") {
@@ -235,8 +236,7 @@ const Login = () => {
           <div style={{ width: "440px", border: "1px solid gray" }}></div>
         </div>
         <div style={socialBtnStyle}>
-          <a
-            href="http://localhost:8090/oauth2/authorization/kakao"
+          <a href="${urlroot}/oauth2/authorization/kakao"
             // target="_blank"
           >
             <img
@@ -248,7 +248,7 @@ const Login = () => {
             />
           </a>
           <a
-            href="http://localhost:8090/oauth2/authorization/naver"
+            href="${urlroot}/oauth2/authorization/naver"
             // target="_blank"
           >
             <img

@@ -5,6 +5,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import { urlroot } from "../../config";
 
 const MyMbtWhy = (props) => {
   const user = useSelector((state) => state.persistedReducer.user.user);
@@ -26,9 +27,9 @@ const MyMbtWhy = (props) => {
 
   const getMyMbtiList = (username, page) => {
     console.log(page);
-    console.log("url:" + `http://localhost:8090/mymbtwhy/${username}/${page}`);
+    console.log("url:" + `${urlroot}/mymbtwhy/${username}/${page}`);
     axios
-      .get(`http://localhost:8090/mymbtwhy/${username}/${page}`)
+      .get(`${urlroot}/mymbtwhy/${username}/${page}`)
       .then((res) => {
         console.log(res);
         setInitData(true);
@@ -119,7 +120,7 @@ const MyMbtWhy = (props) => {
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     axios
       .delete(
-        `http://localhost:8090/deletembtwhy?sendArrayItems=${sendArrayItems}`
+        `${urlroot}/deletembtwhy?sendArrayItems=${sendArrayItems}`
       )
       .then((res) => {
         console.log(res);

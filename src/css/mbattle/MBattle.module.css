@@ -19,24 +19,31 @@
 .pageHeader > h1 {
     text-align: left;
     margin-bottom: 15px;
+    cursor: default;
 }
 
-.pageHeaderLow {
+.pageHeader > div {
     display: flex;
+    justify-content: space-between;
 }
 
 .pageHeaderContent {
-    width: 70%;
     line-height: 42px;
     text-align: left;
     color: #C5C5C5;
+    cursor: default;
 }
 
 .pageHeaderWriteBtn {
-    width: 15%;
-    line-height: 42px;
-    cursor: pointer;
+    margin: auto 10px;
     font-weight: bold;
+    cursor: pointer;
+}
+
+.popoverButton {
+    background: none;
+    font-weight: bold;
+    border: 0;
 }
 
 .sortImg {
@@ -44,14 +51,20 @@
     margin-right: 10px;
 }
 
+.popoverItem {
+    cursor: pointer;
+    min-width: 60px;
+    text-align: center;
+}
+
 .sectionBoards {
-    display: flex;
-    flex-wrap: wrap;
+    /* display: flex;
+    flex-wrap: wrap; */
+    cursor: default;
 }
 
 .sectionBoard {
     width: 370px;
-    /* height: 200px; */
     margin: 15px;
     border: solid #C5C5C5 2px;
     font-weight: bold;
@@ -102,6 +115,11 @@
 .pagingLabel {
     margin: 0 auto;
     width: 600px;
+}
+
+.noMbattle {
+    margin: 100px;
+    color:#C5C5C5;
 }
 
 .sectionSearch {

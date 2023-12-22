@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
+import { urlroot } from "../../config";
 
 const AddJoin = () => {
   //css
@@ -65,7 +66,7 @@ const AddJoin = () => {
     const userMbti= mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ;
     
     axios
-    .get(`http://localhost:8090/guest/${userMbti}`,{
+    .get(`${urlroot}/guest/${userMbti}`,{
       headers : {
         Authorization : token,
       }

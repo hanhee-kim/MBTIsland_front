@@ -14,6 +14,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 // import { Button, Table } from 'reactstrap';
+import { urlroot } from "../../config";
 
 const MyAlarm = () => {
   const [page, setPage] = useState(1);
@@ -40,7 +41,7 @@ const MyAlarm = () => {
   }, []);
 
   const getMyAlarmList = (username, type, page) => {
-    let defaultUrl = "http://localhost:8090/alarmList";
+    let defaultUrl = `${urlroot}/alarmList`;
     defaultUrl += `?username=${username}`;
     if (type != null) {
       defaultUrl += `&type=${type}`;
@@ -101,7 +102,7 @@ const MyAlarm = () => {
     //  알람삭제 ? 읽음처리 ?
     let arrayItems = checkItems.join(",");
     axios
-      .put(`http://localhost:8090/updatealarmisread?arrayItems=${arrayItems}`)
+      .put(`${urlroot}/updatealarmisread?arrayItems=${arrayItems}`)
       .then((res) => {
         console.log(res);
         setFilterChange("읽음처리");
@@ -125,7 +126,7 @@ const MyAlarm = () => {
   const allRaed = () => {
     axios
       .put(
-        `http://localhost:8090/updatealarmisreadall?username=${user.username}`
+        `${urlroot}/updatealarmisreadall?username=${user.username}`
       )
       .then((res) => {
         console.log(res);

@@ -15,6 +15,7 @@ import AdminBan from "./AdminBan";
 import AdminBanDetail from "./AdminBanDetail";
 import { Outlet } from 'react-router-dom';
 import { useSelector } from "react-redux";
+import { urlroot } from "../../config";
 
 const AdminFrame = () => {
 

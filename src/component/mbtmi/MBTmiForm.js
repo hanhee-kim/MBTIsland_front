@@ -3,6 +3,7 @@ import style from "../../css/mbtmi/MBTmi.module.css";
 import React, { useEffect, useState } from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { urlroot } from "../../config";
 
 const MBTmiForm = () => {
     
@@ -46,7 +47,7 @@ const MBTmiForm = () => {
             }
             // console.log('title: ', title, ", content: ", content, ", category: "+ selectCategory, ", writerId: ", user.username, ", writerMbti: ", user.userMbti);
     
-            let defaultUrl = 'http://localhost:8090/mbtmiwrite';
+            let defaultUrl = `${urlroot}/mbtmiwrite`;
             const response = await axios.post(defaultUrl, {
                                 title: title,
                                 content: content,
@@ -89,7 +90,7 @@ const MBTmiForm = () => {
         // }
     }, [no]);
     const getMbtmiDetail = (no) => {
-        let defaultUrl = `http://localhost:8090/mbtmidetail/${no}`;
+        let defaultUrl = `${urlroot}/mbtmidetail/${no}`;
         // if(user.username!=="" || user.username!==undefined) defaultUrl += `?username=${user.username}`;
         axios.get(defaultUrl)
         .then(res=> {
@@ -116,7 +117,7 @@ const MBTmiForm = () => {
             }
             console.log("no: ", mbtmi.no, "writeDate: ", mbtmi.writeDate, "category: ", selectCategory, "title: ", title, ", content: ", content, "writerId: ", user.username);
 
-            let defaultUrl = 'http://localhost:8090/mbtmimodify';
+            let defaultUrl = `${urlroot}/mbtmimodify`;
             const response = await axios.post(defaultUrl, {
                                 no: mbtmi.no, // 수정될 게시글 번호를 전송
 
