@@ -52,6 +52,7 @@ import MBattle from "./component/mbattle/MBattle";
 import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
+import TestBoardForm from "./component/mbtmi/TestBoradForm";
 
 export const persistor = persistStore(store);
 
@@ -142,6 +143,8 @@ function App() {
               <Route exact path="/logout" element={<Logout />} />
 
               {/* 하영 */}
+              <Route exact path="/test" element={<TestBoardForm />} />
+              
               <Route exact path="/" element={<Main />} />
               <Route exact path="/mbtmi" element={<MBTmi />} />
               <Route
