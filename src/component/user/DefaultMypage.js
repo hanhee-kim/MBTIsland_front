@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import { urlroot } from "../../config";
 
 const DefaultMypage = (props) => {
   //---css
@@ -51,7 +52,7 @@ const DefaultMypage = (props) => {
   //css---
   useEffect(() => {
     axios
-      .get(`http://localhost:8090/mypage/${user.username}`)
+      .get(`${urlroot}/mypage/${user.username}`)
       .then((res) => {
         console.log(res);
         setTotalCnt(res.data.totalCnt);
@@ -128,7 +129,7 @@ const DefaultMypage = (props) => {
     console.log("보내기버튼클릭");
     if (emailRegExp.test(changeUser.userEmail)) {
       axios
-        .get(`http://localhost:8090/sendmail/${changeUser.userEmail}`)
+        .get(`${urlroot}/sendmail/${changeUser.userEmail}`)
         .then((res) => {
           console.log(res);
           setServerEmailCode(res.data);
@@ -247,7 +248,7 @@ const DefaultMypage = (props) => {
       }).then((result) => {
         if (result.isConfirmed) {
           axios
-            .get(`http://localhost:8090/leaveuser`,{
+            .get(`${urlroot}/leaveuser`,{
               headers : {
                   Authorization : token,
               }
@@ -285,7 +286,7 @@ const DefaultMypage = (props) => {
       console.log("소셜로그인 경우");
       if (nickRegExp.test(changeUser.userNickname)) {
         axios
-          .post("http://localhost:8090/user/modify", sendUser, {
+          .post(`${urlroot}/user/modify`, sendUser, {
             headers: {
               Authorization: token,
             },
@@ -322,7 +323,7 @@ const DefaultMypage = (props) => {
             }
             //여기서 데이터 전송
             axios
-              .post("http://localhost:8090/user/modify", sendUser, {
+              .post(`${urlroot}/user/modify`, sendUser, {
                 headers: {
                   Authorization: token,
                 },

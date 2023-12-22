@@ -2,6 +2,7 @@ import style from "../../css/notice/Notice.module.css";
 import React, { useEffect, useState } from "react";
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import { urlroot } from "../../config";
 
 const Notice = () => {
 
@@ -31,7 +32,7 @@ const Notice = () => {
     }, []);
     
     const getNoticeList = (search, page) => {
-        let defaultUrl = 'http://localhost:8090/noticelist?hidden=N';
+        let defaultUrl = `${urlroot}/noticelist?hidden=N`;
         if (search !== null) defaultUrl += `&search=${search}`;
         if (page !== null) defaultUrl += `&page=${page}`;
 

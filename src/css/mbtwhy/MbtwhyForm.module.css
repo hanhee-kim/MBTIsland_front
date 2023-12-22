@@ -28,6 +28,7 @@
 
 .formTitleDiv > h5 {
     font-weight: bold;
+    cursor: default;
 }
 
 .contentDiv {

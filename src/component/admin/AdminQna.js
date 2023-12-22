@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import AdminNav from "./AdminNav";
 import axios from "axios";
+import { urlroot } from "../../config";
 
 const AdminQna = () => {
 
@@ -46,7 +47,7 @@ const AdminQna = () => {
     }, [location.search]);
 
     const getQuestionList = (search, answered, page, username) => {
-        let defaultUrl = 'http://localhost:8090/questionlist';
+        let defaultUrl = `${urlroot}/questionlist`;
 
         if (search !== null) defaultUrl += `?search=${search}`;
         if (answered !== null) defaultUrl += `${search !== null ? '&' : '?'}answered=${answered}`;

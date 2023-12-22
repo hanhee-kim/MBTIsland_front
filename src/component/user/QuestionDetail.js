@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
+import { urlroot } from "../../config";
 
 const QuestionDetail = (props) => {
   const user = useSelector((state) => state.persistedReducer.user.user);
@@ -22,7 +23,7 @@ const QuestionDetail = (props) => {
     const num = no.no;
     console.log(num);
     axios
-      .get(`http://localhost:8090/questiondetail/${num}`)
+      .get(`${urlroot}/questiondetail/${num}`)
       .then((res) => {
         console.log(res);
         setQuestion(res.data.question);

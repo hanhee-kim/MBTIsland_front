@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 // import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { urlroot } from "../../config";
 
 const MyBookmark = () => {
   const user = useSelector((state) => state.persistedReducer.user.user);
@@ -36,7 +37,7 @@ const MyBookmark = () => {
   const getMyBookmarkList = (username,page) => {
     console.log("axios들어갈자리");
     axios
-      .get(`http://localhost:8090/mybookmarklist/${username}/${page}`)
+      .get(`${urlroot}/mybookmarklist/${username}/${page}`)
       .then((res) => {
         console.log(res);
         setInitData(true);
@@ -142,7 +143,7 @@ const MyBookmark = () => {
       //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
       axios
         .delete(
-          `http://localhost:8090/deletebookmark?sendArrayItems=${sendArrayItems}`
+          `${urlroot}/deletebookmark?sendArrayItems=${sendArrayItems}`
         )
         .then((res) => {
           console.log(res);

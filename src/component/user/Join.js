@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
 import Swal from "sweetalert2";
+import { urlroot } from "../../config";
 
 const Join = () => {
   //---css
@@ -135,7 +136,7 @@ const Join = () => {
   const duplicateCheck = (e) => {
     e.preventDefault();
     axios
-      .get(`http://localhost:8090/duplicate/${user.username}`)
+      .get(`${urlroot}/duplicate/${user.username}`)
       .then((res) => {
         console.log(res);
         if (res.data == "사용가능") {
@@ -171,7 +172,7 @@ const Join = () => {
       return;
     }
     axios
-      .get(`http://localhost:8090/sendmail/${user.userEmail}`)
+      .get(`${urlroot}/sendmail/${user.userEmail}`)
       .then((res) => {
         console.log(res);
         setServerEmailCode(res.data);
@@ -258,7 +259,7 @@ const Join = () => {
                 console.log("아무거나");
                 console.log(sendUser);
                 axios
-                  .post("http://localhost:8090/join", sendUser)
+                  .post(`${urlroot}/join`, sendUser)
                   .then((res) => {
                     console.log(res);
                     Swal.fire({

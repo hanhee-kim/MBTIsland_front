@@ -16,6 +16,7 @@ import style from "../../css/admin/AdminReport.module.css";
 import React from "react";
 import {Link} from "react-router-dom";
 import AdminNav from "./AdminNav";
+import { urlroot } from "../../config";
 
 const AdminReport = () => {
     const [boards, setBoards] = useState([
@@ -138,7 +139,7 @@ const AdminReport = () => {
     // url에 파라미터로 줄 변수 repage
     const reqBoardList = (repage) => {
         // if(!repage) repage = 1;
-        axios.get(`http://localhost:8090/adminreport/${repage}`)
+        axios.get(`${urlroot}/adminreport/${repage}`)
         .then(res=> {
             console.log(res);
             let pageInfo = res.data.pageInfo;
@@ -173,7 +174,7 @@ const AdminReport = () => {
             return;
         }
 
-        axios.get(`http://localhost:8090/boardsearch/${repage}/${boardType}/${reportType}`)
+        axios.get(`${urlroot}/boardsearch/${repage}/${boardType}/${reportType}`)
         .then(res=> {
             console.log(res);
 

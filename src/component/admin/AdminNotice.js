@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import AdminNav from "./AdminNav";
 import axios from "axios";
+import { urlroot } from "../../config";
 
 const AdminNotice = () => {
 
@@ -32,7 +33,7 @@ const AdminNotice = () => {
     }, [afterDelOrHide]); // 의존성배열을 비우면 useEffect는 컴포넌트가 처음 렌더링될때에만 실행되고 state를 넣으면 state값이 업데이트될때마다 실행됨
 
     const getNoticeList = (search, hidden, page) => {
-        let defaultUrl = 'http://localhost:8090/noticelist';
+        let defaultUrl = `${urlroot}/noticelist`;
 
         if (search !== null) defaultUrl += `?search=${search}`;
         if (hidden !== null) defaultUrl += `${search !== null ? '&' : '?'}hidden=${hidden}`;
@@ -117,7 +118,7 @@ const AdminNotice = () => {
         console.log('체크된 항목:' + checkItems);
         const isConfirmed =window.confirm('선택 항목을 숨김처리하시겠습니까?');
         if(isConfirmed) {
-            axios.get(`http://localhost:8090/hidenotice/${checkItems}`)
+            axios.get(`${urlroot}/hidenotice/${checkItems}`)
             .then(res => {
                 alert('완료되었습니다.');
                 setCheckItems([]);
@@ -134,7 +135,7 @@ const AdminNotice = () => {
         console.log('체크된 항목:' + checkItems);
         const isConfirmed =window.confirm('선택 항목을 삭제하시겠습니까?');
         if(isConfirmed) {
-            axios.delete(`http://localhost:8090/deletenotice/${checkItems}`)
+            axios.delete(`${urlroot}/deletenotice/${checkItems}`)
             .then(res => {
                 alert('완료되었습니다.');
                 setCheckItems([]);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
     Pagination,
     PaginationItem,
@@ -13,11 +13,11 @@ import {
 import axios from 'axios';
 
 import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
+import { urlroot } from "../../config";
 
 function MbtwhyDetail() {
-    // 로그인 유저 정보]
+    // 로그인 유저 정보
     const user = useSelector((state) => state.persistedReducer.user.user);
-    // const [user, setUser] = useState(userSelect);
 
     const [sendUser, setSendUser] = useState({
         username : user.username,
@@ -98,37 +98,37 @@ function MbtwhyDetail() {
     // 댓글 수
     const [commentCount, setCommentCount] = useState(0);
 
-    // 정렬 드롭다운 open 여부
+    // 팝오버 open 여부
     const [open, setOpen] = useState(false);
 
     // 댓글 작성 상태값
     const [inputCommentValue, setInputCommentValue] = useState('');
 
-    // 답글 작성 상태값
-    const [inputReplyValue, setInputReplyValue] = useState('');
-
+    // 추천 여부
+    const [isRecommended, setIsRecommended] = useState(false);
+    
     // 추천 정보 (사용자 아이디, 글 번호, 게시판 유형)
+    // 추천 시 백으로 보낼 데이터
     const [recommend, setRecommend] = useState({
         username: user.username,
         postNo: no,
         boardType: "mbtwhy"
     });
 
-    // 추천 여부
-    const [isRecommended, setIsRecommended] = useState(false);
-
     // 추천 개수
     const [recommendCount, setRecommendCount] = useState();
+    
+    // 북마크 여부
+    const [isBookmarked, setIsBookmarked] = useState(false);
 
     // 북마크 정보 (사용자 아이디, 글 번호, 게시판 유형)
+    // 북마크 시 백으로 보낼 데이터
     const [bookmark, setBookmark] = useState({
         username: user.username,
         postNo: no,
         boardType: "mbtwhy"
     });
 
-    // 북마크 여부
-    const [isBookmarked, setIsBookmarked] = useState(false);
 
     // 절대시간
     const formatDate = (dateString) => {
@@ -171,10 +171,31 @@ function MbtwhyDetail() {
         } else {
             return `${years}년 전`;
         }
-    }
-    
-    const dispatch = useDispatch();
-    
+    };
+
+    // 팝오버 바깥 영역 클릭 시 모든 팝오버 닫기
+    const clickOutsidePopover = (e) => {
+        const popoverElements = document.querySelectorAll(".popover");
+
+        if(e && e.target) {
+            // 조건식
+            // 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어 있지 않다면
+            if(Array.from(popoverElements).every((popover) => !popover.contains(e.target))) {
+                setOpen(false);
+            }
+        }
+    };
+
+    // 댓글 상태 값 변경
+    const commentChange = (e) => {
+        setInputCommentValue(e.target.value);
+    };
+
+    // Toggle 핸들링
+    const handleToggle = () => {
+        setOpen(!open);
+    };
+
     // 신고 팝오버 열기
     const openReportWrite = (report, reportedTable) => {
         setOpen(!open);
@@ -226,19 +247,6 @@ function MbtwhyDetail() {
         );
     };
 
-    // 팝오버 바깥 영역 클릭 시 모든 팝오버 닫기
-    const clickOutsidePopover = (e) => {
-        const popoverElements = document.querySelectorAll(".popover");
-
-        if(e && e.target) {
-            // 조건식
-            // 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어 있지 않다면
-            if(Array.from(popoverElements).every((popover) => !popover.contains(e.target))) {
-                setOpen(false);
-            }
-        }
-    };
-
     useEffect(() => {
         clickOutsidePopover();
         document.addEventListener("mousedown", clickOutsidePopover);
@@ -249,30 +257,19 @@ function MbtwhyDetail() {
 
     useEffect(() => {
         setMbtiColorTo(mbti.toUpperCase());
-        // setSendUser({
-        //     username : user.username,
-        //     userNickname : user.userNickname,
-        //     userMbti : user.userMbti,
-        //     userMbtiColor : user.userMbtiColor
-        // });
         getMbtwhyDetail();
         getMbtwhyCommentList(commentPage);
     }, []);
 
-    // useEffect(() => {
-    //     console.log("user 값 설정");
-    //     setUser(userSelect);
-    // }, [userSelect]);
-
     // 게시글 상세보기 조회
     const getMbtwhyDetail = () => {
-        let defaultUrl = `http://localhost:8090/mbtwhydetail?`;
+        let defaultUrl = `${urlroot}/mbtwhydetail?`;
         // if(page !== null) defaultUrl += `&page=${page}`;
         // if(search !== null) defaultUrl += `&search=${search}`;
         // if(sort !== null) defaultUrl += `&sort=${sort}`;
         if(no !== null) defaultUrl += `no=${no}`;
         // if(commentPage !== null) defaultUrl += `&commentPage=${commentPage}`;
-        defaultUrl += `&username=${user.username}`;
+        if(user.username!=="") defaultUrl += `&username=${user.username}`;
         
         axios.get(defaultUrl)
         .then(res=> {
@@ -316,71 +313,6 @@ function MbtwhyDetail() {
         });
     };
 
-    // 댓글 목록 조회
-    const getMbtwhyCommentList = (commentPage) => {
-        let defaultUrl = `http://localhost:8090/mbtwhycommentlist/${no}`;
-        if(commentPage !== 1) defaultUrl += `?&commentPage=${commentPage}`; 
-        
-        axios.get(defaultUrl)
-        .then(res=> {
-            let pageInfo = res.data.pageInfo;
-            let mbtwhyCommentList = res.data.mbtwhyCommentList;
-            let mbtwhyCommentCount = res.data.mbtwhyCommentCount;
-
-            // 댓글 set
-            setComments([...mbtwhyCommentList]);
-            
-            // 댓글 개수 set
-            setCommentCount(mbtwhyCommentCount);
-
-            // 댓글 페이징 정보 set
-            setCommentPageInfo({...pageInfo});
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
-            }
-            // setCommentPage(btn);
-            setCommentPage(commentPage);
-        })
-        .catch(err=> {
-            console.log(err);
-            setComments([]);
-            setCommentPageInfo({});
-        });
-    };
-
-    // 댓글 상태 값 변경
-    const commentChange = (e) => {
-        setInputCommentValue(e.target.value);
-    };
-
-    // 댓글 작성
-    const postComment = (commentValue, parentcommentNo) => {
-        if(user.userMbti !== mbti.toUpperCase()) {
-            alert(mbti.toUpperCase() + " 유형만 댓글을 작성할 수 있습니다.");
-            setInputCommentValue("");
-            return;
-        }
-
-        let defaultUrl = `http://localhost:8090/mbtwhycomment?no=${no}&comment=${commentValue}`;
-        if(parentcommentNo !== "") defaultUrl += `&parentcommentNo=${parentcommentNo}`
-        // defaultUrl += `&commentPage=${commentPage}`;
-
-        axios.post(defaultUrl, sendUser)
-        .then(res=> {
-            // console.log(res);
-            // let comments = res.data.mbtwhyCommentList;
-            // setComments([...comments]);
-            // let no = res.data.no;
-            // navigate(`/mbtwhydetail/${mbtiValue}/${no}/1`);
-            setInputCommentValue("");
-            getMbtwhyCommentList(commentPage);
-        })
-        .catch(err=> {
-            console.log(err);
-        });
-    };
-
     // 게시글 추천
     const mbtwhyRecommend = () => {
         if(!user.username) {
@@ -388,7 +320,7 @@ function MbtwhyDetail() {
             return;
         }
 
-        let defaultUrl = `http://localhost:8090/mbtwhyrecommend`;
+        let defaultUrl = `${urlroot}/mbtwhyrecommend`;
 
         axios.post(defaultUrl, recommend)
         .then(res=> {
@@ -406,7 +338,7 @@ function MbtwhyDetail() {
             return;
         }
 
-        let defaultUrl = `http://localhost:8090/mbtwhybookmark`;
+        let defaultUrl = `${urlroot}/mbtwhybookmark`;
 
         axios.post(defaultUrl, bookmark)
         .then(res=> {
@@ -418,7 +350,7 @@ function MbtwhyDetail() {
     const mbtwhyDelete = () => {
         const isConfirmed = window.confirm("게시글을 삭제하시겠습니까?");
         if(isConfirmed) {
-            axios.delete(`http://localhost:8090/mbtwhydelete/${no}`)
+            axios.delete(`${urlroot}/mbtwhydelete/${no}`)
             .then(res => {
                 alert('완료되었습니다.');
                 goToPreviousList();
@@ -428,18 +360,88 @@ function MbtwhyDetail() {
             });
         }
         setOpen(false);
-    }
+    };
 
     // 게시글 수정
     const goMbtwhyModify = () => {
         navigate(`/mbtwhymodify/${no}`);
-    }
+    };
+
+    // 댓글 목록 조회
+    const getMbtwhyCommentList = (commentPage) => {
+        let defaultUrl = `${urlroot}/mbtwhycommentlist/${no}`;
+        if(commentPage !== 1) defaultUrl += `?commentPage=${commentPage}`; 
+        
+        axios.get(defaultUrl)
+        .then(res=> {
+            let pageInfo = res.data.pageInfo;
+            let mbtwhyCommentList = res.data.mbtwhyCommentList;
+            let mbtwhyCommentCount = res.data.mbtwhyCommentCount;
+
+            // 댓글 목록 set
+            setComments([...mbtwhyCommentList]);
+            // 댓글 개수 set
+            setCommentCount(mbtwhyCommentCount);
+            // 댓글 페이징 정보 set
+            setCommentPageInfo({...pageInfo});
+
+            // setCommentPage(commentPage);
+        })
+        .catch(err=> {
+            console.log(err);
+            setComments([]);
+            setCommentPageInfo({});
+        });
+    };
+
+    // 댓글 작성
+    const postComment = (commentValue, parentcommentNo) => {
+        
+        if(user.userMbti !== mbti.toUpperCase()) {
+            alert(mbti.toUpperCase() + " 유형만 댓글을 작성할 수 있습니다.");
+            setInputCommentValue("");
+            return;
+        }
+
+        let defaultUrl = `${urlroot}/mbtwhycomment?no=${no}&comment=${commentValue}`;
+        if(parentcommentNo !== "") defaultUrl += `&parentcommentNo=${parentcommentNo}`
+        defaultUrl += `&commentPage=${commentPage}`;
+
+        axios.post(defaultUrl, sendUser)
+        .then(res=> {
+            let mbtwhyCommentList = res.data.mbtwhyCommentList;
+            let allPage = res.data.pageInfo.allPage;
+            let mbtwhyCommentCount = res.data.mbtwhyCommentCount;
+            let commentPageInfo = res.data.pageInfo;
+            setCommentPageInfo(commentPageInfo);
+
+            if(parentcommentNo!=="") { // 2차댓글 작성의 경우
+                let writtenCommentNo = res.data.writtenCommentNo;
+                const isWrittenCommentIsInCurrentPage =  mbtwhyCommentList.some(comment => comment.commentNo === writtenCommentNo);
+                // 현재 페이지번 호를 인자로 하여 불러온 길이 배열 comments 안에 방금 작성된 새댓글이 존재하는지 여부
+                if (!isWrittenCommentIsInCurrentPage) { // 배열 안에 없다면(등록시 페이지가 3->4페이지에 등록되게 된 경우) 1 증가한 페이지 번호로 목록이 렌더링되게 함
+                    getMbtwhyCommentList(commentPage+1);
+                    setCommentPage(commentPage+1);
+                }
+            } else {
+                getMbtwhyCommentList(allPage);
+                setCommentPage(allPage);
+            }
+
+            setComments([...comments]);
+            setInputCommentValue("");
+            setCommentCount(mbtwhyCommentCount);
+        })
+        .catch(err=> {
+            console.log(err);
+        });
+    };
 
     // 댓글 삭제
     const commentDelete = (commentNo) => {
         const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
         if(isConfirmed) {
-            axios.get(`http://localhost:8090/mbtwhycommentdelete/${commentNo}`)
+            axios.get(`${urlroot}/mbtwhycommentdelete/${commentNo}`)
             .then(res => {
                 console.log(res);
                 alert('완료되었습니다.');
@@ -453,11 +455,6 @@ function MbtwhyDetail() {
             });
         }
         setOpen(false);
-    }    
-
-    // Toggle 핸들링
-    const handleToggle = () => {
-        setOpen(!open);
     };
 
     // commentPage 핸들링
@@ -470,7 +467,7 @@ function MbtwhyDetail() {
 
     const navigate = useNavigate();
 
-    // mbtwhy 이동
+    // 목록 이동
     const goToPreviousList = () => {
         // let defaultUrl = `/mbtwhy`;
         // if(mbti !== null) defaultUrl += `/${mbti}`;
@@ -491,7 +488,7 @@ function MbtwhyDetail() {
         const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
         for(let i=commentPageInfo.startPage; i<=commentPageInfo.endPage; i++) {
             pageGroup.push(
-                <span key={i} className={`${page===i? style.activePage: ''}`} onClick={()=>handleCommentPageNo(i)}>{i}</span>
+                <span key={i} className={`${commentPage===i? style.activePage: ''}`} onClick={()=>handleCommentPageNo(i)}>{i}</span>
             )
         }
         return (
@@ -653,7 +650,6 @@ function MbtwhyDetail() {
                     </div>
                 }
             </React.Fragment>
-
         );
     };
 
@@ -791,12 +787,12 @@ function MbtwhyDetail() {
                                             </React.Fragment>
                                             :(user.username !== ""?
                                                 <PopoverBody className={style.popoverItem} onClick={()=>openReportWrite(mbtwhy, "mbtwhy")}>신고</PopoverBody>
-                                                :<React.Fragment></React.Fragment>
+                                                :<></>
                                             )
                                         }
                                     </Popover>
                                 </React.Fragment>
-                            :<React.Fragment></React.Fragment>
+                            :<></>
                             }
                         </div>
                         <div style={{color:"#C5C5C5"}}>
@@ -911,28 +907,26 @@ function MbtwhyDetail() {
                     {/* 삭제된 댓글 */}
 
                     {/* 페이징 영역 */}
-                    {PaginationInside()}
+                    {comments.length===0?<></>:<PaginationInside/>}
 
                     {/* 댓글 달기 */}
-                    {user.userRole === "ROLE_USER"?
-                        <div>
-                            <Input
-                                style={inputComment}
-                                type="textarea"
-                                id="comment"
-                                name="comment"
-                                onChange={commentChange}
-                                cols="40"
-                                rows="15"
-                                required="required"
-                                value={inputCommentValue}
-                                placeholder="댓글을 입력해주세요."
-                            />
-                            <div className={style.postCommentDiv}>
-                                <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue, "")}>등록</Button>
-                            </div>
+                    <div>
+                        <Input
+                            style={inputComment}
+                            type="textarea"
+                            id="comment"
+                            name="comment"
+                            onChange={commentChange}
+                            cols="40"
+                            rows="15"
+                            required="required"
+                            value={inputCommentValue}
+                            placeholder="댓글을 입력해주세요."
+                        />
+                        <div className={style.postCommentDiv}>
+                            <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue, "")}>등록</Button>
                         </div>
-                    :<></>}
+                    </div>
 
                 </div>
                 {/* 댓글 영역 */}

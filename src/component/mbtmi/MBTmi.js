@@ -6,6 +6,7 @@ import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { urlroot } from "../../config";
 
 
 
@@ -107,7 +108,7 @@ const MBTmi = () => {
     }, []);
 
     const getWeeklyHotList = () => {
-        axios.get(`http://localhost:8090/weeklyhotmbtmi`)
+        axios.get(`${urlroot}/weeklyhotmbtmi`)
         .then(res=> {
             // console.log(res);
             let list = res.data.weeklyHotMbtmiList;
@@ -124,7 +125,7 @@ const MBTmi = () => {
     }
 
     const getNewlyMbtmiList = (paramCategory, paramType, paramSearch, paramPage, paramSort) => {
-        let defaultUrl = 'http://localhost:8090/mbtmilist';
+        let defaultUrl = `${urlroot}/mbtmilist`;
 
         if (paramCategory !== "") defaultUrl += `?category=${paramCategory}`;
         if (paramType !== "") defaultUrl += `${paramCategory !== "" ? '&' : '?'}type=${paramType}`;

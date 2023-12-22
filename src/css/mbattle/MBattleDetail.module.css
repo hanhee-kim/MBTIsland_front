@@ -1,5 +1,6 @@
 .container {
-    margin-top: 100px;
+    margin-top: 90px;
+    margin-bottom: 90px;
 }
 
 .sectionCenter {
@@ -34,6 +35,24 @@
     padding: 25px;
     border-bottom: solid #C5C5C5 2px;
     font-weight: bold;
+}
+
+.popoverButton {
+    margin-left: 20px;
+    background: none;
+    font-weight: bold;
+    border: 0;
+}
+
+.popoverImg {
+    width: 30px;
+    margin-right: 10px;
+}
+
+.popoverItem {
+    cursor: pointer;
+    min-width: 30px;
+    text-align: center;
 }
 
 .boardTitle {
@@ -80,6 +99,7 @@
 .subject {
     width: 300px;
     position: relative;
+    margin-bottom: 20px;
 }
 
 .subject > img {
@@ -88,6 +108,10 @@
     filter: brightness(0.4);
 }
 
+/* .subject > div {
+    height: 300px;
+} */
+
 .subject > h4 {
     text-align: center;
 	position: absolute;
@@ -95,6 +119,21 @@
 	left: 50%;
     transform: translate( -50%, -50% );
     color: lightgray;
+}
+
+.voteItemDiv {
+    display: flex;
+    justify-content: center;
+    width: 300px;
+    height: 300px;
+}
+
+.voteItemDiv > h4 {
+    text-align: center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+    transform: translate( -50%, -50% );
 }
 
 .voteButtonDiv {
@@ -114,6 +153,7 @@
     display: flex;
     color: #C5C5C5;
     font-size: 20px;
+    justify-content: space-between;
 }
 
 .boardLow > div {
@@ -126,7 +166,6 @@
 
 .bookmarkDiv {
     display: flex;
-    width: 20%;
     justify-content: start;
 }
 
@@ -138,7 +177,6 @@
 
 .listDiv {
     display: flex;
-    width: 20%;
     justify-content: end;
 }
 
@@ -172,9 +210,27 @@
     line-height: 120px;
 }
 
-.pagingLabel {
-    margin: 0 auto;
-    width: 600px;
+.paging {
+    display: flex;
+    justify-content: center;
+    margin-top: 33px;
+    margin-bottom: 33px;
+}
+
+.paging>span {
+    display: inline-block;
+    margin: 5px;
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    border: 0px solid white;
+    text-align: center;
+    line-height: 32px;
+    cursor: pointer;
+}
+
+.activePage {
+    border: 1px solid #A3A3A3 !important;
 }
 
 .postCommentDiv {
