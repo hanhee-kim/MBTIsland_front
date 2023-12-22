@@ -80,14 +80,14 @@ const MBTmiForm = () => {
     // 외부버튼클릭
     const btnOutsideClick = async () => {
         console.log('외부버튼 클릭');
-
+/*
         // 선택된 이미지가 있는 경우에만 처리
         if (selectedImage) {
             try {
             const formData = new FormData();
             formData.append('image', selectedImage); // state에 저장해둔 처리 전의 선택된 이미지를 폼데이터로 만듦
     
-            const response = await axios.post('http://localhost:8090/uploadImage', formData);
+            const response = await axios.post(`${urlroot}/uploadImage`, formData);
     
             const editor = quillRef.current.getEditor();
             editor.clipboard.dangerouslyPasteHTML(response.data.imageUrl, 'api');
@@ -98,10 +98,10 @@ const MBTmiForm = () => {
             console.error('에러:', error);
             }
         }
-        
+*/        
         // 서버로 보내기
         try {
-            const response = await axios.post(`http://localhost:8090/quilltest`, {
+            const response = await axios.post(`${urlroot}/quilltest`, {
                 content: quillValue,
                 title: '퀼테스트제목',
                 category: '잡담',
