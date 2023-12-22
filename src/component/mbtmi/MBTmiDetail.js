@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useSelector } from "react-redux";
+import { urlroot } from "../../config";
 
 
 /* 재사용성을 높이기 위해 외부에 선언한 페이지네이션 */
@@ -99,8 +100,8 @@ const MBTmiDetail = () => {
         // console.log('등록될댓글내용: ', commentContent);
         // console.log('부모댓글번호: ', parentcommentNo);
 
-        // let defaultUrl = `http://localhost:8090/mbtmicomment?no=${no}&comment=${parentcommentNo!=='' ? comment : reply}`;
-        let defaultUrl = `http://localhost:8090/mbtmicomment?no=${no}&comment=${commentContent}`;
+        // let defaultUrl = `${urlroot}/mbtmicomment?no=${no}&comment=${parentcommentNo!=='' ? comment : reply}`;
+        let defaultUrl = `${urlroot}/mbtmicomment?no=${no}&comment=${commentContent}`;
         if(parentcommentNo !== '') defaultUrl += `&parentcommentNo=${parentcommentNo}`
         defaultUrl += `&commentpage=${commentPage}`; // 3페이지에서 대댓글 작성시 url에 파라미터로 3페이지가 붙음
         console.log('요청url: ', defaultUrl);
@@ -162,7 +163,7 @@ const MBTmiDetail = () => {
     }, []);
 
     const getMbtmiDetail = (no) => {
-        let defaultUrl = `http://localhost:8090/mbtmidetail/${no}`;
+        let defaultUrl = `${urlroot}/mbtmidetail/${no}`;
         if(user.username!=="" || user.username!==undefined) defaultUrl += `?username=${user.username}`;
 
         axios.get(defaultUrl)
@@ -190,7 +191,7 @@ const MBTmiDetail = () => {
     }
 
     const getMbtmiCommentList = (commentPageParam) => {
-        let defaultUrl = `http://localhost:8090/mbtmicommentlist/${no}`;
+        let defaultUrl = `${urlroot}/mbtmicommentlist/${no}`;
         if(commentPageParam!==1) defaultUrl += `?commentpage=${commentPageParam}`;
 
         // alert(defaultUrl);
@@ -229,7 +230,7 @@ const MBTmiDetail = () => {
         console.log('선택한 게시글번호: ', no);
         const isConfirmed =window.confirm('게시글을 삭제하시겠습니까?');
         if(isConfirmed) {
-            axios.delete(`http://localhost:8090/deletembtmi/${no}`)
+            axios.delete(`${urlroot}/deletembtmi/${no}`)
             .then(res => {
                 alert('완료되었습니다.');
                 goToPreviousList();
@@ -251,7 +252,7 @@ const MBTmiDetail = () => {
         console.log('선택한 댓글번호: ', commentNo);
         const isConfirmed =window.confirm('댓글을 삭제하시겠습니까?');
         if(isConfirmed) {
-            axios.get(`http://localhost:8090/deletembtmicomment/${commentNo}`)
+            axios.get(`${urlroot}/deletembtmicomment/${commentNo}`)
             .then(res => {
                 console.log(res);
                 alert('완료되었습니다.');
@@ -281,7 +282,7 @@ const MBTmiDetail = () => {
             return;
         }
         // console.log('추천값 출력: ', recommend);
-        let defaultUrl = `http://localhost:8090/mbtmirecommend`;
+        let defaultUrl = `${urlroot}/mbtmirecommend`;
 
         axios.post(defaultUrl, recommend)
         .then(res=> {
@@ -308,7 +309,7 @@ const MBTmiDetail = () => {
             return;
         }
         console.log('북마크값 출력: ', bookmark);
-        let defaultUrl = `http://localhost:8090/mbtmibookmark`;
+        let defaultUrl = `${urlroot}/mbtmibookmark`;
 
         axios.post(defaultUrl, bookmark)
         .then(res=> {

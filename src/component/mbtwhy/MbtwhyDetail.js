@@ -13,6 +13,7 @@ import {
 import axios from 'axios';
 
 import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
+import { urlroot } from "../../config";
 
 function MbtwhyDetail() {
     // 로그인 유저 정보
@@ -262,7 +263,7 @@ function MbtwhyDetail() {
 
     // 게시글 상세보기 조회
     const getMbtwhyDetail = () => {
-        let defaultUrl = `http://localhost:8090/mbtwhydetail?`;
+        let defaultUrl = `${urlroot}/mbtwhydetail?`;
         // if(page !== null) defaultUrl += `&page=${page}`;
         // if(search !== null) defaultUrl += `&search=${search}`;
         // if(sort !== null) defaultUrl += `&sort=${sort}`;
@@ -319,7 +320,7 @@ function MbtwhyDetail() {
             return;
         }
 
-        let defaultUrl = `http://localhost:8090/mbtwhyrecommend`;
+        let defaultUrl = `${urlroot}/mbtwhyrecommend`;
 
         axios.post(defaultUrl, recommend)
         .then(res=> {
@@ -337,7 +338,7 @@ function MbtwhyDetail() {
             return;
         }
 
-        let defaultUrl = `http://localhost:8090/mbtwhybookmark`;
+        let defaultUrl = `${urlroot}/mbtwhybookmark`;
 
         axios.post(defaultUrl, bookmark)
         .then(res=> {
@@ -349,7 +350,7 @@ function MbtwhyDetail() {
     const mbtwhyDelete = () => {
         const isConfirmed = window.confirm("게시글을 삭제하시겠습니까?");
         if(isConfirmed) {
-            axios.delete(`http://localhost:8090/mbtwhydelete/${no}`)
+            axios.delete(`${urlroot}/mbtwhydelete/${no}`)
             .then(res => {
                 alert('완료되었습니다.');
                 goToPreviousList();
@@ -368,7 +369,7 @@ function MbtwhyDetail() {
 
     // 댓글 목록 조회
     const getMbtwhyCommentList = (commentPage) => {
-        let defaultUrl = `http://localhost:8090/mbtwhycommentlist/${no}`;
+        let defaultUrl = `${urlroot}/mbtwhycommentlist/${no}`;
         if(commentPage !== 1) defaultUrl += `?commentPage=${commentPage}`; 
         
         axios.get(defaultUrl)
@@ -402,7 +403,7 @@ function MbtwhyDetail() {
             return;
         }
 
-        let defaultUrl = `http://localhost:8090/mbtwhycomment?no=${no}&comment=${commentValue}`;
+        let defaultUrl = `${urlroot}/mbtwhycomment?no=${no}&comment=${commentValue}`;
         if(parentcommentNo !== "") defaultUrl += `&parentcommentNo=${parentcommentNo}`
         defaultUrl += `&commentPage=${commentPage}`;
 
@@ -440,7 +441,7 @@ function MbtwhyDetail() {
     const commentDelete = (commentNo) => {
         const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
         if(isConfirmed) {
-            axios.get(`http://localhost:8090/mbtwhycommentdelete/${commentNo}`)
+            axios.get(`${urlroot}/mbtwhycommentdelete/${commentNo}`)
             .then(res => {
                 console.log(res);
                 alert('완료되었습니다.');

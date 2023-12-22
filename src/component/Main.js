@@ -7,6 +7,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { index } from "d3-array";
 import axios from "axios";
+import {urlroot} from '../config';
 
 const Main = () => {
   // //token정보
@@ -106,7 +107,7 @@ const Main = () => {
 
   const getMbtmiList = async () => {
     try {
-      const response = await axios.get(`http://localhost:8090/mbtmilist`);
+      const response = await axios.get(`${urlroot}/mbtmilist`);
       // console.log('getMbtmiList 요청결과: ', response);
       let mbtmiList = response.data.mbtmiList;
       setMbtmiList([...mbtmiList]);
@@ -116,7 +117,7 @@ const Main = () => {
   }
   const getMbtwhyList = async () => {
     try {
-      const response = await axios.get(`http://localhost:8090/mbtwhy`);
+      const response = await axios.get(`${urlroot}/mbtwhy`);
       console.log('getMbtwhyList 요청결과: ', response);
       let mbtwhyList = response.data.mbtwhyList;
       setMbtwhyList([...mbtwhyList]);
@@ -126,7 +127,7 @@ const Main = () => {
   }
   const getMbattleList = async () => {
     // try {
-    //   const response = await axios.get(`http://localhost:8090/----`);
+    //   const response = await axios.get(`${urlroot}/----`);
     //   console.log('getMbattleList 요청결과: ', response);
     //   let mbattleList = response.data.mbtwhyList;
     //   setMbattleList([...mbattleList]);

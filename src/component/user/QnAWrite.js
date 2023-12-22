@@ -4,6 +4,7 @@ import { Form, Button, FormGroup, Input, Label } from "reactstrap";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { urlroot } from "../../config";
 
 const QnAWrite = (props) => {
   const user = useSelector((state) => state.persistedReducer.user.user);
@@ -36,7 +37,7 @@ const QnAWrite = (props) => {
     console.log(user.username);
     //데이터 전달
     axios
-      .post("http://localhost:8090/questionwrite", question)
+      .post(`${urlroot}/questionwrite`, question)
       .then((res) => {
         console.log(res);
         Swal.fire({

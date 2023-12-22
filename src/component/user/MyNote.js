@@ -13,6 +13,7 @@ import NoteDetail from "./NoteDetail";
 import { Dropdown } from "bootstrap";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { urlroot } from "../../config";
 
 const MyNote = () => {
   const [initData, setInitData] = useState(true);
@@ -52,7 +53,7 @@ const MyNote = () => {
   const user = useSelector((state) => state.persistedReducer.user.user);
 
   const getMyNoteList = (username, noteType, readType, page) => {
-    let defaultUrl = "http://localhost:8090/notelistofuser";
+    let defaultUrl = `${urlroot}/notelistofuser`;
     console.log(user.username);
     console.log(username);
     defaultUrl += `?username=${username}`;

@@ -14,6 +14,7 @@ import {
 import axios from 'axios';
 
 import style from "../../css/mbattle/MBattle.module.css";
+import { urlroot } from "../../config";
 
 function MBattle() {
     // 로그인 유저 정보]
@@ -56,7 +57,7 @@ function MBattle() {
     
     // 게시글 목록 조회
     const getMbattleList = (page, search, sort) => {
-        let defaultUrl = `http://localhost:8090/mbattle?page=${page}`;
+        let defaultUrl = `${urlroot}/mbattle?page=${page}`;
         if(search !== "") defaultUrl += `&search=${search}`;
         if(sort !== "") defaultUrl += `&sort=${sort}`;
 

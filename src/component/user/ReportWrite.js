@@ -10,6 +10,7 @@ import { Label } from 'reactstrap';
 import { Form } from 'reactstrap';
 import Swal from "sweetalert2";
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 const ReportWrite = (props) => {
   // 신고 정보 props
@@ -36,7 +37,7 @@ const ReportWrite = (props) => {
   };
   
   const sendReport = () => {
-    let defaultUrl = `http://localhost:8090/report`;
+    let defaultUrl = `${urlroot}/report`;
     axios.post(defaultUrl, report)
     .then(res=> {
       Swal.fire({

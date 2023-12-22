@@ -4,6 +4,7 @@ import style from "../../css/common/Header.module.css";
 import { Button, Popover, PopoverBody } from "reactstrap";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import { urlroot } from "../../config";
 
 const Header = () => {
   // const token = useSelector((state) => state.persistedReducer.token.token);
@@ -21,7 +22,7 @@ const Header = () => {
     } else {
       // user 정보
       axios
-        .get("http://localhost:8090/user", {
+        .get(`${urlroot}/user`, {
           headers: {
             Authorization: token,
           },

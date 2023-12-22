@@ -25,6 +25,7 @@ import {
 import axios from 'axios';
 
 import style from "../../css/mbattle/MBattleDetail.module.css";
+import { urlroot } from "../../config";
 
 function MBattleDetail() {
     // 로그인 유저 정보
@@ -260,7 +261,7 @@ function MBattleDetail() {
 
     // url에 파라미터로 줄 변수 repage
     const getMbattleDetail = () => {
-        let defaultUrl = `http://localhost:8090/mbattledetail/${no}`;
+        let defaultUrl = `${urlroot}/mbattledetail/${no}`;
         defaultUrl += `?username=${user.username}`;
 
         axios.get(defaultUrl)
@@ -307,7 +308,7 @@ function MBattleDetail() {
             return;
         }
 
-        let defaultUrl = `http://localhost:8090/mbattlebookmark`;
+        let defaultUrl = `${urlroot}/mbattlebookmark`;
 
         axios.post(defaultUrl, bookmark)
         .then(res=> {
@@ -319,7 +320,7 @@ function MBattleDetail() {
     const mbattleDelete = () => {
         const isConfirmed = window.confirm("게시글을 삭제하시겠습니까?");
         if(isConfirmed) {
-            axios.delete(`http://localhost:8090/mbattledelete/${no}`)
+            axios.delete(`${urlroot}/mbattledelete/${no}`)
             .then(res => {
                 alert('완료되었습니다.');
                 goToPreviousList();
@@ -338,7 +339,7 @@ function MBattleDetail() {
 
     // 댓글 목록 조회
     const getMbattleCommentList = (commentPage) => {
-        let defaultUrl = `http://localhost:8090/mbattlecommentlist/${no}`;
+        let defaultUrl = `${urlroot}/mbattlecommentlist/${no}`;
         if(commentPage !== 1) defaultUrl += `?commentPage=${commentPage}`; 
         
         axios.get(defaultUrl)
@@ -371,7 +372,7 @@ function MBattleDetail() {
 
     // 댓글 작성
     const postComment = (commentValue) => {
-        let defaultUrl = `http://localhost:8090/mbattlecomment?no=${no}&comment=${commentValue}`;
+        let defaultUrl = `${urlroot}/mbattlecomment?no=${no}&comment=${commentValue}`;
 
         axios.post(defaultUrl, sendUser)
         .then(res=> {
@@ -388,7 +389,7 @@ function MBattleDetail() {
     const commentDelete = (commentNo) => {
         const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
         if(isConfirmed) {
-            axios.get(`http://localhost:8090/mbattlecommentdelete/${commentNo}`)
+            axios.get(`${urlroot}/mbattlecommentdelete/${commentNo}`)
             .then(res => {
                 console.log(res);
                 alert('완료되었습니다.');
@@ -592,7 +593,7 @@ function MBattleDetail() {
                                 <div className={style.subject}>
                                     {mbattle.fileIdx1!==null?
                                         <React.Fragment>
-                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
+                                            <img src={`${urlroot}/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
                                             <h4>{mbattle.voteItem1}</h4>
                                         </React.Fragment>
                                         :<div className={style.voteItemDiv}><h4>{mbattle.voteItem1}</h4></div>
@@ -612,7 +613,7 @@ function MBattleDetail() {
                                 <div className={style.subject}>
                                     {mbattle.fileIdx2!==null?
                                         <React.Fragment>
-                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx2}`} alt=''/>
+                                            <img src={`${urlroot}/mbattleimg/${mbattle.fileIdx2}`} alt=''/>
                                             <h4>{mbattle.voteItem2}</h4>
                                         </React.Fragment>
                                         :<div className={style.voteItemDiv}><h4>{mbattle.voteItem2}</h4></div>

@@ -3,6 +3,7 @@ import { Nav, NavItem, NavLink, Table } from "reactstrap";
 import style from "../../css/admin/AdminNav.module.css";
 import React, { useEffect } from "react";
 import {Link, useLocation} from "react-router-dom";
+import { urlroot } from "../../config";
 
 const AdminNav = () => {
 

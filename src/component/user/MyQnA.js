@@ -17,6 +17,7 @@ import {
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { wait } from "@testing-library/user-event/dist/utils";
+import { urlroot } from "../../config";
 
 const MyQnA = (props) => {
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -36,7 +37,7 @@ const MyQnA = (props) => {
     getMyQnaList(user.username, answered, page);
   }, []);
   const getMyQnaList = (username, answered, page) => {
-    let defaultUrl = "http://localhost:8090/questionlist";
+    let defaultUrl = `${urlroot}/questionlist`;
 
     defaultUrl += `?user=${username}`;
     if (answered !== null)

@@ -7,6 +7,7 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import AdminNav from "./AdminNav";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { urlroot } from "../../config";
 
 const AdminNoticeForm = () => {
 
@@ -39,7 +40,7 @@ const AdminNoticeForm = () => {
         }
     }, [no]);
     const getNoticeDetail = (no) => {
-        axios.get(`http://localhost:8090/noticedetail/${no}`)
+        axios.get(`${urlroot}/noticedetail/${no}`)
         .then(res=> {
             console.log('getNoticeDetail 요청결과: ', res);
             let notice = res.data.notice;
@@ -60,7 +61,7 @@ const AdminNoticeForm = () => {
                 return;
             }
             // console.log("title: ", title, ", content: ", content, "작성자: ", user.username);
-            let defaultUrl = 'http://localhost:8090/noticewrite';
+            let defaultUrl = `${urlroot}/noticewrite`;
             const response = await axios.post(defaultUrl, {
                                 title: title,
                                 content: content,
@@ -87,7 +88,7 @@ const AdminNoticeForm = () => {
                 return;
             }
             // console.log("no: ", notice.no, "writeDate: ", notice.writeDate, "title: ", title, ", content: ", content, "writerId: ", user.username);
-            let defaultUrl = 'http://localhost:8090/noticemodify';
+            let defaultUrl = `${urlroot}/noticemodify`;
             const response = await axios.post(defaultUrl, {
                                 no: notice.no, // 수정될 게시글 번호를 전송
                                 title: title,
@@ -109,7 +110,7 @@ const AdminNoticeForm = () => {
         let noArr = [notice.no];
         const isConfirmed =window.confirm('삭제하시겠습니까?');
         if(isConfirmed) {
-            axios.delete(`http://localhost:8090/deletenotice/${noArr}`)
+            axios.delete(`${urlroot}/deletenotice/${noArr}`)
             .then(res => {
                 alert('완료되었습니다.');
                 backToList();

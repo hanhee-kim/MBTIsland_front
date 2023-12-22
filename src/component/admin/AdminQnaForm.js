@@ -10,6 +10,7 @@ import AdminNav from "./AdminNav";
 import { useNavigate, useParams } from 'react-router';
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { urlroot } from "../../config";
 
 const AdminQnaForm = () => {
 
@@ -35,7 +36,7 @@ const AdminQnaForm = () => {
     }, [no]);
 
     const getQuestionDetail = (no) => {
-        axios.get(`http://localhost:8090/questiondetail/${no}`)
+        axios.get(`${urlroot}/questiondetail/${no}`)
         .then(res=> {
             console.log("getQuestionDetail결과: ", res);
             let question = res.data.question;
@@ -83,7 +84,7 @@ const AdminQnaForm = () => {
                 return;
             }
             console.log("content: ", content, ", writerId: ", user.username, "문의글번호인 파라미터no: ", no, ", 문의글제목: ", question.title, ", 문의글작성자: ", question.writerId);
-            let defaultUrl = 'http://localhost:8090/answerwrite';
+            let defaultUrl = `${urlroot}/answerwrite`;
             const response = await axios.post(defaultUrl, {
                                 title: `Re: ${question.title}`,
                                 content: content,

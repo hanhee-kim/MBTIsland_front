@@ -11,6 +11,7 @@ import {
 import axios from 'axios';
 
 import style from "../../css/mbtwhy/Mbtwhy.module.css";
+import { urlroot } from "../../config";
 
 function Mbtwhy() {
     // 로그인 유저 정보]
@@ -111,7 +112,7 @@ function Mbtwhy() {
     
     // 게시글 목록 조회
     const getMbtwhyList = (page, search, sort) => {
-        let defaultUrl = `http://localhost:8090/mbtwhy?mbti=${mbti}&page=${page}`;
+        let defaultUrl = `${urlroot}/mbtwhy?mbti=${mbti}&page=${page}`;
         if(search !== "") defaultUrl += `&search=${search}`;
         if(sort !== "") defaultUrl += `&sort=${sort}`;
 

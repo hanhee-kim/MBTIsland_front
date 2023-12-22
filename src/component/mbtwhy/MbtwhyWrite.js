@@ -8,6 +8,7 @@ import {
 import axios from 'axios';
 
 import style from "../../css/mbtwhy/MbtwhyForm.module.css";
+import { urlroot } from "../../config";
 
 function MbtwhyWrite() {
     // 로그인 유저 정보
@@ -101,7 +102,7 @@ function MbtwhyWrite() {
             return;
         }
         
-        let defaultUrl = `http://localhost:8090/mbtwhywrite?`;
+        let defaultUrl = `${urlroot}/mbtwhywrite?`;
         if(mbtiValue !== null) defaultUrl += `mbti=${mbtiValue.toUpperCase()}`;
         if(content !== null) defaultUrl += `&content=${content}`;
 

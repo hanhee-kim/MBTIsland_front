@@ -8,6 +8,7 @@ import {
 import axios from 'axios';
 
 import style from "../../css/mbattle/MBattleForm.module.css";
+import { urlroot } from "../../config";
 
 function MBattleWrite() {
     // 로그인 유저 정보
@@ -135,7 +136,7 @@ function MBattleWrite() {
             formData.append("files", file);
         }
     
-        axios.post("http://localhost:8090/mbattlewrite/", formData)
+        axios.post(`${urlroot}/mbattlewrite/`, formData)
         .then(res=> {
             console.log(res);
             let no = res.data.no;

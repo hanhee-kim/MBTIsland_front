@@ -3,12 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom
 import style from "../../css/user/Mypage.module.css";
 import DefaultMypage from "./DefaultMypage";
 import Aside from "./Aside";
-import MyMbtWhy from "./MyMbtWhy";
-import MyMbtmi from "./MyMbtmi";
-import MyQnA from "./MyQnA";
-import MyBookmark from "./MyBookmark";
-import MyAlarm from './MyAlarm';
-import MyNote from './MyNote';
+
 
 const Mypage = () => {
 
