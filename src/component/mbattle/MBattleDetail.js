@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
     Pagination,
     PaginationItem,
     PaginationLink,
     ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
+    Popover,
+    PopoverBody,
     Button,
     Input
 } from "reactstrap";
@@ -31,78 +30,101 @@ function MBattleDetail() {
     // 로그인 유저 정보
     const user = useSelector((state) => state.persistedReducer.user.user);
 
+    const [sendUser, setSendUser] = useState({
+        username : user.username,
+        userNickname : user.userNickname,
+        userMbti : user.userMbti,
+        userMbtiColor : user.userMbtiColor
+    });
+
     // Mbattle 게시글
     const [mbattle, setMbattle] = useState({});
 
     // 글 번호, 댓글 페이지 번호
     const {no, page} = useParams();
 
+    // 댓글 페이지 번호
+    const [commentPage, setCommentPage] = useState(1);
+
+    // 댓글 페이징 정보
+    const [commentPageInfo, setCommentPageInfo] = useState({});
+
+    // 댓글 목록
+    const [comments, setComments] = useState([]);
+
+    // 댓글 수
+    const [commentCount, setCommentCount] = useState(0);
+
+    // 팝오버 open 여부
+    const [open, setOpen] = useState(false);
+
+    // 댓글 작성 상태값
+    const [inputCommentValue, setInputCommentValue] = useState('');
+
     // 투표 여부
     const [isVoted, setIsVoted] = useState(false);
+
+    // 투표 정보 (글 번호, 투표자 아이디, 투표 항목)
+    // 투표 시 백으로 보낼 데이터
+    const [vote, setVote] = useState({
+        mbattleNo: no,
+        voterId: user.username,
+        voteItem: ""
+    });
 
     // 북마크 여부
     const [isBookmarked, setIsBookmarked] = useState(false);
 
-    // const [board, setBoard] = useState(
-    //     {
-    //         num:1,
-    //         mbti:"INTP",
-    //         color:"#9BB7D4",
-    //         writer:"마춤뻡파괴왕",
-    //         date:"1일전",
-    //         title:"똥맛 카레 vs 카레맛 똥",
-    //         subject1:"똥맛 카레",
-    //         subject2:"카레맛 똥",
-    //         file1:"",
-    //         file2:"",
-    //         commentCount:2,
-    //         likeCount:1,
-    //         viewCount:23
-    //     }
-    // );
+    // 북마크 정보 (사용자 아이디, 글 번호, 게시판 유형)
+    // 북마크 시 백으로 보낼 데이터
+    const [bookmark, setBookmark] = useState({
+        username: user.username,
+        postNo: no,
+        boardType: "mbattle"
+    });
 
-    const [comments, setComments] = useState([
-        {
-            num:1,
-            mbti:"ISTP",
-            color:"#4D6879",
-            writer:"마춤뻡파괴왕",
-            date:"1일전",
-            content:"머요",
-        },
-        {
-            num:2,
-            mbti:"ISTP",
-            color:"#4D6879",
-            writer:"난앓아요",
-            date:"1일전",
-            content:"방귀뿡뿡"
-        },
-        {
-            num:3,
-            mbti:"ISTP",
-            color:"#4D6879",
-            writer:"면발이억수로부드럽네",
-            date:"1일전",
-            content:"쌀국수 뚝배기!면발이 억수로 부드럽네 한 뚝배기 하실래예?"
-        },
-        {
-            num:4,
-            mbti:"ISTP",
-            color:"#4D6879",
-            writer:"억장이문어찜",
-            date:"1일전",
-            content:"내공냠냠"
-        },
-        {
-            num:5,
-            mbti:"ISTP",
-            color:"#4D6879",
-            writer:"빵빵이",
-            date:"1일전",
-            content:"옥지얌"
+     // 절대시간
+     const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}`;
+    };
+    
+    // 상대시간(시간차)
+    const formatDatetimeGap = (dateString) => {
+        const date = new Date(dateString);
+        const currentDate = new Date();
+        const datetimeGap = currentDate - date;
+        const seconds = Math.floor(datetimeGap/1000);
+        const minutes = Math.floor(seconds/60);
+        const hours = Math.floor(minutes/60);
+        const days = Math.floor(hours/24);
+        const weeks = Math.floor(days/7);
+        const months = Math.floor(weeks/4);
+        const years = Math.floor(months/12);
+
+        // if(seconds<60) {
+        //     return `${seconds}초 전`;
+        // } 
+        // else 
+        if(minutes<60) {
+            return `${minutes}분 전`;
+        } else if(hours<24) {
+            return `${hours}시간 전`;
+        } else if(days<7) {
+            return `${days}일 전`;
+        } else if(weeks<4) {
+            return `${weeks}주 전`;
+        } else if(months<12) {
+            return `${months}달 전`;
+        } else {
+            return `${years}년 전`;
         }
-    ]);
+    };
 
     const data = [
         {
@@ -148,43 +170,111 @@ function MBattleDetail() {
             amt: 2100,
         },
     ];
-    
-    // 페이징 상태 값
-    const [pageBtn, setPageBtn] = useState([]);
-    const [pageInfo, setPageInfo] = useState({});
 
-    // 댓글 상태 값
-    const [comment, setComment] = useState({num:"", mbti:"", writer:"", date:"", content:""});
+    // 팝오버 바깥 영역 클릭 시 모든 팝오버 닫기
+    const clickOutsidePopover = (e) => {
+        const popoverElements = document.querySelectorAll(".popover");
 
-    // 정렬 드롭다운 open 여부
-    const [open, setOpen] = useState(false);
-
-    // pageChange 함수를 호출한 페이징 영역에서 페이징 항목(1, 2, 3...)들을 인자로 받아옴
-    const pageChange = (repage) => {
-        // getMbattleDetail();
+        if(e && e.target) {
+            // 조건식
+            // 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어 있지 않다면
+            if(Array.from(popoverElements).every((popover) => !popover.contains(e.target))) {
+                setOpen(false);
+            }
+        }
     };
+
+    useEffect(() => {
+        clickOutsidePopover();
+        document.addEventListener("mousedown", clickOutsidePopover);
+        return () => {
+            document.removeEventListener("mousedown", clickOutsidePopover);
+        };
+    }, []);
 
     useEffect(()=> {
         getMbattleDetail();
+        getMbattleCommentList(commentPage);
     }, []);
+
+    // 댓글 상태 값 변경
+    const commentChange = (e) => {
+        setInputCommentValue(e.target.value);
+    };
+
+    // Toggle 핸들링
+    const handleToggle = () => {
+        setOpen(!open);
+    };
+
+    // 신고 팝오버 열기
+    const openReportWrite = (report, reportedTable) => {
+        setOpen(!open);
+
+        let reportData = {};
+        if(reportedTable === "mbattle") {
+            reportData = {
+                // no:0,
+                reportType: "게시글",
+                tableType: reportedTable,
+                reportedPostNo: report.no,
+                // reportedCommentNo:, // 댓글 아니므로 댓글 번호 없음
+                reportedId: report.writerId,
+                reportedTitle: report.title,
+                reportedContent: report.content,
+                fileIdxs: report.fileIdx1 + "," + report.fileIdx2,
+                reporterId: user.username,
+                // reportDate: "", // 백에서 지정
+                reportReason: "광고", // 신고 창에서 변경 (기본값 광고)
+                isCompleted: "N",
+                isWarned: "N"
+            };
+        } else if(reportedTable === "mbattlecomment") {
+            reportData = {
+                // no:0,
+                reportType: "댓글",
+                tableType: reportedTable,
+                reportedPostNo: mbattle.no,
+                reportedCommentNo: report.no,
+                reportedId: report.writerId,
+                // reportedTitle:, // 제목 없음
+                reportedContent: report.commentContent,
+                // fileIdxs: "", // 파일 없음
+                reporterId: user.username,
+                // reportDate: "", // 백에서 지정
+                reportReason: "광고", // 신고 창에서 지정 (기본값 광고)
+                isCompleted: "N",
+                isWarned: "N"
+            };
+        }
+
+        const serializedReportData = encodeURIComponent(JSON.stringify(reportData));
+
+        const url = `/reportwrite?data=${serializedReportData}`;
+        window.open(
+            url,
+            "_blank",
+            "width=650,height=450,location=no,status=no,scrollbars=yes"
+        );
+    };
 
     // url에 파라미터로 줄 변수 repage
     const getMbattleDetail = () => {
         let defaultUrl = `http://localhost:8090/mbattledetail/${no}`;
-        defaultUrl += `&username=${user.username}`;
+        defaultUrl += `?username=${user.username}`;
 
         axios.get(defaultUrl)
         .then(res=> {
             console.log(res);
             let mbattle = res.data.mbattle;
-            let isMbattleVoted = res.data.isMbattleVoted;
+            let mbattleVoter = res.data.mbattleVoter;
             let isMbattleBookmarked = res.data.isMbattleBookmarked;
 
             // 게시글 set
             setMbattle(mbattle);
 
             // 로그인한 유저에게 투표되어 있다면 (투표 데이터 존재한다면)
-            if(isMbattleVoted) {
+            if(mbattleVoter!==null) {
                 setIsVoted(!isVoted);
             }
 
@@ -210,33 +300,224 @@ function MBattleDetail() {
         })
     };
 
-    // 댓글 상태 값 변경
-    const change = (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        setComment({...comment, [name]:value});
-    }
+    // 게시글 북마크
+    const mbattleBookmark = () => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
 
-    const handleToggle = () => {
-        setOpen(!open);
+        let defaultUrl = `http://localhost:8090/mbattlebookmark`;
+
+        axios.post(defaultUrl, bookmark)
+        .then(res=> {
+            setIsBookmarked(!isBookmarked);
+        });
     };
 
-    const random = (e) => {
+    // 게시글 삭제
+    const mbattleDelete = () => {
+        const isConfirmed = window.confirm("게시글을 삭제하시겠습니까?");
+        if(isConfirmed) {
+            axios.delete(`http://localhost:8090/mbattledelete/${no}`)
+            .then(res => {
+                alert('완료되었습니다.');
+                goToPreviousList();
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+        setOpen(false);
+    };
+
+    // 게시글 수정
+    const goMbattleModify = () => {
+        navigate(`/mbattlemodify/${no}`);
+    };
+
+    // 댓글 목록 조회
+    const getMbattleCommentList = (commentPage) => {
+        let defaultUrl = `http://localhost:8090/mbattlecommentlist/${no}`;
+        if(commentPage !== 1) defaultUrl += `?commentPage=${commentPage}`; 
+        
+        axios.get(defaultUrl)
+        .then(res=> {
+            let pageInfo = res.data.pageInfo;
+            let mbattleCommentList = res.data.mbattleCommentList;
+            let mbattleCommentCount = res.data.mbattleCommentCount;
+
+            // 댓글 set
+            setComments([...mbattleCommentList]);
+            
+            // 댓글 개수 set
+            setCommentCount(mbattleCommentCount);
+
+            // 댓글 페이징 정보 set
+            setCommentPageInfo({...pageInfo});
+            let btn = [];
+            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
+                btn.push(i)
+            }
+            // setCommentPage(btn);
+            setCommentPage(commentPage);
+        })
+        .catch(err=> {
+            console.log(err);
+            setComments([]);
+            setCommentPageInfo({});
+        });
+    };
+
+    // 댓글 작성
+    const postComment = (commentValue) => {
+        let defaultUrl = `http://localhost:8090/mbattlecomment?no=${no}&comment=${commentValue}`;
+
+        axios.post(defaultUrl, sendUser)
+        .then(res=> {
+            console.log(res);
+            setInputCommentValue("");
+            getMbattleCommentList(commentPage);
+        })
+        .catch(err=> {
+            console.log(err);
+        });
+    };
+
+    // 댓글 삭제
+    const commentDelete = (commentNo) => {
+        const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
+        if(isConfirmed) {
+            axios.get(`http://localhost:8090/mbattlecommentdelete/${commentNo}`)
+            .then(res => {
+                console.log(res);
+                alert('완료되었습니다.');
+
+                // console.log('commentPage: ', commentPage);
+                getMbattleCommentList(commentPage); // 이 함수를 호출하여 댓글목록 재조회하여 재렌더링 시킨다
+                
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+        setOpen(false);
+    };
+
+    // 랜덤 mbattleDetail 이동 
+    const goRandomMbattleDetail = (e) => {
 
     };
 
-    const dropDownStyle = {
-        display:"flex",
-        border:"none",
-        boxShadow:"none",
-        backgroundColor:"white",
-    }
+    // commentPage 핸들링
+    const handleCommentPageNo = (commentPageNo) => {
+        setCommentPage(commentPageNo);
+        console.log(commentPageNo);
+        
+        getMbattleCommentList(commentPageNo); // setCommentPage(pageNo)는 업데이트가 지연되기 때문에, state인 page가 아니라 전달인자 pageNo로 요청해야함
+    };
+
+    const navigate = useNavigate();
+
+    // 목록 이동
+    const goToPreviousList = () => {
+        // let defaultUrl = `/mbtwhy`;
+        // if(mbti !== null) defaultUrl += `/${mbti}`;
+        // if(page !== null) defaultUrl += `/${page}`;
+        // if(sort !== null) defaultUrl += `/${sort}`;
+        // if(search) defaultUrl += `/${search}`;
+
+        // navigate(defaultUrl);
+
+        // 뒤로가기
+        // store에 Mbtwhy 페이징, 검색, 정렬값 저장하여 목록으로 돌아갈 때 사용하기
+        navigate("/mbattle");
+    };
+
+    // 페이지네이션
+    const PaginationInside = () => {
+        // if(errorMsg) return null;
+        const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
+        for(let i=commentPageInfo.startPage; i<=commentPageInfo.endPage; i++) {
+            pageGroup.push(
+                <span key={i} className={`${commentPage===i? style.activePage: ''}`} onClick={()=>handleCommentPageNo(i)}>{i}</span>
+            )
+        }
+        return (
+            <div className={style.paging}>
+                {!(commentPageInfo.startPage===1) && (
+                    <>
+                        <span onClick={()=>handleCommentPageNo(1)}>≪</span>
+                        <span onClick={()=>handleCommentPageNo(commentPageInfo.startPage-10)}>&lt;</span>
+                    </>
+                )}
+                {pageGroup}
+                {!(commentPageInfo.endPage===commentPageInfo.allPage) && (
+                    <>
+                        <span onClick={()=>handleCommentPageNo(commentPageInfo.endPage+1)}>&gt;</span>
+                        <span onClick={()=>handleCommentPageNo(commentPageInfo.allPage)}>≫</span>
+                    </>
+                )}
+            </div>
+        );
+    };
+
+    // 댓글 컴포넌트
+    const Comment = ({comment}) => {
+        const isLoginUser = user.username !== "" || user.username !== undefined; // 로그인한 유저
+        const isCommentWritter = comment.writerId === user.username; // 댓글 작성 유저
+        const isPostWriter = comment?.writerId === mbattle?.writerId; // 게시글 작성 유저
+
+        return (
+            <React.Fragment>
+                <div key={comment.commentNo} className={style.sectionComment} style={isCommentWritter?{backgroundColor:"#F8F8F8"}:{}}>
+                    <div className={style.writerDiv}>
+                        <div>
+                            <div className={style.circleDiv} style={{backgroundColor:`${comment.writerMbtiColor}`}}></div>&nbsp;&nbsp;&nbsp;
+                            {comment.writerMbti}&nbsp;&nbsp;&nbsp;
+                            {comment.writerNickname}
+                            {isPostWriter && <div className={style.isPostWriterComment}>작성자</div>}
+                        </div>
+                    </div>
+                    <div className={style.boardContent}>
+                        {comment.isRemoved==="Y"?
+                            <div className={style.noComment}>삭제된 댓글입니다.</div>
+                            :(comment.isBlocked==="Y"?
+                                <div className={style.noComment}>차단된 댓글입니다.</div>
+                                :<React.Fragment>
+                                    {comment.commentContent}
+                                </React.Fragment>
+                            )
+                        }
+                    </div>
+                    {comment.isRemoved==="Y" || comment.isBlocked==="Y"?
+                        <div className={style.commentLowDiv}>{formatDatetimeGap(comment.writeDate)}</div>
+                        :<div className={style.commentLowDiv}>
+                            <div>
+                                {formatDatetimeGap(comment.writeDate)}&nbsp;&nbsp;&nbsp;
+                            </div>
+                            {isLoginUser?
+                                <React.Fragment>
+                                    {isCommentWritter?
+                                        <Button style={replyButtonStyle} onClick={()=>commentDelete(comment.commentNo)}>삭제</Button>
+                                        :<Button style={replyButtonStyle} onClick={()=>{openReportWrite(comment, "mbattlecomment")}}>신고</Button>
+                                    }
+                                </React.Fragment>
+                                :<></>
+                            }
+                        </div>
+                    }
+                </div>
+            </React.Fragment>
+
+        );
+    };
 
     const buttonStyle = {
         background:"none",
         color:"black",
         border:"1px solid #C5C5C5"
-    }
+    };
 
     const replyButtonStyle = {
         background:"none",
@@ -244,19 +525,19 @@ function MBattleDetail() {
         fontWeight:"bold",
         border:"none",
         padding:"0px"
-    }
+    };
 
     const inputComment = {
         height:"100px",
         resize:"none"
-    }
+    };
 
     const boardVoteButton = {
         fontWeight:"bold",
         fontSize:"small",
         backgroundColor:"#1FAB70",
         lineHeight:"10px"
-    }
+    };
 
     return (
         <div className={style.container}>
@@ -271,33 +552,32 @@ function MBattleDetail() {
                 <div>
                 {/* 게시글 영역 */}
                     <div key={mbattle.no} className={style.sectionBoard}>
-                        {/* <Link to={"/detailform/only-detail/" + mbattle.no}></Link> */}
                         <div className={style.boardTitle}>
                             <h1>{mbattle.title}</h1>
                             <div> 
-                                <img src="/randomIcon.png" height="30px" alt="" onClick={random} />
-                                <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                    <DropdownToggle style={dropDownStyle}>
-                                        <img className={style.dropDownImg} src="/popover-icon.png" alt=""></img>
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                        <DropdownItem>신고</DropdownItem>
-                                    </DropdownMenu>
-                                </ButtonDropdown>
+                                <img src="/randomIcon.png" height="30px" alt="" onClick={()=>goRandomMbattleDetail()} />
+                                {user.username !== ""?
+                                    <React.Fragment>
+                                        <button onClick={()=>setOpen(!open)} id="Popover1" className={style.popoverButton}><img className={style.popoverImg} src="/popover-icon.png" alt=""/></button>
+                                        <Popover placement="bottom" isOpen={open} name="mbattle" target="Popover1" toggle={()=>handleToggle()}>
+                                            {mbattle.writerId === user.username?
+                                                <React.Fragment>
+                                                    <PopoverBody className={style.popoverItem} onClick={()=>mbattleDelete()}>삭제</PopoverBody>
+                                                </React.Fragment>
+                                                :(user.username !== ""?
+                                                    <PopoverBody className={style.popoverItem} onClick={()=>openReportWrite(mbattle, "mbattle")}>신고</PopoverBody>
+                                                    :<></>
+                                                )
+                                            }
+                                        </Popover>
+                                    </React.Fragment>
+                                :<></>
+                                }
                             </div>
-                            {/* <ButtonDropdown direction="down" isOpen={open} toggle={handleToggle}>
-                                <DropdownToggle style={dropDownStyle}>
-                                    <img className={style.dropDownImg} src="/popover-icon.png"></img>
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem>삭제</DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown> */}
-                            
                         </div>
                         <div className={style.writerDiv}>
-                            <div className={style.circleDiv} style={{backgroundColor:`${mbattle.mbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
-                            {mbattle.mbtiCategori}&nbsp;&nbsp;&nbsp;
+                            <div className={style.circleDiv} style={{backgroundColor:`${mbattle.writerMbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
+                            {mbattle.writerMbti}&nbsp;&nbsp;&nbsp;
                             {mbattle.writerId}
                         </div>
                         <div style={{color:"#C5C5C5"}}>
@@ -310,19 +590,35 @@ function MBattleDetail() {
                         <div className={style.sectionVote}>
                             <div>
                                 <div className={style.subject}>
-                                    <img src="/vsIcon.png" alt=""/>
-                                    <h4>ㅋㅋㅋㅋㅋㅋㅋㅋzzzzzㅋㅋㅋㅋㅋㅋ</h4>
+                                    {mbattle.fileIdx1!==null?
+                                        <React.Fragment>
+                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
+                                            <h4>{mbattle.voteItem1}</h4>
+                                        </React.Fragment>
+                                        :<div className={style.voteItemDiv}><h4>{mbattle.voteItem1}</h4></div>
+                                    }
                                 </div>
-                                <div className={style.voteButtonDiv}>
-                                    <Button style={boardVoteButton}>투표하기</Button>
-                                </div>
+                                {user.userRole === "ROLE_USER"?
+                                    <div className={style.voteButtonDiv}>
+                                        <Button style={boardVoteButton}>투표하기</Button>
+                                    </div>
+                                    :<></>
+                                }
                             </div>
                             <div style={{margin:"30px"}}>
                                 <img src="/vsIcon.png" alt=""/>
                             </div>
                             <div>
                                 <div className={style.subject}>
-                                    <img src="/vsIcon.png" alt=""/>
+                                    {mbattle.fileIdx2!==null?
+                                        <React.Fragment>
+                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx2}`} alt=''/>
+                                            <h4>{mbattle.voteItem2}</h4>
+                                        </React.Fragment>
+                                        :<div className={style.voteItemDiv}><h4>{mbattle.voteItem2}</h4></div>
+                                    }
+                                    <div>
+                                    </div>
                                 </div>
                                 <div className={style.voteButtonDiv}>
                                     <Button style={boardVoteButton}>투표하기</Button>
@@ -386,23 +682,21 @@ function MBattleDetail() {
                         </div>
 
                         <div className={style.boardLow}>
-                            <div className={style.bookmarkDiv}>
-                                <img src="/bookmark.png" alt=""></img>&nbsp;
-                                
+                            <div className={style.bookmarkDiv} onClick={()=>mbattleBookmark()}>
+                                {!isBookmarked?
+                                    <img src="/bookmark.png" alt=""/>
+                                    :<img src="/bookmarked.png" alt=""/>
+                                }
                             </div>
-                            {/* <div className={style.thumbDiv}>
-                                <img src="/thumbIcon.png" alt=""></img>&nbsp;
-                                추천&nbsp;
-                                {mbattle.likeCount}
-                            </div> */}
                             <div className={style.listDiv}>
-                                <Button style={buttonStyle}>목록</Button>
+                                <Button style={buttonStyle} onClick={()=>goToPreviousList()}>목록</Button>
                             </div>
                         </div>
                     </div>
                     <div className={style.commentCountDiv}>
                         <div>
                             댓글&nbsp;
+                            {commentCount}
                             {/* {mbattle.commentCount} */}
                         </div>
                     </div>
@@ -412,87 +706,45 @@ function MBattleDetail() {
                 {/* 댓글 영역 */}
                 <div>
                     {/* 댓글 목록 */}
-                    {comments.length !== 0 && comments.map(comment => {
-                        return (
-                            <div key={comment.num} className={style.sectionComment}>
-                                <div className={style.writerDiv}>
-                                    <div>
-                                        <div className={style.circleDiv} style={{backgroundColor:`${comment.color}`}}> </div>&nbsp;&nbsp;&nbsp;
-                                        {comment.mbti}&nbsp;&nbsp;&nbsp;
-                                        {comment.writer}
-                                    </div>
-                                </div>
-                                <div className={style.boardContent}>
-                                    {comment.content}
-                                </div>
-                                <div className={style.commentLowDiv}>
-                                    <div>
-                                        {comment.date}
-                                    </div>
-                                    <Button style={replyButtonStyle}>신고</Button>
-                                </div>
-                            </div>
-                        )
-                    })}
-
-                    {/* 삭제된 댓글 */}
-                    <div className={style.sectionDeletedComment}>
-                        삭제된 댓글입니다.
+                    <div>
+                        {comments
+                            // .filter(comment=> comment.parentcommentNo===null)
+                            .map(comment => {
+                                return (
+                                    <React.Fragment key={comment.commentNo}>
+                                        <Comment comment={comment} key={comment.commentNo}/>
+                                            {/* {comments
+                                                .filter(reply => reply.parentcommentNo === comment.commentNo)
+                                                .map(reply =><Reply reply={reply} key={reply.commentNo}/>)} */}
+                                    </React.Fragment>
+                                );
+                            })
+                        }
                     </div>
 
                     {/* 페이징 영역 */}
-                    <Pagination aria-label="Page navigation example" className={style.pagingLabel}>
-                        {
-                            pageInfo.curPage===1?
-                            <PaginationItem disabled>
-                                <PaginationLink previous href="#" />
-                            </PaginationItem>:
-                            <PaginationItem>
-                                {/* <PaginationLink previous href={"/list/" + (pageInfo.curPage - 1)} /> */}
-                                <PaginationLink previous onClick={()=>pageChange(pageInfo.curPage-1)}/>
-                            </PaginationItem>
-                        }
-
-                        {                   
-                            pageBtn.map(item=>{
-                                return(
-                                    <PaginationItem key={item} className={item===pageInfo.curPage? 'active':''}>
-                                        {/* <PaginationLink href={"/list/" + item}> */}
-                                        {/* 고유한 id를 넘겨줌 */}
-                                        <PaginationLink onClick={() => pageChange(item)}>
-                                            {item}
-                                        </PaginationLink>
-                                    </PaginationItem>                            
-                                )
-                            })
-                        }
-
-                        {
-                            <PaginationItem disabled={pageInfo.curPage === pageInfo.endPage}>
-                                {/* <PaginationLink next href={"/list/" + (pageInfo.curPage + 1)}/> */}
-                                <PaginationLink next onClick={()=>pageChange(pageInfo.curPage+1)}/>
-                            </PaginationItem>
-                        }
-                    </Pagination>
+                    {comments.length===0?<></>:<PaginationInside/>}
 
                     {/* 댓글 달기 */}
-                    <div>
-                        <Input
-                            style={inputComment}
-                            type="textarea"
-                            id="content"
-                            name="content"
-                            onChange={change}
-                            cols="40"
-                            rows="15"
-                            required="required"
-                            value={comment.content}
-                            placeholder="댓글을 입력해주세요."
-                        />
-                        <div className={style.postCommentDiv}>
-                            <Button style={buttonStyle}>등록</Button>
+                    {user.userRole === "ROLE_USER"?
+                        <div>
+                            <Input
+                                style={inputComment}
+                                type="textarea"
+                                id="comment"
+                                name="comment"
+                                onChange={commentChange}
+                                cols="40"
+                                rows="15"
+                                required="required"
+                                value={inputCommentValue}
+                                placeholder="댓글을 입력해주세요."
+                            />
+                            <div className={style.postCommentDiv}>
+                                <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue, "")}>등록</Button>
+                            </div>
                         </div>
-                    </div>
+                    :<></>}
 
                 </div>
                 {/* 댓글 영역 */}
