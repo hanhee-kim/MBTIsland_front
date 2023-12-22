@@ -102,7 +102,7 @@ const MBTmiDetail = () => {
         // let defaultUrl = `http://localhost:8090/mbtmicomment?no=${no}&comment=${parentcommentNo!=='' ? comment : reply}`;
         let defaultUrl = `http://localhost:8090/mbtmicomment?no=${no}&comment=${commentContent}`;
         if(parentcommentNo !== '') defaultUrl += `&parentcommentNo=${parentcommentNo}`
-        defaultUrl += `&commentpage=${commentPage}`; // 3페이지에서 대댓글 작성시 url에 파라미터가로 3페이지가 붙음
+        defaultUrl += `&commentpage=${commentPage}`; // 3페이지에서 대댓글 작성시 url에 파라미터로 3페이지가 붙음
         console.log('요청url: ', defaultUrl);
 
         axios.post(defaultUrl, sendUser)
@@ -116,9 +116,10 @@ const MBTmiDetail = () => {
 
             if(parentcommentNo!=='') { // 2차댓글 작성의 경우
                 let writtenCommentNo = res.data.writtenCommentNo;
+                // 현재페이지번호를 인자로하여 불러온 댓글목록배열comments 안에 방금 작성된 새댓글이 존재하는지 여부
                 const isWrittenCommentIsInCurrentPage = comments.some(comment => comment.commentNo === writtenCommentNo); 
-                // 현재페이지번호를 인자로하여 불러온 길이 배열 comments 안에 방금작성된 새댓글이 존재하는지 여부
-                if (!isWrittenCommentIsInCurrentPage) { // 배열 안에 없다면(등록시 페이지가 3->4페이지에 등록되게 된 경우) 1증가한 페이지번호로 목록이 렌더링되게 함
+                // 배열 안에 없다면(등록시 3->4페이지에 등록되게 된 경우) 1증가한 페이지번호로 목록이 렌더링되게 함
+                if (!isWrittenCommentIsInCurrentPage) { 
                     getMbtmiCommentList(commentPage+1);
                     setCommentPage(commentPage+1);
                 }
