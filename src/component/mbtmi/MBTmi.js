@@ -44,6 +44,9 @@ const PaginationOutside = ({ pageInfo, handlePageNo }) => {
 
 const MBTmi = () => {
 
+    // 로그인정보 가져오기
+    const user = useSelector((state) => state.persistedReducer.user.user);
+
     const [weeklyHotList, setWeeklyHotList] = useState([]);
     const [errorMsgWeekly, setErrorMsgWeekly] = useState("");
     const [errorMsgNewly, setErrorMsgNewly] = useState("");
@@ -173,6 +176,10 @@ const MBTmi = () => {
     }, []);
 
     const goToMbtmiForm = () => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
         navigate(`/mbtmiform`);
     };
 
