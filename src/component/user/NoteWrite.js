@@ -11,7 +11,7 @@ import Swal from "sweetalert2";
 import { urlroot } from "../../config";
 
 const NoteWrite = (props) => {
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
   const {receiveName,receiveNick} = useParams();
   // const formatReceiveName = receiveName.startsWith(':') ? receiveName.substring(1) : receiveName;
   // const formatReceiveNick = receiveNick.startsWith(':') ? receiveNick.substring(1) : receiveNick;

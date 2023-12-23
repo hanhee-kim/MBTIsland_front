@@ -14,12 +14,12 @@ import {
   ModalHeader,
   Table,
 } from "reactstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { wait } from "@testing-library/user-event/dist/utils";
 import { urlroot } from "../../config";
 
-const MyQnA = (props) => {
+const MyQnA = () => {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [answered, setAnswered] = useState(null);
   const [page, setPage] = useState(1);
@@ -32,11 +32,24 @@ const MyQnA = (props) => {
     const day = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
+  const registration = useSelector((state) => state.persistedReducer.isRegistration);
+  const dispatch = useDispatch();
+  // const isRegistration = props.isRegistration;
   useEffect(() => {
     getMyQnaList(user.username, answered, page);
   }, []);
+  useEffect(() => {
+    console.log("뭐가 찍히긴하나");
+    if(registration){
+
+      getMyQnaList(user.username, answered, page);
+      // setIsRegistration(false);
+      dispatch({type:"isReg",payload:false});
+    }
+  },[registration]);
   const getMyQnaList = (username, answered, page) => {
+    
     let defaultUrl = `${urlroot}/questionlist`;
 
     defaultUrl += `?user=${username}`;
@@ -56,6 +69,7 @@ const MyQnA = (props) => {
         let list = res.data.questionList;
         setQnaList([...list]);
         setPageInfo({ ...pageInfo });
+
       })
       .catch((err) => {
         console.log(err);
@@ -199,7 +213,7 @@ const MyQnA = (props) => {
             <div className={style.tableDiv}>
               <Table className="table-hover" style={{ minWidth: "770px" }}>
                 <thead>
-                  <tr row className="text-center">
+                  <tr className="text-center">
                     <th scope="col" sm={1} style={{ minWidth: "52px" }}>
                       번호
                     </th>

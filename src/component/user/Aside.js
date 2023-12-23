@@ -8,7 +8,7 @@ const Aside = (props) => {
   //state,effect...
   // URL의 path값을 받아올 수 있다.
   const pathName = useLocation().pathname;
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
   const navigate = useNavigate();
   // const menus = [
   //   { name: "프로필", path: "/profile" },

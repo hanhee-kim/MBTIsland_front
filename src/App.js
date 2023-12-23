@@ -117,7 +117,7 @@ function App() {
               <Route
                 exact
                 path="/qnawrite"
-                element={<QnAWrite setIsPopup={setIsPopup} />}
+                element={<QnAWrite setIsPopup={setIsPopup}/>}
               />
               <Route
                 exact

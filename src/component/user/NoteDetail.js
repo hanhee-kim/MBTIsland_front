@@ -7,7 +7,7 @@ import axios from 'axios';
 import { urlroot } from "../../config";
 
 const NoteDetail = (props) => {
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
   const {noteNo} = useParams();
   // const [noteType,setNoteType] = useState('');
 

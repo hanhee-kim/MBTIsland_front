@@ -12,7 +12,7 @@ import { urlroot } from "../../config";
 const AdminNoticeForm = () => {
 
     // 로그인정보 가져오기
-    const user = useSelector((state) => state.persistedReducer.user.user);
+    const user = useSelector((state) => state.persistedReducer.user);
 
     const { no } = useParams();
     const navigate = useNavigate();

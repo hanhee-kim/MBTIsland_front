@@ -23,8 +23,8 @@ const Logout = () => {
   useEffect(() => {
     // dispatch({ type: "logout", payload: "" });
     // dispatch({ type: "logout", payload: {} });
-    // localStorage.removeItem("token");
     persistor.purge();
+    localStorage.removeItem("token");
     // navigate("/login");
     handleLogout();
   }, []);

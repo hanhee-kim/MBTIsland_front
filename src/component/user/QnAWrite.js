@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import style from "../../css/common/common.css";
 import { Form, Button, FormGroup, Input, Label } from "reactstrap";
 import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { urlroot } from "../../config";
 
 const QnAWrite = (props) => {
-  const user = useSelector((state) => state.persistedReducer.user.user);
-
+  const user = useSelector((state) => state.persistedReducer.user);
+  const dispatch = useDispatch();
   useEffect(() => {
     props.setIsPopup(true);
-    // props.setCurLocation("qnawrite");
   }, []);
   const [question, setQuestion] = useState({
     title: "",
@@ -40,6 +39,7 @@ const QnAWrite = (props) => {
       .post(`${urlroot}/questionwrite`, question)
       .then((res) => {
         console.log(res);
+        dispatch({type:"isReg",payload:true});
         Swal.fire({
           title: "문의가 등록되었습니다.",
           icon: "success",
@@ -75,7 +75,7 @@ const QnAWrite = (props) => {
           </FormGroup>
           <FormGroup style={{ justifyContent: "center" }}>
             <Label for="title" sm={3}>
-              제목
+              제목{console.log("is?"+props.isRegistration)}
             </Label>
             <Input
               id="title"

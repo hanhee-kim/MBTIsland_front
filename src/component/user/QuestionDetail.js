@@ -6,7 +6,7 @@ import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import { urlroot } from "../../config";
 
 const QuestionDetail = (props) => {
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
   const no = useParams();
   const [question, setQuestion] = useState({});
   const [answer, setAnswer] = useState({});

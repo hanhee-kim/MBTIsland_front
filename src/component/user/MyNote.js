@@ -50,7 +50,7 @@ const MyNote = () => {
     }
   };
   const [openDropdown, setOpenDropdown] = useState(false);
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
 
   const getMyNoteList = (username, noteType, readType, page) => {
     let defaultUrl = `${urlroot}/notelistofuser`;

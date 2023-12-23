@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import { urlroot } from "../../config";
 
 const MyBookmark = () => {
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
   const [page, setPage] = useState(1);
   const [pageInfo, setPageInfo] = useState({});
   const [initData, setInitData] = useState(true);
@@ -25,7 +25,7 @@ const MyBookmark = () => {
   };
 
   // const path = useLocation().pathname;
-  // const user = useSelector((state) => state.persistedReducer.user.user);
+  // const user = useSelector((state) => state.persistedReducer.user);
   //username맞는 북마크리스트 
   // -> 보드타입(if나누기 꺼내오는 테이블이 달라짐)
   // -> 맞는 보드No로 게시글뽑아서 각 게시글리스트에 담기

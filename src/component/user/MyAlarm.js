@@ -34,7 +34,7 @@ const MyAlarm = () => {
     const day = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
 
   useEffect(() => {
     getMyAlarmList(user.username, type, page);
