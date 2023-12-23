@@ -47,8 +47,8 @@ const AddJoin = () => {
     borderColor: "gray",
   };
   //state,effect,...
-  const token = useSelector((state) => state.persistedReducer.token.token);
-  const user = useSelector((state) =>  state.persistedReducer.user.user)
+  const token = useSelector((state) => state.persistedReducer.token);
+  const user = useSelector((state) =>  state.persistedReducer.user)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [emailCode, setEmailCode] = useState("");

@@ -12,7 +12,7 @@ import { urlroot } from "../../config";
 
 function MBattleWrite() {
     // 로그인 유저 정보
-    const user = useSelector((state) => state.persistedReducer.user.user);
+    const user = useSelector((state) => state.persistedReducer.user);
 
     const imgBoxRef1 = useRef();
     const imgBoxRef2 = useRef();

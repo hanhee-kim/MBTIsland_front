@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import { urlroot } from "../../config";
 
 const MyMbtWhy = (props) => {
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
   const [page, setPage] = useState(1);
   const [pageInfo, setPageInfo] = useState({});
   const formatDate = (dateString) => {

@@ -11,8 +11,8 @@ import {urlroot} from '../config';
 
 const Main = () => {
   // //token정보
-  // const token = useSelector((state) => state.persistedReducer.token.token);
-  // const user = useSelector((state) => state.persistedReducer.user.user);
+  // const token = useSelector((state) => state.persistedReducer.token);
+  // const user = useSelector((state) => state.persistedReducer.user);
   // const dispatch = useDispatch();
 
   // useEffect(() => {

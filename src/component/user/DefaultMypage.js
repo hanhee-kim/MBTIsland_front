@@ -50,20 +50,10 @@ const DefaultMypage = (props) => {
     borderColor: "gray",
   };
   //css---
-  useEffect(() => {
-    axios
-      .get(`${urlroot}/mypage/${user.username}`)
-      .then((res) => {
-        console.log(res);
-        setTotalCnt(res.data.totalCnt);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-  },[])
+ 
   //state
-  const user = useSelector((state) => state.persistedReducer.user.user);
-  const token = useSelector((state) => state.persistedReducer.token.token);
+  const user = useSelector((state) => state.persistedReducer.user);
+  const token = useSelector((state) => state.persistedReducer.token);
   const navigate = useNavigate();
   const [pwInput, setPwInput] = useState(false);
   const [totalCnt,setTotalCnt] = useState(0);
@@ -123,6 +113,18 @@ const DefaultMypage = (props) => {
       setIsSamePassword(false);
     }
   };
+  useEffect(() => {
+    
+    axios
+      .get(`${urlroot}/mypage/${user.username}`)
+      .then((res) => {
+        console.log(res);
+        setTotalCnt(res.data.totalCnt);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  },[])
   //email작성후 보내기버튼 눌렀을때(이때 이메일 중복여부도 확인해주어야함.)
   const sendCode = (e) => {
     e.preventDefault();

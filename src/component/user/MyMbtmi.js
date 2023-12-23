@@ -8,7 +8,7 @@ import axios from "axios";
 import { urlroot } from "../../config";
 
 const MyMbtmi = (props) => {
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
   const [initData, setInitData] = useState(true);
   const [page, setPage] = useState(1);
   const [pageInfo, setPageInfo] = useState({});
@@ -49,6 +49,8 @@ const MyMbtmi = (props) => {
 
   // 체크박스 단일 선택
   const handleSingleCheck = (checked, no) => {
+    console.log(no);
+    console.log(checkItems);
     if (checked) {
       // 단일 선택 시 체크된 아이템을 배열에 추가
       setCheckItems((prev) => [...prev, no]);
@@ -89,7 +91,7 @@ const MyMbtmi = (props) => {
         });
         setCheckItems([]);
 
-        getMyMbtmiList(user.username, 1);
+        getMyMbtmiList(user.username, page);
       })
       .catch((err) => {
         console.log(err);

@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { urlroot } from "../../config";
 
 const Header = () => {
-  // const token = useSelector((state) => state.persistedReducer.token.token);
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  // const token = useSelector((state) => state.persistedReducer.token);
+  const user = useSelector((state) => state.persistedReducer.user);
   const uri = useLocation().pathname;
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
@@ -38,6 +38,23 @@ const Header = () => {
           console.log(err);
         });
     }
+    // //컴포넌트 마운트될 때 실행할 interval(10초마다 실행)
+    // const intervalId = setInterval(() => {
+    //   axios
+    //     .get(`${urlroot}/getnoteandalarm?username=${user.username}`)
+    //     .then((res) => {
+    //       console.log(res);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     })
+    // },10000);
+    // // 컴포넌트가 언마운트될 때 clearInterval을 통해 정리
+    // return () => {
+    //   clearInterval(intervalId);
+    // };
+
+
   }, []);
 
   // 팝오버 여닫힘 상태
@@ -302,7 +319,7 @@ const Header = () => {
               >
                 <PopoverBody className={style.popoverBellOrMessageItem}>
                   {/* 읽지 않은 쪽지 수 표시 */}
-                  <Link to={"/mypage"} className={style.popoverLink}>
+                  <Link to={"/mypage/profile"} className={style.popoverLink}>
                     <div className={style.popoverTopArea}>
                       <span>새로운 쪽지 ({messagesNotRead.length})</span>&nbsp;
                       <span>&gt;</span>
@@ -367,7 +384,7 @@ const Header = () => {
                 target="popoverUser"
                 toggle={() => togglePopover("popoverUser")}
               >
-                <Link to={"/mypage"} className={style.popoverLink}>
+                <Link to={"/mypage/profile"} className={style.popoverLink}>
                   <PopoverBody className={style.popoverItem}>
                     마이페이지
                   </PopoverBody>

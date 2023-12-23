@@ -15,7 +15,7 @@ import { urlroot } from "../../config";
 
 function Mbtwhy() {
     // 로그인 유저 정보]
-    const user = useSelector((state) => state.persistedReducer.user.user);
+    const user = useSelector((state) => state.persistedReducer.user);
 
     // 인기 게시글
     const [hotMbtwhy, setHotMbtwhy] = useState({});

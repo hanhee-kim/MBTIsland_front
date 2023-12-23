@@ -19,7 +19,7 @@ const ReportWrite = (props) => {
   const serializedReportData = urlParams.get('data');
   const reportData = JSON.parse(decodeURIComponent(serializedReportData));
   // 로그인 유저 정보]
-  // const user = useSelector((state) => state.persistedReducer.user.user);
+  // const user = useSelector((state) => state.persistedReducer.user);
 
   // const {reportedId, reportedTable} = useParams();
   // const formatReportedId = reportedId.startsWith(':') ? reportedId.substring(1) : reportedId;

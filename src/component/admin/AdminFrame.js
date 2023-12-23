@@ -20,7 +20,7 @@ import { urlroot } from "../../config";
 const AdminFrame = () => {
 
     const uri = useLocation().pathname;
-    const user = useSelector((state) => state.persistedReducer.user.user);
+    const user = useSelector((state) => state.persistedReducer.user);
     const navigate = useNavigate();
     
     // 관리자 로그인되지 않은 상태로 관리자페이지 url요청시(비정상 접근 처리)

@@ -17,7 +17,7 @@ import { urlroot } from "../../config";
 
 function MbtwhyDetail() {
     // 로그인 유저 정보
-    const user = useSelector((state) => state.persistedReducer.user.user);
+    const user = useSelector((state) => state.persistedReducer.user);
 
     const [sendUser, setSendUser] = useState({
         username : user.username,
