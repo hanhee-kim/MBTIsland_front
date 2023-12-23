@@ -784,24 +784,16 @@ function MbtwhyDetail() {
                                 {mbtwhy.writerMbti}&nbsp;&nbsp;&nbsp;
                                 {mbtwhy.writerNickname}
                             </div>
-                            {user.username !== ""?
-                                <React.Fragment>
-                                    <button onClick={()=>setOpen(!open)} id="Popover1" className={style.popoverButton}><img className={style.popoverImg} src="/popover-icon.png" alt=""/></button>
-                                    <Popover placement="bottom" isOpen={open} name="mbtwhy" target="Popover1" toggle={()=>handleToggle()}>
-                                        {mbtwhy.writerId === user.username?
-                                            <React.Fragment>
-                                                <PopoverBody className={style.popoverItem} onClick={()=>mbtwhyDelete()}>삭제</PopoverBody>
-                                                <PopoverBody className={style.popoverItem} onClick={()=>goMbtwhyModify()}>수정</PopoverBody>
-                                            </React.Fragment>
-                                            :(user.username !== ""?
-                                                <PopoverBody className={style.popoverItem} onClick={()=>openReportWrite(mbtwhy, "mbtwhy")}>신고</PopoverBody>
-                                                :<></>
-                                            )
-                                        }
-                                    </Popover>
-                                </React.Fragment>
-                            :<></>
-                            }
+                            <button onClick={()=>setOpen(!open)} id="Popover1" className={style.popoverButton}><img className={style.popoverImg} src="/popover-icon.png" alt=""/></button>
+                            <Popover placement="bottom" isOpen={open} name="mbtwhy" target="Popover1" toggle={()=>handleToggle()}>
+                                {mbtwhy.writerId === user.username?
+                                    <React.Fragment>
+                                        <PopoverBody className={style.popoverItem} onClick={()=>mbtwhyDelete()}>삭제</PopoverBody>
+                                        <PopoverBody className={style.popoverItem} onClick={()=>goMbtwhyModify()}>수정</PopoverBody>
+                                    </React.Fragment>
+                                    :<PopoverBody className={style.popoverItem} onClick={()=>openReportWrite(mbtwhy, "mbtwhy")}>신고</PopoverBody>
+                                }
+                            </Popover>
                         </div>
                         <div style={{color:"#C5C5C5"}}>
                             {formatDatetimeGap(mbtwhy.writeDate)}

@@ -61,6 +61,7 @@
     display: flex;
     flex-wrap: wrap;
     cursor: default;
+    justify-content: left;
 }
 
 .sectionBoard {
@@ -81,7 +82,8 @@
 }
 
 .boardImages > div > img {
-    height: 140px;
+    max-width: 180px;
+    max-height: 135px;
 }
 
 .voteItemDiv {

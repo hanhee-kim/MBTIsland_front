@@ -85,7 +85,7 @@ const ReportWrite = (props) => {
             <Label for="sentUserNick" sm={3}>
               작성자
             </Label>
-            <Input type="text" name="reportedId" value={report.reporterId} readOnly style={{ width: "150px"}}></Input>
+            <Input type="text" name="reportedId" value={report.reportedId} readOnly style={{ width: "150px"}}></Input>
           </FormGroup>
           <FormGroup style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
             <Label for="reportType" sm={3}>

@@ -64,11 +64,9 @@ function MBattle() {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log("ㅋㅋ", res);
             let pageInfo = res.data.pageInfo;
             let mbattleList = res.data.mbattleList;
             let hotMbattleList = res.data.hotMbattleList;
-            console.log("게시글 목록 개수: " + mbattleList.length);
 
             setMbattleList([...mbattleList]);
             setHotMbattleList([...hotMbattleList]);

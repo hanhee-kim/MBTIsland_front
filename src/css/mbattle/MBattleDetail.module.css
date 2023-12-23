@@ -80,6 +80,12 @@
     border-radius: 50%;
 }
 
+.boardVotedCount {
+    font-size: large;
+    font-weight: bold;
+    color: #1FAB70;
+}
+
 .commentLowDiv {
     display: flex;
     color: #C5C5C5;
@@ -95,7 +101,7 @@
 .sectionVote {
     display: flex;
     margin: 0 auto;
-    padding: 50px;
+    padding: 30px;
     align-items: center;
     justify-content: center;
 }
@@ -128,7 +134,7 @@
     height: 300px;
 }
 
-.voteItemDiv > h1 {
+.voteItemDiv > h5 {
     text-align: center;
 	position: absolute;
 	top: 50%;
@@ -149,6 +155,24 @@
     margin-bottom: 30px;
 }
 
+.sectionResult {
+    display: grid;
+    justify-content: center;
+}
+
+.voteResultText {
+    margin-left: 70px;
+    margin-top: 30px;
+}
+
+.widthGraph {
+    margin: 10px;
+}
+
+.heightGraph {
+    margin: 20px;
+}
+
 .boardLow {
     display: flex;
     color: #C5C5C5;
@@ -167,6 +191,7 @@
 .bookmarkDiv {
     display: flex;
     justify-content: start;
+    cursor: pointer;
 }
 
 .thumbDiv {
