@@ -61,6 +61,8 @@ const Join = () => {
   const [serverEmailCode, setServerEmailCode] = useState("");
   //사용자가 작성한 emailCode
   const [emailCode, setEmailcode] = useState("");
+  //이메일 보내기 클릭했는지
+  const [sendMail,setSendMail] = useState(false);
 
   const [mbtiCheckEI, setMbtiCheckEI] = useState("E");
   const [mbtiCheckNS, setMbtiCheckNS] = useState("N");

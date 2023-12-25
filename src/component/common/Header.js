@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import style from "../../css/common/Header.module.css";
 import { Button, Popover, PopoverBody } from "reactstrap";
 import axios from "axios";
@@ -13,6 +13,7 @@ const Header = () => {
   const [alarmCnt,setAlarmCnt] = useState(0);
   const [noteCnt,setNoteCnt] = useState(0);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   // const localUser = localStorage.getItem("user");
   // 읽지않은 쪽지리스트
@@ -44,10 +45,12 @@ const Header = () => {
           console.log(err);
         });
     }
+    //먼저 한번 실행
+    getNoteListAndAlarmList();
     // //컴포넌트 마운트될 때 실행할 interval(10초마다 실행)
     const intervalId = setInterval(() => {
       getNoteListAndAlarmList();
-    },10000);
+    },100000);
     // 컴포넌트가 언마운트될 때 clearInterval을 통해 정리
     return () => {
       clearInterval(intervalId);
@@ -67,8 +70,8 @@ const Header = () => {
       [popoverKey]: !prevState[popoverKey],
     }));
   };
-  const getNoteListAndAlarmList = () => {
-    axios
+  const getNoteListAndAlarmList = async() => {
+    await axios
         .get(`${urlroot}/getnoteandalarm?username=${user.username}`)
         .then((res) => {
           console.log(res);
@@ -154,11 +157,49 @@ const Header = () => {
   }
   //알림 클릭시
   const goAlarmDetail = (e,index,alarm) => {
+    console.log(e);
     //navigate()
+    console.log(alarm.detailType);
+    console.log(alarm.detailNo);
+    console.log(alarm.detailMbti);
+    switch (alarm.detailType){
+      case "NOTE" :
+        goNoteDetail(e,alarm.detailNo);
+        break;
+      case "MBTMI" :
+        navigate(`/mbtmidetail/${alarm.detailNo}`);
+        getNoteListAndAlarmList();
+        break;
+      case "MBTWHY" :
+        let defaultUrl = `/mbtwhydetail`;
+        defaultUrl += `/${alarm.detailMbti}`;
+        defaultUrl += `/${alarm.detailNo}`;
+        defaultUrl += `/1`;
+        navigate(defaultUrl);
+        getNoteListAndAlarmList();
+        break;
+      case "MBTTLE" :
+        getNoteListAndAlarmList();
+        break;
+      case "QUESTION" :
+        getNoteListAndAlarmList();
+        break;
+      case "SWAL" :
+        getNoteListAndAlarmList();
+        break;
+      default:
+    }
   }
   //쪽지 클릭시
-  const goNoteDetail = (e,index,alarm) => {
-
+  const goNoteDetail = (e,no) => {
+    console.log(e);
+    const noteUrl = "/notedetail/" + no;
+    window.open(
+      noteUrl,
+      "_blank",
+      "width=650,height=700,location=no,status=no,scrollbars=yes"
+    );
+    getNoteListAndAlarmList();
   }
   return (
     <div className={style.header}>
@@ -264,9 +305,10 @@ const Header = () => {
                           <div key={index} className={style.alertContentAndCnt}>
                             <div className={style.alertContent} onClick={(e)=>goAlarmDetail(e,index,alert)}>
                             {alert.alarmType === "댓글" ?
-                              `내 게시글의 새 ${alert.alarmType} (${alert.alarmCnt}) `:`새 ${alert.alarmType}가 있습니다`
+                              `내 게시글의 새 ${alert.alarmType}이 있습니다.`:`새 ${alert.alarmType}가 있습니다`
                               }
                             </div>
+                            {alert.alarmType === "댓글" && `(${alert.alarmCnt})`}
                           </div>
                         )
                     )
@@ -335,7 +377,7 @@ const Header = () => {
                       (note, index) =>
                         index < 5 && (
                           <div key={index}>
-                            <div className={style.messageTitle} onClick={(e)=>goNoteDetail(e,index,note)}>
+                            <div className={style.messageTitle} onClick={(e)=>goNoteDetail(e,note.noteNo)}>
                               {`[${note.sentUserNick}]  ${note.noteContent}`}
                             </div>
                           </div>
