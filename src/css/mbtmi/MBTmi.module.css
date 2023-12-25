@@ -35,14 +35,22 @@
     margin-bottom: 40px;
     padding-top: 20px;
 }
-.boardTitleB>span>p:first-child {
+.boardTitleB>.boardTitleTestArea>p:first-child {
     font-size: 25px;
     margin-bottom: 0px;
 } 
-.boardTitleB>span>p+p {
+.boardTitleB>.boardTitleTestArea>p+p {
     font-size: 15px;
     font-weight: 600;
 } 
+.boardTitleImg {
+    position: relative;
+    bottom: 25px;
+}
+.boardTitleB {
+    display: flex;
+    justify-content: space-between;
+}
 
 /* 주간 인기글 제목(링크) */
 .overflow,
@@ -454,6 +462,14 @@
     width: 18px;
     padding-bottom: 5px;
 }
+/* 쪽지보내기 아이콘 */
+.sendNoteIcon {
+    width: 18px;
+    margin-left: 5px;
+    cursor: pointer;
+    position: relative;
+    bottom: 2px;
+}
 
 
 /* 댓글 영역 */
@@ -624,6 +640,7 @@
 }
 .formBtns {
     float: right;
+    margin-top: 70px;
 }
 .formBtns>input {
     font-size: 17px;

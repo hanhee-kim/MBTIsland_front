@@ -46,34 +46,34 @@ const Main = () => {
   ];
 
   // MBattle 최신글 목록 가정 (댓글수를 포함한 List<Dto>)
-  const [mbattleList, setMbattleList] = useState([
-    { no: 11, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-      , writerId: 'react02', writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-    { no: 10, title: "긴제목 mbattle게시판의 더미게시글 제목 긴제목 mbattle게시판의 더미게시글 제목 긴제목 mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-      , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-    { no: 9, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-      , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-    { no: 8, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-      , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-    { no: 7, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-      , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-    { no: 6, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-      , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-    { no: 5, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-      , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-    { no: 4, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-      , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-    { no: 3, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-      , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-    { no: 2, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-      , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-  ]);
+  // const [mbattleList, setMbattleList] = useState([
+  //   { no: 11, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
+  //     , writerId: 'react02', writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
+  //   { no: 10, title: "긴제목 mbattle게시판의 더미게시글 제목 긴제목 mbattle게시판의 더미게시글 제목 긴제목 mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
+  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
+  //   { no: 9, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
+  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
+  //   { no: 8, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
+  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
+  //   { no: 7, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
+  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
+  //   { no: 6, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
+  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
+  //   { no: 5, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
+  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
+  //   { no: 4, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
+  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
+  //   { no: 3, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
+  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
+  //   { no: 2, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
+  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
+  // ]);
 
 
   const navigate = useNavigate();
   const [mbtmiList, setMbtmiList] = useState([]); // mbtmi 최신글목록
   const [mbtwhyList, setMbtwhyList] = useState([]); // mbtwhy 최신글목록
-  // const [mbattleList, setMbattleList] = useState([]); // mbattle 최신글목록
+  const [mbattleList, setMbattleList] = useState([]); // mbattle 최신글목록
 
   // 상대시간(시간차)
   const formatDatetimeGap = (dateString) => {
@@ -101,7 +101,7 @@ const Main = () => {
   useEffect(()=> {
     getMbtmiList();
     getMbtwhyList();
-    // getMbattleList();
+    getMbattleList();
 
   }, []);
 
@@ -118,7 +118,7 @@ const Main = () => {
   const getMbtwhyList = async () => {
     try {
       const response = await axios.get(`${urlroot}/mbtwhy`);
-      console.log('getMbtwhyList 요청결과: ', response);
+      // console.log('getMbtwhyList 요청결과: ', response);
       let mbtwhyList = response.data.mbtwhyList;
       setMbtwhyList([...mbtwhyList]);
     } catch (error) {
@@ -126,14 +126,14 @@ const Main = () => {
     }
   }
   const getMbattleList = async () => {
-    // try {
-    //   const response = await axios.get(`${urlroot}/----`);
-    //   console.log('getMbattleList 요청결과: ', response);
-    //   let mbattleList = response.data.mbtwhyList;
-    //   setMbattleList([...mbattleList]);
-    // } catch (error) {
-    //   console.error('오류내용: ', error);
-    // }
+    try {
+      const response = await axios.get(`${urlroot}/mbattle`);
+      // console.log('getMbattleList 요청결과: ', response);
+      let mbattleList = response.data.mbattleList;
+      setMbattleList([...mbattleList]);
+    } catch (error) {
+      console.error('오류내용: ', error);
+    }
   }
 
   return (
@@ -152,13 +152,13 @@ const Main = () => {
             {/* MB-TMI 최신글 목록 */}
             <Link to={"/mbtmi"}>
               <div className={style.boardTitleB}>
-                <div>
-                <span>
-                  <p>MB-TMI</p>
-                  <p>유형별로 모여 자유롭게 이야기를 나눌 수 있는 공간</p>
-                </span>
-                </div>
-                <img alt="tmi" src={"/tmi.png"} width={"220px"} height={"120px"}></img>
+                  <div className={style.boardTitleTestArea}>
+                      <p>MB-TMI</p>
+                      <p>유형별로 모여 자유롭게 이야기를 나눌 수 있는 공간</p>
+                  </div>
+                  <div>
+                      <img alt="tmi" src={"/tmi.png"} width={"220px"} height={"120px"} className={style.boardTitleImg}></img>
+                  </div>
               </div>
             </Link>
             <div className={style.newlyPosts}>
@@ -188,14 +188,14 @@ const Main = () => {
             {/* MBT-WHY 최신글 목록 */}
             <Link to={"/mbtwhymain"}>
               <div className={style.boardTitleB}>
-                <div>
-                  <span>
-                    <p>MBT-WHY</p>
-                    <p>원하는 MBTI 유형에게 질문을 남겨보세요!</p>
-                  </span>
-                </div>
-                <img alt="why" src={"/why.png"} width={"220px"} height={"120px"} ></img>
-            </div>
+                  <div className={style.boardTitleTestArea}>
+                      <p>MBT-WHY</p>
+                      <p>원하는 MBTI 유형에게 질문을 남겨보세요!</p>
+                  </div>
+                  <div>
+                      <img alt="tmi" src={"/why.png"} width={"220px"} height={"120px"} className={style.boardTitleImg}></img>
+                  </div>
+              </div>
             </Link>
             <div className={style.newlyPosts}>
               <table className={style.table}>
@@ -224,13 +224,13 @@ const Main = () => {
             {/* M-BATTLE 최신글 목록 */}
             <Link to={"/mbattle"}>
               <div className={style.boardTitleB}>
-                <div>
-                  <span>
-                    <p>M-BATTLE</p>
-                    <p>MBTI 유형 별 성향을 알아보세요!</p>
-                  </span>
-                </div>  
-                <img alt="mbattle" src={"/mbattle.png"} width={"220px"} height={"120px"} ></img>
+                  <div className={style.boardTitleTestArea}>
+                      <p>MBT-BATTLE</p>
+                      <p>MBTI 유형 별 성향을 알아보세요!</p>
+                  </div>
+                  <div>
+                      <img alt="battle" src={"/mbattle.png"} width={"220px"} height={"120px"} className={style.boardTitleImg}></img>
+                  </div>
               </div>
             </Link>
             <div className={style.newlyPosts}>
@@ -241,9 +241,7 @@ const Main = () => {
                       <tr key={post.no}>
                         <td>
                           <span className={style.overflowLong}>
-                            {/* App.js에 등록된 파라미터 포함 url로 변경할것 */}
-                            {/* <Link to={`/mbattledetail/${post.no}`}>{post.title}</Link> */}
-                            <Link to={`/mbattledetail`}>{post.title}</Link>
+                            <Link to={`/mbattledetail/${post.no}/1`}>{post.title}</Link>
                           </span>
                           <span>[{post.commentCnt}]</span>
                           <small>{formatDatetimeGap(post.writeDate)}</small>

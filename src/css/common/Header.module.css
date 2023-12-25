@@ -204,4 +204,8 @@
     color: black;
 }
 
+.newAlarm, .newNote {
+    text-decoration: none;
+    color: black;
+}
 

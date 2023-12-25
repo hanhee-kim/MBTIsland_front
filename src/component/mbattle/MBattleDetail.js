@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    ButtonDropdown,
     Popover,
     PopoverBody,
     Button,
@@ -23,9 +19,9 @@ import {
     ResponsiveContainer
 } from 'recharts';
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 import style from "../../css/mbattle/MBattleDetail.module.css";
-import { urlroot } from "../../config";
 
 function MBattleDetail() {
     // 로그인 유저 정보
@@ -42,7 +38,7 @@ function MBattleDetail() {
     const [mbattle, setMbattle] = useState({});
 
     // 글 번호, 댓글 페이지 번호
-    const {no, page} = useParams();
+    const {no} = useParams();
 
     // 댓글 페이지 번호
     const [commentPage, setCommentPage] = useState(1);
@@ -62,16 +58,79 @@ function MBattleDetail() {
     // 댓글 작성 상태값
     const [inputCommentValue, setInputCommentValue] = useState('');
 
-    // 투표 여부
-    const [isVoted, setIsVoted] = useState(false);
-
-    // 투표 정보 (글 번호, 투표자 아이디, 투표 항목)
-    // 투표 시 백으로 보낼 데이터
-    const [vote, setVote] = useState({
+    // 투표 데이터 (글 번호, 투표자 아이디, 투표 항목)
+    const [voter, setVoter] = useState({
         mbattleNo: no,
         voterId: user.username,
         voteItem: ""
     });
+
+    // 투표 결과 데이터 (글 번호, 투표 항목, I, E, S, N, T, F, J, P)
+    // const [result, setResult] = useState({
+    //     mbattleNo: no,
+    //     voteItem: "",
+    //     I: "",
+    //     E: "",
+    //     S: "",
+    //     N: "",
+    //     T: "",
+    //     F: "",
+    //     J: "",
+    //     P: ""
+    // });
+
+    const [voteCnt1, setVoteCnt1] = useState(0);
+
+    const [voteCnt2, setVoteCnt2] = useState(0);
+
+    const [voteData1, setVoteData1] = useState([
+        {
+            name: "1번",
+            투표수: 0,
+        },
+    ]);
+
+    const [voteData2, setVoteData2] = useState([
+        {
+            name: "2번",
+            투표수: 0,
+        },
+    ]);
+
+    const [mbtiData, setMbtiData] = useState([
+        {
+            name: "I",
+            투표수: 0,
+        },
+        {
+            name: "E",
+            투표수: 0,
+        },
+        {
+            name: "S",
+            투표수: 0,
+        },
+        {
+            name: "N",
+            투표수: 0,
+        },
+        {
+            name: "T",
+            투표수: 0,
+        },
+        {
+            name: "F",
+            투표수: 0,
+        },
+        {
+            name: "J",
+            투표수: 0,
+        },
+        {
+            name: "P",
+            투표수: 0,
+        },
+    ]);
 
     // 북마크 여부
     const [isBookmarked, setIsBookmarked] = useState(false);
@@ -84,8 +143,8 @@ function MBattleDetail() {
         boardType: "mbattle"
     });
 
-     // 절대시간
-     const formatDate = (dateString) => {
+    // 절대시간
+    const formatDate = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -127,51 +186,6 @@ function MBattleDetail() {
         }
     };
 
-    const data = [
-        {
-            name: 'Page A',
-            uv: 4000,
-            pv: 2400,
-            amt: 2400,
-        },
-        {
-            name: 'Page B',
-            uv: 3000,
-            pv: 1398,
-            amt: 2210,
-        },
-        {
-            name: 'Page C',
-            uv: 2000,
-            pv: 9800,
-            amt: 2290,
-        },
-        {
-            name: 'Page D',
-            uv: 2780,
-            pv: 3908,
-            amt: 2000,
-        },
-        {
-            name: 'Page E',
-            uv: 1890,
-            pv: 4800,
-            amt: 2181,
-        },
-        {
-            name: 'Page F',
-            uv: 2390,
-            pv: 3800,
-            amt: 2500,
-        },
-        {
-            name: 'Page G',
-            uv: 3490,
-            pv: 4300,
-            amt: 2100,
-        },
-    ];
-
     // 팝오버 바깥 영역 클릭 시 모든 팝오버 닫기
     const clickOutsidePopover = (e) => {
         const popoverElements = document.querySelectorAll(".popover");
@@ -210,26 +224,51 @@ function MBattleDetail() {
 
     // 신고 팝오버 열기
     const openReportWrite = (report, reportedTable) => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            setOpen(!open);
+            return;
+        }
+        
         setOpen(!open);
 
         let reportData = {};
         if(reportedTable === "mbattle") {
-            reportData = {
-                // no:0,
-                reportType: "게시글",
-                tableType: reportedTable,
-                reportedPostNo: report.no,
-                // reportedCommentNo:, // 댓글 아니므로 댓글 번호 없음
-                reportedId: report.writerId,
-                reportedTitle: report.title,
-                reportedContent: report.content,
-                fileIdxs: report.fileIdx1 + "," + report.fileIdx2,
-                reporterId: user.username,
-                // reportDate: "", // 백에서 지정
-                reportReason: "광고", // 신고 창에서 변경 (기본값 광고)
-                isCompleted: "N",
-                isWarned: "N"
-            };
+            if(report.fileIdx1 !== null && report.fileIdx2 !== null) {
+                reportData = {
+                    // no:0,
+                    reportType: "게시글",
+                    tableType: reportedTable,
+                    reportedPostNo: report.no,
+                    // reportedCommentNo:, // 댓글 아니므로 댓글 번호 없음
+                    reportedId: report.writerId,
+                    reportedTitle: report.title,
+                    reportedContent: report.voteItem1 + ", " + report.voteItem2,
+                    fileIdxs: report.fileIdx1 + "," + report.fileIdx2,
+                    reporterId: user.username,
+                    // reportDate: "", // 백에서 지정
+                    reportReason: "광고", // 신고 창에서 변경 (기본값 광고)
+                    isCompleted: "N",
+                    isWarned: "N"
+                };
+            } else {
+                reportData = {
+                    // no:0,
+                    reportType: "게시글",
+                    tableType: reportedTable,
+                    reportedPostNo: report.no,
+                    // reportedCommentNo:, // 댓글 아니므로 댓글 번호 없음
+                    reportedId: report.writerId,
+                    reportedTitle: report.title,
+                    reportedContent: report.voteItem1 + ", " + report.voteItem2,
+                    // fileIdxs: report.fileIdx1 + "," + report.fileIdx2,
+                    reporterId: user.username,
+                    // reportDate: "", // 백에서 지정
+                    reportReason: "광고", // 신고 창에서 변경 (기본값 광고)
+                    isCompleted: "N",
+                    isWarned: "N"
+                };
+            }
         } else if(reportedTable === "mbattlecomment") {
             reportData = {
                 // no:0,
@@ -266,17 +305,117 @@ function MBattleDetail() {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
+            // 게시글
             let mbattle = res.data.mbattle;
+            // 투표 여부
             let mbattleVoter = res.data.mbattleVoter;
+            // 북마크 여부
             let isMbattleBookmarked = res.data.isMbattleBookmarked;
+            // 항목1 투표 결과
+            let mbattleResult1 = res.data.mbattleResult1;
+            // 항목2 투표 결과
+            let mbattleResult2 = res.data.mbattleResult2;
+
+            console.log(mbattle);
+            console.log(mbattleVoter);
+            console.log(isMbattleBookmarked);
+            console.log(mbattleResult1);
+            console.log(mbattleResult2);
+
+            if(mbattleResult1!==null) {
+                setVoteData1([
+                    {
+                        name: "1번",
+                        투표수: mbattleResult1.voteCnt,
+                    }
+                ]);
+
+                setVoteCnt1(mbattleResult1.voteCnt);
+            }
+
+            if(mbattleResult2!==null) {
+                setVoteData2([
+                    {
+                        name: "2번",
+                        투표수: mbattleResult2.voteCnt,
+                    }
+                ]);
+                setVoteCnt2(mbattleResult2.voteCnt);
+            }
+
+            // data mbti 결과
+            let I = 0;
+            let E = 0;
+            let S = 0;
+            let N = 0;
+            let T = 0;
+            let F = 0;
+            let J = 0;
+            let P = 0;
+
+            if(mbattleResult1!==null) {
+                I += mbattleResult1.i;
+                E += mbattleResult1.e;
+                S += mbattleResult1.s;
+                N += mbattleResult1.n;
+                T += mbattleResult1.t;
+                F += mbattleResult1.f;
+                J += mbattleResult1.j;
+                P += mbattleResult1.p;
+            }
+
+            if(mbattleResult2!==null) {
+                I += mbattleResult2.i;
+                E += mbattleResult2.e;
+                S += mbattleResult2.s;
+                N += mbattleResult2.n;
+                T += mbattleResult2.t;
+                F += mbattleResult2.f;
+                J += mbattleResult2.j;
+                P += mbattleResult2.p;
+            }
+
+            setMbtiData([
+                {
+                    name: "I",
+                    투표수: I,
+                },
+                {
+                    name: "E",
+                    투표수: E,
+                },
+                {
+                    name: "S",
+                    투표수: S,
+                },
+                {
+                    name: "N",
+                    투표수: N,
+                },
+                {
+                    name: "T",
+                    투표수: T,
+                },
+                {
+                    name: "F",
+                    투표수: F,
+                },
+                {
+                    name: "J",
+                    투표수: J,
+                },
+                {
+                    name: "P",
+                    투표수: P,
+                },
+            ]);
 
             // 게시글 set
             setMbattle(mbattle);
 
-            // 로그인한 유저에게 투표되어 있다면 (투표 데이터 존재한다면)
+            // 로그인한 유저가 이미 투표했다면 (투표 데이터에 존재한다면)
             if(mbattleVoter!==null) {
-                setIsVoted(!isVoted);
+                setVoter(mbattleVoter);
             }
 
             if(isMbattleBookmarked) {
@@ -318,6 +457,11 @@ function MBattleDetail() {
 
     // 게시글 삭제
     const mbattleDelete = () => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+        
         const isConfirmed = window.confirm("게시글을 삭제하시겠습니까?");
         if(isConfirmed) {
             axios.delete(`${urlroot}/mbattledelete/${no}`)
@@ -332,10 +476,28 @@ function MBattleDetail() {
         setOpen(false);
     };
 
-    // 게시글 수정
-    const goMbattleModify = () => {
-        navigate(`/mbattlemodify/${no}`);
-    };
+    // 투표
+    const voteItem = (vote) => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+
+        // let defaultUrl = `${urlroot}/mbattlevote/${no}/${vote}/${user.username}/${user.userMbti}`
+        let defaultUrl = `${urlroot}/mbattlevote/${user.userMbti}/${vote}`
+        console.log("ㅋ");
+        axios.post(defaultUrl, voter)
+        .then(res=> {
+            let mbattleResult = res.data.mbattleResult;
+            
+            // setResult({...result, mbattleResult});
+            setVoter({...voter, voteItem:vote});
+            getMbattleDetail();
+        })
+        .catch(err=> {
+            console.log(err);
+        })
+    }
 
     // 댓글 목록 조회
     const getMbattleCommentList = (commentPage) => {
@@ -372,6 +534,12 @@ function MBattleDetail() {
 
     // 댓글 작성
     const postComment = (commentValue) => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            setInputCommentValue("");
+            return;
+        }
+
         let defaultUrl = `${urlroot}/mbattlecomment?no=${no}&comment=${commentValue}`;
 
         axios.post(defaultUrl, sendUser)
@@ -405,11 +573,6 @@ function MBattleDetail() {
         setOpen(false);
     };
 
-    // 랜덤 mbattleDetail 이동 
-    const goRandomMbattleDetail = (e) => {
-
-    };
-
     // commentPage 핸들링
     const handleCommentPageNo = (commentPageNo) => {
         setCommentPage(commentPageNo);
@@ -422,7 +585,7 @@ function MBattleDetail() {
 
     // 목록 이동
     const goToPreviousList = () => {
-        // let defaultUrl = `/mbtwhy`;
+        // let defaultUrl = `/mbattle`;
         // if(mbti !== null) defaultUrl += `/${mbti}`;
         // if(page !== null) defaultUrl += `/${page}`;
         // if(sort !== null) defaultUrl += `/${sort}`;
@@ -433,6 +596,21 @@ function MBattleDetail() {
         // 뒤로가기
         // store에 Mbtwhy 페이징, 검색, 정렬값 저장하여 목록으로 돌아갈 때 사용하기
         navigate("/mbattle");
+    };
+
+    // 랜덤 mbattleDetail 이동 
+    const goRandomMbattleDetail = (e) => {
+        let randomNo = 0;
+        axios.get(`${urlroot}/mbattlerandom`)
+        .then(res=> {
+            randomNo = res.data.randomNo;
+            navigate(`/mbattledetail/${randomNo}`);
+            navigate(0);
+            console.log(randomNo);
+        })
+        .catch(err=> {
+            console.log(err);
+        });
     };
 
     // 페이지네이션
@@ -514,6 +692,99 @@ function MBattleDetail() {
         );
     };
 
+    // 결과 통계 컴포넌트
+    const Result = () => {
+        return(
+            <div className={style.sectionResult}>
+                <div className={style.widthGraph}>
+                    <div className={style.voteResultText}>
+                        <div>1.{mbattle.voteItem1}</div>
+                        <div>{voteCnt1}명 투표</div>
+                    </div>
+                    <div style={{width:"600px", height:"100px"}}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart width={600} height={400} data={voteData1} layout="vertical">
+                                {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                                {/* <XAxis dataKey="name" /> */}
+                                <YAxis type="category" dataKey="name" />
+                                <Tooltip />
+                                {/* <Legend /> */}
+                                <Bar dataKey="투표수" fill="#FF6D6D" background={{ fill: '#eee' }} barSize={50} stroke="#000" strokeWidth={1}/>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                <div className={style.widthGraph}>
+                    <div className={style.voteResultText}>
+                        <div>2.{mbattle.voteItem2}</div>
+                        <div>{voteCnt2}명 투표</div>
+                    </div>
+                    <div style={{width:"600px", height:"100px"}}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart width={600} height={400} data={voteData2} layout="vertical">
+                                {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                                {/* <XAxis dataKey="name" /> */}
+                                <YAxis type="category" dataKey="name" />
+                                <Tooltip />
+                                {/* <Legend /> */}
+                                <Bar dataKey="투표수" fill="#7EBAFF" background={{ fill: '#eee' }} barSize={50} stroke="#000" strokeWidth={1}/>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+                
+
+                <div className={style.heightGraph} style={{width:"600px", height:"400px"}}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                            data={mbtiData}
+                            margin={{
+                                top: 5,
+                                right: 30,
+                                left: 20,
+                                bottom: 5
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="투표수" fill="#82ca9d" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+                            {/* <Bar dataKey="E" fill="blue" activeBar={<Rectangle fill="gold" stroke="purple" />} /> */}
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+                {/* <div style={{width:"600px", height:"400px"}}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart width={150} height={40} data={data} layout="vertical">
+                            <YAxis/>
+                            <Bar dataKey="uv" fill="#8884d8" background={{ fill: '#eee' }}/>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+
+                <div>
+                    <BarChart
+                        width={430}
+                        height={170}
+                        data={data}
+                        layout="vertical">
+                        <XAxis type="number" orientation="top"/>
+                        <YAxis type="category" dataKey="currency" axisLine={false} dx={-5} tickLine={false} 
+                            style={{ fill: "#285A64" }} />
+                        <Bar background dataKey="uv" fill="#285A64" barSize={{ height: 300 }}>
+                            
+                        </Bar>
+                    </BarChart>
+                </div> */}
+
+                
+            </div>
+        )
+    };
+
     const buttonStyle = {
         background:"none",
         color:"black",
@@ -556,24 +827,16 @@ function MBattleDetail() {
                         <div className={style.boardTitle}>
                             <h1>{mbattle.title}</h1>
                             <div> 
-                                <img src="/randomIcon.png" height="30px" alt="" onClick={()=>goRandomMbattleDetail()} />
-                                {user.username !== ""?
-                                    <React.Fragment>
-                                        <button onClick={()=>setOpen(!open)} id="Popover1" className={style.popoverButton}><img className={style.popoverImg} src="/popover-icon.png" alt=""/></button>
-                                        <Popover placement="bottom" isOpen={open} name="mbattle" target="Popover1" toggle={()=>handleToggle()}>
-                                            {mbattle.writerId === user.username?
-                                                <React.Fragment>
-                                                    <PopoverBody className={style.popoverItem} onClick={()=>mbattleDelete()}>삭제</PopoverBody>
-                                                </React.Fragment>
-                                                :(user.username !== ""?
-                                                    <PopoverBody className={style.popoverItem} onClick={()=>openReportWrite(mbattle, "mbattle")}>신고</PopoverBody>
-                                                    :<></>
-                                                )
-                                            }
-                                        </Popover>
-                                    </React.Fragment>
-                                :<></>
-                                }
+                                <img className={style.randomIcon} src="/randomIcon.png" height="30px" alt="" onClick={()=>goRandomMbattleDetail()} />
+                                <button onClick={()=>setOpen(!open)} id="Popover1" className={style.popoverButton}><img className={style.popoverImg} src="/popover-icon.png" alt=""/></button>
+                                <Popover placement="bottom" isOpen={open} name="mbattle" target="Popover1" toggle={()=>handleToggle()}>
+                                    {mbattle.writerId === user.username?
+                                        <React.Fragment>
+                                            <PopoverBody className={style.popoverItem} onClick={()=>mbattleDelete()}>삭제</PopoverBody>
+                                        </React.Fragment>
+                                        :<PopoverBody className={style.popoverItem} onClick={()=>openReportWrite(mbattle, "mbattle")}>신고</PopoverBody>
+                                    }
+                                </Popover>
                             </div>
                         </div>
                         <div className={style.writerDiv}>
@@ -582,9 +845,12 @@ function MBattleDetail() {
                             {mbattle.writerId}
                         </div>
                         <div style={{color:"#C5C5C5"}}>
-                            {mbattle.writeDate}
+                            {formatDatetimeGap(mbattle.writeDate)}
                             <img className={style.viewIcon} src="/viewIcon-bold.png" alt=""></img>
                             {mbattle.viewCnt}
+                        </div>&nbsp;&nbsp;&nbsp;
+                        <div className={style.boardVotedCount}>
+                            {mbattle.voteCnt}명 투표
                         </div>
 
                         {/* 투표 영역 */}
@@ -596,91 +862,68 @@ function MBattleDetail() {
                                             <img src={`${urlroot}/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
                                             <h4>{mbattle.voteItem1}</h4>
                                         </React.Fragment>
-                                        :<div className={style.voteItemDiv}><h4>{mbattle.voteItem1}</h4></div>
+                                        :<div className={style.voteItemDiv}><h5>{mbattle.voteItem1}</h5></div>
                                     }
                                 </div>
-                                {user.userRole === "ROLE_USER"?
+                                {voter.voteItem===""?
                                     <div className={style.voteButtonDiv}>
-                                        <Button style={boardVoteButton}>투표하기</Button>
+                                        <Button style={boardVoteButton} onClick={()=>voteItem(1)}>투표하기</Button>
                                     </div>
-                                    :<></>
+                                    :(voter.voteItem===1?
+                                        <div className={style.voteButtonDiv}>
+                                            <Button style={boardVoteButton} onClick={()=>alert("이미 투표하셨습니다.")}>투표완료</Button>
+                                        </div>
+                                        :<></>
+                                    )
                                 }
+                                {/* {voter.voterId===user.username && voter.voteItem===1?
+                                    <div className={style.voteButtonDiv}>
+                                        <Button style={boardVoteButton}>투표완료</Button>
+                                    </div>
+                                    :<div className={style.voteButtonDiv}>
+                                        <Button style={boardVoteButton} onClick={()=>voteItem(1)}>투표하기</Button>
+                                    </div>
+                                } */}
                             </div>
                             <div style={{margin:"30px"}}>
                                 <img src="/vsIcon.png" alt=""/>
                             </div>
-                            <div>
+                            <div style={{minHeight:"344px"}}>
                                 <div className={style.subject}>
                                     {mbattle.fileIdx2!==null?
                                         <React.Fragment>
                                             <img src={`${urlroot}/mbattleimg/${mbattle.fileIdx2}`} alt=''/>
                                             <h4>{mbattle.voteItem2}</h4>
                                         </React.Fragment>
-                                        :<div className={style.voteItemDiv}><h4>{mbattle.voteItem2}</h4></div>
+                                        :<div className={style.voteItemDiv}><h5>{mbattle.voteItem2}</h5></div>
                                     }
                                     <div>
                                     </div>
                                 </div>
-                                <div className={style.voteButtonDiv}>
-                                    <Button style={boardVoteButton}>투표하기</Button>
-                                </div>
+                                {voter.voteItem===""?
+                                    <div className={style.voteButtonDiv}>
+                                        <Button style={boardVoteButton} onClick={()=>voteItem(2)}>투표하기</Button>
+                                    </div>
+                                    :(voter.voteItem===2?
+                                        <div className={style.voteButtonDiv}>
+                                            <Button style={boardVoteButton} onClick={()=>alert("이미 투표하셨습니다.")}>투표완료</Button>
+                                        </div>
+                                        :<></>
+                                    )
+                                }
+                                {/* {voter.voterId===user.username && voter.voteItem===2?
+                                    <div className={style.voteButtonDiv}>
+                                        <Button style={boardVoteButton}>투표완료</Button>
+                                    </div>
+                                    :<div className={style.voteButtonDiv}>
+                                        <Button style={boardVoteButton} onClick={()=>voteItem(2)}>투표하기</Button>
+                                    </div>
+                                } */}
                             </div>
                         </div>
 
                         {/* 통계 영역 */}
-                        <div style={{width:"600px", height:"400px"}}>
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart
-                                    data={data}
-                                    margin={{
-                                        top: 5,
-                                        right: 30,
-                                        left: 20,
-                                        bottom: 5
-                                    }}
-                                >
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Bar dataKey="uv" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
-                                <Bar dataKey="pv" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                        <div style={{width:"600px", height:"400px"}}>
-                            <ResponsiveContainer>
-                                <BarChart data={data} layout="vertical">
-                                    <YAxis type="name"/>
-                                    <XAxis type="number" orientation="top" stroke="#285A64"/>
-                                    <Bar dataKey="uv" fill="#8884d8" background={{ fill: '#eee' }} barSize={{height:"10px"}}/>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                        <div style={{width:"600px", height:"400px"}}>
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart width={150} height={40} data={data} layout="vertical">
-                                    <YAxis/>
-                                    <Bar dataKey="uv" fill="#8884d8" background={{ fill: '#eee' }}/>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-
-                        <div>
-                            <BarChart
-                                width={430}
-                                height={170}
-                                data={data}
-                                layout="vertical">
-                                <XAxis type="number" orientation="top"/>
-                                <YAxis type="category" dataKey="currency" axisLine={false} dx={-5} tickLine={false} 
-                                    style={{ fill: "#285A64" }} />
-                                <Bar background dataKey="uv" fill="#285A64" barSize={{ height: 300 }}>
-                                    
-                                </Bar>
-                            </BarChart>
-                        </div>
+                        {voter.voteItem && <Result />}
 
                         <div className={style.boardLow}>
                             <div className={style.bookmarkDiv} onClick={()=>mbattleBookmark()}>
@@ -727,25 +970,23 @@ function MBattleDetail() {
                     {comments.length===0?<></>:<PaginationInside/>}
 
                     {/* 댓글 달기 */}
-                    {user.userRole === "ROLE_USER"?
-                        <div>
-                            <Input
-                                style={inputComment}
-                                type="textarea"
-                                id="comment"
-                                name="comment"
-                                onChange={commentChange}
-                                cols="40"
-                                rows="15"
-                                required="required"
-                                value={inputCommentValue}
-                                placeholder="댓글을 입력해주세요."
-                            />
-                            <div className={style.postCommentDiv}>
-                                <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue, "")}>등록</Button>
-                            </div>
+                    <div>
+                        <Input
+                            style={inputComment}
+                            type="textarea"
+                            id="comment"
+                            name="comment"
+                            onChange={commentChange}
+                            cols="40"
+                            rows="15"
+                            required="required"
+                            value={inputCommentValue}
+                            placeholder="댓글을 입력해주세요."
+                        />
+                        <div className={style.postCommentDiv}>
+                            <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue, "")}>등록</Button>
                         </div>
-                    :<></>}
+                    </div>
 
                 </div>
                 {/* 댓글 영역 */}

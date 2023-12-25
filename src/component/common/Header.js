@@ -254,6 +254,16 @@ const Header = () => {
               />
             </Link>
           </li>
+          
+          <li
+            className={
+              uri.includes("/mbtmi")
+                ? `${style.navItem} ${style.currentBoard}`
+                : style.navItem
+            }
+          >
+            <Link to={"/mbtmi"}>MB-TMI</Link>
+          </li>
           <li
             className={
               uri.includes("/mbtwhy")
@@ -271,15 +281,6 @@ const Header = () => {
             }
           >
             <Link to={"/mbattle"}>M-BATTLE</Link>
-          </li>
-          <li
-            className={
-              uri.includes("/mbtmi")
-                ? `${style.navItem} ${style.currentBoard}`
-                : style.navItem
-            }
-          >
-            <Link to={"/mbtmi"}>MB-TMI</Link>
           </li>
         </div>
 
@@ -328,7 +329,7 @@ const Header = () => {
                   {/* 미확인 알림 수 표시 */}
                   <Link to={"/mypage/alarm"} className={style.popoverLink}>
                     <div className={style.popoverTopArea}>
-                      <span>새로운 알림 ({alarmCnt})</span>&nbsp;
+                      <span className={style.newAlarm}>새로운 알림 ({alarmCnt})</span>&nbsp;
                       <span>&gt;</span>
                     </div>
                   </Link>
@@ -402,7 +403,7 @@ const Header = () => {
                   {/* 읽지 않은 쪽지 수 표시 */}
                   <Link to={"/mypage/note"} className={style.popoverLink}>
                     <div className={style.popoverTopArea}>
-                      <span>새로운 쪽지 ({noteCnt})</span>&nbsp;
+                      <span className={style.newNote}>새로운 쪽지 ({noteCnt})</span>&nbsp;
                       <span>&gt;</span>
                     </div>
                   </Link>

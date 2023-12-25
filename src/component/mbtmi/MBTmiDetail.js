@@ -1,4 +1,4 @@
-import { Button, Input, Popover, PopoverBody, Table } from "reactstrap";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Popover, PopoverBody, Table } from "reactstrap";
 import style from "../../css/mbtmi/MBTmi.module.css";
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -175,6 +175,9 @@ const MBTmiDetail = () => {
             let isRecommended = res.data.isMbtmiRecommend;
             let isBookmarked = res.data.isMbtmiBookmark;
 
+            // 이미지 출력 관련 처리 추가
+            mbtmi.content = replaceImagePlaceholders(mbtmi.content);
+
             setMbtmi(mbtmi);
             setMbtmiCommentCnt(mbtmiCommentCnt);
             setRecommendCount(recommendCnt);
@@ -189,6 +192,13 @@ const MBTmiDetail = () => {
             setMbtmiCommentCnt(0);
         });
     }
+
+    // 이미지 출력 관련 처리 추가
+    const replaceImagePlaceholders = (content) => {
+        return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
+            return `<img src="http://localhost:8090/mbtmiimg/${fileIdx}" alt=''/>`;
+        });
+    };
 
     const getMbtmiCommentList = (commentPageParam) => {
         let defaultUrl = `${urlroot}/mbtmicommentlist/${no}`;
@@ -210,8 +220,9 @@ const MBTmiDetail = () => {
         });
     }
 
-    const [open,setOpen]=useState(false);
+
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
+    const [open,setOpen]=useState(false);
     useEffect(() => {
         const clickOutsidePopover = (event) => {
             const popoverElements = document.querySelectorAll(".popover");
@@ -245,6 +256,7 @@ const MBTmiDetail = () => {
     // 수정 버튼 클릭시
     const modifyMbtmi = (no) => {
         // console.log('수정할 게시글번호: ', no);
+        setOpen(false);
         navigate(`/mbtmiform/${no}`)
     };
 
@@ -378,6 +390,22 @@ const MBTmiDetail = () => {
         );
     };
 
+    // 쪽지보내기 아이콘 클릭시(게시글, Comment, Reply)
+    const sendNote = (receiveUsername, receiveNickname) => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+
+        const url = `/notewrite/${receiveUsername}/${receiveNickname}`; // 받을 유저
+
+        window.open(
+            url,
+            "_blank",
+            "width=650,height=450,location=no,status=no,scrollbars=yes"
+        );
+    }
+
 
     // 목록으로 가기 버튼
     const navigate = useNavigate();
@@ -419,9 +447,8 @@ const MBTmiDetail = () => {
     }
 
 
-
     // 1차댓글
-    const Comment = ({comment}) => {
+    const Comment = ({comment, index}) => {
         const isLoginUserComment = comment?.writerId === user.username;
         const isPostWriterComment = comment?.writerId === mbtmi?.writerId; // comment가 null 또는 undefined이 아닌 경우에만 writerId 속성 값을 읽도록하여  Uncaught runtime errors런타임에러 방지
         const isRemovedOrBlockedComment = comment?.isRemoved === 'Y' || comment?.isBlocked === 'Y';
@@ -447,7 +474,9 @@ const MBTmiDetail = () => {
                             <div className={style.commentProfileColor} style={{ background: comment.writerMbtiColor, borderColor: comment.writerMbtiColor }}/>
                             <span>{comment.writerMbti} {comment.writerNickname}</span>
                             {isPostWriterComment && <span className={style.isPostWriterComment}>작성자</span>}
+                            {!isLoginUserComment && <img src={"/sendNoteIcon.png" } alt="쪽지보내기" className={style.sendNoteIcon} onClick={()=> sendNote(mbtmi.writerId)}/>}
                         </div>
+
                         <div className={`${style.commentTd2row} ${isRemovedOrBlockedComment? style.deletedComment : ''}`} >
                             {comment.isRemoved==='Y'? '삭제된 댓글입니다' : comment.isBlocked==='Y' ? '관리자에 의해 차단된 댓글입니다' : comment.commentContent}
                         </div>
@@ -500,7 +529,9 @@ const MBTmiDetail = () => {
                         <div className={style.commentProfileColor} style={{ background: reply.writerMbtiColor, borderColor: reply.writerMbtiColor }}/>
                         <span>{reply.writerMbti} {reply.writerNickname}</span>
                         {isPostWriterComment && <span className={style.isPostWriterComment}>작성자</span>}
+                        {!isLoginUserComment && <img src={"/sendNoteIcon.png" } alt="쪽지보내기" className={style.sendNoteIcon} onClick={()=> sendNote(mbtmi.writerId)}/>}
                     </div>
+
                     <div className={`${style.commentTd2row} ${isRemovedOrBlockedComment? style.deletedComment : ''}`}>
                         {reply.isRemoved==='Y'? '삭제된 댓글입니다' : reply.isBlocked==='Y' ? '관리자에 의해 차단된 댓글입니다' : reply.commentContent}
                     </div>
@@ -542,6 +573,7 @@ const MBTmiDetail = () => {
                         <img src={"/bookmarkIcon-red.png" } alt="" className={style.bookmarkIcon} onClick={()=>mbtmiBookmark()}/>
                         )}
                     <div className={style.postArea}>
+                        {/* 게시글 수정, 삭제 팝오버 */}
                         <div style={{ display: mbtmi.writerId === user.username ? 'block' : 'none' }}>
                             <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="popover1"/>
                             <Popover  className={style.popover} placement="bottom" isOpen={open} target="popover1" toggle={()=>setOpen(!open)}>
@@ -550,8 +582,13 @@ const MBTmiDetail = () => {
                             </Popover><br/><br/><br/>
                         </div>
                         <h2 className={style.postTitle}>{mbtmi.title}</h2>
-                        <div className={style.profileColor} style={{ background: mbtmi.writerMbtiColor, borderColor: mbtmi.writerMbtiColor }}/>&nbsp;
+
+                        <div className={style.profileColor} style={{ background: mbtmi.writerMbtiColor, borderColor: mbtmi.writerMbtiColor }} />&nbsp;
                         <span>{mbtmi.writerMbti}&nbsp;{mbtmi.writerNickname}</span>
+                        {mbtmi.writerId !== user.username && (
+                        <img src={"/sendNoteIcon.png" } alt="쪽지보내기" className={style.sendNoteIcon} onClick={()=> sendNote(mbtmi.writerId, mbtmi.writerNickname)}/>
+                        )}
+
                         {/* <h6>{formatDate(mbtmi.writeDate)} */}
                         <h6>&nbsp;{formatDatetimeGap(mbtmi.writeDate)}
                             <span><img src={"/viewIcon.png" } alt="조회" className={style.viewIcon} />&nbsp;{mbtmi.viewCnt}</span>
@@ -593,11 +630,11 @@ const MBTmiDetail = () => {
                                 </React.Fragment>))} */}
                         
                         {/* 백엔드 쿼리dsl의 정렬조건으로 no보다 우선시되는 parentcommentNo를 추가하여 화면에 표시될 (중첩)구조로 가져온 리스트를 단순 렌더링 */}
-                        {mbtmiCommentList.map((comment) => (
+                        {mbtmiCommentList.map((comment, index) => (
                             <React.Fragment key={comment.commentNo}>
                                 {/* 1차댓글 or 2차댓글 여부에 따라 서로 다른 컴포넌트로 렌더링 */}
                                 {(comment.parentcommentNo === null && (
-                                <Comment comment={comment} />
+                                <Comment comment={comment} index={index} />
                                 )) || (<Reply reply={comment} />)}
                             </React.Fragment>
                         ))}
