@@ -57,6 +57,12 @@
 .checkbox {
     zoom: 1.5;
 }
+.checkbox + span {
+    margin-left: 5px;
+    position: relative;
+    bottom: 3px;
+}
+
 :root {
     accent-color: black;
 }

@@ -2,7 +2,7 @@ import { Nav, NavItem, NavLink, Table, Input } from "reactstrap";
 import styleFrame from "../../css/admin/AdminFrame.module.css";
 import style from "../../css/admin/AdminNotice.module.css";
 import React, { useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import AdminNav from "./AdminNav";
 import axios from "axios";
 import { urlroot } from "../../config";
@@ -27,6 +27,18 @@ const AdminNotice = () => {
         return `${year}-${month}-${day}`;
     };
     
+    // 내비 바의 '공지사항 목록' 재클릭시 초기상태로 재렌더링하게함
+    const location = useLocation();
+    useEffect(() => {
+        getNoticeList(null, null, 1);
+        setSearch(null);
+        setHidden(null);
+        setPage(1);
+        setPageInfo({});
+        setTmpSearch(null);
+        setActiveFilter(null);
+        setErrorMsg(null);
+    }, [location]);
 
     useEffect(() => {
         getNoticeList(search, hidden, page);
@@ -68,6 +80,7 @@ const AdminNotice = () => {
 
     const handlePageNo = (pageNo) => {
         setPage(pageNo);
+        setCheckItems([]);
         console.log('***클릭된 pageNo:' + pageNo);
         console.log('***변경된 state page값:' + page); // state는 ui보다 한박자 늦다
         console.log('현재 적용되는 필터값: ' + hidden);
@@ -77,6 +90,7 @@ const AdminNotice = () => {
     const handleFilterChange = (hidden) => {
         getNoticeList(search, hidden, 1); // 필터변경시 페이지 리셋, 검색어는 유지해야함
         setActiveFilter(hidden);
+        setCheckItems([]);
     };
     const handleSearchChange = (event) => {
         const searchTerm = event.target.value;
@@ -87,6 +101,7 @@ const AdminNotice = () => {
         setSearch(tmpSearch);
         setHidden(null);
         setActiveFilter(null);
+        setCheckItems([]);
         getNoticeList(tmpSearch, null, 1); // 검색수행시 페이지 리셋, 필터 리셋해야함 
         // cf. setSearch와 setHidden은 비동기적으로 state를 업데이트하기 때문에(즉시 업데이트x) 
         // tmpSearch대신 search, null대신 hidden을 넣으면 업데이트 이전의 state값이 들어가게된다

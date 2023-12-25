@@ -152,7 +152,7 @@ const Main = () => {
             {/* MB-TMI 최신글 목록 */}
             <Link to={"/mbtmi"}>
               <div className={style.boardTitleB}>
-                  <div className={style.boardTitleTestArea}>
+                  <div className={style.boardTitleTextArea}>
                       <p>MB-TMI</p>
                       <p>유형별로 모여 자유롭게 이야기를 나눌 수 있는 공간</p>
                   </div>
@@ -168,14 +168,19 @@ const Main = () => {
                     return (
                       <tr key={post.no}>
                         <td>
-                          <span className={style.overflowLong}>
-                            <Link to={`/mbtmidetail/${post.no}`}>{post.title}</Link>
+                          <span className={style.postTitleAndEtc}>
+                            <span className={style.overflowLong}>
+                              <Link to={`/mbtmidetail/${post.no}`}>{post.title}</Link>
+                            </span>
+                            <span>[{post.commentCnt}]</span>
+                            <small>{formatDatetimeGap(post.writeDate)}</small>
                           </span>
-                          <span>[{post.commentCnt}]</span>
-                          <small>{formatDatetimeGap(post.writeDate)}</small>
-                          <div className={style.profileColor} style={{ background: post.writerMbtiColor, borderColor: post.writerMbtiColor }}/>
-                          <span>
-                            {post.writerMbti}&nbsp;{post.writerNickname}
+
+                          <span className={style.postWriterInfo}>
+                            <div className={style.profileColor} style={{ background: post.writerMbtiColor, borderColor: post.writerMbtiColor }}/>
+                            <span>
+                              {post.writerMbti}&nbsp;{post.writerNickname}
+                            </span>
                           </span>
                         </td>
                       </tr>
@@ -188,7 +193,7 @@ const Main = () => {
             {/* MBT-WHY 최신글 목록 */}
             <Link to={"/mbtwhymain"}>
               <div className={style.boardTitleB}>
-                  <div className={style.boardTitleTestArea}>
+                  <div className={style.boardTitleTextArea}>
                       <p>MBT-WHY</p>
                       <p>원하는 MBTI 유형에게 질문을 남겨보세요!</p>
                   </div>
@@ -204,14 +209,19 @@ const Main = () => {
                     return (
                       <tr key={post.no}>
                         <td>
-                          <span className={style.overflowLong}>
-                            <Link to={`/mbtwhydetail/${post.mbtiCategory}/${post.no}/1`}>{post.content}</Link>
+                          <span className={style.postTitleAndEtc}>
+                            <span className={style.overflowLong}>
+                              <Link to={`/mbtwhydetail/${post.mbtiCategory}/${post.no}/1`}>{post.content}</Link>
+                            </span>
+                            <span>[{post.commentCnt}]</span>
+                            <small>{formatDatetimeGap(post.writeDate)}</small>
                           </span>
-                          <span>[{post.commentCnt}]</span>
-                          <small>{formatDatetimeGap(post.writeDate)}</small>
-                          <div className={style.profileColor} style={{ background: post.writerMbtiColor, borderColor: post.writerMbtiColor }}/>
-                          <span>
-                            {post.writerMbti}&nbsp;{post.writerNickname}
+
+                          <span className={style.postWriterInfo}>
+                            <div className={style.profileColor} style={{ background: post.writerMbtiColor, borderColor: post.writerMbtiColor }}/>
+                            <span>
+                              {post.writerMbti}&nbsp;{post.writerNickname}
+                            </span>
                           </span>
                         </td>
                       </tr>
@@ -224,7 +234,7 @@ const Main = () => {
             {/* M-BATTLE 최신글 목록 */}
             <Link to={"/mbattle"}>
               <div className={style.boardTitleB}>
-                  <div className={style.boardTitleTestArea}>
+                  <div className={style.boardTitleTextArea}>
                       <p>MBT-BATTLE</p>
                       <p>MBTI 유형 별 성향을 알아보세요!</p>
                   </div>
@@ -240,14 +250,19 @@ const Main = () => {
                     return (
                       <tr key={post.no}>
                         <td>
-                          <span className={style.overflowLong}>
-                            <Link to={`/mbattledetail/${post.no}/1`}>{post.title}</Link>
+                          <span className={style.postTitleAndEtc}>
+                            <span className={style.overflowLong}>
+                              <Link to={`/mbattledetail/${post.no}/1`}>{post.title}</Link>
+                            </span>
+                            <span>[{post.commentCnt}]</span>
+                            <small>{formatDatetimeGap(post.writeDate)}</small>
                           </span>
-                          <span>[{post.commentCnt}]</span>
-                          <small>{formatDatetimeGap(post.writeDate)}</small>
-                          <div className={style.profileColor} style={{ background: post.writerMbtiColor, borderColor: post.writerMbtiColor }}/>
-                          <span>
-                            {post.writerMbti}&nbsp;{post.writerNickname}
+
+                          <span className={style.postWriterInfo}>
+                            <div className={style.profileColor} style={{ background: post.writerMbtiColor, borderColor: post.writerMbtiColor }}/>
+                            <span>
+                              {post.writerMbti}&nbsp;{post.writerNickname}
+                            </span>
                           </span>
                         </td>
                       </tr>
