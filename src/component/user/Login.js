@@ -80,7 +80,12 @@ const Login = () => {
     setUser({ ...user, [e.target.name]: e.target.value });
     console.log("user:" + user.username + "  " + user.userPassword);
   };
-
+  //엔터 포커싱
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      login(e); // Enter 키를 눌렀을 때 로그인 함수 호출
+    }
+  }
   const login = (e) => {
     e.preventDefault();
     axios
@@ -155,10 +160,6 @@ const Login = () => {
       });
     }
   };
-  const goKakaoLogin = () => {
-    Location.href = "http://www.naver.com";
-  };
-  const goNaverLogin = () => {};
 
   return (
     <div
@@ -198,6 +199,7 @@ const Login = () => {
               id="userPassword"
               placeholder="PW를 입력하세요."
               onChange={(e) => change(e)}
+              onKeyDown={(e)=>handleKeyPress(e)} // Enter 키 이벤트 처리
             />
           </Col>
         </FormGroup>

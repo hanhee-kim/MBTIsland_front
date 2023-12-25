@@ -23,6 +23,7 @@ const Aside = (props) => {
     { name: "프로필", path: "/mypage/profile" },
     { name: "MBTWHY", path: "/mypage/mbtwhy" },
     { name: "MBTMI", path: "/mypage/mbtmi" },
+    { name: "MBATTLE", path: "/mypage/mbattle" },
     { name: "문의함", path: "/mypage/qna" },
     { name: "북마크", path: "/mypage/bookmark" },
     { name: "알림함", path: "/mypage/alarm" },

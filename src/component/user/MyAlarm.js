@@ -160,19 +160,34 @@ const MyAlarm = () => {
     setFilterChange("타입필터적용");
     getMyAlarmList(user.username, type, page);
   };
+  //tr클릭시 해당알림의 게시글로 이동할때 알림컬럼을 읽음처리
+  const checkAlarm = (no) => {
+    axios
+      .put(`${urlroot}/checkalarm/${no}`)
+      .then((res)=>{
+        console.log(res.data);
+      })
+      .catch((err)=>{
+      })
+  }
   //tr클릭시 해당알림의 게시글로 이동할때
   const goDetail = (e, alarm) => {
     //useNavigate();사용해서
     const no = alarm.detailNo;
+    const mbti = alarm.detailMbti
+    checkAlarm(no);
     switch (alarm.detailType) {
       case "MBTMI":
-        navigate("/mbtmidetail/" + no);
+        navigate("/mbtmidetail/" + no + "/1");
+        // navigate("/mbtmidetail/" + no);
         break;
       case "MBTWHY":
-        navigate("/mbtwhydetail/" + no);
+        navigate("/mbtwhydetail/" + mbti + "/" + no + "/1");
+        // navigate("/mbtwhydetail/" + mbti + "/" + no);
         break;
       case "MBATTLE":
-        navigate("/mbattledetail/" + no);
+        navigate("/mbattledetail/" + no + "/1");
+        // navigate("/mbattledetail/" + no);
         break;
       case "NOTE":
         let noteNo = no;
@@ -190,11 +205,18 @@ const MyAlarm = () => {
           "_blank",
           "width=720,height=780,location=no,status=no,scrollbars=yes"
         );
-
         break;
-      case "SWAL":
+// 쪽지 댓글 경고 제재 문의답글 ( 타입 )
+      case "WARN":
         Swal.fire({
-          title: "",
+          title: alarm.alarmType+"",
+          text: "",
+          icon: "",
+        });
+        break;
+      case "BAN":
+        Swal.fire({
+          title: alarm.alarmType+"",
           text: "",
           icon: "",
         });
