@@ -6,6 +6,7 @@ import {
     Input
 } from "reactstrap";
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 import style from "../../css/mbtwhy/MbtwhyForm.module.css";
 
@@ -75,7 +76,7 @@ function MbtwhyModify() {
 
     // Mbtwhy 게시글 조회
     const getMbtwhy = () => {
-        let defaultUrl = `http://localhost:8090/getmbtwhymodify/${no}`;
+        let defaultUrl = `${urlroot}/getmbtwhymodify/${no}`;
         axios.get(defaultUrl)
         .then(res => {
             let mbtiCategory = res.data.mbtiCategory;
@@ -97,7 +98,7 @@ function MbtwhyModify() {
             return;
         }
 
-        let defaultUrl = `http://localhost:8090/mbtwhymodify/${no}/${content}`;
+        let defaultUrl = `${urlroot}/mbtwhymodify/${no}/${content}`;
         axios.post(defaultUrl)
         .then(res => {
             console.log(res);

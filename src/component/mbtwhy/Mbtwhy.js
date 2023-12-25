@@ -9,6 +9,7 @@ import {
     Popover,
     PopoverBody } from "reactstrap";
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 import style from "../../css/mbtwhy/Mbtwhy.module.css";
 
@@ -96,7 +97,7 @@ function Mbtwhy() {
 
     // mbtwhydetail 이동
     const goMbtwhyDetail = (no) => {
-        let defaultUrl = `/mbtwhydetail/${mbti}/${no}/1`;
+        let defaultUrl = `/mbtwhydetail/${no}/${mbti}`;
 
         navigate(defaultUrl);
     }
@@ -112,11 +113,11 @@ function Mbtwhy() {
         if(mbti !== null) defaultUrl += `/${mbti}`;
         
         navigate(defaultUrl);
-    }
+    };
     
     // 게시글 목록 조회
     const getMbtwhyList = (page, search, sort) => {
-        let defaultUrl = `http://localhost:8090/mbtwhy?mbti=${mbti}&page=${page}`;
+        let defaultUrl = `${urlroot}/mbtwhy?mbti=${mbti}&page=${page}`;
         if(search !== "") defaultUrl += `&search=${search}`;
         if(sort !== "") defaultUrl += `&sort=${sort}`;
 
@@ -136,9 +137,9 @@ function Mbtwhy() {
         })
         .catch(err=> {
             console.log(err);
-            setMbtwhyList([]);
-            setHotMbtwhy({});
-            setPageInfo({});
+            // setMbtwhyList([]);
+            // setHotMbtwhy({});
+            // setPageInfo({});
             // setMbtwhyCnt(0);
         })
     };
@@ -173,7 +174,7 @@ function Mbtwhy() {
 
         setMbtiColorTo();
         setPage(1);
-        setSearch("")
+        setSearch("");
         setSort("최신순");
         getMbtwhyList(1, "", "최신순");
     }, [mbti]);

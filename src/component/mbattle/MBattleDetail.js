@@ -19,6 +19,7 @@ import {
     ResponsiveContainer
 } from 'recharts';
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 import style from "../../css/mbattle/MBattleDetail.module.css";
 
@@ -37,7 +38,7 @@ function MBattleDetail() {
     const [mbattle, setMbattle] = useState({});
 
     // 글 번호, 댓글 페이지 번호
-    const {no, page} = useParams();
+    const {no} = useParams();
 
     // 댓글 페이지 번호
     const [commentPage, setCommentPage] = useState(1);
@@ -142,8 +143,8 @@ function MBattleDetail() {
         boardType: "mbattle"
     });
 
-     // 절대시간
-     const formatDate = (dateString) => {
+    // 절대시간
+    const formatDate = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -233,22 +234,41 @@ function MBattleDetail() {
 
         let reportData = {};
         if(reportedTable === "mbattle") {
-            reportData = {
-                // no:0,
-                reportType: "게시글",
-                tableType: reportedTable,
-                reportedPostNo: report.no,
-                // reportedCommentNo:, // 댓글 아니므로 댓글 번호 없음
-                reportedId: report.writerId,
-                reportedTitle: report.title,
-                reportedContent: report.content,
-                fileIdxs: report.fileIdx1 + "," + report.fileIdx2,
-                reporterId: user.username,
-                // reportDate: "", // 백에서 지정
-                reportReason: "광고", // 신고 창에서 변경 (기본값 광고)
-                isCompleted: "N",
-                isWarned: "N"
-            };
+            if(report.fileIdx1 !== null && report.fileIdx2 !== null) {
+                reportData = {
+                    // no:0,
+                    reportType: "게시글",
+                    tableType: reportedTable,
+                    reportedPostNo: report.no,
+                    // reportedCommentNo:, // 댓글 아니므로 댓글 번호 없음
+                    reportedId: report.writerId,
+                    reportedTitle: report.title,
+                    reportedContent: report.voteItem1 + ", " + report.voteItem2,
+                    fileIdxs: report.fileIdx1 + "," + report.fileIdx2,
+                    reporterId: user.username,
+                    // reportDate: "", // 백에서 지정
+                    reportReason: "광고", // 신고 창에서 변경 (기본값 광고)
+                    isCompleted: "N",
+                    isWarned: "N"
+                };
+            } else {
+                reportData = {
+                    // no:0,
+                    reportType: "게시글",
+                    tableType: reportedTable,
+                    reportedPostNo: report.no,
+                    // reportedCommentNo:, // 댓글 아니므로 댓글 번호 없음
+                    reportedId: report.writerId,
+                    reportedTitle: report.title,
+                    reportedContent: report.voteItem1 + ", " + report.voteItem2,
+                    // fileIdxs: report.fileIdx1 + "," + report.fileIdx2,
+                    reporterId: user.username,
+                    // reportDate: "", // 백에서 지정
+                    reportReason: "광고", // 신고 창에서 변경 (기본값 광고)
+                    isCompleted: "N",
+                    isWarned: "N"
+                };
+            }
         } else if(reportedTable === "mbattlecomment") {
             reportData = {
                 // no:0,
@@ -280,7 +300,7 @@ function MBattleDetail() {
 
     // url에 파라미터로 줄 변수 repage
     const getMbattleDetail = () => {
-        let defaultUrl = `http://localhost:8090/mbattledetail/${no}`;
+        let defaultUrl = `${urlroot}/mbattledetail/${no}`;
         defaultUrl += `?username=${user.username}`;
 
         axios.get(defaultUrl)
@@ -427,7 +447,7 @@ function MBattleDetail() {
             return;
         }
 
-        let defaultUrl = `http://localhost:8090/mbattlebookmark`;
+        let defaultUrl = `${urlroot}/mbattlebookmark`;
 
         axios.post(defaultUrl, bookmark)
         .then(res=> {
@@ -444,7 +464,7 @@ function MBattleDetail() {
         
         const isConfirmed = window.confirm("게시글을 삭제하시겠습니까?");
         if(isConfirmed) {
-            axios.delete(`http://localhost:8090/mbattledelete/${no}`)
+            axios.delete(`${urlroot}/mbattledelete/${no}`)
             .then(res => {
                 alert('완료되었습니다.');
                 goToPreviousList();
@@ -463,8 +483,8 @@ function MBattleDetail() {
             return;
         }
 
-        // let defaultUrl = `http://localhost:8090/mbattlevote/${no}/${vote}/${user.username}/${user.userMbti}`
-        let defaultUrl = `http://localhost:8090/mbattlevote/${user.userMbti}/${vote}`
+        // let defaultUrl = `${urlroot}/mbattlevote/${no}/${vote}/${user.username}/${user.userMbti}`
+        let defaultUrl = `${urlroot}/mbattlevote/${user.userMbti}/${vote}`
         console.log("ㅋ");
         axios.post(defaultUrl, voter)
         .then(res=> {
@@ -481,7 +501,7 @@ function MBattleDetail() {
 
     // 댓글 목록 조회
     const getMbattleCommentList = (commentPage) => {
-        let defaultUrl = `http://localhost:8090/mbattlecommentlist/${no}`;
+        let defaultUrl = `${urlroot}/mbattlecommentlist/${no}`;
         if(commentPage !== 1) defaultUrl += `?commentPage=${commentPage}`; 
         
         axios.get(defaultUrl)
@@ -520,7 +540,7 @@ function MBattleDetail() {
             return;
         }
 
-        let defaultUrl = `http://localhost:8090/mbattlecomment?no=${no}&comment=${commentValue}`;
+        let defaultUrl = `${urlroot}/mbattlecomment?no=${no}&comment=${commentValue}`;
 
         axios.post(defaultUrl, sendUser)
         .then(res=> {
@@ -537,7 +557,7 @@ function MBattleDetail() {
     const commentDelete = (commentNo) => {
         const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
         if(isConfirmed) {
-            axios.get(`http://localhost:8090/mbattlecommentdelete/${commentNo}`)
+            axios.get(`${urlroot}/mbattlecommentdelete/${commentNo}`)
             .then(res => {
                 console.log(res);
                 alert('완료되었습니다.');
@@ -581,10 +601,10 @@ function MBattleDetail() {
     // 랜덤 mbattleDetail 이동 
     const goRandomMbattleDetail = (e) => {
         let randomNo = 0;
-        axios.get("http://localhost:8090/mbattlerandom")
+        axios.get(`${urlroot}/mbattlerandom`)
         .then(res=> {
             randomNo = res.data.randomNo;
-            navigate(`/mbattledetail/${randomNo}/1`);
+            navigate(`/mbattledetail/${randomNo}`);
             navigate(0);
             console.log(randomNo);
         })
@@ -839,7 +859,7 @@ function MBattleDetail() {
                                 <div className={style.subject}>
                                     {mbattle.fileIdx1!==null?
                                         <React.Fragment>
-                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
+                                            <img src={`${urlroot}/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
                                             <h4>{mbattle.voteItem1}</h4>
                                         </React.Fragment>
                                         :<div className={style.voteItemDiv}><h5>{mbattle.voteItem1}</h5></div>
@@ -872,7 +892,7 @@ function MBattleDetail() {
                                 <div className={style.subject}>
                                     {mbattle.fileIdx2!==null?
                                         <React.Fragment>
-                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx2}`} alt=''/>
+                                            <img src={`${urlroot}/mbattleimg/${mbattle.fileIdx2}`} alt=''/>
                                             <h4>{mbattle.voteItem2}</h4>
                                         </React.Fragment>
                                         :<div className={style.voteItemDiv}><h5>{mbattle.voteItem2}</h5></div>

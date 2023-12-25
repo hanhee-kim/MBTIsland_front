@@ -9,13 +9,12 @@ import {
     Pagination,
     PaginationItem,
     PaginationLink } from "reactstrap";
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 import styleFrame from "../../css/admin/AdminFrame.module.css";
 import style from "../../css/admin/AdminReport.module.css";
-import React from "react";
-import {Link} from "react-router-dom";
 import AdminNav from "./AdminNav";
+import { urlroot } from "../../config";
 
 const AdminBan = () => {
     const [boards, setBoards] = useState([
@@ -136,7 +135,7 @@ const AdminBan = () => {
     // url에 파라미터로 줄 변수 repage
     const reqBoardList = (repage) => {
         // if(!repage) repage = 1;
-        axios.get(`http://localhost:8090/adminban/${repage}`)
+        axios.get(`${urlroot}/adminban/${repage}`)
         .then(res=> {
             console.log(res);
             let pageInfo = res.data.pageInfo;
@@ -168,7 +167,7 @@ const AdminBan = () => {
             return;
         }
 
-        axios.get(`http://localhost:8090/boardsearch/${repage}/${id}`)
+        axios.get(`${urlroot}/boardsearch/${repage}/${id}`)
         .then(res=> {
             console.log(res);
 

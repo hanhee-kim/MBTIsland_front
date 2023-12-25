@@ -1,6 +1,6 @@
 import { Table } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { useSelector } from "react-redux"
 
 import style from "../../css/mbtwhy/MbtwhyMain.module.css"
 
@@ -70,7 +70,7 @@ function MbtwhyMain() {
                             <td style={{...cardStyle, backgroundColor:"#D8927A"}} onClick={()=>goMbtwhy("estp")}><h1>ESTP</h1></td>
                             <td style={{...cardStyle, backgroundColor:"#F0A4AB"}} onClick={()=>goMbtwhy("esfp")}><h1>ESFP</h1></td>
                             <td style={{...cardStyle, backgroundColor:"#FFD966"}} onClick={()=>goMbtwhy("enfp")}><h1>ENFP</h1></td>
-                            <td style={{...cardStyle, backgroundColor:"#B6634A"}} onClick={()=>goMbtwhy("istj")}><h1>ENTP</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#B6634A"}} onClick={()=>goMbtwhy("entp")}><h1>ENTP</h1></td>
                         </tr>
                         <tr>
                             <td style={{...cardStyle, backgroundColor:"#596D55"}} onClick={()=>goMbtwhy("estj")}><h1>ESTJ</h1></td>

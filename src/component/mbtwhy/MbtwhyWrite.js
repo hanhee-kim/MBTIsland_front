@@ -6,6 +6,7 @@ import {
     Input
 } from "reactstrap";
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 import style from "../../css/mbtwhy/MbtwhyForm.module.css";
 
@@ -101,7 +102,7 @@ function MbtwhyWrite() {
             return;
         }
         
-        let defaultUrl = `http://localhost:8090/mbtwhywrite?`;
+        let defaultUrl = `${urlroot}/mbtwhywrite?`;
         if(mbtiValue !== null) defaultUrl += `mbti=${mbtiValue.toUpperCase()}`;
         if(content !== null) defaultUrl += `&content=${content}`;
 

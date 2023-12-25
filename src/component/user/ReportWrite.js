@@ -10,6 +10,7 @@ import { Label } from 'reactstrap';
 import { Form } from 'reactstrap';
 import Swal from "sweetalert2";
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 const ReportWrite = (props) => {
   // 신고 정보 props
@@ -36,7 +37,7 @@ const ReportWrite = (props) => {
   };
   
   const sendReport = () => {
-    let defaultUrl = `http://localhost:8090/report`;
+    let defaultUrl = `${urlroot}/report`;
     axios.post(defaultUrl, report)
     .then(res=> {
       Swal.fire({
@@ -98,9 +99,9 @@ const ReportWrite = (props) => {
               onChange={(e)=>setReport({...report, reportReason:e.target.value})}
               style={{ width: "150px"}}
             >
-              <option>광고</option>
-              <option>도배</option>
-              <option>욕설</option>
+              <option value="광고">광고</option>
+              <option value="도배">도배</option>
+              <option value="욕설">욕설</option>
             </Input>
 
           </FormGroup>

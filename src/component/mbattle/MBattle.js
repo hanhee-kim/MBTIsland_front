@@ -9,6 +9,7 @@ import {
     Input,
     Button } from "reactstrap";
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 import style from "../../css/mbattle/MBattle.module.css";
 
@@ -53,12 +54,12 @@ function MBattle() {
 
     // mbattleDetail 이동
     const goMbattleDetail = (no) => {
-        navigate(`/mbattledetail/${no}/1`);
+        navigate(`/mbattledetail/${no}`);
     };
     
     // 게시글 목록 조회
     const getMbattleList = (page, search, sort) => {
-        let defaultUrl = `http://localhost:8090/mbattle?page=${page}`;
+        let defaultUrl = `${urlroot}/mbattle?page=${page}`;
         if(search !== "") defaultUrl += `&search=${search}`;
         if(sort !== "") defaultUrl += `&sort=${sort}`;
 
@@ -221,13 +222,13 @@ function MBattle() {
                                 <div className={style.boardImages}>
                                     {hotMbattle.fileIdx1 !== null?
                                         <div>
-                                            <img src={`http://localhost:8090/mbattleimg/${hotMbattle.fileIdx1}`} alt=''/>
+                                            <img src={`${urlroot}/mbattleimg/${hotMbattle.fileIdx1}`} alt=''/>
                                         </div>
                                         :<div className={style.voteItemDiv}>{hotMbattle.voteItem1}</div>
                                     }
                                     {hotMbattle.fileIdx2 !== null?
                                         <div>
-                                            <img src={`http://localhost:8090/mbattleimg/${hotMbattle.fileIdx2}`} alt=''/>
+                                            <img src={`${urlroot}/mbattleimg/${hotMbattle.fileIdx2}`} alt=''/>
                                         </div>
                                         :<div className={style.voteItemDiv}>{hotMbattle.voteItem2}</div>
                                     }
@@ -261,13 +262,13 @@ function MBattle() {
                                 <div className={style.boardImages}>
                                     {mbattle.fileIdx1 !== null?
                                         <div>
-                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
+                                            <img src={`${urlroot}/mbattleimg/${mbattle.fileIdx1}`} alt=''/>
                                         </div>
                                         :<div className={style.voteItemDiv}>{mbattle.voteItem1}</div>
                                     }
                                     {mbattle.fileIdx2 !== null?
                                         <div>
-                                            <img src={`http://localhost:8090/mbattleimg/${mbattle.fileIdx2}`} alt=''/>
+                                            <img src={`${urlroot}/mbattleimg/${mbattle.fileIdx2}`} alt=''/>
                                         </div>
                                         :<div className={style.voteItemDiv}>{mbattle.voteItem2}</div>
                                     }

@@ -6,6 +6,7 @@ import {
     Input
 } from "reactstrap";
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 import style from "../../css/mbattle/MBattleForm.module.css";
 
@@ -135,7 +136,7 @@ function MBattleWrite() {
             formData.append("files", file);
         }
     
-        axios.post("http://localhost:8090/mbattlewrite/", formData)
+        axios.post(`${urlroot}/mbattlewrite/`, formData)
         .then(res=> {
             console.log(res);
             let no = res.data.no;
