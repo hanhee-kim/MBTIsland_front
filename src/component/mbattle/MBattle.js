@@ -9,7 +9,6 @@ import {
     Input,
     Button } from "reactstrap";
 import axios from 'axios';
-import { urlroot } from "../../config";
 
 import style from "../../css/mbattle/MBattle.module.css";
 import { urlroot } from "../../config";

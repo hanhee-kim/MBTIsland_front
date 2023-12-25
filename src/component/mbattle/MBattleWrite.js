@@ -9,7 +9,6 @@ import axios from 'axios';
 import { urlroot } from "../../config";
 
 import style from "../../css/mbattle/MBattleForm.module.css";
-import { urlroot } from "../../config";
 
 function MBattleWrite() {
     // 로그인 유저 정보

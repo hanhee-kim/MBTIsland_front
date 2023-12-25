@@ -12,7 +12,6 @@ import axios from 'axios';
 import { urlroot } from "../../config";
 
 import style from "../../css/mbtwhy/Mbtwhy.module.css";
-import { urlroot } from "../../config";
 
 function Mbtwhy() {
     // 로그인 유저 정보]

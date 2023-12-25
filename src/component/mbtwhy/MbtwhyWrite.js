@@ -9,7 +9,6 @@ import axios from 'axios';
 import { urlroot } from "../../config";
 
 import style from "../../css/mbtwhy/MbtwhyForm.module.css";
-import { urlroot } from "../../config";
 
 function MbtwhyWrite() {
     // 로그인 유저 정보

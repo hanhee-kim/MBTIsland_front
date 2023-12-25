@@ -15,13 +15,6 @@ import { urlroot } from "../../config";
 
 import styleFrame from "../../css/admin/AdminFrame.module.css";
 import style from "../../css/admin/AdminReport.module.css";
-<<<<<<< HEAD
-import React from "react";
-import {Link} from "react-router-dom";
-import AdminNav from "./AdminNav";
-import { urlroot } from "../../config";
-=======
->>>>>>> inss
 
 const AdminReport = () => {
     // 로그인 유저 정보
@@ -65,14 +58,9 @@ const AdminReport = () => {
         navigate(defaultUrl, {replace:false});
     };
 
-    // url에 파라미터로 줄 변수 repage
+    // 신고 목록 조회
     const getReportList = (page, filter) => {
-        // if(!repage) repage = 1;
-<<<<<<< HEAD
-        axios.get(`${urlroot}/adminreport/${repage}`)
-=======
         axios.get(`${urlroot}/adminreport/${page}/${filter}/${boardType}/${reportType}`)
->>>>>>> inss
         .then(res=> {
             console.log(res);
             let pageInfo = res.data.pageInfo;
@@ -109,30 +97,11 @@ const AdminReport = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-<<<<<<< HEAD
-    // 페이지 별 검색
-    const reqBoardSearch = (repage) => {
-        if(boardType==='') {
-            alert('게시판 타입을 선택하세요.');
-            return;
-        } else if (reportType==='') {
-            alert('신고 사유를 선택하세요.');
-            return;
-        }
-
-        axios.get(`${urlroot}/boardsearch/${repage}/${boardType}/${reportType}`)
-        .then(res=> {
-            console.log(res);
-
-            let pageInfo = res.data.pageInfo;
-            let list = res.data.boardList;
-=======
     // filter 핸들링
     const handleSort = (filter) => {
         setFilter(filter);
         getReportList(page, filter, boardType, reportType);
     };
->>>>>>> inss
 
     // search 핸들링 (boardType, reportType)
     const handleSearch = () => {
