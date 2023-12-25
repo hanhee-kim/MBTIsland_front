@@ -40,7 +40,7 @@ const MyQnA = () => {
     getMyQnaList(user.username, answered, page);
   }, []);
   useEffect(() => {
-    console.log("뭐가 찍히긴하나");
+    console.log("여기는 오는지");
     if(registration){
 
       getMyQnaList(user.username, answered, page);

@@ -59,7 +59,7 @@
 }
 
 .sectionBoards {
-    cursor: default;
+    cursor: pointer;
 }
 
 .sectionBoard {
@@ -173,10 +173,6 @@
     border:0px solid white;
     text-align: center;
     cursor: pointer;
-}
-
-.activePage {
-    border: 1px solid #A3A3A3 !important;
 }
 
 .activePage {

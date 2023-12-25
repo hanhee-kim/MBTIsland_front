@@ -40,6 +40,8 @@ const MyNote = () => {
         "_blank",
         "width=650,height=700,location=no,status=no,scrollbars=yes"
       );
+      //
+      getMyNoteList(user.username,noteType, readType, page);
     } else if (note.sentUsername == user.username) {
       const url = "/sentnotedetail/" + note.noteNo;
       window.open(
@@ -252,12 +254,12 @@ const MyNote = () => {
             <div className={style.tableDiv}>
               <Table className="table-hover" style={{ minWidth: "770px" }}>
                 <thead>
-                  <tr row className="text-center">
+                  <tr className="text-center">
                     <th scope="col" sm={1} style={{ minWidth: "50px" }}>
                       번호
                     </th>
                     {noteType === "sent" ? (
-                      <th scope="col" sm={1} style={{ minWidth: "63px" }}>
+                      <th scope="col" sm={1} style={{ minWidth: "110px" }}>
                         받는이
                       </th>
                     ) : (
@@ -290,11 +292,11 @@ const MyNote = () => {
                           {(page - 1) * 10 + index + 1}
                         </td>
                         {noteType === "sent" ? (
-                          <td sm={1} className="text-center">
+                          <td sm={1} className="text-center" style={{minWidth:'110px'}}>
                             {note.receiveUserNick}
                           </td>
                         ) : (
-                          <td sm={1} className="text-center">
+                          <td sm={1} className="text-center" style={{minWidth:'110px'}}>
                             {note.sentUserNick}
                           </td>
                         )}

@@ -9,9 +9,9 @@ import {
     Popover,
     PopoverBody } from "reactstrap";
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 import style from "../../css/mbtwhy/Mbtwhy.module.css";
-import { urlroot } from "../../config";
 
 function Mbtwhy() {
     // 로그인 유저 정보]
@@ -97,18 +97,23 @@ function Mbtwhy() {
 
     // mbtwhydetail 이동
     const goMbtwhyDetail = (no) => {
-        let defaultUrl = `/mbtwhydetail/${mbti}/${no}/1`;
+        let defaultUrl = `/mbtwhydetail/${no}/${mbti}`;
 
         navigate(defaultUrl);
     }
 
     // mbtwhywrite 이동
     const goMbtwhyWrite = () => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+
         let defaultUrl = `/mbtwhywrite`;
         if(mbti !== null) defaultUrl += `/${mbti}`;
         
         navigate(defaultUrl);
-    }
+    };
     
     // 게시글 목록 조회
     const getMbtwhyList = (page, search, sort) => {
@@ -132,9 +137,9 @@ function Mbtwhy() {
         })
         .catch(err=> {
             console.log(err);
-            setMbtwhyList([]);
-            setHotMbtwhy({});
-            setPageInfo({});
+            // setMbtwhyList([]);
+            // setHotMbtwhy({});
+            // setPageInfo({});
             // setMbtwhyCnt(0);
         })
     };
@@ -169,7 +174,7 @@ function Mbtwhy() {
 
         setMbtiColorTo();
         setPage(1);
-        setSearch("")
+        setSearch("");
         setSort("최신순");
         getMbtwhyList(1, "", "최신순");
     }, [mbti]);
@@ -289,7 +294,7 @@ function Mbtwhy() {
                 <div className={style.pageHeader} style={{borderColor:`${mbtiColor}`}}>
                     <h1>{mbti}</h1>
                     <div style={{display:"flex"}}>
-                        {user.username!==undefined?<div className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</div>:<></>}
+                        <div className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</div>
                         <button className={style.popoverButton} onClick={()=>setOpen(!open)} id="Popover1"><img src={"/sortIcon.png" } alt="" className={style.sortImg} />{!sort? "최신순" : sort}</button>
                         <Popover placement="bottom" isOpen={open} target="Popover1" toggle={()=>handleToggle()}>
                             <PopoverBody className={style.popoverItem} onClick={()=>handleSort("최신순")}>최신순</PopoverBody>

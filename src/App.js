@@ -52,6 +52,8 @@ import MBattle from "./component/mbattle/MBattle";
 import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
+import AdminReportDetail from "./component/admin/AdminReportDetail"
+import MyMbattle from "./component/user/MyMbattle";
 
 export const persistor = persistStore(store);
 
@@ -104,6 +106,7 @@ function App() {
                 <Route exact path="profile" element={<DefaultMypage />} />
                 <Route exact path="mbtwhy" element={<MyMbtWhy />} />
                 <Route exact path="mbtmi" element={<MyMbtmi />} />
+                <Route exact path="mbattle" element={<MyMbattle />} />
                 <Route exact path="qna" element={<MyQnA />} />
                 <Route exact path="bookmark" element={<MyBookmark />} />
                 <Route exact path="alarm" element={<MyAlarm />} />
@@ -167,14 +170,15 @@ function App() {
               {/* 인수 */}
               <Route exect path="/mbtwhymain" element={<MbtwhyMain />} />
               <Route exect path="/mbtwhy/:mbti" element={<Mbtwhy />} />
-              <Route exact path="/mbtwhydetail/:mbti/:no/:page" element={<MbtwhyDetail />} />
+              <Route exact path="/mbtwhydetail/:no/:mbti?" element={<MbtwhyDetail />} />
               <Route exact path="/mbtwhywrite/:mbti?" element={<MbtwhyWrite />} />
               <Route exact path="/mbtwhymodify/:no" element={<MbtwhyModify />} />
               <Route exact path="/mbattle" element={<MBattle />} />
               <Route exact path="/mbattlewrite" element={<MBattleWrite />} />
-              <Route exact path="/mbattledetail/:no/:page" element={<MBattleDetail />} />
-              <Route exact path="/adminreport" element={<AdminFrame />} />
-              <Route exact path="/adminreportdetail" element={<AdminFrame />} />
+              <Route exact path="/mbattledetail/:no" element={<MBattleDetail />} />
+              <Route exact path="/adminreport" element={<AdminFrame />}>
+                <Route exact path="/adminreport/detail/:no/:page/:filter/:boardtype/:reporttype" element={<AdminReportDetail />} />
+              </Route>
               <Route exact path="/adminban" element={<AdminFrame />} />
               <Route exact path="/adminbandetail" element={<AdminFrame />} />
               <Route

@@ -86,7 +86,7 @@ const ReportWrite = (props) => {
             <Label for="sentUserNick" sm={3}>
               작성자
             </Label>
-            <Input type="text" name="reportedId" value={report.reporterId} readOnly style={{ width: "150px"}}></Input>
+            <Input type="text" name="reportedId" value={report.reportedId} readOnly style={{ width: "150px"}}></Input>
           </FormGroup>
           <FormGroup style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
             <Label for="reportType" sm={3}>
@@ -99,9 +99,9 @@ const ReportWrite = (props) => {
               onChange={(e)=>setReport({...report, reportReason:e.target.value})}
               style={{ width: "150px"}}
             >
-              <option>광고</option>
-              <option>도배</option>
-              <option>욕설</option>
+              <option value="광고">광고</option>
+              <option value="도배">도배</option>
+              <option value="욕설">욕설</option>
             </Input>
 
           </FormGroup>

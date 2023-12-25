@@ -9,12 +9,10 @@ import {
     Pagination,
     PaginationItem,
     PaginationLink } from "reactstrap";
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 import styleFrame from "../../css/admin/AdminFrame.module.css";
 import style from "../../css/admin/AdminReport.module.css";
-import React from "react";
-import {Link} from "react-router-dom";
 import AdminNav from "./AdminNav";
 import { urlroot } from "../../config";
 

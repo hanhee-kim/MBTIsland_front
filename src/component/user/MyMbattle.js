@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { urlroot } from "../../config";
 
-const MyMbtmi = (props) => {
+const MyMbattle = () => {
   const user = useSelector((state) => state.persistedReducer.user);
   const [initData, setInitData] = useState(true);
   const [page, setPage] = useState(1);
@@ -15,6 +15,7 @@ const MyMbtmi = (props) => {
   // navigate
   const navigate = useNavigate();
   const [tmiList,setTmiList] = useState([]);
+  const [battleList,setBattleList] = useState([]);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -23,26 +24,23 @@ const MyMbtmi = (props) => {
     return `${year}-${month}-${day}`;
   };
   //서버와 통신할 메소드 정의
-  const getMyMbtmiList = (username,page) => {
-    console.log(page);
-    console.log("url:" + `${urlroot}/mbtmilist?username=${username}&page=${page}`);
-
+  const getMyMbattleList = (username,page) => {
+    
     axios
-      .get(`${urlroot}/mbtmilist?username=${username}&page=${page}`)
+      .get(`${urlroot}/mbattlelistbyuser?username=${username}&page=${page}`)
       .then((res) => {
         console.log(res);
         setInitData(true);
         setPageInfo(res.data.pageInfo);
-        setTmiList(res.data.mbtmiList);
+        setBattleList(res.data.mbattleList);
       })
       .catch((err) => {
         console.log(err);
         setInitData(false);
       });
-  };
+  }
   useEffect(() => {
-    //tmi controller + 변수 담아 맵핑
-    getMyMbtmiList(user.username,page);
+    getMyMbattleList(user.username,page);
   }, []);
   // 체크된 아이템을 담을 배열
   const [checkItems, setCheckItems] = useState([]);
@@ -65,14 +63,14 @@ const MyMbtmi = (props) => {
     if (checked) {
       // 전체 선택 클릭 시 데이터의 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트
       const idArray = [];
-      tmiList.forEach((el) => idArray.push(el.no));
+      battleList.forEach((el) => idArray.push(el.no));
       setCheckItems(idArray);
     } else {
       // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
       setCheckItems([]);
     }
   };
-  const delTmi = () => {
+  const delBattle = () => {
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     let sendArrayItems = checkItems.join(",");
     console.log(checkItems.type);
@@ -81,7 +79,7 @@ const MyMbtmi = (props) => {
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     axios
       .delete(
-        `${urlroot}/deletembtmilist?sendArrayItems=${sendArrayItems}`
+        `${urlroot}/deletembattlelist?sendArrayItems=${sendArrayItems}`
       )
       .then((res) => {
         console.log(res);
@@ -91,21 +89,22 @@ const MyMbtmi = (props) => {
         });
         setCheckItems([]);
 
-        getMyMbtmiList(user.username, page);
+        getMyMbattleList(user.username, page);
       })
       .catch((err) => {
         console.log(err);
       });
   };
   //tr 클릭시 detail로 이동
-  const goMyMbtmiDetail = (e, tmi) => {
-    navigate(`/mbtmidetail/${tmi.no}`);
-  };
+  const goMyMbattleDetail = (e,battle) => {
+    // navigate(`/mbattledetail/${battle.no}`);
+    navigate(`/mbattledetail/${battle.no}/1`);
+  }
+
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
     console.log("***페이지이동***");
-    getMyMbtmiList(user.username,pageNo);
-    // getMyMbtmiList(user.username, pageNo);
+    getMyMbattleList(user.username,pageNo);
     //페이지가 변경되면 checkItems 빈배열로 초기화.
     setCheckItems([]);
 
@@ -147,12 +146,12 @@ const MyMbtmi = (props) => {
   };
 
   return (
-    <div className={style.myMbtmiContainer}>
-      <div className={style.myMbtmiTitle}>* MB-TMI *</div>
+    <div className={style.myMbattleContainer}>
+      <div className={style.myMbattleTitle}>* M-BATTLE *</div>
       {initData ? (
         <>
           <div style={{ padding: "20px", marginTop: "10px" }}>
-            <Button color="dark" style={{ margin: "10px" }} onClick={delTmi}>
+            <Button color="dark" style={{ margin: "10px" }} onClick={delBattle}>
               삭제
             </Button>
             <div className={style.tableDiv}>
@@ -166,16 +165,14 @@ const MyMbtmi = (props) => {
                         onChange={(e) => handleAllCheck(e.target.checked)}
                         // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
                         checked={
-                          checkItems.length === tmiList.length ? true : false
+                          checkItems.length === battleList.length ? true : false
                         }
                       />
                     </th>
                     <th scope="col" sm={1}>
                       번호
                     </th>
-                    <th scope="col" sm={2}>
-                      카테고리
-                    </th>
+                    
                     <th scope="col" sm={4} style={{ minWidth: "200px" }}>
                       제목
                     </th>
@@ -183,49 +180,47 @@ const MyMbtmi = (props) => {
                       작성일
                     </th>
                     <th scope="col" sm={1}>
-                      댓글수
+                      투표수
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {tmiList.map((tmi, index) => {
+                  {battleList.map((battle, index) => {
                     return (
                       <tr key={index}>
                         <td sm={1} className="text-center">
                           <input
                             type="checkbox"
-                            name={`select-${tmi.no}`}
+                            name={`select-${battle.no}`}
                             onChange={(e) =>
-                              handleSingleCheck(e.target.checked, tmi.no)
+                              handleSingleCheck(e.target.checked, battle.no)
                             }
                             // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
-                            checked={checkItems.includes(tmi.no) ? true : false}
+                            checked={checkItems.includes(battle.no) ? true : false}
                           />
                         </td>
-                        <td sm={1} className="text-center" onClick={(e) => goMyMbtmiDetail(e, tmi)}>
-                          {tmi.no}
+                        <td sm={1} className="text-center" onClick={(e) => goMyMbattleDetail(e, battle)}>
+                          {battle.no}
                         </td>
-                        <td sm={2} className="text-center" onClick={(e) => goMyMbtmiDetail(e, tmi)}>
-                          [ {tmi.category} ]
-                        </td>
+                        
                         <td
                           sm={4}
                           className="text-truncate"
                           style={{ maxWidth: "400px" }}
-                          onClick={(e) => goMyMbtmiDetail(e, tmi)}
+                          onClick={(e) => goMyMbattleDetail(e, battle)}
                         >
-                          {tmi.title}
+                          {battle.title}
                         </td>
                         <td
                           sm={3}
                           className="text-center"
                           style={{ minWidth: "105px" }}
-                          onClick={(e) => goMyMbtmiDetail(e, tmi)}
+                          onClick={(e) => goMyMbattleDetail(e, battle)}
                         >
-                          {formatDate(tmi.writeDate)}
+                          {formatDate(battle.writeDate)}
                         </td>
-                        <td sm={1} className="text-center" onClick={(e) => goMyMbtmiDetail(e, tmi)}>
-                          {tmi.recommendCnt}
+                        <td sm={1} className="text-center" onClick={(e) => goMyMbattleDetail(e, battle)}>
+                          {battle.voteCnt}
                         </td>
                       </tr>
                     );
@@ -248,7 +243,7 @@ const MyMbtmi = (props) => {
           }}
         >
           <div style={{ fontSize: "25px" }}>
-            작성한 MB-TMI 게시글이 없습니다.
+            작성한 M-BATTLE 게시글이 없습니다.
           </div>
         </div>
       )}
@@ -256,4 +251,4 @@ const MyMbtmi = (props) => {
   );
 };
 
-export default MyMbtmi;
+export default MyMbattle;

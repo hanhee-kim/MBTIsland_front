@@ -1,7 +1,4 @@
 import {
-    Nav,
-    NavItem,
-    NavLink,
     FormGroup,
     Col,
     Input,
@@ -9,201 +6,140 @@ import {
     Pagination,
     PaginationItem,
     PaginationLink } from "reactstrap";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import styleFrame from "../../css/admin/AdminFrame.module.css";
-import style from "../../css/admin/AdminReport.module.css";
-import React from "react";
-import {Link} from "react-router-dom";
 import AdminNav from "./AdminNav";
 import { urlroot } from "../../config";
 
+import styleFrame from "../../css/admin/AdminFrame.module.css";
+import style from "../../css/admin/AdminReport.module.css";
+
 const AdminReport = () => {
-    const [boards, setBoards] = useState([
-        {
-            num:1,
-            reportedId:"user01",
-            content:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유! 지금 바로 들어오세요!! 당장 당장 다앋ㅇ다아당ㅈ앙당장",
-            reporterId:"user99",
-            reportDate:"2023.12.04",
-            reportReason:"광고",
-            isCompleted:"미처리"
-        },
-        {
-            num:2,
-            reportedId:"user01",
-            content:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유! 지금 바로 들어오세요!! 당장 당장 다앋ㅇ다아당ㅈ앙당장",
-            reporterId:"user99",
-            reportDate:"2023.12.04",
-            reportReason:"광고",
-            isCompleted:"미처리"
-        },
-        {
-            num:3,
-            reportedId:"user01",
-            content:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유! 지금 바로 들어오세요!! 당장 당장 다앋ㅇ다아당ㅈ앙당장",
-            reporterId:"user99",
-            reportDate:"2023.12.04",
-            reportReason:"광고",
-            isCompleted:"미처리"
-        },        
-        {
-            num:4,
-            reportedId:"user01",
-            content:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유! 지금 바로 들어오세요!! 당장 당장 다앋ㅇ다아당ㅈ앙당장",
-            reporterId:"user99",
-            reportDate:"2023.12.04",
-            reportReason:"광고",
-            isCompleted:"미처리"
-        },
-        {
-            num:5,
-            reportedId:"user01",
-            content:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유! 지금 바로 들어오세요!! 당장 당장 다앋ㅇ다아당ㅈ앙당장",
-            reporterId:"user99",
-            reportDate:"2023.12.04",
-            reportReason:"광고",
-            isCompleted:"처리 완료"
-        },
-        {
-            num:6,
-            reportedId:"user01",
-            content:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유! 지금 바로 들어오세요!! 당장 당장 다앋ㅇ다아당ㅈ앙당장",
-            reporterId:"user99",
-            reportDate:"2023.12.04",
-            reportReason:"광고",
-            isCompleted:"처리 완료"
-        },
-        {
-            num:7,
-            reportedId:"user01",
-            content:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유! 지금 바로 들어오세요!! 당장 당장 다앋ㅇ다아당ㅈ앙당장",
-            reporterId:"user99",
-            reportDate:"2023.12.04",
-            reportReason:"광고",
-            isCompleted:"처리 완료"
-        },
-        {
-            num:8,
-            reportedId:"user01",
-            content:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유! 지금 바로 들어오세요!! 당장 당장 다앋ㅇ다아당ㅈ앙당장",
-            reporterId:"user99",
-            reportDate:"2023.12.04",
-            reportReason:"광고",
-            isCompleted:"처리 완료"
-        },
-        {
-            num:9,
-            reportedId:"user01",
-            content:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유! 지금 바로 들어오세요!! 당장 당장 다앋ㅇ다아당ㅈ앙당장",
-            reporterId:"user99",
-            reportDate:"2023.12.04",
-            reportReason:"광고",
-            isCompleted:"처리 완료"
-        },
-        {
-            num:10,
-            reportedId:"user01",
-            content:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유! 지금 바로 들어오세요!! 당장 당장 다앋ㅇ다아당ㅈ앙당장",
-            reporterId:"user99",
-            reportDate:"2023.12.04",
-            reportReason:"광고",
-            isCompleted:"처리 완료"
-        }
-    ]);
+    // 로그인 유저 정보
+    const user = useSelector((state) => state.persistedReducer.user.user);
+
+    // 신고 게시글 목록
+    const [reportList, setReportList] = useState([]);
 
     // 페이징 상태 값
-    const [pageBtn, setPageBtn] = useState([]);
+    const [page, setPage] = useState(1);
     const [pageInfo, setPageInfo] = useState({});
 
-    
-    // pageChange 함수를 호출한 페이징 영역에서 페이징 항목(1, 2, 3...)들을 인자로 받아옴
-    const pageChange = (repage) => {
-        // 검색되었다면 (isSearch가 true인 경우)
-        if(isSearch) reqBoardSearch(repage);
-        // 검색되지 않았다면 (isSearch가 false인 경우)
-        else reqBoardList(repage);
+    // 필터링 값
+    const [filter, setFilter] = useState("all");
+
+    // 게시판 유형
+    const [boardType, setBoardType] = useState("all");
+
+    // 신고 사유
+    const [reportType, setReportType] = useState("전체");
+
+    // 절대시간
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
     };
 
-    // 검색이 되었는지 여부
-    // 검색되면 true로
-    const [isSearch, setIsSearch] = useState(false);
+    // navigate
+    const navigate = useNavigate();
 
-    const [boardType, setBoardType] = useState('');
-    const [reportType, setReportType] = useState('');
-
-    const searchSubmit = () => {
-        reqBoardSearch(1);
+    // reportDetail 이동
+    const goReportDetail = (no) => {
+        let defaultUrl = `/adminreport/detail/${no}` +
+                            (page? `/${page}` : "") +
+                            (filter? `/${filter}` : "") +
+                            (boardType? `/${boardType}` : "") +
+                            (reportType? `/${reportType}` : "");
+        navigate(defaultUrl, {replace:false});
     };
 
-    // url에 파라미터로 줄 변수 repage
-    const reqBoardList = (repage) => {
-        // if(!repage) repage = 1;
-        axios.get(`${urlroot}/adminreport/${repage}`)
+    // 신고 목록 조회
+    const getReportList = (page, filter) => {
+        axios.get(`${urlroot}/adminreport/${page}/${filter}/${boardType}/${reportType}`)
         .then(res=> {
             console.log(res);
             let pageInfo = res.data.pageInfo;
-            let list = res.data.boardList;
+            let reportList = res.data.reportList;
 
-            setBoards([...list]);
+            console.log(reportList);
+
+            setReportList([...reportList]);
             
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
-            }
-            setPageBtn(btn);
+            setPage(page);
             setPageInfo({...pageInfo});
-
-            // 검색이 아닌, 페이징된 상태이므로
-            // 검색 여부를 위한 isSearch 변수를 false로
-            setIsSearch(false);
         })
         .catch(err=> {
             console.log(err);
+            // setReportList([]);
+            // setPageInfo({});
         })
     };
 
+    useEffect(() => {
+        // const searchInput = document.getElementById("searchInput");
+        // searchInput.value = null;
+        
+        // setPage(1);
+        // setSearch("");
+        // setFilter("all");
+        getReportList(page, filter);
+    }, []);
 
-    // 페이지 별 검색
-    const reqBoardSearch = (repage) => {
-        if(boardType==='') {
-            alert('게시판 타입을 선택하세요.');
-            return;
-        } else if (reportType==='') {
-            alert('신고 사유를 선택하세요.');
-            return;
+    // page 핸들링
+    const handlePage = (pageNo) => {
+        setPage(pageNo);
+        getReportList(pageNo, filter);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // filter 핸들링
+    const handleSort = (filter) => {
+        setFilter(filter);
+        getReportList(page, filter, boardType, reportType);
+    };
+
+    // search 핸들링 (boardType, reportType)
+    const handleSearch = () => {
+        getReportList(page, filter, boardType, reportType);
+    };
+
+    // 페이지네이션
+    const PaginationInside = () => {
+        const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
+        for(let i=pageInfo.startPage; i<=pageInfo.endPage; i++) {
+            pageGroup.push(
+                <span key={i} className={`${page===i? style.activePage: ''}`} onClick={()=>handlePage(i)}>{i}</span>
+            )
         }
-
-        axios.get(`${urlroot}/boardsearch/${repage}/${boardType}/${reportType}`)
-        .then(res=> {
-            console.log(res);
-
-            let pageInfo = res.data.pageInfo;
-            let list = res.data.boardList;
-
-            setBoards([...list]);
-            
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
-            }
-            setPageBtn(btn);
-            setPageInfo({...pageInfo});
-
-            // 검색이 아닌, 페이징된 상태이므로
-            // 검색 여부를 위한 isSearch 변수를 false로
-            setIsSearch(true);
-        })
-        .catch(err=> {
-            console.log(err);
-        });
+        return (
+            <div className={style.paging}>
+                {!(pageInfo.startPage===1) && (
+                    <>
+                        <span onClick={()=>handlePage(1)}>≪</span>
+                        <span onClick={()=>handlePage(pageInfo.startPage-10)}>&lt;</span>
+                    </>
+                )}
+                {pageGroup}
+                {!(pageInfo.endPage===pageInfo.allPage) && (
+                    <>
+                        <span onClick={()=>handlePage(pageInfo.endPage+1)}>&gt;</span>
+                        <span onClick={()=>handlePage(pageInfo.allPage)}>≫</span>
+                    </>
+                )}
+            </div>
+        );
     };
 
     const buttonStyle = {
         background:"white",
         color:"black",
         border:"1px solid lightgray"
-    }
+    };
 
     return (
         <>
@@ -228,24 +164,34 @@ const AdminReport = () => {
                     </Col>
                     <Col sm={2}>
                         <Input type='select' name="type" onChange={(e)=>setReportType(e.target.value)}>
-                            <option value='all'>전체</option>
-                            <option value='advertisement'>광고</option>
-                            <option value='swearword'>욕설</option>
-                            <option value='spam'>도배</option>
+                            <option value='전체'>전체</option>
+                            <option value='광고'>광고</option>
+                            <option value='욕설'>욕설</option>
+                            <option value='도배'>도배</option>
                         </Input>
                     </Col>
                     <Col sm={4}>
-                        <Button style={buttonStyle} onClick={searchSubmit}>검색</Button>
+                        <Button style={buttonStyle} onClick={()=>handleSearch()}>검색</Button>
                     </Col>
                 </FormGroup>
                 {/* 검색 영역 */}
             
                 {/* 분류 영역 */}
-                <div className={style.sortDiv}>
+                <div className={style.filterBtns}>
+                    <div>
+                        <span className={`${style.filterBtn} ${filter==="all"? style.filterActive :""}`} onClick={() => handleSort("all")}>전체</span>
+                        <span className={`${style.filterBtn} ${filter==="Y"? style.filterActive :""}`} onClick={() => handleSort("Y")}>처리</span>
+                        <span className={`${style.filterBtn} ${filter==="N"? style.filterActive :""}`} onClick={() => handleSort("N")}>미처리</span>
+                    </div>
+                </div>
+                {/* 분류 영역 */}
+
+                {/* 분류 영역 */}
+                {/* <div className={style.sortDiv}>
                     <div>전체</div>&nbsp;&nbsp;&nbsp;
                     <div style={{color:"#C5C5C5"}}>처리완료</div>&nbsp;&nbsp;&nbsp;
                     <div style={{color:"#C5C5C5"}}>미처리</div>&nbsp;&nbsp;&nbsp;
-                </div>
+                </div> */}
                 {/* 분류 영역 */}
 
                 {/* 게시글 영역 */}
@@ -256,15 +202,15 @@ const AdminReport = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {boards.length !== 0 && boards.map(board => {
+                        {reportList.length !== 0 && reportList.map(report => {
                             return (
-                                    <tr key={board.num}>
-                                        <td>{board.reportedId}</td>
-                                        <td><div className={style.boardContent}>{board.content}</div></td>
-                                        <td>{board.reporterId}</td>
-                                        <td>{board.reportDate}</td>
-                                        <td>{board.reportReason}</td>
-                                        <td>{board.isCompleted}</td>
+                                    <tr key={report.no} onClick={()=>goReportDetail(report.no)}>
+                                        <td>{report.reportedId}</td>
+                                        <td><div className={style.boardContent}>{(report.reportedTitle)!==null?(report.reportedTitle):(report.reportedContent)}</div></td>
+                                        <td>{report.reporterId}</td>
+                                        <td>{formatDate(report.reportDate)}</td>
+                                        <td>{report.reportReason}</td>
+                                        <td>{(report.isCompleted)==="Y"? <>처리</> : <>미처리</>}</td>
                                     </tr>
                             )
                         })}
@@ -273,39 +219,7 @@ const AdminReport = () => {
                 {/* 게시글 영역 */}
 
                 {/* 페이징 영역 */}
-                <Pagination aria-label="Page navigation example" className={style.pagingLabel}>
-                    {
-                        pageInfo.curPage===1?
-                        <PaginationItem disabled>
-                            <PaginationLink previous href="#" />
-                        </PaginationItem>:
-                        <PaginationItem>
-                            {/* <PaginationLink previous href={"/list/" + (pageInfo.curPage - 1)} /> */}
-                            <PaginationLink previous onClick={()=>pageChange(pageInfo.curPage-1)}/>
-                        </PaginationItem>
-                    }
-
-                    {                   
-                        pageBtn.map(item=>{
-                            return(
-                                <PaginationItem key={item} className={item===pageInfo.curPage? 'active':''}>
-                                    {/* <PaginationLink href={"/list/" + item}> */}
-                                    {/* 고유한 id를 넘겨줌 */}
-                                    <PaginationLink onClick={() => pageChange(item)}>
-                                        {item}
-                                    </PaginationLink>
-                                </PaginationItem>                            
-                            )
-                        })
-                    }
-
-                    {
-                        <PaginationItem disabled={pageInfo.curPage === pageInfo.endPage}>
-                            {/* <PaginationLink next href={"/list/" + (pageInfo.curPage + 1)}/> */}
-                            <PaginationLink next onClick={()=>pageChange(pageInfo.curPage+1)}/>
-                        </PaginationItem>
-                    }
-                </Pagination>
+                {reportList.length===0?<></>:<PaginationInside/>}
                 {/* 페이징 영역 */}
             </div>
         </div>
