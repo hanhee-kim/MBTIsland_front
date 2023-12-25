@@ -462,6 +462,14 @@
     width: 18px;
     padding-bottom: 5px;
 }
+/* 쪽지보내기 아이콘 */
+.sendNoteIcon {
+    width: 18px;
+    margin-left: 5px;
+    cursor: pointer;
+    position: relative;
+    bottom: 2px;
+}
 
 
 /* 댓글 영역 */
