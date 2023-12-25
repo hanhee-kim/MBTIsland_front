@@ -46,8 +46,6 @@ const MBTmiForm = () => {
 
 
 
-
-
     // 에디터 content의 변경이벤트 감지하여 호출됨... 이미지 삽입 감지하도록함=삽입이미지핸들러함수가 이미지를 처리하도록함(서버에 저장하고 url을 받아와서...)
     const handleQuillChange = async (content, delta, source, editor) => {
         setQuillValue(content);
@@ -55,68 +53,115 @@ const MBTmiForm = () => {
         console.log('editor.getHTML():', editor.getHTML()); // 텍스트는 <p>입력문자열</p> 이미지는 <img src="엄청 긴 base64코드"> 로 콘솔에 찍힌다
 
 
-        // 이 함수를 트리거하는 이벤트인 onChange가 이미지 삽입으로 인해서 일어났는지를 체크
-        if (source === 'user' && delta.ops.length > 0) {
-            const insertedOps = delta.ops.filter((op) => op.insert && op.insert.image);
 
-
-            if (insertedOps.length > 0) {
-                const input = document.createElement("input");
-                input.setAttribute("type", "file");
-                input.setAttribute("accept", "image/*");
-    
-                input.addEventListener("change", async () => {
-                    const file = input.files[0];
-                    setSelectedImage(file);
-                    
-                });
-    
-                input.click();
+        // 이미지가 삽입되었는지 확인
+        if (source === 'user') {
+            const insertedImages = delta.ops.filter(op => {
+                return op.insert && op.insert.image;
+            });
+            
+            if (insertedImages.length > 0) {
+                console.log('이미지 삽입되었음')
+                const imageData = insertedImages[0].insert.image;
+                setSelectedImage(imageData);
             }
         }
     };
 
+    // 이미지 전송 로직
+    const uploadImage = async (imageData, postNo) => {
+        console.log('imageData: ', imageData)
+        console.log('~~!~!~postNo: ', postNo);
+
+
+        const formData = new FormData();
+
+        // Base64 이미지 데이터를 Blob으로 변환
+        const blob = await fetch(imageData).then(r => r.blob());
+
+        formData.append('image', blob, "image.jpg");
+        formData.append('postNo', postNo);
+
+        const imageResponse = await axios.post(`${urlroot}/uploadImage`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        const fileIdx = imageResponse.data.fileIdx;
+        console.log('fileIdx: ', fileIdx);
+
+        // // 게시글 업데이트 로직
+        // await axios.put(`${urlroot}/updatePost/${postNo}`, { fileIdx: fileIdx });
+    };
+
+
 
     // 외부버튼클릭
-    const btnOutsideClick = async () => {
+    const handleFormSubmit = async () => {
         console.log('외부버튼 클릭');
-/*
-        // 선택된 이미지가 있는 경우에만 처리
+
+        // 에디터 내용에서 이미지 태그 제거
+        const contentWithoutImages = quillValue.replace(/<img[^>]*>/g, "");
+        setQuillValue(contentWithoutImages);
+        console.log('***contentWithoutImages: ', contentWithoutImages);
+
+        // 1단계: 텍스트 컨텐츠 백엔드로 전송
+        const postData = {
+            title: "테스트1",
+            content: contentWithoutImages,
+            category: '취미',
+            writerId: user.username,
+            writerNickname: user.userNickname,
+            writerMbti: user.userMbti,
+            writerMbtiColor: user.userMbtiColor,
+        };
+        const response = await axios.post(`${urlroot}/quilltest`, postData);
+        const mbtmi = response.data.mbtmi;
+        console.log('*****반환받은데이터: ', response.data.mbtmi); // 일단 여기까지 확인
+        console.log('넘길 no: ', mbtmi.no);
+
+        // 이미지가 선택된 경우 이미지 전송 로직 실행
         if (selectedImage) {
-            try {
-            const formData = new FormData();
-            formData.append('image', selectedImage); // state에 저장해둔 처리 전의 선택된 이미지를 폼데이터로 만듦
-    
-            const response = await axios.post(`${urlroot}/uploadImage`, formData);
-    
-            const editor = quillRef.current.getEditor();
-            editor.clipboard.dangerouslyPasteHTML(response.data.imageUrl, 'api');
-    
-            // 이미지 처리 후 state 초기화
-            setSelectedImage(null);
-            } catch (error) {
-            console.error('에러:', error);
-            }
+            console.log('###selectedImage: ', selectedImage);
+            console.log('mbtmi.no: ', mbtmi.no);
+            await uploadImage(selectedImage, mbtmi.no);
         }
-*/        
-        // 서버로 보내기
-        try {
-            const response = await axios.post(`${urlroot}/quilltest`, {
-                content: quillValue,
-                title: '퀼테스트제목',
-                category: '잡담',
-                writerId: user.username,
-                writerNickname: user.userNickname,
-                writerMbti: user.userMbti,
-                writerMbtiColor: user.userMbtiColor,
+
+
+
+        // 2단계: 이미지 처리 및 백엔드로 전송
+        // if (selectedImage) {
+        //     const formData = new FormData();
+        //     formData.append('image', selectedImage);
+        //     formData.append('postNo', postNo); // 게시글 번호 추가
+
+        //     const imageResponse = await axios.post(`${urlroot}/uploadImage`, formData);
+        //     const fileIdx = imageResponse.data.fileIdx; // 백엔드에서 반환된 파일 인덱스
+
+        //     // 3단계: 게시글 업데이트 (file_idx 업데이트)
+        //     await axios.put(`${urlroot}/updatePost/${postNo}`, { fileIdx: fileIdx });
+        // }
+
+        
+
+        // // 서버로 보내기
+        // try {
+        //     const response = await axios.post(`${urlroot}/quilltest`, {
+        //         content: quillValue,
+        //         title: '퀼테스트제목',
+        //         category: '잡담',
+        //         writerId: user.username,
+        //         writerNickname: user.userNickname,
+        //         writerMbti: user.userMbti,
+        //         writerMbtiColor: user.userMbtiColor,
                 
                 
-            });
-            console.log('퀼데이터보내기 요청결과: ', response);
+        //     });
+        //     console.log('퀼데이터보내기 요청결과: ', response);
             
-        } catch (error) {
-            console.error('퀼데이터보내기 오류내용: ', error);
-        }
+        // } catch (error) {
+        //     console.error('퀼데이터보내기 오류내용: ', error);
+        // }
     }
 
 
@@ -180,7 +225,7 @@ const MBTmiForm = () => {
 
                 <div>
                     <div style={{ margin: "50px" }}>
-                        <button style={{cursor: 'pointer', background: 'pink', zIndex: 10}} onClick={btnOutsideClick}>퀼컴포넌트밖외부저장버튼</button>
+                        <button style={{cursor: 'pointer', background: 'pink', zIndex: 10}} onClick={handleFormSubmit}>저장버튼</button>
 
                         <ReactQuill
                             style={{ height: "400px", width: '100%' }}
