@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { persistReducer, PERSIST, PURGE, REHYDRATE } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import storageSession from "redux-persist/lib/storage/session";
 //logger
 import logger from "redux-logger";
 
@@ -80,7 +81,8 @@ const reducer = (currentState,action) => {
 
 const persistConfig = {
   key: "root",
-  storage,
+  // storage,
+  storage: storageSession, // sessionStorage를 사용할 경우
   //whiteList: ,
   autoRehydrate: false,
 };

@@ -150,12 +150,17 @@ const Main = () => {
           <section className={style.sectionLeftArea}></section>
           <section className={style.section}>
             {/* MB-TMI 최신글 목록 */}
-            <Link to={"/mbtmi"}><div className={style.boardTitleB}>
-              <span>
-                <p>MB-TMI</p>
-                <p>유형별로 모여 자유롭게 이야기를 나눌 수 있는 공간</p>
-              </span>
-            </div></Link>
+            <Link to={"/mbtmi"}>
+              <div className={style.boardTitleB}>
+                <div>
+                <span>
+                  <p>MB-TMI</p>
+                  <p>유형별로 모여 자유롭게 이야기를 나눌 수 있는 공간</p>
+                </span>
+                </div>
+                <img alt="tmi" src={"/tmi.png"} width={"220px"} height={"120px"}></img>
+              </div>
+            </Link>
             <div className={style.newlyPosts}>
               <table className={style.table}>
                 <tbody>
@@ -181,12 +186,17 @@ const Main = () => {
             </div>
 
             {/* MBT-WHY 최신글 목록 */}
-            <Link to={"/mbtwhymain"}><div className={style.boardTitleB}>
-            <span>
-                <p>MBT-WHY</p>
-                <p>원하는 MBTI 유형에게 질문을 남겨보세요!</p>
-              </span>
-            </div></Link>
+            <Link to={"/mbtwhymain"}>
+              <div className={style.boardTitleB}>
+                <div>
+                  <span>
+                    <p>MBT-WHY</p>
+                    <p>원하는 MBTI 유형에게 질문을 남겨보세요!</p>
+                  </span>
+                </div>
+                <img alt="why" src={"/why.png"} width={"220px"} height={"120px"} ></img>
+            </div>
+            </Link>
             <div className={style.newlyPosts}>
               <table className={style.table}>
                 <tbody>
@@ -212,12 +222,17 @@ const Main = () => {
             </div>
 
             {/* M-BATTLE 최신글 목록 */}
-            <Link to={"/mbattle"}><div className={style.boardTitleB}>
-            <span>
-                <p>M-BATTLE</p>
-                <p>MBTI 유형 별 성향을 알아보세요!</p>
-              </span>
-            </div></Link>
+            <Link to={"/mbattle"}>
+              <div className={style.boardTitleB}>
+                <div>
+                  <span>
+                    <p>M-BATTLE</p>
+                    <p>MBTI 유형 별 성향을 알아보세요!</p>
+                  </span>
+                </div>  
+                <img alt="mbattle" src={"/mbattle.png"} width={"220px"} height={"120px"} ></img>
+              </div>
+            </Link>
             <div className={style.newlyPosts}>
               <table className={style.table}>
                 <tbody>

@@ -24,7 +24,7 @@ const Logout = () => {
     // dispatch({ type: "logout", payload: "" });
     // dispatch({ type: "logout", payload: {} });
     persistor.purge();
-    localStorage.removeItem("token");
+    // localStorage.removeItem("token");
     // navigate("/login");
     handleLogout();
   }, []);
