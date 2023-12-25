@@ -8,7 +8,6 @@ import axios from "axios";
 import { urlroot } from "../../config";
 
 const AdminNotice = () => {
-
     const [noticeList, setNoticeList] = useState([]); // 페이지당 게시글목록 
     const [noticeCnts, setNoticeCnts] = useState({'totalCnt':0, 'displayCnt':0, 'hiddenCnt':0}); // 표시할 게시글수들
     const [search, setSearch] = useState(null); // 검색어
@@ -26,7 +25,31 @@ const AdminNotice = () => {
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
+
+
+    const location = useLocation();
+    useEffect(() => {
+        // 로컬 스토리지에서 이전목록값을 읽어서 렌더링되게해야함
+        const savedState = localStorage.getItem('adminNoticeValue');
+        const initialState = savedState ? JSON.parse(savedState) : { search: null, hidden: null, page: 1 };
     
+        // 상세/폼에서 돌아온 경우에만 로컬스토리지의 이전목록값 사용
+        if (location.state && location.state.fromDetail) {
+            setSearch(initialState.search);
+            setHidden(initialState.hidden);
+            setPage(initialState.page);
+            setActiveFilter(initialState.hidden);
+            getNoticeList(initialState.search, initialState.hidden, initialState.page);
+        } else {
+            // 그 외의 경우에는 초기값 사용하여 렌더링
+            setSearch(null);
+            setHidden(null);
+            setActiveFilter(null);
+            setPage(1);
+            getNoticeList(null, null, 1);
+        }
+    }, [location]);
+/*
     // 내비 바의 '공지사항 목록' 재클릭시 초기상태로 재렌더링하게함
     const location = useLocation();
     useEffect(() => {
@@ -40,9 +63,43 @@ const AdminNotice = () => {
         setErrorMsg(null);
     }, [location]);
 
+    // localStorage에서 목록의 값을 읽어서 렌더링
+    useEffect(() => {
+        if (!location.state || !location.state.fromDetail) {
+            const savedState = localStorage.getItem('adminNoticeValue');
+            const initialState = savedState ? JSON.parse(savedState) : { search: null, hidden: null, page: 1 };
+
+            setSearch(initialState.search);
+            setHidden(initialState.hidden);
+            setPage(initialState.page);
+
+            getNoticeList(initialState.search, initialState.hidden, initialState.page);
+        }
+    }, []);
+*/
+
     useEffect(() => {
         getNoticeList(search, hidden, page);
     }, [afterDelOrHide]); // 의존성배열을 비우면 useEffect는 컴포넌트가 처음 렌더링될때에만 실행되고 state를 넣으면 state값이 업데이트될때마다 실행됨
+
+
+    const updateLocalStorage = (newValue) => {
+        const currentValue = {
+            search: search,
+            hidden: hidden,
+            page: page,
+        };
+        console.log('$$$ 로컬스토리지에 저장될 currentValue: ', currentValue);
+        localStorage.setItem('adminNoticeValue', JSON.stringify({ ...currentValue, ...newValue }));
+    };
+
+
+    // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
+    const navigate = useNavigate();
+    const makeFlexibleLink = (post) => {
+        const linkTo = `/adminnoticeform/${post.no}`; // 관리자페이지의 공지사항폼 컴포넌트
+        navigate(linkTo, {replace:false});
+    }
 
     const getNoticeList = (search, hidden, page) => {
         let defaultUrl = `${urlroot}/noticelist`;
@@ -86,11 +143,15 @@ const AdminNotice = () => {
         console.log('현재 적용되는 필터값: ' + hidden);
         console.log('현재 적용되는 검색어: ' + search);
         getNoticeList(search, hidden, pageNo); // 페이지변경시 필터 유지, 검색어 유지해야함
+
+        updateLocalStorage({ page: pageNo });
     };
     const handleFilterChange = (hidden) => {
         getNoticeList(search, hidden, 1); // 필터변경시 페이지 리셋, 검색어는 유지해야함
         setActiveFilter(hidden);
         setCheckItems([]);
+
+        updateLocalStorage({ hidden: hidden });
     };
     const handleSearchChange = (event) => {
         const searchTerm = event.target.value;
@@ -105,6 +166,8 @@ const AdminNotice = () => {
         getNoticeList(tmpSearch, null, 1); // 검색수행시 페이지 리셋, 필터 리셋해야함 
         // cf. setSearch와 setHidden은 비동기적으로 state를 업데이트하기 때문에(즉시 업데이트x) 
         // tmpSearch대신 search, null대신 hidden을 넣으면 업데이트 이전의 state값이 들어가게된다
+
+        updateLocalStorage({ search: tmpSearch });
     };
 
     
@@ -190,16 +253,7 @@ const AdminNotice = () => {
         );
     }
 
-    // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
-    const navigate = useNavigate();
-    const makeFlexibleLink = (post) => {
-        // alert('no, search, page: ' + post.no + ", " + search + ", " + page);
-        // const linkTo = `/noticedetail/${post.no}` +
-        //                 (search ? `/${search}` : '') +
-        //                 (page ? `/${page}` : ''); // 일반 공지사항상세 컴포넌트
-        const linkTo = `/adminnoticeform/${post.no}`; // 관리자페이지의 공지사항폼 컴포넌트
-        navigate(linkTo, {replace:false});
-    }
+    
 
     return (
         <>
