@@ -176,6 +176,16 @@ const Header = () => {
               />
             </Link>
           </li>
+          
+          <li
+            className={
+              uri.includes("/mbtmi")
+                ? `${style.navItem} ${style.currentBoard}`
+                : style.navItem
+            }
+          >
+            <Link to={"/mbtmi"}>MB-TMI</Link>
+          </li>
           <li
             className={
               uri.includes("/mbtwhy")
@@ -193,15 +203,6 @@ const Header = () => {
             }
           >
             <Link to={"/mbattle"}>M-BATTLE</Link>
-          </li>
-          <li
-            className={
-              uri.includes("/mbtmi")
-                ? `${style.navItem} ${style.currentBoard}`
-                : style.navItem
-            }
-          >
-            <Link to={"/mbtmi"}>MB-TMI</Link>
           </li>
         </div>
 

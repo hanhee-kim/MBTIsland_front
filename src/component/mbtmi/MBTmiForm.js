@@ -148,10 +148,13 @@ const MBTmiForm = () => {
             <section className={style.section}>
 
                 <div className={style.boardTitleB}>
-                        <span>
-                            <p>MB-TMI</p>
-                            <p>유형별로 모여 자유롭게  이야기를 나눌 수 있는 공간</p>
-                        </span>
+                    <div className={style.boardTitleTestArea}>
+                        <p>MB-TMI</p>
+                        <p>유형별로 모여 자유롭게 이야기를 나눌 수 있는 공간</p>
+                    </div>
+                    <div>
+                        <img alt="tmi" src={"/tmi.png"} width={"220px"} height={"120px"} className={style.boardTitleImg}></img>
+                    </div>
                 </div>
 
                 {modifying===false? (
