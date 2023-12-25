@@ -5,6 +5,7 @@ import { Button, Popover, PopoverBody } from "reactstrap";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { urlroot } from "../../config";
+import Swal from "sweetalert2";
 
 const Header = () => {
   // const token = useSelector((state) => state.persistedReducer.token);
@@ -50,7 +51,7 @@ const Header = () => {
     // //컴포넌트 마운트될 때 실행할 interval(10초마다 실행)
     const intervalId = setInterval(() => {
       getNoteListAndAlarmList();
-    },100000);
+    },10000);
     // 컴포넌트가 언마운트될 때 clearInterval을 통해 정리
     return () => {
       clearInterval(intervalId);
@@ -164,31 +165,67 @@ const Header = () => {
     console.log(alarm.detailMbti);
     switch (alarm.detailType){
       case "NOTE" :
+        checkAlarm(alarm.alarmNo);
         goNoteDetail(e,alarm.detailNo);
         break;
       case "MBTMI" :
+        checkAlarm(alarm.alarmNo);
         navigate(`/mbtmidetail/${alarm.detailNo}`);
         getNoteListAndAlarmList();
         break;
       case "MBTWHY" :
-        let defaultUrl = `/mbtwhydetail`;
-        defaultUrl += `/${alarm.detailMbti}`;
-        defaultUrl += `/${alarm.detailNo}`;
-        defaultUrl += `/1`;
-        navigate(defaultUrl);
+        checkAlarm(alarm.alarmNo);
+        navigate(`/mbtwhydetail/${alarm.detailMbti}/${alarm.detailNo}/1`);
         getNoteListAndAlarmList();
         break;
       case "MBTTLE" :
+        checkAlarm(alarm.alarmNo);
+        navigate(`/mbattledetail/${alarm.detailNo}/1`);
         getNoteListAndAlarmList();
         break;
       case "QUESTION" :
+        checkAlarm(alarm.alarmNo);
+        goQuestionDetail(alarm.detailNo);
         getNoteListAndAlarmList();
         break;
-      case "SWAL" :
+      case "WARN" :
+        checkAlarm(alarm.alarmNo);
+        Swal.fire({
+          title: alarm.alarmType+"",
+          text: "",
+          icon: "",
+        });
+        getNoteListAndAlarmList();
+        break;
+      case "BAN":
+        checkAlarm(alarm.alarmNo);
+        Swal.fire({
+          title: alarm.alarmType+"",
+          text: "",
+          icon: "",
+        });
         getNoteListAndAlarmList();
         break;
       default:
     }
+  }
+  const checkAlarm = (no) => {
+    axios
+      .put(`${urlroot}/checkalarm/${no}`)
+      .then((res)=>{
+        console.log(res.data);
+      })
+      .catch((err)=>{
+
+      })
+  }
+  const goQuestionDetail = (no) =>{
+    const noteUrl = "/questiondetail/" + no;
+    window.open(
+      noteUrl,
+      "_blank",
+      "width=650,height=700,location=no,status=no,scrollbars=yes"
+    );
   }
   //쪽지 클릭시
   const goNoteDetail = (e,no) => {
