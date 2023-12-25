@@ -640,6 +640,7 @@
 }
 .formBtns {
     float: right;
+    margin-top: 70px;
 }
 .formBtns>input {
     font-size: 17px;

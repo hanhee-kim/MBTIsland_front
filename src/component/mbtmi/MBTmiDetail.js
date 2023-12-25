@@ -175,6 +175,9 @@ const MBTmiDetail = () => {
             let isRecommended = res.data.isMbtmiRecommend;
             let isBookmarked = res.data.isMbtmiBookmark;
 
+            // 이미지 출력 관련 처리 추가
+            mbtmi.content = replaceImagePlaceholders(mbtmi.content);
+
             setMbtmi(mbtmi);
             setMbtmiCommentCnt(mbtmiCommentCnt);
             setRecommendCount(recommendCnt);
@@ -189,6 +192,13 @@ const MBTmiDetail = () => {
             setMbtmiCommentCnt(0);
         });
     }
+
+    // 이미지 출력 관련 처리 추가
+    const replaceImagePlaceholders = (content) => {
+        return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
+            return `<img src="http://localhost:8090/mbtmiimg/${fileIdx}" alt=''/>`;
+        });
+    };
 
     const getMbtmiCommentList = (commentPageParam) => {
         let defaultUrl = `${urlroot}/mbtmicommentlist/${no}`;
@@ -211,41 +221,6 @@ const MBTmiDetail = () => {
     }
 
 
-    // 팝오버
-/*
-    const [popoverStates, setPopoverStates] = useState({
-        postPopover: false,
-        postMessagePopover: false,
-        commentPopovers: {}
-    });
-    const togglePopover = (name, index = null) => {
-        setPopoverStates(prevState => {
-            let newState = { ...prevState };
-            if (name === 'commentPopovers') {
-                newState[name] = { ...prevState[name], [index]: !prevState[name][index] };
-            } else {
-                newState[name] = !prevState[name];
-            }
-            return newState;
-        });
-    };
-    const handleClickOutside = event => {
-        if (!event.target.closest('.popover') && !event.target.closest('.popover-trigger')) {
-            setPopoverStates({
-                postPopover: false,
-                postMessagePopover: false,
-                commentPopovers: {}
-            });
-        }
-    };
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-*/
-    
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
     const [open,setOpen]=useState(false);
     useEffect(() => {
