@@ -1,6 +1,6 @@
 import { Table } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { useSelector } from "react-redux"
 
 import style from "../../css/mbtwhy/MbtwhyMain.module.css"
 
@@ -17,6 +17,11 @@ function MbtwhyMain() {
 
     // mbtwhywrite 이동
     const goMbtwhyWrite = () => {
+        if(!user.username) {
+            alert("로그인해주세요.");
+            return;
+        }
+
         let defaultUrl = `/mbtwhywrite`;
         navigate(defaultUrl);
     }
@@ -43,7 +48,7 @@ function MbtwhyMain() {
                     <h1>MBT-Why</h1>
                     <div>
                         <h6 className={style.pageHeaderContent}>원하는 MBTI 유형에게 질문을 남겨보세요!</h6>
-                        {user.username!==undefined?<div className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</div>:<></>}
+                        <div className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</div>
                     </div>
                 </div>
 
@@ -65,7 +70,7 @@ function MbtwhyMain() {
                             <td style={{...cardStyle, backgroundColor:"#D8927A"}} onClick={()=>goMbtwhy("estp")}><h1>ESTP</h1></td>
                             <td style={{...cardStyle, backgroundColor:"#F0A4AB"}} onClick={()=>goMbtwhy("esfp")}><h1>ESFP</h1></td>
                             <td style={{...cardStyle, backgroundColor:"#FFD966"}} onClick={()=>goMbtwhy("enfp")}><h1>ENFP</h1></td>
-                            <td style={{...cardStyle, backgroundColor:"#B6634A"}} onClick={()=>goMbtwhy("istj")}><h1>ENTP</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#B6634A"}} onClick={()=>goMbtwhy("entp")}><h1>ENTP</h1></td>
                         </tr>
                         <tr>
                             <td style={{...cardStyle, backgroundColor:"#596D55"}} onClick={()=>goMbtwhy("estj")}><h1>ESTJ</h1></td>
