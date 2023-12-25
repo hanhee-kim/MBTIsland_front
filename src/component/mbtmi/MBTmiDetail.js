@@ -175,6 +175,9 @@ const MBTmiDetail = () => {
             let isRecommended = res.data.isMbtmiRecommend;
             let isBookmarked = res.data.isMbtmiBookmark;
 
+            // 이미지 출력 관련 처리 추가
+            mbtmi.content = replaceImagePlaceholders(mbtmi.content); 
+
             setMbtmi(mbtmi);
             setMbtmiCommentCnt(mbtmiCommentCnt);
             setRecommendCount(recommendCnt);
@@ -189,6 +192,13 @@ const MBTmiDetail = () => {
             setMbtmiCommentCnt(0);
         });
     }
+
+    // 이미지 출력 관련 처리 추가
+    const replaceImagePlaceholders = (content) => {
+        return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
+            return `<img src="http://localhost:8090/mbtmiimg/${fileIdx}" alt=''/>`;
+        });
+    };
 
     const getMbtmiCommentList = (commentPageParam) => {
         let defaultUrl = `${urlroot}/mbtmicommentlist/${no}`;
@@ -556,7 +566,7 @@ const MBTmiDetail = () => {
                         <h6>&nbsp;{formatDatetimeGap(mbtmi.writeDate)}
                             <span><img src={"/viewIcon.png" } alt="조회" className={style.viewIcon} />&nbsp;{mbtmi.viewCnt}</span>
                         </h6>
-                        <div className={style.postContent} dangerouslySetInnerHTML={{ __html: mbtmi.content }}></div>
+                        <div className={style.postContent} dangerouslySetInnerHTML={{ __html: mbtmi? mbtmi.content : ""}}></div>
                         <p>
                             {!isRecommended? (
                             <img src={"/thumbIcon.png" } alt="" className={style.thumbIconDetail} onClick={()=>mbtmiRecommend()}/>

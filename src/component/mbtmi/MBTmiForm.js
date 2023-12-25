@@ -28,6 +28,17 @@ const MBTmiForm = () => {
     const [activeCategory, setActiveCategory] = useState("");
 
 
+    const handleCategoryChange = (categoryParam) => {
+        setSelectCategory(categoryParam);
+        setActiveCategory(categoryParam);
+    };
+
+    // 취소 버튼
+    const goToPreviousList = () => {
+        navigate(-1);
+    };
+
+
 
 
     // 선택된 이미지 (백엔드로 보내어 처리 전)
@@ -52,8 +63,6 @@ const MBTmiForm = () => {
 
         console.log('editor.getHTML():', editor.getHTML()); // 텍스트는 <p>입력문자열</p> 이미지는 <img src="엄청 긴 base64코드"> 로 콘솔에 찍힌다
 
-
-
         // 이미지가 삽입되었는지 확인
         if (source === 'user') {
             const insertedImages = delta.ops.filter(op => {
@@ -61,7 +70,7 @@ const MBTmiForm = () => {
             });
             
             if (insertedImages.length > 0) {
-                console.log('이미지 삽입되었음')
+                console.log('이미지 삽입되었음');
                 const imageData = insertedImages[0].insert.image;
                 setSelectedImage(imageData);
             }
@@ -70,98 +79,89 @@ const MBTmiForm = () => {
 
     // 이미지 전송 로직
     const uploadImage = async (imageData, postNo) => {
-        console.log('imageData: ', imageData)
-        console.log('~~!~!~postNo: ', postNo);
-
-
         const formData = new FormData();
-
         // Base64 이미지 데이터를 Blob으로 변환
         const blob = await fetch(imageData).then(r => r.blob());
-
         formData.append('image', blob, "image.jpg");
         formData.append('postNo', postNo);
 
-        const imageResponse = await axios.post(`${urlroot}/uploadImage`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-        const fileIdx = imageResponse.data.fileIdx;
-        console.log('fileIdx: ', fileIdx);
+        try {
+            const imageResponse = await axios.post(`${urlroot}/uploadImage`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            const fileIdx = imageResponse.data;
+            // console.log('fileIdx: ', fileIdx);
+    
+            // 게시글 업데이트 로직
+            await axios.post(`${urlroot}/updateFileIdxs/${postNo}`, { fileIdx: fileIdx });
 
-        // // 게시글 업데이트 로직
-        // await axios.put(`${urlroot}/updatePost/${postNo}`, { fileIdx: fileIdx });
+            return fileIdx;
+            
+        } catch (error) {
+            console.error('이미지 업로드 및 게시글 업데이트 오류:', error);
+        }
     };
 
 
 
     // 외부버튼클릭
     const handleFormSubmit = async () => {
-        console.log('외부버튼 클릭');
 
-        // 에디터 내용에서 이미지 태그 제거
+        // 에디터 내용에서 이미지 태그 제거하고 텍스트만 추출
         const contentWithoutImages = quillValue.replace(/<img[^>]*>/g, "");
         setQuillValue(contentWithoutImages);
-        console.log('***contentWithoutImages: ', contentWithoutImages);
+        // console.log('***contentWithoutImages: ', contentWithoutImages);
 
+        if (title==='' || quillValue==='' || selectCategory==='') {
+            alert('제목, 내용, 카테고리를 확인해주세요.');
+            return;
+        }
+        console.log('title: ', title, ", content: ", quillValue, ", category: "+ selectCategory, ", writerId: ", user.username, ", writerMbti: ", user.userMbti);
+        
         // 1단계: 텍스트 컨텐츠 백엔드로 전송
         const postData = {
-            title: "테스트1",
+            title: title,
             content: contentWithoutImages,
-            category: '취미',
+            category: selectCategory,
             writerId: user.username,
             writerNickname: user.userNickname,
             writerMbti: user.userMbti,
             writerMbtiColor: user.userMbtiColor,
         };
-        const response = await axios.post(`${urlroot}/quilltest`, postData);
-        const mbtmi = response.data.mbtmi;
-        console.log('*****반환받은데이터: ', response.data.mbtmi); // 일단 여기까지 확인
-        console.log('넘길 no: ', mbtmi.no);
 
-        // 이미지가 선택된 경우 이미지 전송 로직 실행
-        if (selectedImage) {
-            console.log('###selectedImage: ', selectedImage);
-            console.log('mbtmi.no: ', mbtmi.no);
-            await uploadImage(selectedImage, mbtmi.no);
+        try {
+            const response = await axios.post(`${urlroot}/quilltest`, postData);
+            const mbtmi = response.data.mbtmi;
+            // console.log('*****반환받은데이터: ', response.data.mbtmi);
+            // console.log('넘길 no: ', mbtmi.no);
+
+
+            // 이미지 URL을 포함한 새로운 컨텐츠 생성
+            let updatedContent = quillValue;
+            const imageTags = quillValue.match(/<img[^>]*src="([^"]+)"[^>]*>/g) || [];
+
+            for (const imgTag of imageTags) {
+                const imgSrcMatch = imgTag.match(/src\s*=\s*"([^"]+)"/);
+                const imageData = imgSrcMatch ? imgSrcMatch[1] : null;
+                if (imageData) {
+                    const fileIdx = await uploadImage(imageData, mbtmi.no);
+                    console.log('fileIdx: ', fileIdx)
+                    updatedContent = updatedContent.replace(imgTag, `<img src="${fileIdx}" />`);
+                }
+            }
+            // 이미지가 포함된 최종 컨텐츠로 업데이트
+            const updateResponse = await axios.post(`${urlroot}/mbtmiContainingImgTags/${mbtmi.no}`, { content: updatedContent });
+            console.log('결과: ', updateResponse);
+
+            // 게시글 상세 컴포넌트로 이동
+            navigate(`/mbtmidetail/${mbtmi.no}`);
+
+        } catch (error) {
+            console.log(error);            
         }
 
-
-
-        // 2단계: 이미지 처리 및 백엔드로 전송
-        // if (selectedImage) {
-        //     const formData = new FormData();
-        //     formData.append('image', selectedImage);
-        //     formData.append('postNo', postNo); // 게시글 번호 추가
-
-        //     const imageResponse = await axios.post(`${urlroot}/uploadImage`, formData);
-        //     const fileIdx = imageResponse.data.fileIdx; // 백엔드에서 반환된 파일 인덱스
-
-        //     // 3단계: 게시글 업데이트 (file_idx 업데이트)
-        //     await axios.put(`${urlroot}/updatePost/${postNo}`, { fileIdx: fileIdx });
-        // }
-
-        
-
-        // // 서버로 보내기
-        // try {
-        //     const response = await axios.post(`${urlroot}/quilltest`, {
-        //         content: quillValue,
-        //         title: '퀼테스트제목',
-        //         category: '잡담',
-        //         writerId: user.username,
-        //         writerNickname: user.userNickname,
-        //         writerMbti: user.userMbti,
-        //         writerMbtiColor: user.userMbtiColor,
-                
-                
-        //     });
-        //     console.log('퀼데이터보내기 요청결과: ', response);
-            
-        // } catch (error) {
-        //     console.error('퀼데이터보내기 오류내용: ', error);
-        // }
     }
 
 
@@ -206,9 +206,6 @@ const MBTmiForm = () => {
 
 
 
-
-
-
     return (
         <>
         <div className={style.container} id="top">
@@ -225,8 +222,17 @@ const MBTmiForm = () => {
 
                 <div>
                     <div style={{ margin: "50px" }}>
-                        <button style={{cursor: 'pointer', background: 'pink', zIndex: 10}} onClick={handleFormSubmit}>저장버튼</button>
-
+                        {/* 카테고리 */}
+                        <div className={style.categoryBtns}>
+                            <label className={activeCategory==='잡담'? style.activeCategory :''} onClick={() => handleCategoryChange('잡담')}>잡담</label>
+                            <label className={activeCategory==='연애'? style.activeCategory :''} onClick={() => handleCategoryChange('연애')}>연애</label>
+                            <label className={activeCategory==='회사'? style.activeCategory :''} onClick={() => handleCategoryChange('회사')}>회사</label>
+                            <label className={activeCategory==='학교'? style.activeCategory :''} onClick={() => handleCategoryChange('학교')}>학교</label>
+                            <label className={activeCategory==='취미'? style.activeCategory :''} onClick={() => handleCategoryChange('취미')}>취미</label>
+                        </div>
+                        {/* 제목 */}
+                        <input type="text" className={style.formtitle} onChange={(e)=>setTitle(e.target.value)}/>
+                        {/* 내용: 에디터 */}
                         <ReactQuill
                             style={{ height: "400px", width: '100%' }}
                             theme="snow"
@@ -238,6 +244,13 @@ const MBTmiForm = () => {
                             ref={quillRef}
 
                         />
+                    </div>
+                </div>
+                <div style={{marginRight: '50px', float: 'right', marginTop: '20px'}}>
+                    <div className={style.formBtns}>
+                            <input type="button" value="취소" onClick={goToPreviousList}/>
+                            {/* <button style={{cursor: 'pointer', background: 'pink', zIndex: 10}} onClick={handleFormSubmit}>저장버튼</button> */}
+                            <input type="button" value="저장" onClick={handleFormSubmit}/>
                     </div>
                 </div>
 
