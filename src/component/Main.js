@@ -1,4 +1,4 @@
-import { Table, UncontrolledCarousel } from "reactstrap";
+import { Modal, ModalBody, ModalHeader, Table, UncontrolledCarousel } from "reactstrap";
 
 import style from "../css/Main.module.css";
 import React, { useEffect, useState } from "react";
@@ -19,11 +19,22 @@ const Main = () => {
 
   // },[])
 
+  // 로그인정보 가져오기
+  const user = useSelector((state) => state.persistedReducer.user);
+
   const navigate = useNavigate();
   const [mbtmiList, setMbtmiList] = useState([]); // mbtmi 최신글목록
   const [mbtwhyList, setMbtwhyList] = useState([]); // mbtwhy 최신글목록
   const [mbattleList, setMbattleList] = useState([]); // mbattle 최신글목록
 
+  // 절대시간
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
   // 상대시간(시간차)
   const formatDatetimeGap = (dateString) => {
     const date = new Date(dateString);
@@ -85,6 +96,31 @@ const Main = () => {
     }
   }
 
+  // 로그인한 활동정지 유저의 안내 모달
+  const [bannedUserLogin, setBannedUserLogin] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  useEffect(() => {
+    if(user.isBanned==='Y') {
+      setBannedUserLogin(true); // 정지회원일때만 모달이 열리도록 함
+      banperiod();
+    }
+  }, []);
+  // 모달 여닫힘을 토글하는 함수
+  const toggleModal = () => {
+    setBannedUserLogin(!bannedUserLogin);
+  };
+  // 활동정지회원의 정지기간을 조회
+  const banperiod = async () => {
+    const response = await axios.get(`${urlroot}/usersbanperiod/${user.username}`)
+    // console.log('banperiod의 결과: ', response);
+    const startDate = response.data.banStartDate;
+    const endDate = response.data.banEndDate;
+    setStartDate(startDate);
+    setEndDate(endDate);
+  }
+
+
   return (
     <>
       <div className={style.container} id="top">
@@ -102,13 +138,13 @@ const Main = () => {
             {/* The slideshow/carousel */}
             <div className="carousel-inner">
               <div className="carousel-item active" onClick={()=>alert('배너이미지1 클릭!')}>
-                <img src={"/2000x300.png"} alt="배너이미지1" className="d-block" style={{width: '100%'}}/>
+                <img src={"/2000x300.png"} alt="배너이미지1" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
               </div>
               <div className="carousel-item" onClick={()=>alert('배너이미지2 클릭!')}>
-                <img src="/2200x300.png" alt="배너이미지2" className="d-block" style={{width: '100%'}}/>
+                <img src="/2200x300.png" alt="배너이미지2" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
               </div>
               <div className="carousel-item" onClick={()=>alert('배너이미지3 클릭!')}>
-                <img src="/1800x400.png" alt="배너이미지3" className="d-block" style={{width: '100%'}}/>
+                <img src="/1800x400.png" alt="배너이미지3" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
               </div>
             </div>
             
@@ -125,6 +161,18 @@ const Main = () => {
         <div>
           <section className={style.sectionLeftArea}></section>
           <section className={style.section}>
+
+            <Modal isOpen={bannedUserLogin} toggle={toggleModal}>
+              <ModalHeader toggle={toggleModal}>활동 정지 안내</ModalHeader><br/>
+              <ModalBody>
+                <div>회원님의 계정은 현재 경고 누적으로 인해 <b>활동정지</b> 상태입니다.</div><br/>
+                <div>경고 누적 횟수&nbsp; : &nbsp;{user.userWarnCnt}회</div>
+                {startDate !== '' && (
+                  <><div>정지 기간&nbsp; : &nbsp;{formatDate(startDate)} ~ {formatDate(endDate)}</div><br/></>
+                )}
+              </ModalBody>
+            </Modal>
+
             {/* MB-TMI 최신글 목록 */}
             <Link to={"/mbtmi"}>
               <div className={style.boardTitleB}>
