@@ -355,9 +355,9 @@ const MBTmiDetail = () => {
                 reportedPostNo: reportTarget.no,
                 // reportedCommentNo:, // 댓글 아니므로 댓글 번호 없음
                 reportedId: reportTarget.writerId,
-                // reportedTitle:, // 제목 없음
+                reportedTitle: reportTarget.title,
                 reportedContent: reportTarget.content,
-                // fileIdxs: "", // 파일 없음
+                fileIdxs: reportTarget.fileIdxs,
                 reporterId: user.username,
                 // reportDate: "", // 백에서 지정
                 reportReason: "광고", // 신고 창에서 변경 (기본값 광고)
