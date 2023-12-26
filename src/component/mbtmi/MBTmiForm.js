@@ -168,9 +168,8 @@ const MBTmiForm = () => {
             { indent: "-1" },
             { indent: "+1" },
             ],
-            ["link", "image"],
+            ["image"],
             [{ align: [] }, { color: [] }, { background: [] }],
-            ["clean"],
         ],
 
         imageResize: {
