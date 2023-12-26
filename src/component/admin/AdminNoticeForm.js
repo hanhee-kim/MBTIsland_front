@@ -8,14 +8,16 @@ import AdminNav from "./AdminNav";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { urlroot } from "../../config";
+import { useLocation } from 'react-router';
 
 const AdminNoticeForm = () => {
 
     // 로그인정보 가져오기
     const user = useSelector((state) => state.persistedReducer.user);
 
-    const { no } = useParams();
     const navigate = useNavigate();
+    const { no } = useParams(); 
+    
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [notice, setNotice] = useState(null); // 작성된 공지사항 객체
@@ -27,6 +29,13 @@ const AdminNoticeForm = () => {
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
+    };
+
+    // 목록으로 돌아가기
+    const goToPreviousList = () => {
+        const savedState = localStorage.getItem('adminNoticeValue');
+        const previousState = savedState ? JSON.parse(savedState) : {};
+        navigate('/adminnotice', { state: { fromDetail: true, ...previousState } });
     };
 
 
@@ -134,8 +143,10 @@ const AdminNoticeForm = () => {
                         <li>본문</li>
                         <textarea className={style.formContent} rows="18" onChange={(e)=>setContent(e.target.value)}/>
                         <div className={style.formBtns}>
-                            <input type="button" value="취소" onClick={backToList}/>
-                            <input type="button" value="저장" onClick={addPost}/>
+                            <span>
+                                <input type="button" value="취소" onClick={backToList}/>
+                                <input type="button" value="저장" onClick={addPost}/>
+                            </span>
                         </div>
                     </form>    
                 )}
@@ -150,8 +161,11 @@ const AdminNoticeForm = () => {
                         <li>본문</li>
                         <div className={style.formContent}>{notice.content}</div>
                         <div className={style.formBtns}>
-                            <input type="button" value="수정" onClick={()=>setModifying(true)}/>
-                            <input type="button" value="삭제" onClick={deleteNotice}/>
+                            <input type="button" value="목록" onClick={goToPreviousList} className={style.previousListBtn}/>
+                            <span>
+                                <input type="button" value="수정" onClick={()=>setModifying(true)}/>
+                                <input type="button" value="삭제" onClick={deleteNotice}/>
+                            </span>
                         </div>
                     </form>    
                 )}
@@ -166,8 +180,10 @@ const AdminNoticeForm = () => {
                         <li>본문</li>
                         <textarea className={style.formContent} rows="18" value={content} onChange={(e)=>setContent(e.target.value)}/>
                         <div className={style.formBtns}>
-                            <input type="button" value="취소" onClick={()=>setModifying(false)}/>
-                            <input type="button" value="저장" onClick={modifyPost}/>
+                            <span>
+                                <input type="button" value="취소" onClick={()=>setModifying(false)}/>
+                                <input type="button" value="저장" onClick={modifyPost}/>
+                            </span>
                         </div>
                     </form>
                 )}
@@ -182,8 +198,11 @@ const AdminNoticeForm = () => {
                         <li>본문</li>
                         <div className={style.formContent}>{notice.content}</div>
                         <div className={style.formBtns}>
-                            <input type="button" value="수정" onClick={()=>setModifying(true)}/>
-                            <input type="button" value="삭제" onClick={deleteNotice}/>
+                            <input type="button" value="목록" onClick={goToPreviousList} className={style.previousListBtn}/>
+                            <span>
+                                <input type="button" value="수정" onClick={()=>setModifying(true)}/>
+                                <input type="button" value="삭제" onClick={deleteNotice}/>
+                            </span>
                         </div>
                     </form>    
                 )}

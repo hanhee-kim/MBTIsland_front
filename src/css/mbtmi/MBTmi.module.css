@@ -1,5 +1,5 @@
 .container{
-    padding-top: 80px;
+    padding-top: 100px;
     /* border: 3px solid blue; */
 	height: auto;
     min-height: 100%;
@@ -35,13 +35,14 @@
     margin-bottom: 40px;
     padding-top: 20px;
 }
-.boardTitleB>.boardTitleTestArea>p:first-child {
+.boardTitleB>.boardTitleTextArea>p:first-child {
     font-size: 25px;
     margin-bottom: 0px;
 } 
-.boardTitleB>.boardTitleTestArea>p+p {
+.boardTitleB>.boardTitleTextArea>p+p {
     font-size: 15px;
     font-weight: 600;
+    color: #868484;
 } 
 .boardTitleImg {
     position: relative;
@@ -297,9 +298,11 @@
     margin: 6px 0 6px 0;
     padding: 0px 20px 0px 20px;
 }
+/* 작성자 mbti+닉네임*/
 .td1row>span {
     margin-bottom: 10px;
     margin-right: 22px;
+    font-size: 18.5px;
 }
 /* 작성일 */
 .td1row>small {

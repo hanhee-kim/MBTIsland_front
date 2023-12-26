@@ -53,6 +53,7 @@ import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
 import AdminReportDetail from "./component/admin/AdminReportDetail"
+import MyMbattle from "./component/user/MyMbattle";
 
 export const persistor = persistStore(store);
 
@@ -105,6 +106,7 @@ function App() {
                 <Route exact path="profile" element={<DefaultMypage />} />
                 <Route exact path="mbtwhy" element={<MyMbtWhy />} />
                 <Route exact path="mbtmi" element={<MyMbtmi />} />
+                <Route exact path="mbattle" element={<MyMbattle />} />
                 <Route exact path="qna" element={<MyQnA />} />
                 <Route exact path="bookmark" element={<MyBookmark />} />
                 <Route exact path="alarm" element={<MyAlarm />} />
@@ -158,8 +160,8 @@ function App() {
                 path="/noticedetail/:no/:search?/:page?"
                 element={<NoticeDetail />}
               />
-              <Route exact path="/adminnotice" element={<AdminFrame />} />
-              <Route exact path="/adminnoticeform/:no?" element={<AdminFrame />} />
+              <Route exact path="/adminnotice/:search?/:hidden?/:page?" element={<AdminFrame />} />
+              <Route exact path="/adminnoticeform/:no/:search?/:hidden?/:page?" element={<AdminFrame />} />
               {/* 중첩 라우팅 */}
               <Route path="/adminqna" element={<AdminFrame />}>
                 <Route path="/adminqna/form/:no" element={<AdminQnaForm />} />

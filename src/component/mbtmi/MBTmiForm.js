@@ -23,57 +23,38 @@ const MBTmiForm = () => {
     const [modifying, setModifying] = useState(false); // 수정모드 여부
     const [mbtmi, setMbtmi] = useState(null);
 
+    // 에디터ref등록
+    const quillRef = useRef();
 
     // 선택된 이미지 (백엔드로 보내어 처리 전)
     const [selectedImage, setSelectedImage] = useState(null);
 
-    // 에디터ref등록
-    const quillRef = useRef();
-
     // 텍스트 state
     const [quillValue, setQuillValue] = useState("");
 
-    // 에디터 content의 변경이벤트 감지하여 호출됨... 이미지 삽입 감지하도록함=삽입이미지핸들러함수가 이미지를 처리하도록함(서버에 저장하고 url을 받아와서...)
+    // 에디터 content의 변경을 감지하여 호출됨.
     const handleQuillChange = async (content, delta, source, editor) => {
         setQuillValue(content);
 
         console.log('editor.getHTML():', editor.getHTML()); // 텍스트는 <p>입력문자열</p> 이미지는 <img src="엄청 긴 base64코드"> 로 콘솔에 찍힌다
 
-        // 이미지가 삽입되었는지 확인
+        // 이미지가 삽입또는 제거됐는지 확인 후 처리
         if (source === 'user') {
-            // const insertedImages = delta.ops.filter(op => {
-            //     return op.insert && op.insert.image;
-            // });
-
-            // if (insertedImages.length > 0) {
-            //     console.log('이미지 삽입되었음');
-            //     const imageData = insertedImages[0].insert.image;
-            //     setSelectedImage(imageData);
-            // }
-
-
-            // 이미지 삽입 또는 제거 감지
             const insertedImages = delta.ops.filter(op => op.insert && op.insert.image);
             const deletedImages = delta.ops.filter(op => op.delete);
-
-            if (insertedImages.length > 0) {
-                // 이미지가 삽입된 경우
+            if (insertedImages.length > 0) { // 이미지가 삽입된 경우
                 const imageData = insertedImages[0].insert.image;
-                setSelectedImage(imageData);
-                // 이미지 삽입 처리
-            } else if (deletedImages.length > 0) {
-                // 이미지가 제거된 경우
-                setSelectedImage(null);
-                // 이미지 제거 처리
+                setSelectedImage(imageData); // 이미지 삽입 처리
+            } else if (deletedImages.length > 0) { // 이미지가 제거된 경우
+                setSelectedImage(null); // 이미지 제거 처리
             }
-            
         }
     };
 
-    // 이미지 전송 로직
+    // 이미지 업로드
     const uploadImage = async (imageData, postNo) => {
         const formData = new FormData();
-        // Base64 이미지 데이터를 Blob으로 변환
+        // Base64 이미지데이터를 Blob으로 변환
         const blob = await fetch(imageData).then(r => r.blob());
         formData.append('image', blob, "image.jpg");
         formData.append('postNo', postNo);
@@ -123,7 +104,7 @@ const MBTmiForm = () => {
         };
 
         try {
-            const response = await axios.post(`${urlroot}/quilltest`, postData);
+            const response = await axios.post(`${urlroot}/mbtmiwritewithoutimages`, postData);
             const mbtmi = response.data.mbtmi;
             // console.log('*****반환받은데이터: ', response.data.mbtmi);
             // console.log('넘길 no: ', mbtmi.no);
@@ -231,7 +212,6 @@ const MBTmiForm = () => {
             setActiveCategory(prevCategory);
             setSelectCategory(prevCategory);
 
-
             // setQuillValue(mbtmi.content); // 에디터의 내용값 설정
             mbtmi.content = replaceImagePlaceholders(mbtmi.content); // 이미지 출력을 위한 처리
             setQuillValue(mbtmi.content); // 이미지URL로 교체된 내용을 에디터의 내용값으로 설정
@@ -248,8 +228,6 @@ const MBTmiForm = () => {
     };
     
 
-
-
     // 수정 폼에서의 저장 버튼 클릭시
     const modifyPost = async () => {
         try {
@@ -265,12 +243,12 @@ const MBTmiForm = () => {
             console.log('contentWithoutImages: ', contentWithoutImages);
             // 게시글 수정 데이터
             const postData = {
-                no: mbtmi.no,
+                no: mbtmi.no,  // 수정될 게시글 번호를 전송
                 title: title,
                 content: contentWithoutImages,
                 category: selectCategory,
                 writerId: user.username,
-                writeDate: mbtmi.writeDate
+                writeDate: mbtmi.writeDate // 기존 등록일을 전송
             };
 
             // 이미지 URL을 포함한 새로운 컨텐츠 생성
@@ -294,19 +272,6 @@ const MBTmiForm = () => {
             postData.content = updatedContent;
             // 수정된 게시글 데이터로 서버에 요청
             const response = await axios.post(`${urlroot}/mbtmimodify`, postData);
-
-            
-            // let defaultUrl = `${urlroot}/mbtmimodify`;
-            // const response = await axios.post(defaultUrl, {
-            //                     no: mbtmi.no, // 수정될 게시글 번호를 전송
-
-            //                     title: title,
-            //                     content: content,
-            //                     category: selectCategory,
-
-            //                     writerId: user.username,
-            //                     writeDate: mbtmi.writeDate, // 기존 등록일을 전송
-            //                 });
 
             console.log('수정 요청결과: ', response);
             const modifiedMbtmi = response.data.mbtmi;
@@ -333,7 +298,7 @@ const MBTmiForm = () => {
             <section className={style.section}>
 
                 <div className={style.boardTitleB}>
-                    <div className={style.boardTitleTestArea}>
+                    <div className={style.boardTitleTextArea}>
                         <p>MB-TMI</p>
                         <p>유형별로 모여 자유롭게 이야기를 나눌 수 있는 공간</p>
                     </div>
@@ -403,27 +368,7 @@ const MBTmiForm = () => {
                                 <input type="button" value="취소" onClick={goToPreviousList}/>
                                 <input type="button" value="저장" onClick={modifyPost}/>
                         </div>
-
-
-                        {/* <li>카테고리</li>
-                        <div className={style.categoryBtns}>
-                            <label className={activeCategory==='잡담'? style.activeCategory :''} onClick={() => handleCategoryChange('잡담')}>잡담</label>
-                            <label className={activeCategory==='연애'? style.activeCategory :''} onClick={() => handleCategoryChange('연애')}>연애</label>
-                            <label className={activeCategory==='회사'? style.activeCategory :''} onClick={() => handleCategoryChange('회사')}>회사</label>
-                            <label className={activeCategory==='학교'? style.activeCategory :''} onClick={() => handleCategoryChange('학교')}>학교</label>
-                            <label className={activeCategory==='취미'? style.activeCategory :''} onClick={() => handleCategoryChange('취미')}>취미</label>
-                        </div>
-
-                        <li>제목</li>
-                        <input type="text" className={style.formtitle} value={title} onChange={(e)=>setTitle(e.target.value)}/>
-                        <li>본문</li>
-                        <textarea className={style.formContent} rows="18" value={content} onChange={(e)=>setContent(e.target.value)}/>
-                        <div className={style.formBtns}>
-                            <input type="button" value="취소" onClick={goToPreviousList}/>
-                            <input type="button" value="저장" onClick={modifyPost}/>
-                        </div> */}
                     </form>    
-
                 )}
 
 

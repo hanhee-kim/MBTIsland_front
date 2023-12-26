@@ -100,6 +100,11 @@ const MBTmiDetail = () => {
         // console.log('등록될댓글내용: ', commentContent);
         // console.log('부모댓글번호: ', parentcommentNo);
 
+        if(user.isBanned==='Y') {
+            alert("정지 상태에서는 댓글을 작성하실 수 없습니다.");
+            return;
+        }
+
         // let defaultUrl = `${urlroot}/mbtmicomment?no=${no}&comment=${parentcommentNo!=='' ? comment : reply}`;
         let defaultUrl = `${urlroot}/mbtmicomment?no=${no}&comment=${commentContent}`;
         if(parentcommentNo !== '') defaultUrl += `&parentcommentNo=${parentcommentNo}`
@@ -410,7 +415,9 @@ const MBTmiDetail = () => {
     // 목록으로 가기 버튼
     const navigate = useNavigate();
     const goToPreviousList = () => {
-        navigate(-1);
+        // navigate(-1); // 수정 직후였다면 수정폼으로 돌아가게된다
+        navigate(`/mbtmi`, { state: { fromDetail: true } }); 
+        // 두번째 인자를 통해 MBTmiDetail.js에서의 이동과 header.js의 메뉴 선택을 통한 이동을 구분하여 후자만 초기값으로 렌더링 되게함
     };
 
     const handlePageNo = (pageNo) => {
@@ -558,10 +565,13 @@ const MBTmiDetail = () => {
             <section className={style.sectionLeftArea}></section>
             <section className={style.section}>
                 <div className={style.boardTitleB}>
-                        <span>
-                            <p>MB-TMI</p>
-                            <p>유형별로 모여 자유롭게  이야기를 나눌 수 있는 공간</p>
-                        </span>
+                    <div className={style.boardTitleTextArea}>
+                        <p>MB-TMI</p>
+                        <p>유형별로 모여 자유롭게 이야기를 나눌 수 있는 공간</p>
+                    </div>
+                    <div>
+                        <img alt="tmi" src={"/tmi.png"} width={"220px"} height={"120px"} className={style.boardTitleImg}></img>
+                    </div>
                 </div>
 
                 {mbtmi? (

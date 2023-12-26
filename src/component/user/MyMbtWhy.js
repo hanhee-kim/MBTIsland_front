@@ -205,8 +205,8 @@ const MyMbtWhy = (props) => {
                         />
                       </td>
                       <td sm={1} className="text-center" onClick={(e) => goMbtwhyDetail(e, why)}>
-                        {/* {why.no} */}
-                        {(page - 1) * 10 + index + 1}
+                        {why.no}
+                        
                       </td>
                       <td sm={2} className="text-center" onClick={(e) => goMbtwhyDetail(e, why)}>
                         {why.mbtiCategory}

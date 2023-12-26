@@ -12,7 +12,6 @@ import { urlroot } from "../../config";
 
 const AdminQna = () => {
 
-    const location = useLocation();
     const [questionList, setQuestionList] = useState([]);
     const [questionCnts, setQuestionCnts] = useState({'totalCnt':0, 'answeredCnt':0, 'answeredNotCnt':0});
     const [search, setSearch] = useState(null);
@@ -30,6 +29,20 @@ const AdminQna = () => {
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
+
+    // 내비 바의 '문의 답변' 재클릭시 초기상태로 재렌더링하게함
+    const location = useLocation();
+    useEffect(() => {
+        getQuestionList(null, null, 1, null);
+        setSearch(null);
+        setAnswered(null);
+        setPage(1);
+        setPageInfo({});
+        setTmpSearch(null);
+        setUsername(null);
+        setActiveFilter(null);
+        setErrorMsg(null);
+    }, [location]);
 
     useEffect(() => {
 
