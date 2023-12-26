@@ -19,57 +19,6 @@ const Main = () => {
 
   // },[])
 
-  // 캐러셀 이미지
-  const items = [
-      {
-          key:0,
-          src:'https://picsum.photos/seed/picsum/1440/300',
-          altText:'배너이미지1',
-          caption:'caption1',
-          header:'header1',
-          
-      },
-      {
-          key:1,
-          src:'https://picsum.photos/seed/picsum/1440/300',
-          altText:'배너이미지2',
-          caption:'caption2',
-          header:'header2'
-      },
-      {
-          key:2,
-          src:'https://picsum.photos/seed/picsum/1440/300',
-          altText:'배너이미지3',
-          caption:'caption3',
-          header:'header3'
-      }
-  ];
-
-  // MBattle 최신글 목록 가정 (댓글수를 포함한 List<Dto>)
-  // const [mbattleList, setMbattleList] = useState([
-  //   { no: 11, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-  //     , writerId: 'react02', writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-  //   { no: 10, title: "긴제목 mbattle게시판의 더미게시글 제목 긴제목 mbattle게시판의 더미게시글 제목 긴제목 mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-  //   { no: 9, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-  //   { no: 8, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-  //   { no: 7, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-  //   { no: 6, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-  //   { no: 5, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-  //   { no: 4, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-  //   { no: 3, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-  //   { no: 2, title: "mbattle게시판의 더미게시글 제목", voteItem1: '찍먹', voteItem2: '부먹', writeDate: "2023-12-19T18:02:47.000+00:00"
-  //     , writerId: 'react02',  writerMbti: "ENTP", writerMbtiColor: "#B6634A", writerNickname: "리액트2", commentCnt: 0, },
-  // ]);
-
-
   const navigate = useNavigate();
   const [mbtmiList, setMbtmiList] = useState([]); // mbtmi 최신글목록
   const [mbtwhyList, setMbtwhyList] = useState([]); // mbtwhy 최신글목록
@@ -128,7 +77,7 @@ const Main = () => {
   const getMbattleList = async () => {
     try {
       const response = await axios.get(`${urlroot}/mbattle`);
-      // console.log('getMbattleList 요청결과: ', response);
+      console.log('getMbattleList 요청결과: ', response);
       let mbattleList = response.data.mbattleList;
       setMbattleList([...mbattleList]);
     } catch (error) {
@@ -140,11 +89,38 @@ const Main = () => {
     <>
       <div className={style.container} id="top">
         <div className={style.bannerArea}>
-          <UncontrolledCarousel
-            // key={index}
-            items={items}
-            className={style.bannerImage}
-          />
+          {/* 부트스트랩5 캐러셀 */}
+          <div id="demo" className="carousel slide" data-bs-ride="carousel" style={{width: '100%'}}> 
+
+            {/* Indicators/dots */}
+            <div className="carousel-indicators">
+              <button type="button" data-bs-target="#demo" data-bs-slide-to="0" className="active"></button>
+              <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
+              <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+            </div>
+            
+            {/* The slideshow/carousel */}
+            <div className="carousel-inner">
+              <div className="carousel-item active" onClick={()=>alert('배너이미지1 클릭!')}>
+                <img src={"/2000x300.png"} alt="배너이미지1" className="d-block" style={{width: '100%'}}/>
+              </div>
+              <div className="carousel-item" onClick={()=>alert('배너이미지2 클릭!')}>
+                <img src="/2200x300.png" alt="배너이미지2" className="d-block" style={{width: '100%'}}/>
+              </div>
+              <div className="carousel-item" onClick={()=>alert('배너이미지3 클릭!')}>
+                <img src="/1800x400.png" alt="배너이미지3" className="d-block" style={{width: '100%'}}/>
+              </div>
+            </div>
+            
+            {/* Left and right controls/icons */}
+            <button className="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+              <span className="carousel-control-prev-icon"></span>
+            </button>
+            <button className="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+              <span className="carousel-control-next-icon"></span>
+            </button>
+          </div>
+
         </div>
         <div>
           <section className={style.sectionLeftArea}></section>
