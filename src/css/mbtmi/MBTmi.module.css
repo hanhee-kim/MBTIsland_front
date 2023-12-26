@@ -93,7 +93,7 @@
 .overflow {
     /* 줄바꿈을 막고 생략기호 표시 */
     display: inline-block;
-    max-width: 430px;
+    max-width: 375px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
