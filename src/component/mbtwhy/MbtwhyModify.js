@@ -102,7 +102,7 @@ function MbtwhyModify() {
         axios.post(defaultUrl)
         .then(res => {
             console.log(res);
-            navigate(`/mbtwhydetail/${mbti.toLowerCase()}/${no}/1`);
+            navigate(`/mbtwhydetail/${no}/${mbti.toLowerCase()}`);
         })
         .catch(err => {
             console.log(err);
@@ -174,9 +174,13 @@ function MbtwhyModify() {
                         <Button style={buttonStyle} onClick={()=>modifyMbtwhy()}>수정</Button>
                         <Button style={buttonStyle} onClick={()=>goMbtwhy()}>취소</Button>
                     </div>
-                    
                 </div>
             </div>
+            <section className={style.sectionRightArea}>
+                <div>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
+                </div>
+            </section>
         </div>
     );
 }

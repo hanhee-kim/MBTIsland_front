@@ -934,6 +934,11 @@ function MbtwhyDetail() {
                 </div>
                 {/* 댓글 영역 */}
             </div>
+            <section className={style.sectionRightArea}>
+                <div>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
+                </div>
+            </section>
         </div>
     );
 }

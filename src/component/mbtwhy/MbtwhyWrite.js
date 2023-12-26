@@ -110,7 +110,7 @@ function MbtwhyWrite() {
         .then(res=> {
             console.log(res);
             let no = res.data.no;
-            navigate(`/mbtwhydetail/${mbtiValue}/${no}/1`);
+            navigate(`/mbtwhydetail/${no}/${mbtiValue}`);
         })
         .catch(err=> {
             console.log(err);
@@ -190,6 +190,11 @@ function MbtwhyWrite() {
                     </div>
                 </div>
             </div>
+            <section className={style.sectionRightArea}>
+                <div>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
+                </div>
+            </section>
         </div>
     );
 }

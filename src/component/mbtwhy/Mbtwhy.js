@@ -422,6 +422,11 @@ function Mbtwhy() {
                     <div style={{backgroundColor:"#35598F"}} onClick={()=>goMbtwhy("entj")}><h5>ENTJ</h5></div>
                 </div>
             </div>
+            <section className={style.sectionRightArea}>
+                <div>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
+                </div>
+            </section>
         </div>
     );
 }
