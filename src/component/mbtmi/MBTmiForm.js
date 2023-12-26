@@ -80,18 +80,18 @@ const MBTmiForm = () => {
 
     // 등록폼에서 저장 버튼 클릭시
     const handleFormSubmit = async () => {
-
+        
+        console.log('title: ', title, ", content: ", quillValue, ", category: "+ selectCategory, ", writerId: ", user.username, ", writerMbti: ", user.userMbti);
+        if (title==='' || quillValue==='' || selectCategory==='') {
+            alert('제목, 내용, 카테고리를 확인해주세요.');
+            return;
+        } 
         // 에디터 내용에서 이미지 태그 제거하고 텍스트만 추출
         const contentWithoutImages = quillValue.replace(/<img[^>]*>/g, "");
         setQuillValue(contentWithoutImages);
         // console.log('***contentWithoutImages: ', contentWithoutImages);
 
-        if (title==='' || quillValue==='' || selectCategory==='') {
-            alert('제목, 내용, 카테고리를 확인해주세요.');
-            return;
-        }
-        console.log('title: ', title, ", content: ", quillValue, ", category: "+ selectCategory, ", writerId: ", user.username, ", writerMbti: ", user.userMbti);
-        
+
         // 1단계: 텍스트 컨텐츠 백엔드로 전송
         const postData = {
             title: title,
@@ -231,13 +231,11 @@ const MBTmiForm = () => {
     // 수정 폼에서의 저장 버튼 클릭시
     const modifyPost = async () => {
         try {
+            console.log("no: ", mbtmi.no, "writeDate: ", mbtmi.writeDate, "category: ", selectCategory, "title: ", title, ", content: ", content, "writerId: ", user.username);
             if (title==='' || quillValue==='' || selectCategory==='') {
                 alert('제목, 내용, 카테고리를 확인해주세요.');
                 return;
             }
-            console.log("no: ", mbtmi.no, "writeDate: ", mbtmi.writeDate, "category: ", selectCategory, "title: ", title, ", content: ", content, "writerId: ", user.username);
-
-
             // 에디터 내용에서 이미지 태그 제거하고 텍스트만 추출
             const contentWithoutImages = quillValue.replace(/<img[^>]*>/g, "");
             console.log('contentWithoutImages: ', contentWithoutImages);
@@ -280,9 +278,11 @@ const MBTmiForm = () => {
 
             // 수정 완료 후 Detail.js로 이동하기
             navigate(`/mbtmidetail/${no}`)
+
         } catch (error) {
             console.error('수정 오류내용: ', error);
         }
+
     }
 
     // Base64 이미지 데이터인지 확인하는 함수
