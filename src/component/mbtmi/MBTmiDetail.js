@@ -199,9 +199,16 @@ const MBTmiDetail = () => {
     }
 
     // 이미지 출력 관련 처리 추가
+    // const replaceImagePlaceholders = (content) => {
+    //     return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
+    //         return `<img src=`${urlroot}/mbtmiimg/${fileIdx}` alt=''/>`;
+    //     });
+    // };
+    // 이미지 사이즈 조절 모듈 추가 이후 width 속성을 고려
     const replaceImagePlaceholders = (content) => {
-        return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
-            return `<img src="http://localhost:8090/mbtmiimg/${fileIdx}" alt=''/>`;
+        console.log('content: ', content);
+        return content.replace(/<img src="(\d+)"(.*)\/>/g, (match, fileIdx, otherAttributes) => {
+            return `<img src="${urlroot}/mbtmiimg/${fileIdx}" ${otherAttributes} alt=''/>`;
         });
     };
 

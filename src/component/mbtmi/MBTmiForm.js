@@ -4,8 +4,10 @@ import React, { useEffect, useRef, useState } from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { urlroot } from "../../config";
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from "react-quill";
 import 'react-quill/dist/quill.snow.css';
+import ImageResize from "quill-image-resize-module-react";
+Quill.register("modules/imageResize", ImageResize);
 
 const MBTmiForm = () => {
     
@@ -116,19 +118,37 @@ const MBTmiForm = () => {
 
             for (const imgTag of imageTags) {
                 const imgSrcMatch = imgTag.match(/src\s*=\s*"([^"]+)"/);
+                const imgWidthMatch = imgTag.match(/width\s*=\s*"([^"]+)"/); // width 속성 추출
                 const imageData = imgSrcMatch ? imgSrcMatch[1] : null;
                 if (imageData) {
                     const fileIdx = await uploadImage(imageData, mbtmi.no);
-                    console.log('fileIdx: ', fileIdx)
+                    console.log('fileIdx: ', fileIdx);
+
+                    // 추가
+                    const newImgTag = `<img src="${fileIdx}" ${imgWidthMatch ? `width="${imgWidthMatch[1]}px"` : ''} />`;
+                    updatedContent = updatedContent.replace(imgTag, newImgTag);
+
                     updatedContent = updatedContent.replace(imgTag, `<img src="${fileIdx}" />`);
                 }
             }
+
+            /*
             // 이미지가 포함된 최종 컨텐츠로 업데이트
             const updateResponse = await axios.post(`${urlroot}/mbtmiContainingImgTags/${mbtmi.no}`, { content: updatedContent });
             console.log('결과: ', updateResponse);
-
+            
             // 게시글 상세 컴포넌트로 이동
-            navigate(`/mbtmidetail/${mbtmi.no}`);
+            // navigate(`/mbtmidetail/${mbtmi.no}`);
+            */
+
+            try {
+                const updateResponse = await axios.post(`${urlroot}/mbtmiContainingImgTags/${mbtmi.no}`, { content: updatedContent });
+                console.log('결과: ', updateResponse);
+                navigate(`/mbtmidetail/${mbtmi.no}`);
+            } catch (error) {
+                console.error('게시글업데이트 에러 내용:', error);
+            }
+
 
         } catch (error) {
             console.log(error);            
@@ -152,6 +172,11 @@ const MBTmiForm = () => {
             [{ align: [] }, { color: [] }, { background: [] }],
             ["clean"],
         ],
+
+        imageResize: {
+            parchment: Quill.import("parchment"),
+            modules: ["Resize", "DisplaySize", "Toolbar"],
+        },
     };
 
     // 리액트quill의 텍스트 스타일 지정 
@@ -221,9 +246,16 @@ const MBTmiForm = () => {
         });
     }
     // 이미지출력을 위한 처리: fileIdx가 들어간 이미지태그 이미지 URL로 교체
+    // const replaceImagePlaceholders = (content) => {
+    //     return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
+    //         return `<img src="${urlroot}/mbtmiimg/${fileIdx}" alt=''/>`;
+    //     });
+    // };
+    // 이미지 사이즈 조절 모듈 추가 이후 width 속성을 고려
     const replaceImagePlaceholders = (content) => {
-        return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
-            return `<img src="http://localhost:8090/mbtmiimg/${fileIdx}" alt=''/>`;
+        console.log('content: ', content);
+        return content.replace(/<img src="(\d+)"(.*)\/>/g, (match, fileIdx, otherAttributes) => {
+            return `<img src="${urlroot}/mbtmiimg/${fileIdx}" ${otherAttributes} alt=''/>`;
         });
     };
     
