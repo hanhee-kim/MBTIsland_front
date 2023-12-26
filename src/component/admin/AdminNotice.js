@@ -169,6 +169,10 @@ const AdminNotice = () => {
 
         updateLocalStorage({ search: tmpSearch });
     };
+    // 엔터키로 검색 수행
+    const handleKeyPress = (e) => {
+        if (e.key==="Enter") handleSearch();
+    }
 
     
     // 체크 선택과 해제
@@ -267,7 +271,7 @@ const AdminNotice = () => {
                         <span className={`${style.filterBtn} ${activeFilter==='Y'? style.filterActive :''}`} onClick={() => handleFilterChange("Y")}>숨김 : {noticeCnts.hiddenCnt}</span>
                     </div>
                     <div className={style.searchBar}>
-                        <input type="text" onChange={handleSearchChange}/>
+                        <input type="text" onChange={handleSearchChange} onKeyDown={(e)=>handleKeyPress(e)}/>
                         <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} onClick={handleSearch}/>
                     </div>
                 </div>

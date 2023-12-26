@@ -138,10 +138,8 @@ const AdminNoticeForm = () => {
                 {/* 최초 등록 폼 */}
                 {!notice && modifying===false && itsDetail===false && (
                     <form className={style.noticeForm}>
-                        <li>제목</li>
-                        <input type="text" className={style.formtitle} onChange={(e)=>setTitle(e.target.value)}/>
-                        <li>본문</li>
-                        <textarea className={style.formContent} rows="18" onChange={(e)=>setContent(e.target.value)}/>
+                        <input type="text" placeholder="제목을 입력하세요" className={style.formtitle} onChange={(e)=>setTitle(e.target.value)}/>
+                        <textarea placeholder="내용을 입력하세요" className={style.formContent} rows="18" onChange={(e)=>setContent(e.target.value)}/>
                         <div className={style.formBtns}>
                             <span>
                                 <input type="button" value="취소" onClick={backToList}/>
@@ -154,12 +152,10 @@ const AdminNoticeForm = () => {
                 {notice && modifying===false && itsDetail===false && (
                     <form className={style.noticeForm}>
                         <div className={style.titleAndDate}>
-                            <li>제목</li>
                             <span>등록: {formatDate(notice.writeDate)}&nbsp;&nbsp;&nbsp;조회: {!notice.viewCnt? 0 : notice.viewCnt}&nbsp;&nbsp;&nbsp;</span>
                         </div>
-                        <div className={style.formtitle}>{notice.title}</div>
-                        <li>본문</li>
-                        <div className={style.formContent}>{notice.content}</div>
+                        <input type="text" className={style.formtitle} value={notice.title} readOnly/>
+                        <textarea className={style.formContent} rows="18" value={notice.content} readOnly/>
                         <div className={style.formBtns}>
                             <input type="button" value="목록" onClick={goToPreviousList} className={style.previousListBtn}/>
                             <span>
@@ -173,11 +169,9 @@ const AdminNoticeForm = () => {
                 {notice && modifying===true && (
                     <form className={style.noticeForm}>
                         <div className={style.titleAndDate}>
-                            <li>제목</li>
                             <span>등록: {formatDate(notice.writeDate)}&nbsp;&nbsp;&nbsp;조회: {!notice.viewCnt? 0 : notice.viewCnt}&nbsp;&nbsp;&nbsp;</span>
                         </div>
                         <input type="text" className={style.formtitle} value={title} onChange={(e)=>setTitle(e.target.value)}/>
-                        <li>본문</li>
                         <textarea className={style.formContent} rows="18" value={content} onChange={(e)=>setContent(e.target.value)}/>
                         <div className={style.formBtns}>
                             <span>
@@ -191,12 +185,10 @@ const AdminNoticeForm = () => {
                 {notice && modifying===false && itsDetail===true && (
                     <form className={style.noticeForm}>
                         <div className={style.titleAndDate}>
-                            <li>제목</li>
                             <span>등록: {formatDate(notice.writeDate)}&nbsp;&nbsp;&nbsp;조회: {!notice.viewCnt? 0 : notice.viewCnt}&nbsp;&nbsp;&nbsp;</span>
                         </div>
-                        <div className={style.formtitle}>{notice.title}</div>
-                        <li>본문</li>
-                        <div className={style.formContent}>{notice.content}</div>
+                        <input type="text" className={style.formtitle} value={notice.title} readOnly/>
+                        <textarea className={style.formContent} rows="18" value={notice.content} readOnly/>
                         <div className={style.formBtns}>
                             <input type="button" value="목록" onClick={goToPreviousList} className={style.previousListBtn}/>
                             <span>

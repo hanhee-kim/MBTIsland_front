@@ -117,6 +117,10 @@ const AdminQna = () => {
         setActiveFilter(null);
         getQuestionList(tmpSearch, null, 1, username);
     };
+    // 엔터키로 검색 수행
+    const handleKeyPress = (e) => {
+        if (e.key==="Enter") handleSearch();
+    }
 
     // 팝오버 오픈 상태
     const [openList, setOpenList] = useState([]);
@@ -207,7 +211,7 @@ const AdminQna = () => {
                         <span className={`${style.filterBtn} ${activeFilter==='N'? style.filterActive :''}`} onClick={() => handleFilterChange("N")}>미처리 : {questionCnts.answeredNotCnt}</span>
                     </div>
                     <div className={style.searchBar}>
-                        <input type="text" onChange={handleSearchChange}/>
+                        <input type="text" onChange={handleSearchChange} onKeyDown={(e)=>handleKeyPress(e)}/>
                         <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} onClick={handleSearch}/>
                     </div>
                 </div>

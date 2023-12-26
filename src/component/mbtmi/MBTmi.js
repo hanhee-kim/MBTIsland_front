@@ -279,6 +279,10 @@ const MBTmi = () => {
         setPage(1);
         getNewlyMbtmiList(category, type, tmpSearch, 1, sort); // 페이지번호만 리셋
     }
+    // 엔터키로 검색 수행
+    const handleKeyPress = (e) => {
+        if (e.key==="Enter") handleSearch();
+    }
 
     // 카테고리 변경
     const handleCategoryChange = (categoryParam) => {
@@ -492,7 +496,7 @@ const MBTmi = () => {
                         <button onClick={goToMbtmiForm}><img src={"/writebtnIcon.png" } alt="" className={style.writebtnIcon} />작성하기</button>
                     </span>
                     <div className={style.searchBar}>
-                        <input type="text" onChange={handleSearchChange}/>
+                        <input type="text" onChange={handleSearchChange} onKeyDown={(e)=>handleKeyPress(e)}/>
                         <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} onClick={handleSearch}/>
                     </div>
                 </div>

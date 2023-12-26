@@ -97,7 +97,7 @@ const MBTmiDetail = () => {
         userMbtiColor : user.userMbtiColor
     });
     const addComment = (commentContent, parentcommentNo) => {
-        // console.log('등록될댓글내용: ', commentContent);
+        console.log('등록될댓글내용: ', commentContent);
         // console.log('부모댓글번호: ', parentcommentNo);
 
         if(user.isBanned==='Y') {
@@ -105,8 +105,8 @@ const MBTmiDetail = () => {
             return;
         }
 
-        // let defaultUrl = `${urlroot}/mbtmicomment?no=${no}&comment=${parentcommentNo!=='' ? comment : reply}`;
-        let defaultUrl = `${urlroot}/mbtmicomment?no=${no}&comment=${commentContent}`;
+        // 댓글내용: 포함된 개행문자가 단순 문자열로 무시되지 않고 올바르게 인코딩되어 백으로 보내지도록 직접 인코딩을 해줌
+        let defaultUrl = `${urlroot}/mbtmicomment?no=${no}&comment=${encodeURIComponent(commentContent)}`;
         if(parentcommentNo !== '') defaultUrl += `&parentcommentNo=${parentcommentNo}`
         defaultUrl += `&commentpage=${commentPage}`; // 3페이지에서 대댓글 작성시 url에 파라미터로 3페이지가 붙음
         console.log('요청url: ', defaultUrl);
@@ -401,6 +401,10 @@ const MBTmiDetail = () => {
             alert("로그인해주세요.");
             return;
         }
+        if(user.isBanned==='Y') {
+            alert("정지 상태에서는 쪽지를 보내실 수 없습니다.");
+            return;
+        }
 
         const url = `/notewrite/${receiveUsername}/${receiveNickname}`; // 받을 유저
 
@@ -516,7 +520,7 @@ const MBTmiDetail = () => {
                         </span>
                     </div>
                     <div>
-                        <input type="text" className={style.commentInput} placeholder="댓글을 입력해주세요" id="comment" name="comment" onChange={(e)=>setTmpReplyContent(e.target.value)} required="required" value={tmpReplyContent}/>
+                        <textarea className={style.commentInput} placeholder="댓글을 입력해주세요" id="comment" name="comment" onChange={(e)=>setTmpReplyContent(e.target.value)} required="required" value={tmpReplyContent}/>
                     </div>
                 </div>
                 </td></tr>
@@ -667,7 +671,7 @@ const MBTmiDetail = () => {
                                 </span>
                             </div>
                             <div>
-                                <input type="text" className={style.commentInput} placeholder="댓글을 입력해주세요" id="comment" name="comment" onChange={(e)=>setComment(e.target.value)} required="required" value={comment}/>
+                                <textarea className={style.commentInput} placeholder="댓글을 입력해주세요" id="comment" name="comment" onChange={(e)=>setComment(e.target.value)} required="required" value={comment}/>
                             </div>
                         </div> )}
                 </div>

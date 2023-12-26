@@ -130,7 +130,7 @@ const AdminQnaForm = () => {
                                     <small>{answer.isRead}</small>
                                     <span>{formatDate(answer.writeDate)}</span>
                                     <hr/>
-                                    {answer.content}
+                                    <div className={styleQna.answerContent}>{answer.content}</div>
                                 </div>
                                 ) : (
                                 <>

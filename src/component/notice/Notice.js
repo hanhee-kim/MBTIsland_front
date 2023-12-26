@@ -77,6 +77,10 @@ const Notice = () => {
         setPage(1);
         getNoticeList(tmpSearch, 1);
     }
+    // 엔터키로 검색 수행
+    const handleKeyPress = (e) => {
+        if (e.key==="Enter") handleSearch();
+    }
 
     // 페이지네이션
     const PaginationInside = () => {
@@ -116,6 +120,7 @@ const Notice = () => {
         navigate(linkTo, {replace:false});
     }
 
+    
 
     return (
         <>
@@ -129,7 +134,7 @@ const Notice = () => {
                 <div className={style.aboveTable}>
                     <h5>총 {noticeCnt}건 현재 {pageInfo.curPage}/{pageInfo.allPage}페이지</h5>
                     <div className={style.searchBar}>
-                        <input type="text" onChange={handleSearchChange}/>
+                        <input type="text" onChange={handleSearchChange} onKeyDown={(e)=>handleKeyPress(e)}/>
                         <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} onClick={handleSearch}/>
                     </div>
                 </div>

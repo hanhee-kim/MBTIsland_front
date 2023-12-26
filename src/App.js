@@ -161,7 +161,7 @@ function App() {
                 element={<NoticeDetail />}
               />
               <Route exact path="/adminnotice/:search?/:hidden?/:page?" element={<AdminFrame />} />
-              <Route exact path="/adminnoticeform/:no/:search?/:hidden?/:page?" element={<AdminFrame />} />
+              <Route exact path="/adminnoticeform/:no?/:search?/:hidden?/:page?" element={<AdminFrame />} />
               {/* 중첩 라우팅 */}
               <Route path="/adminqna" element={<AdminFrame />}>
                 <Route path="/adminqna/form/:no" element={<AdminQnaForm />} />

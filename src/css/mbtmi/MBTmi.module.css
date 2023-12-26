@@ -528,6 +528,11 @@
     margin-left: 8px;
 }
 
+/* 댓글 내용 */
+.commentTd2row {
+    white-space: pre !important; /* 개행문자를 공백으로의 치환없이 그대로 보여지게함 */
+}
+
 .commentTd2row,
 .commentTd3row {
     width: 100%;
@@ -609,6 +614,8 @@
     min-height: 100px;
     border-radius: 4px;
     border: 1px solid #8F8F8F;
+
+    resize: none;
 }
 .replyWriteArea {
     margin-top: 10px;
