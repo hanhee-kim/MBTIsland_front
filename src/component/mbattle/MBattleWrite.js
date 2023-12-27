@@ -201,6 +201,7 @@ function MBattleWrite() {
                         required="required"
                         value={mbattle.title}
                         placeholder="제목을 입력해주세요."
+                        maxLength={32}
                     />
 
                     {/* 사진, 주제 작성 */}
@@ -223,6 +224,7 @@ function MBattleWrite() {
                                 required="required"
                                 value={mbattle.voteItem1}
                                 placeholder="주제를 입력해주세요."
+                                maxLength={10}
                             />
                         </div>
                         <div>
@@ -243,13 +245,14 @@ function MBattleWrite() {
                                 required="required"
                                 value={mbattle.voteItem2}
                                 placeholder="주제를 입력해주세요."
+                                maxLength={10}
                             />
                         </div>
                     </div>
 
                     <div className={style.ButtonDiv}>
                         <Button style={buttonStyle} onClick={()=>postMbattle()}>등록</Button>
-                        <Button style={buttonStyle} href="mbattle/1">취소</Button>
+                        <Button style={buttonStyle} onClick={()=>navigate(-1)}>취소</Button>
                     </div>
                 </div>
             </div>
