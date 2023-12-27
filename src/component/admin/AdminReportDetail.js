@@ -41,7 +41,6 @@ const AdminReportDetail = () => {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
             let report = res.data.report;
 
             // 사진 set
@@ -69,8 +68,6 @@ const AdminReportDetail = () => {
         let defaultUrl = `${urlroot}/reportwarning?username=${username}&reportType=${reportType}&tableType=${tableType}`;
         if(postNo) defaultUrl += `&postNo=${postNo}`;
         if(commentNo) defaultUrl += `&commentNo=${commentNo}`;
-
-        console.log(defaultUrl);
 
         axios.post(defaultUrl)
         .then(res=> {

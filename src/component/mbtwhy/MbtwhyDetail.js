@@ -571,7 +571,6 @@ function MbtwhyDetail() {
             if (result.isConfirmed) {
                 axios.get(`${urlroot}/mbtwhycommentdelete/${commentNo}`)
                 .then(res => {
-                    console.log(res);
                     Swal.fire({
                         title: "완료되었습니다.",
                         icon: "success",

@@ -109,8 +109,6 @@ function MBattleWrite() {
 
     // 게시글 작성
     const postMbattle = () => {
-        console.log(mbattle.fileIdx1);
-        console.log(mbattle.fileIdx2);
         if((mbattle.fileIdx1.length===0 && mbattle.fileIdx2.length!==0) || (mbattle.fileIdx1.length!==0 && mbattle.fileIdx2.length===0)) {
             Swal.fire({
                 title: "파일을 모두 첨부해주세요.",
@@ -148,7 +146,6 @@ function MBattleWrite() {
     
         axios.post(`${urlroot}/mbattlewrite/`, formData)
         .then(res=> {
-            console.log(res);
             let no = res.data.no;
             navigate(`/mbattledetail/${no}`);
         })
