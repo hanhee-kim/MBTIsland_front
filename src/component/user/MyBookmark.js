@@ -35,17 +35,17 @@ const MyBookmark = () => {
   const navigate = useNavigate();
   //더미데이터
   const getMyBookmarkList = (username,page) => {
-    console.log("axios들어갈자리");
+    //console.log("axios들어갈자리");
     axios
       .get(`${urlroot}/mybookmarklist/${username}/${page}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setInitData(true);
         setPageInfo(res.data.pageInfo);
         setBookmarkList(res.data.bookmarkList);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         setInitData(false);
       })
   }
@@ -54,7 +54,7 @@ const MyBookmark = () => {
   },[])
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
-    console.log("***페이지이동***");
+    //console.log("***페이지이동***");
     // getMyBookmarkList(user.username, pageNo);
     //페이지가 변경되면 checkItems 빈배열로 초기화.
     setCheckItems([]);
@@ -96,14 +96,14 @@ const MyBookmark = () => {
   };
   // const [isBookmarked,setIsBookmarked] = useState(true);
   const changeBookmarkIcon = (e,no,boardType) => {
-    console.log("trClick"+no+boardType)
+    //console.log("trClick"+no+boardType)
     //해당 북마크 넘버 가져가서 북마크테이블에서 지우기
     //원래 가져온게 (true) 만가져오긴함 true면 false로 ,
     // false로 바꾸면 해당 리스트에서 지우고 한번 더 데이터 가져올지? 
     // const trClick = (bookmark) => {
-    //   console.log("trClick ");
+    //   //console.log("trClick ");
     //   if(boardType === 'MBT-WHY'){
-    //     console.log("???")
+    //     //console.log("???")
     //     navigate('/mbtwhydetail/:no');
     //   }
     //   else{ //MBTMI
@@ -120,7 +120,7 @@ const MyBookmark = () => {
         // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
         setCheckItems(checkItems.filter((el) => el !== no));
       }
-      console.log(checkItems);
+      //console.log(checkItems);
     };
   
     // 체크박스 전체 선택
@@ -144,8 +144,8 @@ const MyBookmark = () => {
         return;
       }
       let sendArrayItems = checkItems.join(",");
-      console.log(checkItems.type);
-      console.log(checkItems);
+      //console.log(checkItems.type);
+      //console.log(checkItems);
   
       //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
       axios
@@ -153,7 +153,7 @@ const MyBookmark = () => {
           `${urlroot}/deletebookmark?sendArrayItems=${sendArrayItems}`
         )
         .then((res) => {
-          console.log(res);
+          //console.log(res);
           Swal.fire({
             title: "삭제 성공!",
             icon: "success",
@@ -162,7 +162,7 @@ const MyBookmark = () => {
           getMyBookmarkList(user.username, 1);
         })
         .catch((err) => {
-          console.log(err);
+          //console.log(err);
         });
     };    
   return (

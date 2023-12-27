@@ -88,7 +88,7 @@ function MbtwhyModify() {
             setContent(content);
         })
         .catch(err => {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -101,11 +101,11 @@ function MbtwhyModify() {
         let defaultUrl = `${urlroot}/mbtwhymodify/${no}/${content}`;
         axios.post(defaultUrl)
         .then(res => {
-            console.log(res);
+            //console.log(res);
             navigate(`/mbtwhydetail/${no}/${mbti.toLowerCase()}`);
         })
         .catch(err => {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -115,7 +115,7 @@ function MbtwhyModify() {
     }, []);
 
     useEffect(() => {
-        console.log(content);
+        //console.log(content);
     }, [content]);
 
     const pageHeader = {

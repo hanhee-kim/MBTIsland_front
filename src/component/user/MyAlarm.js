@@ -49,26 +49,26 @@ const MyAlarm = () => {
     if (page !== null || page !== "") {
       defaultUrl += `&page=${page}`;
     }
-    console.log("요청url : " + defaultUrl);
+    //console.log("요청url : " + defaultUrl);
 
     axios
       .get(defaultUrl)
       .then((res) => {
-        console.log(res);
-        console.log(res);
+        //console.log(res);
+        //console.log(res);
         let pageInfo = res.data.pageInfo;
         let list = res.data.alarmList;
         setAlarmList([...list]);
         setPageInfo({ ...pageInfo });
       })
       .catch((err) => {
-        console.log(err);
-        console.log(err.response.data);
+        //console.log(err);
+        //console.log(err.response.data);
         if (
           err.response.data.err == "해당 알림없음." ||
           err.response.data.err == "알림에 대한 해당 댓글이 존재하지 않음"
         ) {
-          console.log(alarmList);
+          //console.log(alarmList);
           setAlarmList(err.response.data.alarmList);
         }
       });
@@ -77,7 +77,7 @@ const MyAlarm = () => {
   // 체크박스 단일 선택
   const handleSingleCheck = (checked, no) => {
     if (checked) {
-      console.log(checkItems);
+      //console.log(checkItems);
       // 단일 선택 시 체크된 아이템을 배열에 추가
       setCheckItems((prev) => [...prev, no]);
     } else {
@@ -112,7 +112,7 @@ const MyAlarm = () => {
     axios
       .put(`${urlroot}/updatealarmisread?arrayItems=${arrayItems}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setFilterChange("읽음처리");
         setCheckItems([]);
         Swal.fire({
@@ -122,7 +122,7 @@ const MyAlarm = () => {
         getMyAlarmList(user.username, type, page);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        //console.log(err.response.data);
         let errLog = err.response.data;
         Swal.fire({
           title: "읽음처리 실패!",
@@ -135,7 +135,7 @@ const MyAlarm = () => {
     axios
       .put(`${urlroot}/updatealarmisreadall?username=${user.username}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setFilterChange("모두읽음처리");
         setCheckItems([]);
         Swal.fire({
@@ -145,7 +145,7 @@ const MyAlarm = () => {
         getMyAlarmList(user.username, type, page);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        //console.log(err.response.data);
         let errLog = err.response.data;
         Swal.fire({
           title: "모두 읽음 처리 실패!",
@@ -171,7 +171,7 @@ const MyAlarm = () => {
     axios
       .put(`${urlroot}/checkalarm/${no}`)
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
       })
       .catch((err) => {});
   };
@@ -180,7 +180,7 @@ const MyAlarm = () => {
     //useNavigate();사용해서
     const no = alarm.detailNo;
     const mbti = alarm.detailMbti;
-    console.log(user.username, type, page);
+    //console.log(user.username, type, page);
     switch (alarm.detailType) {
       case "MBTMI":
         checkAlarm(alarm.alarmNo);
@@ -278,7 +278,7 @@ const MyAlarm = () => {
   };
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
-    console.log("***페이지이동***");
+    //console.log("***페이지이동***");
     getMyAlarmList(user.username, type, pageNo);
   };
   return (

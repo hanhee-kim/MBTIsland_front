@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 
 /* 재사용성을 높이기 위해 외부에 선언한 페이지네이션 */
 const PaginationOutside = ({ pageInfo, handlePageNo }) => {
-    // console.log('PaginationOutside에서 출력한 pageInfo : ', pageInfo);
+    // //console.log('PaginationOutside에서 출력한 pageInfo : ', pageInfo);
     const isFirstGroup = pageInfo.startPage===1;
     const isLastGroup = pageInfo.endPage===pageInfo.allPage;
     const pageGroup = [];
@@ -98,8 +98,8 @@ const MBTmiDetail = () => {
         userMbtiColor : user.userMbtiColor
     });
     const addComment = (commentContent, parentcommentNo) => {
-        console.log('등록될댓글내용: ', commentContent);
-        // console.log('부모댓글번호: ', parentcommentNo);
+        //console.log('등록될댓글내용: ', commentContent);
+        // //console.log('부모댓글번호: ', parentcommentNo);
 
         if(user.isBanned==='Y') {
             Swal.fire({
@@ -120,11 +120,11 @@ const MBTmiDetail = () => {
         let defaultUrl = `${urlroot}/mbtmicomment?no=${no}&comment=${encodeURIComponent(commentContent)}`;
         if(parentcommentNo !== '') defaultUrl += `&parentcommentNo=${parentcommentNo}`
         defaultUrl += `&commentpage=${commentPage}`; // 3페이지에서 대댓글 작성시 url에 파라미터로 3페이지가 붙음
-        console.log('요청url: ', defaultUrl);
+        //console.log('요청url: ', defaultUrl);
 
         axios.post(defaultUrl, sendUser)
         .then(res=> {
-            console.log(res);
+            //console.log(res);
             let comments = res.data.mbtmiCommentList;
             let allPage = res.data.pageInfo.allPage;
             let mbtmiCommentCnt = res.data.mbtmiCommentCnt;
@@ -152,7 +152,7 @@ const MBTmiDetail = () => {
             // getMbtmiCommentList(allPage); // ***
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     };
     
@@ -172,9 +172,9 @@ const MBTmiDetail = () => {
 
         getMbtmiCommentList(1, user.username);
         
-        console.log("현재 게시글번호: ", no);
-        console.log('user.username: ', user.username);
-        // console.log('현재 댓글 페이지번호: ' + commentPage);
+        //console.log("현재 게시글번호: ", no);
+        //console.log('user.username: ', user.username);
+        // //console.log('현재 댓글 페이지번호: ' + commentPage);
     // }, [user.username]);
     }, []);
 
@@ -184,7 +184,7 @@ const MBTmiDetail = () => {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
+            //console.log(res);
             let mbtmi = res.data.mbtmi;
             let mbtmiCommentCnt = res.data.mbtmiCommentCnt;
             let recommendCnt = res.data.mbtmi.recommendCnt;
@@ -200,11 +200,11 @@ const MBTmiDetail = () => {
             setIsRecommended(isRecommended);
             setIsBookmarked(isBookmarked);
 
-            // console.log('getMbtmiDetail함수에서 출력한 commentPage: ' + commentPage);
+            // //console.log('getMbtmiDetail함수에서 출력한 commentPage: ' + commentPage);
             
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             setMbtmiCommentCnt(0);
         });
     }
@@ -217,7 +217,7 @@ const MBTmiDetail = () => {
     // };
     // 이미지 사이즈 조절 모듈 추가 이후 width 속성을 고려
     const replaceImagePlaceholders = (content) => {
-        console.log('content: ', content);
+        //console.log('content: ', content);
         return content.replace(/<img src="(\d+)"(.*)\/>/g, (match, fileIdx, otherAttributes) => {
             return `<img src="${urlroot}/mbtmiimg/${fileIdx}" ${otherAttributes} alt=''/>`;
         });
@@ -229,14 +229,14 @@ const MBTmiDetail = () => {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log('댓글목록받아오기요청결과: ', res);
+            //console.log('댓글목록받아오기요청결과: ', res);
             let mbtmiCommentList = res.data.mbtmiCommentList;
             let commentPageInfo = res.data.pageInfo;
             setMbtmiCommentList([...mbtmiCommentList]);
             setCommentPageInfo({...commentPageInfo});
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             setCommentPageInfo({});
         });
     }
@@ -259,7 +259,7 @@ const MBTmiDetail = () => {
     }, []);
 
     const deleteMbtmi = (no) => {
-        // console.log('선택한 게시글번호: ', no);
+        // //console.log('선택한 게시글번호: ', no);
 
         Swal.fire({
             title: '게시글을 삭제하시겠습니까?',
@@ -280,7 +280,7 @@ const MBTmiDetail = () => {
                         goToPreviousList();
                     })
                     .catch(err => {
-                        console.log(err);
+                        //console.log(err);
                         Swal.fire({
                             title: 'Error',
                             icon: 'error'
@@ -294,13 +294,13 @@ const MBTmiDetail = () => {
 
     // 수정 버튼 클릭시
     const modifyMbtmi = (no) => {
-        // console.log('수정할 게시글번호: ', no);
+        // //console.log('수정할 게시글번호: ', no);
         setOpen(false);
         navigate(`/mbtmiform/${no}`)
     };
 
     const deleteComment = (commentNo) => {
-        // console.log('선택한 댓글번호: ', commentNo);
+        // //console.log('선택한 댓글번호: ', commentNo);
 
         Swal.fire({
             title: '댓글을 삭제하시겠습니까?',
@@ -321,7 +321,7 @@ const MBTmiDetail = () => {
                         getMbtmiCommentList(commentPage); // 이 함수를 호출하여 댓글목록 재조회하여 재렌더링 시킨다
                     })
                     .catch(err => {
-                        console.log(err);
+                        //console.log(err);
                         Swal.fire({
                             title: 'Error',
                             icon: 'error'
@@ -363,18 +363,18 @@ const MBTmiDetail = () => {
             });
             return;
         }
-        // console.log('추천값 출력: ', recommend);
+        // //console.log('추천값 출력: ', recommend);
         let defaultUrl = `${urlroot}/mbtmirecommend`;
 
         axios.post(defaultUrl, recommend)
         .then(res=> {
-            // console.log('추천결과: ', res);
+            // //console.log('추천결과: ', res);
             let mbtmiRecommendCount = res.data.mbtmiRecommendCount;
             setIsRecommended(!isRecommended);
             setRecommendCount(mbtmiRecommendCount);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -407,22 +407,22 @@ const MBTmiDetail = () => {
             });
             return;
         }
-        console.log('북마크값 출력: ', bookmark);
+        //console.log('북마크값 출력: ', bookmark);
         let defaultUrl = `${urlroot}/mbtmibookmark`;
 
         axios.post(defaultUrl, bookmark)
         .then(res=> {
-            console.log('북마크결과: ', res);
+            //console.log('북마크결과: ', res);
             setIsBookmarked(!isBookmarked);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     }
 
     // 신고 팝업창
     const openReportWrite = (reportTarget, reportTargetFrom) => {
-        // console.log('신고대상 reportTarget(객체): ', reportTarget, ", reportTargetFrom(테이블명): ", reportTargetFrom);
+        // //console.log('신고대상 reportTarget(객체): ', reportTarget, ", reportTargetFrom(테이블명): ", reportTargetFrom);
         if(!user.username) {
             Swal.fire({
                 title: "로그인해주세요.",
@@ -543,7 +543,7 @@ const MBTmiDetail = () => {
 
     // 댓글목록 페이지네이션
     const PaginationInside = () => {
-        // console.log('댓글목록 페이지네이션에서 출력 commentPage: ' + commentPage);
+        // //console.log('댓글목록 페이지네이션에서 출력 commentPage: ' + commentPage);
         const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
         for(let i=commentPageInfo.startPage; i<=commentPageInfo.endPage; i++) {
             pageGroup.push(
@@ -598,7 +598,7 @@ const MBTmiDetail = () => {
 
         const [tmpReplyContent, setTmpReplyContent] = useState('');
         const addReply = (tmpReplyContent) => {
-            console.log('대댓글내용: ', tmpReplyContent);
+            //console.log('대댓글내용: ', tmpReplyContent);
             // setReply(tmpReplyContent);
             // addComment(comment.commentNo);
             addComment(tmpReplyContent, comment.commentNo);
@@ -620,7 +620,7 @@ const MBTmiDetail = () => {
                         </div>
                         <div className={style.commentTd3row}>
                             <small>{formatDatetimeGap(comment.writeDate)}</small>
-                            {console.log('유저 있는지 확인: ', user.username)}
+                            {/* {console.log('유저 있는지 확인: ', user.username)} */}
                             {/* {user?.username!==undefined && user?.username!=="" && !isRemovedOrBlockedComment && ( */}
                             {!isRemovedOrBlockedComment && (
                                 <small onClick={handleReply}>답글쓰기</small>

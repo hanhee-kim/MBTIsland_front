@@ -10,7 +10,7 @@ const Mypage = () => {
  //function
   const [currentPage, setCurrentPage] = useState("");
   const changePage = (e) => {
-    console.log(e);
+    // console.log(e);
     setCurrentPage(e);
   };
   return (

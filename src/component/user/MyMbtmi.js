@@ -24,19 +24,19 @@ const MyMbtmi = (props) => {
   };
   //서버와 통신할 메소드 정의
   const getMyMbtmiList = (username,page) => {
-    console.log(page);
-    console.log("url:" + `${urlroot}/mbtmilist?username=${username}&page=${page}`);
+    //console.log(page);
+    //console.log("url:" + `${urlroot}/mbtmilist?username=${username}&page=${page}`);
 
     axios
       .get(`${urlroot}/mbtmilist?username=${username}&page=${page}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setInitData(true);
         setPageInfo(res.data.pageInfo);
         setTmiList(res.data.mbtmiList);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         setInitData(false);
       });
   };
@@ -49,8 +49,8 @@ const MyMbtmi = (props) => {
 
   // 체크박스 단일 선택
   const handleSingleCheck = (checked, no) => {
-    console.log(no);
-    console.log(checkItems);
+    //console.log(no);
+    //console.log(checkItems);
     if (checked) {
       // 단일 선택 시 체크된 아이템을 배열에 추가
       setCheckItems((prev) => [...prev, no]);
@@ -82,8 +82,8 @@ const MyMbtmi = (props) => {
     }
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     let sendArrayItems = checkItems.join(",");
-    console.log(checkItems.type);
-    console.log(checkItems);
+    //console.log(checkItems.type);
+    //console.log(checkItems);
 
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     axios
@@ -91,7 +91,7 @@ const MyMbtmi = (props) => {
         `${urlroot}/deletembtmilist?sendArrayItems=${sendArrayItems}`
       )
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         Swal.fire({
           title: "삭제 성공!",
           icon: "success",
@@ -101,7 +101,7 @@ const MyMbtmi = (props) => {
         getMyMbtmiList(user.username, page);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   };
   //tr 클릭시 detail로 이동
@@ -110,7 +110,7 @@ const MyMbtmi = (props) => {
   };
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
-    console.log("***페이지이동***");
+    //console.log("***페이지이동***");
     getMyMbtmiList(user.username,pageNo);
     // getMyMbtmiList(user.username, pageNo);
     //페이지가 변경되면 checkItems 빈배열로 초기화.

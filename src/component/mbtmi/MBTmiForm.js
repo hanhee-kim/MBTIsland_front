@@ -39,7 +39,7 @@ const MBTmiForm = () => {
     const handleQuillChange = async (content, delta, source, editor) => {
         setQuillValue(content);
 
-        console.log('editor.getHTML():', editor.getHTML()); // 텍스트는 <p>입력문자열</p> 이미지는 <img src="엄청 긴 base64코드"> 로 콘솔에 찍힌다
+        //console.log('editor.getHTML():', editor.getHTML()); // 텍스트는 <p>입력문자열</p> 이미지는 <img src="엄청 긴 base64코드"> 로 콘솔에 찍힌다
 
         // 이미지가 삽입또는 제거됐는지 확인 후 처리
         if (source === 'user') {
@@ -69,7 +69,7 @@ const MBTmiForm = () => {
                 }
             });
             const fileIdx = imageResponse.data;
-            // console.log('fileIdx: ', fileIdx);
+            // //console.log('fileIdx: ', fileIdx);
     
             // 게시글 업데이트 로직
             await axios.post(`${urlroot}/updateFileIdxs/${postNo}`, { fileIdx: fileIdx });
@@ -77,14 +77,14 @@ const MBTmiForm = () => {
             return fileIdx;
             
         } catch (error) {
-            console.error('이미지 업로드 및 게시글 업데이트 오류:', error);
+            //console.error('이미지 업로드 및 게시글 업데이트 오류:', error);
         }
     };
 
     // 등록폼에서 저장 버튼 클릭시
     const handleFormSubmit = async () => {
         
-        console.log('title: ', title, ", content: ", quillValue, ", category: "+ selectCategory, ", writerId: ", user.username, ", writerMbti: ", user.userMbti);
+        //console.log('title: ', title, ", content: ", quillValue, ", category: "+ selectCategory, ", writerId: ", user.username, ", writerMbti: ", user.userMbti);
         if (title==='' || quillValue==='' || selectCategory==='') {
             Swal.fire({
                 title: "게시글 등록 실패",
@@ -96,7 +96,7 @@ const MBTmiForm = () => {
         // 에디터 내용에서 이미지 태그 제거하고 텍스트만 추출
         const contentWithoutImages = quillValue.replace(/<img[^>]*>/g, "");
         setQuillValue(contentWithoutImages);
-        // console.log('***contentWithoutImages: ', contentWithoutImages);
+        // //console.log('***contentWithoutImages: ', contentWithoutImages);
 
 
         // 1단계: 텍스트 컨텐츠 백엔드로 전송
@@ -113,8 +113,8 @@ const MBTmiForm = () => {
         try {
             const response = await axios.post(`${urlroot}/mbtmiwritewithoutimages`, postData);
             const mbtmi = response.data.mbtmi;
-            // console.log('*****반환받은데이터: ', response.data.mbtmi);
-            // console.log('넘길 no: ', mbtmi.no);
+            // //console.log('*****반환받은데이터: ', response.data.mbtmi);
+            // //console.log('넘길 no: ', mbtmi.no);
 
 
             // 이미지 URL을 포함한 새로운 컨텐츠 생성
@@ -127,7 +127,7 @@ const MBTmiForm = () => {
                 const imageData = imgSrcMatch ? imgSrcMatch[1] : null;
                 if (imageData) {
                     const fileIdx = await uploadImage(imageData, mbtmi.no);
-                    console.log('fileIdx: ', fileIdx);
+                    //console.log('fileIdx: ', fileIdx);
 
                     // 추가
                     const newImgTag = `<img src="${fileIdx}" ${imgWidthMatch ? `width="${imgWidthMatch[1]}px"` : ''} />`;
@@ -140,7 +140,7 @@ const MBTmiForm = () => {
             /*
             // 이미지가 포함된 최종 컨텐츠로 업데이트
             const updateResponse = await axios.post(`${urlroot}/mbtmiContainingImgTags/${mbtmi.no}`, { content: updatedContent });
-            console.log('결과: ', updateResponse);
+            //console.log('결과: ', updateResponse);
             
             // 게시글 상세 컴포넌트로 이동
             // navigate(`/mbtmidetail/${mbtmi.no}`);
@@ -148,15 +148,15 @@ const MBTmiForm = () => {
 
             try {
                 const updateResponse = await axios.post(`${urlroot}/mbtmiContainingImgTags/${mbtmi.no}`, { content: updatedContent });
-                console.log('결과: ', updateResponse);
+                //console.log('결과: ', updateResponse);
                 navigate(`/mbtmidetail/${mbtmi.no}`);
             } catch (error) {
-                console.error('게시글업데이트 에러 내용:', error);
+                //console.error('게시글업데이트 에러 내용:', error);
             }
 
 
         } catch (error) {
-            console.log(error);            
+            //console.log(error);            
         }
     }
 
@@ -232,7 +232,7 @@ const MBTmiForm = () => {
         // if(user.username!=="" || user.username!==undefined) defaultUrl += `?username=${user.username}`;
         axios.get(defaultUrl)
         .then(res=> {
-            console.log('getMbtmiDetail 요청결과: ', res);
+            //console.log('getMbtmiDetail 요청결과: ', res);
             let mbtmi = res.data.mbtmi;
             let prevCategory = res.data.mbtmi.category;
             setMbtmi(mbtmi);
@@ -246,7 +246,7 @@ const MBTmiForm = () => {
             setQuillValue(mbtmi.content); // 이미지URL로 교체된 내용을 에디터의 내용값으로 설정
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     }
     // 이미지출력을 위한 처리: fileIdx가 들어간 이미지태그 이미지 URL로 교체
@@ -257,7 +257,7 @@ const MBTmiForm = () => {
     // };
     // 이미지 사이즈 조절 모듈 추가 이후 width 속성을 고려
     const replaceImagePlaceholders = (content) => {
-        console.log('content: ', content);
+        //console.log('content: ', content);
         return content.replace(/<img src="(\d+)"(.*)\/>/g, (match, fileIdx, otherAttributes) => {
             return `<img src="${urlroot}/mbtmiimg/${fileIdx}" ${otherAttributes} alt=''/>`;
         });
@@ -267,7 +267,7 @@ const MBTmiForm = () => {
     // 수정 폼에서의 저장 버튼 클릭시
     const modifyPost = async () => {
         try {
-            console.log("no: ", mbtmi.no, "writeDate: ", mbtmi.writeDate, "category: ", selectCategory, "title: ", title, ", content: ", content, "writerId: ", user.username);
+            //console.log("no: ", mbtmi.no, "writeDate: ", mbtmi.writeDate, "category: ", selectCategory, "title: ", title, ", content: ", content, "writerId: ", user.username);
             if (title==='' || quillValue==='' || selectCategory==='') {
                 Swal.fire({
                     title: "게시글 등록 실패",
@@ -278,7 +278,7 @@ const MBTmiForm = () => {
             }
             // 에디터 내용에서 이미지 태그 제거하고 텍스트만 추출
             const contentWithoutImages = quillValue.replace(/<img[^>]*>/g, "");
-            console.log('contentWithoutImages: ', contentWithoutImages);
+            //console.log('contentWithoutImages: ', contentWithoutImages);
             // 게시글 수정 데이터
             const postData = {
                 no: mbtmi.no,  // 수정될 게시글 번호를 전송
@@ -311,7 +311,7 @@ const MBTmiForm = () => {
             // 수정된 게시글 데이터로 서버에 요청
             const response = await axios.post(`${urlroot}/mbtmimodify`, postData);
 
-            console.log('수정 요청결과: ', response);
+            //console.log('수정 요청결과: ', response);
             const modifiedMbtmi = response.data.mbtmi;
             setMbtmi(modifiedMbtmi);
             setModifying(false);
@@ -320,7 +320,7 @@ const MBTmiForm = () => {
             navigate(`/mbtmidetail/${no}`)
 
         } catch (error) {
-            console.error('수정 오류내용: ', error);
+            //console.error('수정 오류내용: ', error);
         }
 
     }
@@ -382,7 +382,7 @@ const MBTmiForm = () => {
                 ) : (
                     // 수정 폼
                     <form className={style.mbtmiForm}>
-                    {console.log('selectCategory: ', selectCategory, ", mbtmi: ", mbtmi, ", activeCategory: ", activeCategory)}
+                    {/* {console.log('selectCategory: ', selectCategory, ", mbtmi: ", mbtmi, ", activeCategory: ", activeCategory)} */}
 
                         {/* 카테고리 */}
                         <div className={style.categoryBtns}>

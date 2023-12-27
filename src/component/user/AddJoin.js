@@ -57,7 +57,7 @@ const AddJoin = () => {
   const [mbtiCheckTF, setMbtiCheckTF] = useState("T");
   const [mbtiCheckPJ, setMbtiCheckPJ] = useState("P");
   useEffect(()=>{
-    console.log(token);
+    //console.log(token);
   },[])
   //function
   const addJoin = (e) => {
@@ -71,16 +71,16 @@ const AddJoin = () => {
       }
     })
     .then(res=> {            
-      console.log(res);
-      console.log("data:"+res.data);
+      //console.log(res);
+      //console.log("data:"+res.data);
       // setUser(res.data);
       dispatch({type:"user",payload:res.data});
-      console.log(user.userMbti);
+      //console.log(user.userMbti);
       navigate("/");
     })
     .catch(err=> {
-      console.log("user가져오기 에러");
-      console.log(err);
+      //console.log("user가져오기 에러");
+      //console.log(err);
     })
   };
   const mbtiEIClick = (e, ei) => {

@@ -41,7 +41,7 @@ const AdminReportDetail = () => {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
+            //console.log(res);
             let report = res.data.report;
 
             // 사진 set
@@ -54,7 +54,7 @@ const AdminReportDetail = () => {
             setReport(report);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     };
 
@@ -70,7 +70,7 @@ const AdminReportDetail = () => {
         if(postNo) defaultUrl += `&postNo=${postNo}`;
         if(commentNo) defaultUrl += `&commentNo=${commentNo}`;
 
-        console.log(defaultUrl);
+        //console.log(defaultUrl);
 
         axios.post(defaultUrl)
         .then(res=> {
@@ -81,7 +81,7 @@ const AdminReportDetail = () => {
             getReportDetail();
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     };
 
@@ -100,7 +100,7 @@ const AdminReportDetail = () => {
             getReportDetail();
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     };
 

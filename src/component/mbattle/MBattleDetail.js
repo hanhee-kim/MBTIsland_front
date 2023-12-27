@@ -321,11 +321,11 @@ function MBattleDetail() {
             // 항목2 투표 결과
             let mbattleResult2 = res.data.mbattleResult2;
 
-            console.log(mbattle);
-            console.log(mbattleVoter);
-            console.log(isMbattleBookmarked);
-            console.log(mbattleResult1);
-            console.log(mbattleResult2);
+            //console.log(mbattle);
+            //console.log(mbattleVoter);
+            //console.log(isMbattleBookmarked);
+            //console.log(mbattleResult1);
+            //console.log(mbattleResult2);
 
             if(mbattleResult1!==null) {
                 setVoteData1([
@@ -440,7 +440,7 @@ function MBattleDetail() {
             // setPageInfo({...pageInfo});
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             setMbattle({});
         })
     };
@@ -500,7 +500,7 @@ function MBattleDetail() {
                     goToPreviousList();
                 })
                 .catch(err => {
-                    console.log(err);
+                    //console.log(err);
                 });
             }
         }); 
@@ -536,7 +536,7 @@ function MBattleDetail() {
 
         // let defaultUrl = `${urlroot}/mbattlevote/${no}/${vote}/${user.username}/${user.userMbti}`
         let defaultUrl = `${urlroot}/mbattlevote/${user.userMbti}/${vote}`
-        console.log("ㅋ");
+        //console.log("ㅋ");
         axios.post(defaultUrl, voter)
         .then(res=> {
             let mbattleResult = res.data.mbattleResult;
@@ -546,7 +546,7 @@ function MBattleDetail() {
             getMbattleDetail();
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     };
 
@@ -612,7 +612,7 @@ function MBattleDetail() {
             setCommentPage(commentPage);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             setComments([]);
             setCommentPageInfo({});
         });
@@ -648,12 +648,12 @@ function MBattleDetail() {
 
         axios.post(defaultUrl, sendUser)
         .then(res=> {
-            console.log(res);
+            //console.log(res);
             setInputCommentValue("");
             getMbattleCommentList(commentPage);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -687,7 +687,7 @@ function MBattleDetail() {
                     getMbattleCommentList(commentPage); // 이 함수를 호출하여 댓글목록 재조회하여 재렌더링 시킨다
                 })
                 .catch(err => {
-                    console.log(err);
+                    //console.log(err);
                 });
             }
         });
@@ -698,7 +698,7 @@ function MBattleDetail() {
     // commentPage 핸들링
     const handleCommentPageNo = (commentPageNo) => {
         setCommentPage(commentPageNo);
-        console.log(commentPageNo);
+        //console.log(commentPageNo);
         
         getMbattleCommentList(commentPageNo); // setCommentPage(pageNo)는 업데이트가 지연되기 때문에, state인 page가 아니라 전달인자 pageNo로 요청해야함
     };
@@ -728,10 +728,10 @@ function MBattleDetail() {
             randomNo = res.data.randomNo;
             navigate(`/mbattledetail/${randomNo}`);
             navigate(0);
-            console.log(randomNo);
+            //console.log(randomNo);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     };
 

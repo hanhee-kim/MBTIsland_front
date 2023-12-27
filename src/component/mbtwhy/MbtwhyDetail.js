@@ -301,7 +301,7 @@ function MbtwhyDetail() {
             }
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             setMbtwhy({});
             setComments([]);
             setCommentPageInfo({});
@@ -401,7 +401,7 @@ function MbtwhyDetail() {
                     goToPreviousList();
                 })
                 .catch(err => {
-                    console.log(err);
+                    //console.log(err);
                 });
             }
         });   
@@ -470,7 +470,7 @@ function MbtwhyDetail() {
             // setCommentPage(commentPage);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             setComments([]);
             setCommentPageInfo({});
         });
@@ -545,7 +545,7 @@ function MbtwhyDetail() {
             setCommentCount(mbtwhyCommentCount);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -571,7 +571,7 @@ function MbtwhyDetail() {
             if (result.isConfirmed) {
                 axios.get(`${urlroot}/mbtwhycommentdelete/${commentNo}`)
                 .then(res => {
-                    console.log(res);
+                    //console.log(res);
                     Swal.fire({
                         title: "완료되었습니다.",
                         icon: "success",
@@ -581,7 +581,7 @@ function MbtwhyDetail() {
                     
                 })
                 .catch(err => {
-                    console.log(err);
+                    //console.log(err);
                 });
             }
         });

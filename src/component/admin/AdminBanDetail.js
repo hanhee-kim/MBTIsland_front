@@ -51,14 +51,14 @@ const AdminBanDetail = () => {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
+            // console.log(res);
             let bannedUser = res.data.bannedUser;
 
             // 게시글 set
             setBan(bannedUser);
         })
         .catch(err=> {
-            console.log(err);
+            // console.log(err);
         })
     };
 
@@ -66,11 +66,11 @@ const AdminBanDetail = () => {
     const getReportList = (page) => {
         axios.get(`${urlroot}/adminreport/${username}/${page}`)
         .then(res=> {
-            console.log(res);
+            // console.log(res);
             let pageInfo = res.data.pageInfo;
             let reportList = res.data.reportList;
 
-            console.log(reportList);
+            // console.log(reportList);
 
             setReportList([...reportList]);
             
@@ -78,7 +78,7 @@ const AdminBanDetail = () => {
             setPageInfo({...pageInfo});
         })
         .catch(err=> {
-            console.log(err);
+            // console.log(err);
             // setReportList([]);
             // setPageInfo({});
         })
@@ -97,7 +97,7 @@ const AdminBanDetail = () => {
             getBanDetail();
         })
         .catch(err=> {
-            console.log(err);
+            // console.log(err);
         })
     };
 

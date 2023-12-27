@@ -40,7 +40,7 @@ const ReportWrite = (props) => {
       });
     })
     .catch(err=> {
-      console.log(err);
+      //console.log(err);
       Swal.fire({
         title: "신고 실패",
         icon: "fail",
@@ -51,12 +51,12 @@ const ReportWrite = (props) => {
   };
 
   // const changeReportReason = (e) => {
-  //   console.log(e.target.value);
+  //   //console.log(e.target.value);
   //   setReport({...report,reportType:e.target.value});
   // };
 
   useEffect(()=> {
-    console.log("신고 정보:", report);
+    //console.log("신고 정보:", report);
   }, [report]);
 
   return (
