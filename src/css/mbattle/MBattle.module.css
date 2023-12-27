@@ -90,6 +90,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    white-space: pre;
 }
 
 .boardContents {
@@ -147,10 +148,31 @@
 .noMbattle {
     margin: 100px;
     color:#C5C5C5;
+    justify-content: center;
 }
 
 .sectionSearch {
     width: 600px;
     text-align: center;
     margin: 0 auto;
+}
+
+.sectionRightArea {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.sectionRightArea>div {
+    /* border: dashed red 3px; */
+    /* padding-right: 100px; */
+    /* position: sticky; */
+    position:fixed;
+    right: 100px;
+    bottom: 40px;
+}
+
+.movetopIcon {
+    float: right;
+    width: 50px;
+    cursor: pointer;
 }

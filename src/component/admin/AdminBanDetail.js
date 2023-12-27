@@ -1,138 +1,149 @@
 import {
-    Nav,
-    NavItem,
-    NavLink,
-    FormGroup,
-    Col,
-    Input,
-    Button,
-    Pagination,
-    PaginationItem,
-    PaginationLink } from "reactstrap";
-import { useState } from "react";
+    Button
+} from "reactstrap";
+import React, { useEffect, useState } from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import Swal from "sweetalert2";
 import axios from 'axios';
-import styleFrame from "../../css/admin/AdminFrame.module.css";
-import style from "../../css/admin/AdminReport.module.css";
-import React from "react";
-import {Link} from "react-router-dom";
 import AdminNav from "./AdminNav";
 import { urlroot } from "../../config";
 
-const AdminBanDetail = () => {
-    const [report, setReport] = useState({
-        num:1,
-        userId:"user01",
-        warningCount: 3,
-        banCount: 1,
-        isBanned:"활동 정지",
-        banStartDate:"2023.11.11",
-        banEndDate:"2023.11.25"
-    });
+import styleFrame from "../../css/admin/AdminFrame.module.css";
+import style from "../../css/admin/AdminReport.module.css";
 
-    const [records, setRecords] = useState([
-        {
-            num:1,
-            reportReason:"광고",
-            reportType:"게시글",
-            reportDate:"2023.11.04",
-            isCompleted:"미처리"
-        },
-        {
-            num:2,
-            reportReason:"광고",
-            reportType:"게시글",
-            reportDate:"2023.11.04",
-            isCompleted:"미처리"
-        },
-        {
-            num:3,
-            reportReason:"광고",
-            reportType:"게시글",
-            reportDate:"2023.11.04",
-            isCompleted:"미처리"
-        },        
-        {
-            num:4,
-            reportReason:"광고",
-            reportType:"게시글",
-            reportDate:"2023.11.04",
-            isCompleted:"미처리"
-        },
-        {
-            num:5,
-            reportReason:"광고",
-            reportType:"게시글",
-            reportDate:"2023.11.04",
-            isCompleted:"미처리"
-        },
-        {
-            num:6,
-            reportReason:"광고",
-            reportType:"게시글",
-            reportDate:"2023.11.04",
-            isCompleted:"미처리"
-        },
-        {
-            num:7,
-            reportReason:"광고",
-            reportType:"게시글",
-            reportDate:"2023.11.04",
-            isCompleted:"미처리"
-        },
-        {
-            num:8,
-            reportReason:"광고",
-            reportType:"게시글",
-            reportDate:"2023.11.04",
-            isCompleted:"미처리"
-        },
-        {
-            num:9,
-            reportReason:"광고",
-            reportType:"게시글",
-            reportDate:"2023.11.04",
-            isCompleted:"미처리"
-        },
-        {
-            num:10,
-            reportReason:"광고",
-            reportType:"게시글",
-            reportDate:"2023.11.04",
-            isCompleted:"미처리"
+const AdminBanDetail = () => {
+    const {username} = useParams();
+
+    // 경고 내역
+    const [ban, setBan] = useState({});
+
+    // 신고 목록
+    const [reportList, setReportList] = useState([]);
+
+    // 페이징 상태 값
+    const [page, setPage] = useState(1);
+    const [pageInfo, setPageInfo] = useState({});
+
+    // 절대시간
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    // 목록 가기
+    const navigate = useNavigate();
+    const goToPreviousList = () => {
+        navigate(-1);
+    };
+
+    // reportDetail 이동
+    const goReportDetail = (no) => {
+        let defaultUrl = `/adminreport/detail/${no}`;
+        navigate(defaultUrl, {replace:false});
+    };
+
+    // 경고 내역 조회
+    const getBanDetail = () => {
+        let defaultUrl = `${urlroot}/adminbandetail/${username}`;
+
+        axios.get(defaultUrl)
+        .then(res=> {
+            console.log(res);
+            let bannedUser = res.data.bannedUser;
+
+            // 게시글 set
+            setBan(bannedUser);
+        })
+        .catch(err=> {
+            console.log(err);
+        })
+    };
+
+    // 신고 목록 조회
+    const getReportList = (page) => {
+        axios.get(`${urlroot}/adminreport/${username}/${page}`)
+        .then(res=> {
+            console.log(res);
+            let pageInfo = res.data.pageInfo;
+            let reportList = res.data.reportList;
+
+            console.log(reportList);
+
+            setReportList([...reportList]);
+            
+            setPage(page);
+            setPageInfo({...pageInfo});
+        })
+        .catch(err=> {
+            console.log(err);
+            // setReportList([]);
+            // setPageInfo({});
+        })
+    };
+
+    // 경고 해제
+    const unfreeze = () => {
+        let defaultUrl = `${urlroot}/unfreezeban/${username}`;
+
+        axios.post(defaultUrl)
+        .then(res=> {
+            Swal.fire({
+                title: "정지 처리 완료",
+                icon: "success",
+            });
+            getBanDetail();
+        })
+        .catch(err=> {
+            console.log(err);
+        })
+    };
+
+    useEffect(() => {
+        getBanDetail();
+        getReportList(page);
+    }, []);
+
+    // page 핸들링
+    const handlePage = (pageNo) => {
+        setPage(pageNo);
+        getReportList(pageNo);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // 페이지네이션
+    const PaginationInside = () => {
+        const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
+        for(let i=pageInfo.startPage; i<=pageInfo.endPage; i++) {
+            pageGroup.push(
+                <span key={i} className={`${page===i? style.activePage: ''}`} onClick={()=>handlePage(i)}>{i}</span>
+            )
         }
-    ]);
+        return (
+            <div className={style.paging}>
+                {!(pageInfo.startPage===1) && (
+                    <>
+                        <span onClick={()=>handlePage(1)}>≪</span>
+                        <span onClick={()=>handlePage(pageInfo.startPage-10)}>&lt;</span>
+                    </>
+                )}
+                {pageGroup}
+                {!(pageInfo.endPage===pageInfo.allPage) && (
+                    <>
+                        <span onClick={()=>handlePage(pageInfo.endPage+1)}>&gt;</span>
+                        <span onClick={()=>handlePage(pageInfo.allPage)}>≫</span>
+                    </>
+                )}
+            </div>
+        );
+    };
 
     const buttonStyle = {
         background:"white",
         color:"black",
         border:"1px solid lightgray"
-    }
-
-    // 페이징 상태 값
-    const [pageBtn, setPageBtn] = useState([]);
-    const [pageInfo, setPageInfo] = useState({});
-
-    // url에 파라미터로 줄 변수 repage
-    const reqBoardList = (repage) => {
-        // if(!repage) repage = 1;
-        axios.get(`${urlroot}/adminreport/${repage}`)
-        .then(res=> {
-            console.log(res);
-            let pageInfo = res.data.pageInfo;
-            let list = res.data.boardList;
-
-            setRecords([...list]);
-            
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
-            }
-            setPageBtn(btn);
-            setPageInfo({...pageInfo});
-        })
-        .catch(err=> {
-            console.log(err);
-        })
     };
 
     return (
@@ -145,38 +156,38 @@ const AdminBanDetail = () => {
                 <table className={style.detailTable}>
                     <tr>
                         <td>아이디</td>
-                        <td>{report.userId}</td>
+                        <td>{ban.username}</td>
                     </tr>
                     <tr>
                         <td>경고 횟수</td>
-                        <td>{report.warningCount}</td>
+                        <td>{ban.userWarnCnt}</td>
                     </tr>
                     <tr>
                         <td>정지 횟수</td>
-                        <td>{report.banCount}</td>
+                        <td>{ban.userBanCnt}</td>
                     </tr>
                     <tr>
                         <td>상태</td>
                         <td>
                             <div style={{display:"flex", justifyContent:"space-between"}}>
-                                <div>{report.isBanned}</div>
-                                <div><Button style={buttonStyle}>해제</Button></div>
+                                <div>{ban.isBanned==="Y"? <>정지</>:<>정상</>}</div>
+                                {ban.isBanned==="Y"?
+                                    <div><Button style={buttonStyle} onClick={()=>unfreeze()}>해제</Button></div>
+                                    :<></>
+                                }
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>정지 기간</td>
-                        <td>{report.banStartDate} ~ {report.banEndDate}</td>
+                        <td>{ban.banDate===null?<></>:<>~ {formatDate(ban.banDate)}</>}</td>
                     </tr>
                 </table><br/>
-
-                {/* 게시글 영역 */}
                 
                 {/* 분류 영역 */}
                 <div className={style.sortDiv}>
                     신고이력
                 </div>
-                {/* 분류 영역 */}
 
                 {/* 게시글 영역 */}
                 <table className={style.boardTable}>
@@ -186,60 +197,26 @@ const AdminBanDetail = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {records.length !== 0 && records.map(record => {
+                        {reportList.length !== 0 && reportList.map(report => {
                             return (
-                                <tr key={record.num}>
-                                    <td>{record.reportReason}</td>
-                                    <td>{record.reportType}</td>
-                                    <td>{record.reportDate}</td>
-                                    <td>{record.isCompleted}</td>
+                                <tr key={report.no} className={style.sectionTr} onClick={()=>goReportDetail(report.no)}>
+                                    <td>{report.reportReason}</td>
+                                    <td>{report.reportType}</td>
+                                    <td>{formatDate(report.reportDate)}</td>
+                                    <td>{(report.isCompleted)==="Y"? <>처리</> : <>미처리</>}</td>
                                 </tr>
                             )
                         })}
                     </tbody>
                 </table><br/>
-                {/* 게시글 영역 */}
 
                 {/* 하단 버튼 영역 */}
                 <div className={style.buttonDiv}>
-                    <Button style={buttonStyle}>목록</Button>
+                    <Button style={buttonStyle} onClick={()=>goToPreviousList()}>목록</Button>
                 </div>
 
                 {/* 페이징 영역 */}
-                <Pagination aria-label="Page navigation example" className={style.pagingLabel}>
-                    {
-                        pageInfo.curPage===1?
-                        <PaginationItem disabled>
-                            <PaginationLink previous href="#" />
-                        </PaginationItem>:
-                        <PaginationItem>
-                            {/* <PaginationLink previous href={"/list/" + (pageInfo.curPage - 1)} /> */}
-                            <PaginationLink previous onClick={()=>reqBoardList(pageInfo.curPage-1)}/>
-                        </PaginationItem>
-                    }
-
-                    {                   
-                        pageBtn.map(item=>{
-                            return(
-                                <PaginationItem key={item} className={item===pageInfo.curPage? 'active':''}>
-                                    {/* <PaginationLink href={"/list/" + item}> */}
-                                    {/* 고유한 id를 넘겨줌 */}
-                                    <PaginationLink onClick={() => reqBoardList(item)}>
-                                        {item}
-                                    </PaginationLink>
-                                </PaginationItem>                            
-                            )
-                        })
-                    }
-
-                    {
-                        <PaginationItem disabled={pageInfo.curPage === pageInfo.endPage}>
-                            {/* <PaginationLink next href={"/list/" + (pageInfo.curPage + 1)}/> */}
-                            <PaginationLink next onClick={()=>reqBoardList(pageInfo.curPage+1)}/>
-                        </PaginationItem>
-                    }
-                </Pagination>
-                {/* 페이징 영역 */}
+                {reportList.length===0?<></>:<PaginationInside/>}
 
             </div>
         </div>

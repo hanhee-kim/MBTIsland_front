@@ -4,8 +4,11 @@ import React, { useEffect, useRef, useState } from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { urlroot } from "../../config";
-import ReactQuill from 'react-quill';
+import Swal from "sweetalert2";
+import ReactQuill, { Quill } from "react-quill";
 import 'react-quill/dist/quill.snow.css';
+import ImageResize from "quill-image-resize-module-react";
+Quill.register("modules/imageResize", ImageResize);
 
 const MBTmiForm = () => {
     
@@ -23,57 +26,38 @@ const MBTmiForm = () => {
     const [modifying, setModifying] = useState(false); // 수정모드 여부
     const [mbtmi, setMbtmi] = useState(null);
 
+    // 에디터ref등록
+    const quillRef = useRef();
 
     // 선택된 이미지 (백엔드로 보내어 처리 전)
     const [selectedImage, setSelectedImage] = useState(null);
 
-    // 에디터ref등록
-    const quillRef = useRef();
-
     // 텍스트 state
     const [quillValue, setQuillValue] = useState("");
 
-    // 에디터 content의 변경이벤트 감지하여 호출됨... 이미지 삽입 감지하도록함=삽입이미지핸들러함수가 이미지를 처리하도록함(서버에 저장하고 url을 받아와서...)
+    // 에디터 content의 변경을 감지하여 호출됨.
     const handleQuillChange = async (content, delta, source, editor) => {
         setQuillValue(content);
 
         console.log('editor.getHTML():', editor.getHTML()); // 텍스트는 <p>입력문자열</p> 이미지는 <img src="엄청 긴 base64코드"> 로 콘솔에 찍힌다
 
-        // 이미지가 삽입되었는지 확인
+        // 이미지가 삽입또는 제거됐는지 확인 후 처리
         if (source === 'user') {
-            // const insertedImages = delta.ops.filter(op => {
-            //     return op.insert && op.insert.image;
-            // });
-
-            // if (insertedImages.length > 0) {
-            //     console.log('이미지 삽입되었음');
-            //     const imageData = insertedImages[0].insert.image;
-            //     setSelectedImage(imageData);
-            // }
-
-
-            // 이미지 삽입 또는 제거 감지
             const insertedImages = delta.ops.filter(op => op.insert && op.insert.image);
             const deletedImages = delta.ops.filter(op => op.delete);
-
-            if (insertedImages.length > 0) {
-                // 이미지가 삽입된 경우
+            if (insertedImages.length > 0) { // 이미지가 삽입된 경우
                 const imageData = insertedImages[0].insert.image;
-                setSelectedImage(imageData);
-                // 이미지 삽입 처리
-            } else if (deletedImages.length > 0) {
-                // 이미지가 제거된 경우
-                setSelectedImage(null);
-                // 이미지 제거 처리
+                setSelectedImage(imageData); // 이미지 삽입 처리
+            } else if (deletedImages.length > 0) { // 이미지가 제거된 경우
+                setSelectedImage(null); // 이미지 제거 처리
             }
-            
         }
     };
 
-    // 이미지 전송 로직
+    // 이미지 업로드
     const uploadImage = async (imageData, postNo) => {
         const formData = new FormData();
-        // Base64 이미지 데이터를 Blob으로 변환
+        // Base64 이미지데이터를 Blob으로 변환
         const blob = await fetch(imageData).then(r => r.blob());
         formData.append('image', blob, "image.jpg");
         formData.append('postNo', postNo);
@@ -99,18 +83,22 @@ const MBTmiForm = () => {
 
     // 등록폼에서 저장 버튼 클릭시
     const handleFormSubmit = async () => {
-
+        
+        console.log('title: ', title, ", content: ", quillValue, ", category: "+ selectCategory, ", writerId: ", user.username, ", writerMbti: ", user.userMbti);
+        if (title==='' || quillValue==='' || selectCategory==='') {
+            Swal.fire({
+                title: "게시글 등록 실패",
+                text: "제목, 내용, 카테고리를 확인해주세요.",
+                icon: "warning",
+            });
+            return;
+        } 
         // 에디터 내용에서 이미지 태그 제거하고 텍스트만 추출
         const contentWithoutImages = quillValue.replace(/<img[^>]*>/g, "");
         setQuillValue(contentWithoutImages);
         // console.log('***contentWithoutImages: ', contentWithoutImages);
 
-        if (title==='' || quillValue==='' || selectCategory==='') {
-            alert('제목, 내용, 카테고리를 확인해주세요.');
-            return;
-        }
-        console.log('title: ', title, ", content: ", quillValue, ", category: "+ selectCategory, ", writerId: ", user.username, ", writerMbti: ", user.userMbti);
-        
+
         // 1단계: 텍스트 컨텐츠 백엔드로 전송
         const postData = {
             title: title,
@@ -123,7 +111,7 @@ const MBTmiForm = () => {
         };
 
         try {
-            const response = await axios.post(`${urlroot}/quilltest`, postData);
+            const response = await axios.post(`${urlroot}/mbtmiwritewithoutimages`, postData);
             const mbtmi = response.data.mbtmi;
             // console.log('*****반환받은데이터: ', response.data.mbtmi);
             // console.log('넘길 no: ', mbtmi.no);
@@ -135,19 +123,37 @@ const MBTmiForm = () => {
 
             for (const imgTag of imageTags) {
                 const imgSrcMatch = imgTag.match(/src\s*=\s*"([^"]+)"/);
+                const imgWidthMatch = imgTag.match(/width\s*=\s*"([^"]+)"/); // width 속성 추출
                 const imageData = imgSrcMatch ? imgSrcMatch[1] : null;
                 if (imageData) {
                     const fileIdx = await uploadImage(imageData, mbtmi.no);
-                    console.log('fileIdx: ', fileIdx)
+                    console.log('fileIdx: ', fileIdx);
+
+                    // 추가
+                    const newImgTag = `<img src="${fileIdx}" ${imgWidthMatch ? `width="${imgWidthMatch[1]}px"` : ''} />`;
+                    updatedContent = updatedContent.replace(imgTag, newImgTag);
+
                     updatedContent = updatedContent.replace(imgTag, `<img src="${fileIdx}" />`);
                 }
             }
+
+            /*
             // 이미지가 포함된 최종 컨텐츠로 업데이트
             const updateResponse = await axios.post(`${urlroot}/mbtmiContainingImgTags/${mbtmi.no}`, { content: updatedContent });
             console.log('결과: ', updateResponse);
-
+            
             // 게시글 상세 컴포넌트로 이동
-            navigate(`/mbtmidetail/${mbtmi.no}`);
+            // navigate(`/mbtmidetail/${mbtmi.no}`);
+            */
+
+            try {
+                const updateResponse = await axios.post(`${urlroot}/mbtmiContainingImgTags/${mbtmi.no}`, { content: updatedContent });
+                console.log('결과: ', updateResponse);
+                navigate(`/mbtmidetail/${mbtmi.no}`);
+            } catch (error) {
+                console.error('게시글업데이트 에러 내용:', error);
+            }
+
 
         } catch (error) {
             console.log(error);            
@@ -167,10 +173,14 @@ const MBTmiForm = () => {
             { indent: "-1" },
             { indent: "+1" },
             ],
-            ["link", "image"],
+            ["image"],
             [{ align: [] }, { color: [] }, { background: [] }],
-            ["clean"],
         ],
+
+        imageResize: {
+            parchment: Quill.import("parchment"),
+            modules: ["Resize", "DisplaySize", "Toolbar"],
+        },
     };
 
     // 리액트quill의 텍스트 스타일 지정 
@@ -231,7 +241,6 @@ const MBTmiForm = () => {
             setActiveCategory(prevCategory);
             setSelectCategory(prevCategory);
 
-
             // setQuillValue(mbtmi.content); // 에디터의 내용값 설정
             mbtmi.content = replaceImagePlaceholders(mbtmi.content); // 이미지 출력을 위한 처리
             setQuillValue(mbtmi.content); // 이미지URL로 교체된 내용을 에디터의 내용값으로 설정
@@ -241,36 +250,43 @@ const MBTmiForm = () => {
         });
     }
     // 이미지출력을 위한 처리: fileIdx가 들어간 이미지태그 이미지 URL로 교체
+    // const replaceImagePlaceholders = (content) => {
+    //     return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
+    //         return `<img src="${urlroot}/mbtmiimg/${fileIdx}" alt=''/>`;
+    //     });
+    // };
+    // 이미지 사이즈 조절 모듈 추가 이후 width 속성을 고려
     const replaceImagePlaceholders = (content) => {
-        return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
-            return `<img src="http://localhost:8090/mbtmiimg/${fileIdx}" alt=''/>`;
+        console.log('content: ', content);
+        return content.replace(/<img src="(\d+)"(.*)\/>/g, (match, fileIdx, otherAttributes) => {
+            return `<img src="${urlroot}/mbtmiimg/${fileIdx}" ${otherAttributes} alt=''/>`;
         });
     };
     
 
-
-
     // 수정 폼에서의 저장 버튼 클릭시
     const modifyPost = async () => {
         try {
+            console.log("no: ", mbtmi.no, "writeDate: ", mbtmi.writeDate, "category: ", selectCategory, "title: ", title, ", content: ", content, "writerId: ", user.username);
             if (title==='' || quillValue==='' || selectCategory==='') {
-                alert('제목, 내용, 카테고리를 확인해주세요.');
+                Swal.fire({
+                    title: "게시글 등록 실패",
+                    text: "제목, 내용, 카테고리를 확인해주세요.",
+                    icon: "warning",
+                });
                 return;
             }
-            console.log("no: ", mbtmi.no, "writeDate: ", mbtmi.writeDate, "category: ", selectCategory, "title: ", title, ", content: ", content, "writerId: ", user.username);
-
-
             // 에디터 내용에서 이미지 태그 제거하고 텍스트만 추출
             const contentWithoutImages = quillValue.replace(/<img[^>]*>/g, "");
             console.log('contentWithoutImages: ', contentWithoutImages);
             // 게시글 수정 데이터
             const postData = {
-                no: mbtmi.no,
+                no: mbtmi.no,  // 수정될 게시글 번호를 전송
                 title: title,
                 content: contentWithoutImages,
                 category: selectCategory,
                 writerId: user.username,
-                writeDate: mbtmi.writeDate
+                writeDate: mbtmi.writeDate // 기존 등록일을 전송
             };
 
             // 이미지 URL을 포함한 새로운 컨텐츠 생성
@@ -295,19 +311,6 @@ const MBTmiForm = () => {
             // 수정된 게시글 데이터로 서버에 요청
             const response = await axios.post(`${urlroot}/mbtmimodify`, postData);
 
-            
-            // let defaultUrl = `${urlroot}/mbtmimodify`;
-            // const response = await axios.post(defaultUrl, {
-            //                     no: mbtmi.no, // 수정될 게시글 번호를 전송
-
-            //                     title: title,
-            //                     content: content,
-            //                     category: selectCategory,
-
-            //                     writerId: user.username,
-            //                     writeDate: mbtmi.writeDate, // 기존 등록일을 전송
-            //                 });
-
             console.log('수정 요청결과: ', response);
             const modifiedMbtmi = response.data.mbtmi;
             setMbtmi(modifiedMbtmi);
@@ -315,9 +318,11 @@ const MBTmiForm = () => {
 
             // 수정 완료 후 Detail.js로 이동하기
             navigate(`/mbtmidetail/${no}`)
+
         } catch (error) {
             console.error('수정 오류내용: ', error);
         }
+
     }
 
     // Base64 이미지 데이터인지 확인하는 함수
@@ -333,7 +338,7 @@ const MBTmiForm = () => {
             <section className={style.section}>
 
                 <div className={style.boardTitleB}>
-                    <div className={style.boardTitleTestArea}>
+                    <div className={style.boardTitleTextArea}>
                         <p>MB-TMI</p>
                         <p>유형별로 모여 자유롭게 이야기를 나눌 수 있는 공간</p>
                     </div>
@@ -365,6 +370,7 @@ const MBTmiForm = () => {
                             onChange={handleQuillChange}
 
                             ref={quillRef}
+                            className={style.customQuill}
                         />
                         <div className={style.formBtns}>
                                 <input type="button" value="취소" onClick={goToPreviousList}/>
@@ -403,27 +409,7 @@ const MBTmiForm = () => {
                                 <input type="button" value="취소" onClick={goToPreviousList}/>
                                 <input type="button" value="저장" onClick={modifyPost}/>
                         </div>
-
-
-                        {/* <li>카테고리</li>
-                        <div className={style.categoryBtns}>
-                            <label className={activeCategory==='잡담'? style.activeCategory :''} onClick={() => handleCategoryChange('잡담')}>잡담</label>
-                            <label className={activeCategory==='연애'? style.activeCategory :''} onClick={() => handleCategoryChange('연애')}>연애</label>
-                            <label className={activeCategory==='회사'? style.activeCategory :''} onClick={() => handleCategoryChange('회사')}>회사</label>
-                            <label className={activeCategory==='학교'? style.activeCategory :''} onClick={() => handleCategoryChange('학교')}>학교</label>
-                            <label className={activeCategory==='취미'? style.activeCategory :''} onClick={() => handleCategoryChange('취미')}>취미</label>
-                        </div>
-
-                        <li>제목</li>
-                        <input type="text" className={style.formtitle} value={title} onChange={(e)=>setTitle(e.target.value)}/>
-                        <li>본문</li>
-                        <textarea className={style.formContent} rows="18" value={content} onChange={(e)=>setContent(e.target.value)}/>
-                        <div className={style.formBtns}>
-                            <input type="button" value="취소" onClick={goToPreviousList}/>
-                            <input type="button" value="저장" onClick={modifyPost}/>
-                        </div> */}
                     </form>    
-
                 )}
 
 

@@ -49,14 +49,22 @@
     display: flex;;
 }
 
-/* .cardStyle {
+.sectionRightArea {
     display: flex;
-    width: 170px;
-    height: 125px;
-    margin: auto;
-    border: solid #C5C5C5 2px;
-    border-radius: 20px;
-    justify-content: center;
-    flex-direction: column;
+    flex-direction: column-reverse;
+}
+
+.sectionRightArea>div {
+    /* border: dashed red 3px; */
+    /* padding-right: 100px; */
+    /* position: sticky; */
+    position:fixed;
+    right: 100px;
+    bottom: 40px;
+}
+
+.movetopIcon {
+    float: right;
+    width: 50px;
     cursor: pointer;
-} */
+}

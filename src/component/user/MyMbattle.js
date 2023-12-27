@@ -98,7 +98,7 @@ const MyMbattle = () => {
   //tr 클릭시 detail로 이동
   const goMyMbattleDetail = (e,battle) => {
     // navigate(`/mbattledetail/${battle.no}`);
-    navigate(`/mbattledetail/${battle.no}/1`);
+    navigate(`/mbattledetail/${battle.no}`);
   }
 
   const handlePageNo = (pageNo) => {

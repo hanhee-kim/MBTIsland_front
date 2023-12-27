@@ -1,5 +1,5 @@
 .container{
-    padding-top: 80px;
+    padding-top: 100px;
     /* border: 3px solid blue; */
 	height: auto;
     min-height: 100%;
@@ -35,13 +35,14 @@
     margin-bottom: 40px;
     padding-top: 20px;
 }
-.boardTitleB>.boardTitleTestArea>p:first-child {
+.boardTitleB>.boardTitleTextArea>p:first-child {
     font-size: 25px;
     margin-bottom: 0px;
 } 
-.boardTitleB>.boardTitleTestArea>p+p {
+.boardTitleB>.boardTitleTextArea>p+p {
     font-size: 15px;
     font-weight: 600;
+    color: #868484;
 } 
 .boardTitleImg {
     position: relative;
@@ -92,7 +93,7 @@
 .overflow {
     /* 줄바꿈을 막고 생략기호 표시 */
     display: inline-block;
-    max-width: 430px;
+    max-width: 375px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -297,9 +298,11 @@
     margin: 6px 0 6px 0;
     padding: 0px 20px 0px 20px;
 }
+/* 작성자 mbti+닉네임*/
 .td1row>span {
     margin-bottom: 10px;
     margin-right: 22px;
+    font-size: 18.5px;
 }
 /* 작성일 */
 .td1row>small {
@@ -439,6 +442,12 @@
     color: #8F8F8F;
     cursor: pointer;
 }
+
+/* quill로 삽입된 이미지를 출력할때 최대 크기 지정 */
+.postContent img {
+    max-width: 700px;
+}
+
 .thumbIconDetail{
     width: 30px;
 }
@@ -525,6 +534,11 @@
     margin-left: 8px;
 }
 
+/* 댓글 내용 */
+.commentTd2row {
+    white-space: pre !important; /* 개행문자를 공백으로의 치환없이 그대로 보여지게함 */
+}
+
 .commentTd2row,
 .commentTd3row {
     width: 100%;
@@ -606,6 +620,8 @@
     min-height: 100px;
     border-radius: 4px;
     border: 1px solid #8F8F8F;
+
+    resize: none;
 }
 .replyWriteArea {
     margin-top: 10px;
@@ -616,6 +632,12 @@
 
 
 /* MBTmi 작성폼 */
+/* .customQuill img,
+.ql-editor img  {
+    max-width: 700px;
+    height: auto;
+} */
+
 .mbtmiForm {
     /* border: 1px solid green; */
     width: 100%;

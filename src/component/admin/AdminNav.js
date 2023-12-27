@@ -29,7 +29,7 @@ const AdminNav = () => {
                     <NavLink tag={Link} to="/adminban" className={uri.includes("/adminban")? `${style.navLink} ${style.navActive}` :style.navLink}>정지 회원</NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink tag={Link} to="/adminqna" className={uri.includes("/adminqna")? `${style.navLink} ${style.navActive}` :style.navLink}>문의 답변</NavLink>
+                    <NavLink tag={Link} to="/adminqna" className={uri.includes("/adminqna")? `${style.navLink} ${style.navActive}` :style.navLink}>1:1 문의 답변</NavLink>
                 </NavItem>
             </div>
         </Nav>

@@ -5,6 +5,7 @@ import { Popover, PopoverBody, PopoverHeader } from "reactstrap";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { urlroot } from "../../config";
+import Swal from "sweetalert2";
 
 const NoticeDetail = () => {
     
@@ -59,32 +60,69 @@ const NoticeDetail = () => {
 
     const hideNotice = () => {
         let noArr = [notice.no];
-        const isConfirmed =window.confirm('게시글을 숨김처리하시겠습니까?');
-        if(isConfirmed) {
-            axios.get(`${urlroot}/hidenotice/${noArr}`)
-            .then(res => {
-                alert('완료되었습니다.');
-                goToPreviousList();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        } 
+
+        Swal.fire({
+            title: '게시글을 숨김처리하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.get(`${urlroot}/hidenotice/${noArr}`)
+                    .then(res => {
+                        Swal.fire({
+                            title: "완료되었습니다.",
+                            icon: "success",
+                        });
+                        goToPreviousList();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error'
+                        });
+                    });
+            }
+        });
+
         setOpen(false);
     }
+
     const deleteNotice = () => {
         let noArr = [notice.no];
-        const isConfirmed =window.confirm('게시글을 삭제하시겠습니까?');
-        if(isConfirmed) {
-            axios.delete(`${urlroot}/deletenotice/${noArr}`)
-            .then(res => {
-                alert('완료되었습니다.');
-                goToPreviousList();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        }
+
+        Swal.fire({
+            title: '게시글을 삭제하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${urlroot}/deletenotice/${noArr}`)
+                    .then(res => {
+                        Swal.fire({
+                            title: "완료되었습니다.",
+                            icon: "success",
+                        });
+                        goToPreviousList();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error'
+                        });
+                    });
+            }
+        });
+
         setOpen(false);
     }
 

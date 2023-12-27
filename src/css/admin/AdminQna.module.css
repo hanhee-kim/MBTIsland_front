@@ -83,7 +83,7 @@
     font-size: 18px;
     width: 100%;
     padding: 60px 0;
-    white-space: normal;
+    white-space: pre;
     word-break: keep-all; /* 줄바꿈시 단어 단위 유지 */
 }
 /* 이전(목록 이동) 버튼 */
@@ -149,6 +149,10 @@
     float: right;
     margin-right: 15px;
 }
+.answerContent {
+    white-space: pre;
+}
+
 /* .answerFormArea>textarea+* {
     float: right;
 } */

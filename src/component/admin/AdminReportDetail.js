@@ -1,34 +1,23 @@
 import {
     Button
 } from "reactstrap";
-import { useEffect, useState } from "react";
-import axios from 'axios';
-import styleFrame from "../../css/admin/AdminFrame.module.css";
-import style from "../../css/admin/AdminReport.module.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import axios from 'axios';
 import AdminNav from "./AdminNav";
 import { urlroot } from "../../config";
+
+import styleFrame from "../../css/admin/AdminFrame.module.css";
+import style from "../../css/admin/AdminReport.module.css";
 
 const AdminReportDetail = () => {
 
     // 글 번호, 페이지 번호, 필터링, 게시글 타입, 신고 유형
     const {no, page, filter, boardType, reportType} = useParams();
 
-    const [report, setReport] = useState({
-        // no:1,
-        // reportedId:"user01",
-        // tableType:"MB-TMI",
-        // reportType:"게시글",
-        // title:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유!",
-        // content:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유! 지금 바로 들어오세요!! 당장 당장 다앋ㅇ다아당ㅈ앙당장",
-        // files:"1,2,3",
-        // reporterId:"user99",
-        // reportDate:"2023.12.04",
-        // reportReason:"광고",
-        // isCompleted:"미처리",
-        // isWarned:"미처리"
-    });
+    // 신고 내역
+    const [report, setReport] = useState({});
 
     // 절대시간
     const formatDate = (dateString) => {
@@ -85,7 +74,10 @@ const AdminReportDetail = () => {
 
         axios.post(defaultUrl)
         .then(res=> {
-            alert("경고 처리 완료");
+            Swal.fire({
+                title: "경고 처리 완료",
+                icon: "warning",
+            });
             getReportDetail();
         })
         .catch(err=> {
@@ -101,7 +93,10 @@ const AdminReportDetail = () => {
 
         axios.post(defaultUrl)
         .then(res=> {
-            alert("처리 완료");
+            Swal.fire({
+                title: "처리 완료",
+                icon: "warning",
+            });
             getReportDetail();
         })
         .catch(err=> {
@@ -112,7 +107,8 @@ const AdminReportDetail = () => {
     const buttonStyle = {
         background:"white",
         color:"black",
-        border:"1px solid lightgray"
+        border:"1px solid lightgray",
+        marginLeft:"10px"
     };
 
     return (
@@ -130,7 +126,17 @@ const AdminReportDetail = () => {
                     </tr>
                     <tr>
                         <td>게시판 명</td>
-                        <td>{report.tableType}</td>
+                        <td>
+                            {report.tableType==="mbtmi" || report.tableType==="mbtmicomment"?
+                                <>MB-TMI</>
+                                :(report.tableType==="mbtwhy" || report.tableType==="mbtwhycomment"?
+                                    <>MBT-WHY</>
+                                    :(report.tableType==="mbattle" || report.tableType==="mbattlecomment" &&
+                                        <>M-BATTLE</>
+                                    )
+                                )
+                            }
+                        </td>
                     </tr>
                     <tr>
                         <td>유형</td>
@@ -145,9 +151,12 @@ const AdminReportDetail = () => {
                     }
                     <tr>
                         <td>내용</td>
-                        <td>{report.reportedContent}</td>
+                        {report.tableType==="mbtmi"?
+                            <td className={style.mbtmiTr} dangerouslySetInnerHTML={{ __html: report.reportedContent }}></td>
+                            :<td style={{whiteSpace:"pre"}}>{report.reportedContent}</td>
+                        }
                     </tr>
-                    {report.reportType==="댓글" || report.tableType==="mbtwhy"?
+                    {report.reportType==="댓글" || report.tableType==="mbtwhy" || report.tableType==="mbtmi"?
                         <></>
                         :<tr>
                             <td>사진</td>
@@ -181,7 +190,6 @@ const AdminReportDetail = () => {
                         <td>{report.isWarned==="Y"?<>경고</>:<>미경고</>}</td>
                     </tr>
                 </table><br/>
-                {/* 게시글 영역 */}
 
                 {/* 하단 버튼 영역 */}
                 <div className={style.buttonDiv}>
@@ -192,7 +200,7 @@ const AdminReportDetail = () => {
                         <></>
                         :<div>
                             <Button style={buttonStyle} onClick={()=>warning(report.reportedId, report.reportType, report.tableType, report.reportedPostNo, report.reportedCommentNo)}>경고</Button>
-                            <Button style={buttonStyle} onClick={()=>processing()}>처리</Button>
+                            <Button style={buttonStyle} onClick={()=>processing(report.reportType, report.tableType, report.reportedPostNo, report.reportedCommentNo)}>처리</Button>
                         </div>
                     }
                 </div>

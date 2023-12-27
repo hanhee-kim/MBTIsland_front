@@ -5,6 +5,7 @@ import {
     Button,
     Input
 } from "reactstrap";
+import Swal from "sweetalert2";
 import axios from 'axios';
 import { urlroot } from "../../config";
 
@@ -111,13 +112,22 @@ function MBattleWrite() {
         console.log(mbattle.fileIdx1);
         console.log(mbattle.fileIdx2);
         if((mbattle.fileIdx1.length===0 && mbattle.fileIdx2.length!==0) || (mbattle.fileIdx1.length!==0 && mbattle.fileIdx2.length===0)) {
-            alert("파일을 모두 첨부해주세요.");
+            Swal.fire({
+                title: "파일을 모두 첨부해주세요.",
+                icon: "warning",
+            });
             return;
         } else if (mbattle.title==="") {
-            alert("제목을 입력해주세요.");
+            Swal.fire({
+                title: "제목을 입력해주세요.",
+                icon: "warning",
+            });
             return;
         } else if((mbattle.voteItem1==="" && mbattle.voteItem2!=="") || (mbattle.voteItem1!=="" && mbattle.voteItem2==="")) {
-            alert("주제를 모두 입력해주세요.");
+            Swal.fire({
+                title: "주제를 모두 입력해주세요.",
+                icon: "warning",
+            });
             return;
         }
 
@@ -140,7 +150,7 @@ function MBattleWrite() {
         .then(res=> {
             console.log(res);
             let no = res.data.no;
-            navigate(`/mbattledetail/${no}/1`);
+            navigate(`/mbattledetail/${no}`);
         })
         .catch(err=> {
             console.log(err);
@@ -246,6 +256,12 @@ function MBattleWrite() {
                     </div>
                 </div>
             </div>
+
+            <section className={style.sectionRightArea}>
+                <div>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
+                </div>
+            </section>
         </div>
     );
 }

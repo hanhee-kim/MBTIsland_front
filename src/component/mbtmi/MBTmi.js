@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { urlroot } from "../../config";
+import Swal from "sweetalert2";
 
 
 
@@ -90,22 +91,84 @@ const MBTmi = () => {
     const [search, setSearch] = useState("");
     const [tmpSearch, setTmpSearch] = useState("");
     const [activeCategory, setActiveCategory] = useState("");
+    // localStorage에 저장된 이전 목록의 값을 사용하여 최신글목록이 받아와진 상태인지 여부(로컬스토리지 사용여부)
+    const [usedLocalStorage, setUsedLocalStorage] = useState(false);
 
 
-    // (게시글 상세에서)목록가기 버튼 또는 뒤로가기 클릭시의 동작 로직 고려
+    // 헤더의 MB-TMI메뉴 재클릭시 초기상태로 재렌더링하게함
+    const location = useLocation();
     useEffect(() => {
-        // alert('초기 useEffect 호출!');
-
-        // localStorage에 저장된 페이지 정보를 읽음
-        const storedInfo = localStorage.getItem('curPage');
-        if(storedInfo) {
-            setPage(parseInt(storedInfo, 10)); // 페이지넘버
+        if (!location.state || !location.state.fromDetail) {
+            setWeeklyHotList([]);
+            setErrorMsgWeekly("");
+            setErrorMsgNewly("");
+            setMbtmiList([]);
+            setPage(1);
+            setPageInfo({});
+            setCategory("");
+            setSort("");
+            setSearch("");
+            setTmpSearch("");
+            setActiveCategory("");
+            setOpen(false);
+            setCheckedRadioValues({group1: '', group2: '', group3: '', group4: ''});
+            setType("");
+            // 초기값으로 목록 렌더링되도록 함
+            getWeeklyHotList();
+            getNewlyMbtmiList("", "", "", 1, "");
+            // localStorage 초기화
+            localStorage.removeItem('mbtmiListPrevValue');
         }
+    }, [location]);
 
-        getWeeklyHotList();
-        getNewlyMbtmiList(category, type, search, page, sort);
-        // getNewlyMbtmiList(null, null, null, null, null);
+
+    useEffect(() => {
+        // localStorage에 저장된 이전의 목록 정보를 읽음
+        const savedPrevListValue = localStorage.getItem('mbtmiListPrevValue');
+        const prevListValue = savedPrevListValue ? JSON.parse(savedPrevListValue) : null;
+    
+        if (prevListValue) { // state업데이트
+            setPage(parseInt(prevListValue.curPage, 10));
+            setCategory(prevListValue.curCategory);
+            setActiveCategory(prevListValue.curCategory);
+            setType(prevListValue.curType);
+            setSearch(prevListValue.curSearchTerm);
+            setSort(prevListValue.curSort);
+            setCheckedRadioValues(prevListValue.checkedRadioValues);
+            setUsedLocalStorage(true);
+        } else { // 초기 데이터 로딩
+            getWeeklyHotList();
+            getNewlyMbtmiList("", "", "", 1, "");
+        }
+    
+        // 로컬스토리지 초기화
+        localStorage.removeItem("mbtmiListPrevValue");
     }, []);
+    
+    useEffect(() => {
+        // usedLocalStorage가 true인 경우에만(usedLocalStorage===true라는 것은 localStorage를 사용한 상태라는 것으로, localStorage를 읽지 않고 렌더링해야하는 경우에 해당)
+        if (usedLocalStorage) {
+            getNewlyMbtmiList(category, type, search, page, sort);
+            getWeeklyHotList();
+        }
+    }, [usedLocalStorage, category, type, search, page, sort]);
+
+
+    // localStorage에 저장된 mbtmiListPrevValue객체를 업데이트하는 함수로, handlePageNo 등에서 호출됨
+    const updateLocalStorage = (newValue) => {
+        // console.log('updateLocalStorage가 받은 인자: ', newValue);
+        const valueToSave = {
+            curPage: page,
+            curCategory: category,
+            curType: type,
+            curSearchTerm: search,
+            curSort: sort,
+            checkedRadioValues: checkedRadioValues, // 라디오버튼의 checked를 유지시키기 위하여 저장
+            ...newValue
+        };
+        console.log('$$$ 로컬스토리지에 저장될 valueToSave: ', valueToSave);
+        localStorage.setItem('mbtmiListPrevValue', JSON.stringify(valueToSave)); // localStorage에는 문자열만 저장 가능
+    };
 
     const getWeeklyHotList = () => {
         axios.get(`${urlroot}/weeklyhotmbtmi`)
@@ -125,6 +188,8 @@ const MBTmi = () => {
     }
 
     const getNewlyMbtmiList = (paramCategory, paramType, paramSearch, paramPage, paramSort) => {
+        console.log('getNewlyMbtmiList이 호출됨! ', 'paramPage: ', paramPage, "paramType: ", paramType, ", checkedRadioValues: ",  checkedRadioValues);
+
         let defaultUrl = `${urlroot}/mbtmilist`;
 
         if (paramCategory !== "") defaultUrl += `?category=${paramCategory}`;
@@ -137,8 +202,7 @@ const MBTmi = () => {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log('최신글목록 요청결과');
-            console.log(res);
+            console.log('최신글목록 요청결과: ', res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.mbtmiList;
             setMbtmiList([...list]);
@@ -177,34 +241,69 @@ const MBTmi = () => {
     }, []);
 
     const goToMbtmiForm = () => {
+        console.log('유저정보: ', user.username, ", 정지여부: ", user.isBanned);
         if(!user.username) {
-            alert("로그인해주세요.");
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
+        if(user.isBanned==='Y') {
+            Swal.fire({
+                title: "정지 상태에서는 글을 작성하실 수 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
+        if(user.userRole==='ROLE_ADMIN') {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+        
         navigate(`/mbtmiform`);
     };
 
 
     const handlePageNo = (pageNo) => {
         // 현재 페이지번호를 localStorage에 저장
-        localStorage.setItem('curPage', pageNo.toString());
+        // localStorage.setItem('curPage', pageNo.toString());
+
+        // 함수를 이용하여 현재 페이지번호를 localStorage에 저장
+        updateLocalStorage({ curPage: pageNo });
 
         setPage(pageNo);
-        console.log('현재 적용되는 검색어: ' + search);
+        // console.log('현재 적용되는 검색어: ' + search);
         getNewlyMbtmiList(category, type, search, pageNo, sort);
     };
     const handleSearchChange = (event) => {
         const searchTerm = event.target.value;
         setTmpSearch(searchTerm);
+        
+        // 현재 검색값을 localStorage에 저장
+        // localStorage.setItem('curSearchTerm', searchTerm);
     };
     const handleSearch = () => {
+        // 함수를 이용하여 현재 검색값을 localStorage에 저장
+        updateLocalStorage({ curSearchTerm: tmpSearch });
+
         setSearch(tmpSearch);
         setPage(1);
         getNewlyMbtmiList(category, type, tmpSearch, 1, sort); // 페이지번호만 리셋
     }
+    // 엔터키로 검색 수행
+    const handleKeyPress = (e) => {
+        if (e.key==="Enter") handleSearch();
+    }
 
     // 카테고리 변경
     const handleCategoryChange = (categoryParam) => {
+        // 함수를 이용하여 현재 카테고리값을 localStorage에 저장
+        updateLocalStorage({ curCategory: categoryParam });
+
         getNewlyMbtmiList(categoryParam, type, search, 1, sort); // 카테고리 변경시 페이지는 리셋, 타입과 검색어와 정렬은 유지
         setPage(1);
         setCategory(categoryParam);
@@ -214,7 +313,7 @@ const MBTmi = () => {
     // MBTI필터 변경
     const [checkedRadioValues, setCheckedRadioValues] = useState({group1: '', group2: '', group3: '', group4: ''});
     const handleRadioCheck = (group, value) => {
-        console.log('handleRadioCheck함수 실행!');
+        // console.log('handleRadioCheck함수 실행!');
         setCheckedRadioValues(prev=> ({
             ...prev, [group]: value
         }));
@@ -235,11 +334,14 @@ const MBTmi = () => {
     useEffect(()=> {
         // type이 초기값이 아닌 경우에만 실행되도록 if문으로 감싼다
         if(type!=="") {
+            // 함수를 이용하여 현재 mbti타입값을 localStorage에 저장
+            updateLocalStorage({ curType: type });
+
             // console.log("category: ", category);
             console.log("type: ", type);
             // console.log("search: ", search);
-            setPage(1);
-            getNewlyMbtmiList(category, type, search, 1, sort);
+            setPage(page); // setPage(1)
+            getNewlyMbtmiList(category, type, search, page, sort); // getNewlyMbtmiList(category, type, search, 1, sort);
         }
     }, [type]);
 
@@ -247,24 +349,34 @@ const MBTmi = () => {
     const refreshFilter = (refreshTarget) => {
         // console.log('refreshRadioCheck함수 실행!');
         setErrorMsgNewly("");
+
         if(refreshTarget==='typeFilter') {
             console.log('typeFilter를 리셋');
             getNewlyMbtmiList(category, "", search, 1, sort);
             setCheckedRadioValues({group1: '', group2: '', group3: '', group4: ''});
             setType("");
             setPage(1);
+
+            // type필터값 리셋시 localStorage 업데이트
+            updateLocalStorage({ curType: "", checkedRadioValues: {group1: '', group2: '', group3: '', group4: ''}, curPage: 1 });
+
         } else {
             console.log('categoryFilter를 리셋');
             getNewlyMbtmiList("", type, search, 1, sort);
             setCategory("");
             setActiveCategory("");
             setPage(1);
+
+            // category필터값 리셋시 localStorage 업데이트
+            updateLocalStorage({ curCategory: "", curPage: 1 });
         }
     }
 
     // 정렬값 변경
     const handleSort = (paramSort) => {
-        console.log('정렬값: ', paramSort);
+        // 함수를 이용하여 현재 mbti타입값을 localStorage에 저장
+        updateLocalStorage({ curSort: paramSort });
+
         setSort(paramSort);
         setOpen(!open); // 팝오버 닫기
         getNewlyMbtmiList(category, type, search, 1, paramSort); // 페이지번호만 리셋
@@ -302,7 +414,7 @@ const MBTmi = () => {
     // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
     const navigate = useNavigate();
     const makeFlexibleLink = (post) => {
-        // alert('no, category, type, search, page: ' + post.no + ", " + category + ", " + type + ", " + search + ", " + page);
+        // console.log('no, category, type, search, page: ' + post.no + ", " + category + ", " + type + ", " + search + ", " + page);
         const linkTo = `/mbtmidetail/${post.no}` +
                         (category? `/${category}` : '') +
                         (type? `/${type}` : '') +
@@ -311,8 +423,6 @@ const MBTmi = () => {
         navigate(linkTo, {replace:false});
     }
 
-    
-
 
     return (
         
@@ -320,15 +430,15 @@ const MBTmi = () => {
         <div className={style.container} id="top">
             <section className={style.sectionLeftArea}></section>
             <section className={style.section}>
-                <div className={style.boardTitleB}>
-                    <div className={style.boardTitleTestArea}>
-                        <p>MB-TMI</p>
-                        <p>유형별로 모여 자유롭게 이야기를 나눌 수 있는 공간</p>
-                    </div>
-                    <div>
-                        <img alt="tmi" src={"/tmi.png"} width={"220px"} height={"120px"} className={style.boardTitleImg}></img>
-                    </div>
+            <div className={style.boardTitleB}>
+                <div className={style.boardTitleTextArea}>
+                    <p>MB-TMI</p>
+                    <p>유형별로 모여 자유롭게 이야기를 나눌 수 있는 공간</p>
                 </div>
+                <div>
+                    <img alt="tmi" src={"/tmi.png"} width={"220px"} height={"120px"} className={style.boardTitleImg}></img>
+                </div>
+            </div>
                 <h5 className={style.weekyHotPostsTitle}>&#128293;주간 인기글</h5>
                 <div className={style.weeklyHotPosts}>
                     <table className={style.weeklyPostsTable}>
@@ -401,7 +511,7 @@ const MBTmi = () => {
                         <button onClick={goToMbtmiForm}><img src={"/writebtnIcon.png" } alt="" className={style.writebtnIcon} />작성하기</button>
                     </span>
                     <div className={style.searchBar}>
-                        <input type="text" onChange={handleSearchChange}/>
+                        <input type="text" onChange={handleSearchChange} onKeyDown={(e)=>handleKeyPress(e)}/>
                         <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} onClick={handleSearch}/>
                     </div>
                 </div>

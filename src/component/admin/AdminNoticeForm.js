@@ -8,14 +8,17 @@ import AdminNav from "./AdminNav";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { urlroot } from "../../config";
+import { useLocation } from 'react-router';
+import Swal from "sweetalert2";
 
 const AdminNoticeForm = () => {
 
     // 로그인정보 가져오기
     const user = useSelector((state) => state.persistedReducer.user);
 
-    const { no } = useParams();
     const navigate = useNavigate();
+    const { no } = useParams(); 
+    
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [notice, setNotice] = useState(null); // 작성된 공지사항 객체
@@ -27,6 +30,13 @@ const AdminNoticeForm = () => {
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
+    };
+
+    // 목록으로 돌아가기
+    const goToPreviousList = () => {
+        const savedState = localStorage.getItem('adminNoticeValue');
+        const previousState = savedState ? JSON.parse(savedState) : {};
+        navigate('/adminnotice', { state: { fromDetail: true, ...previousState } });
     };
 
 
@@ -57,7 +67,11 @@ const AdminNoticeForm = () => {
     const addPost = async () => {
         try {
             if(!title || !content) {
-                alert('제목과 내용을 입력하세요.');
+                Swal.fire({
+                    title: "공지사항 등록 실패",
+                    text: "제목, 내용을 입력하세요.",
+                    icon: "warning",
+                });
                 return;
             }
             // console.log("title: ", title, ", content: ", content, "작성자: ", user.username);
@@ -84,7 +98,11 @@ const AdminNoticeForm = () => {
     const modifyPost = async () => {
         try {
             if(!title || !content) {
-                alert('제목과 내용을 입력하세요.');
+                Swal.fire({
+                    title: "공지사항 수정 실패",
+                    text: "제목, 내용을 입력하세요.",
+                    icon: "warning",
+                });
                 return;
             }
             // console.log("no: ", notice.no, "writeDate: ", notice.writeDate, "title: ", title, ", content: ", content, "writerId: ", user.username);
@@ -108,17 +126,34 @@ const AdminNoticeForm = () => {
     // 삭제 버튼 클릭시
     const deleteNotice = () => {
         let noArr = [notice.no];
-        const isConfirmed =window.confirm('삭제하시겠습니까?');
-        if(isConfirmed) {
-            axios.delete(`${urlroot}/deletenotice/${noArr}`)
-            .then(res => {
-                alert('완료되었습니다.');
-                backToList();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        }
+
+        Swal.fire({
+            title: '삭제하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${urlroot}/deletenotice/${noArr}`)
+                    .then(res => {
+                        Swal.fire({
+                            title: "완료되었습니다.",
+                            icon: "success",
+                        });
+                        backToList();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error'
+                        });
+                    });
+            }
+        });
     }
 
     return (
@@ -129,13 +164,13 @@ const AdminNoticeForm = () => {
                 {/* 최초 등록 폼 */}
                 {!notice && modifying===false && itsDetail===false && (
                     <form className={style.noticeForm}>
-                        <li>제목</li>
-                        <input type="text" className={style.formtitle} onChange={(e)=>setTitle(e.target.value)}/>
-                        <li>본문</li>
-                        <textarea className={style.formContent} rows="18" onChange={(e)=>setContent(e.target.value)}/>
+                        <input type="text" placeholder="제목을 입력하세요" className={style.formtitle} onChange={(e)=>setTitle(e.target.value)}/>
+                        <textarea placeholder="내용을 입력하세요" className={style.formContent} rows="18" onChange={(e)=>setContent(e.target.value)}/>
                         <div className={style.formBtns}>
-                            <input type="button" value="취소" onClick={backToList}/>
-                            <input type="button" value="저장" onClick={addPost}/>
+                            <span>
+                                <input type="button" value="취소" onClick={backToList}/>
+                                <input type="button" value="저장" onClick={addPost}/>
+                            </span>
                         </div>
                     </form>    
                 )}
@@ -143,15 +178,16 @@ const AdminNoticeForm = () => {
                 {notice && modifying===false && itsDetail===false && (
                     <form className={style.noticeForm}>
                         <div className={style.titleAndDate}>
-                            <li>제목</li>
                             <span>등록: {formatDate(notice.writeDate)}&nbsp;&nbsp;&nbsp;조회: {!notice.viewCnt? 0 : notice.viewCnt}&nbsp;&nbsp;&nbsp;</span>
                         </div>
-                        <div className={style.formtitle}>{notice.title}</div>
-                        <li>본문</li>
-                        <div className={style.formContent}>{notice.content}</div>
+                        <input type="text" className={style.formtitle} value={notice.title} readOnly/>
+                        <textarea className={style.formContent} rows="18" value={notice.content} readOnly/>
                         <div className={style.formBtns}>
-                            <input type="button" value="수정" onClick={()=>setModifying(true)}/>
-                            <input type="button" value="삭제" onClick={deleteNotice}/>
+                            <input type="button" value="목록" onClick={goToPreviousList} className={style.previousListBtn}/>
+                            <span>
+                                <input type="button" value="수정" onClick={()=>setModifying(true)}/>
+                                <input type="button" value="삭제" onClick={deleteNotice}/>
+                            </span>
                         </div>
                     </form>    
                 )}
@@ -159,15 +195,15 @@ const AdminNoticeForm = () => {
                 {notice && modifying===true && (
                     <form className={style.noticeForm}>
                         <div className={style.titleAndDate}>
-                            <li>제목</li>
                             <span>등록: {formatDate(notice.writeDate)}&nbsp;&nbsp;&nbsp;조회: {!notice.viewCnt? 0 : notice.viewCnt}&nbsp;&nbsp;&nbsp;</span>
                         </div>
                         <input type="text" className={style.formtitle} value={title} onChange={(e)=>setTitle(e.target.value)}/>
-                        <li>본문</li>
                         <textarea className={style.formContent} rows="18" value={content} onChange={(e)=>setContent(e.target.value)}/>
                         <div className={style.formBtns}>
-                            <input type="button" value="취소" onClick={()=>setModifying(false)}/>
-                            <input type="button" value="저장" onClick={modifyPost}/>
+                            <span>
+                                <input type="button" value="취소" onClick={()=>setModifying(false)}/>
+                                <input type="button" value="저장" onClick={modifyPost}/>
+                            </span>
                         </div>
                     </form>
                 )}
@@ -175,15 +211,16 @@ const AdminNoticeForm = () => {
                 {notice && modifying===false && itsDetail===true && (
                     <form className={style.noticeForm}>
                         <div className={style.titleAndDate}>
-                            <li>제목</li>
                             <span>등록: {formatDate(notice.writeDate)}&nbsp;&nbsp;&nbsp;조회: {!notice.viewCnt? 0 : notice.viewCnt}&nbsp;&nbsp;&nbsp;</span>
                         </div>
-                        <div className={style.formtitle}>{notice.title}</div>
-                        <li>본문</li>
-                        <div className={style.formContent}>{notice.content}</div>
+                        <input type="text" className={style.formtitle} value={notice.title} readOnly/>
+                        <textarea className={style.formContent} rows="18" value={notice.content} readOnly/>
                         <div className={style.formBtns}>
-                            <input type="button" value="수정" onClick={()=>setModifying(true)}/>
-                            <input type="button" value="삭제" onClick={deleteNotice}/>
+                            <input type="button" value="목록" onClick={goToPreviousList} className={style.previousListBtn}/>
+                            <span>
+                                <input type="button" value="수정" onClick={()=>setModifying(true)}/>
+                                <input type="button" value="삭제" onClick={deleteNotice}/>
+                            </span>
                         </div>
                     </form>    
                 )}
