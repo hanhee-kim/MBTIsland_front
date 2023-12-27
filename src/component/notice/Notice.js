@@ -2,6 +2,7 @@ import style from "../../css/notice/Notice.module.css";
 import React, { useEffect, useState } from "react";
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import { urlroot } from "../../config";
 
 const Notice = () => {
 
@@ -22,24 +23,38 @@ const Notice = () => {
 
     useEffect(() => {
         // localStorage에 저장된 페이지 정보를 읽음
-        const storedInfo = localStorage.getItem('curPage');
-        if(storedInfo) {
-            setPage(parseInt(storedInfo, 10)); // 페이지넘버
+        const noticeCurPage = localStorage.getItem('noticeCurPage');
+        const noticeSearchTerm = localStorage.getItem('noticeSearchTerm');
+        if(noticeCurPage) {
+            setPage(parseInt(noticeCurPage, 10));
+        } else {
+            setPage(1);
         }
-
-        getNoticeList(search, page);
+        if(noticeSearchTerm) {
+            setSearch(noticeSearchTerm);
+        } else {
+            setSearch(null);
+        }
+        // 로컬스토리지 초기화
+        localStorage.removeItem("noticeCurPage");
+        localStorage.removeItem("noticeSearchTerm");
+        
     }, []);
     
+    useEffect(()=> {
+        getNoticeList(search, page);
+    }, [page, search])
+    
     const getNoticeList = (search, page) => {
-        let defaultUrl = 'http://localhost:8090/noticelist?hidden=N';
+        let defaultUrl = `${urlroot}/noticelist?hidden=N`;
         if (search !== null) defaultUrl += `&search=${search}`;
         if (page !== null) defaultUrl += `&page=${page}`;
 
-        console.log('요청url:' + defaultUrl);
+        //console.log('요청url:' + defaultUrl);
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
+            //console.log(res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.noticeList;
             let noticeCnt = res.data.noticeCnts.displayCnt;
@@ -49,9 +64,9 @@ const Notice = () => {
             setErrorMsg(null);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             if(err.response && err.response.data) {
-                console.log('err.response.data: ' + err.response.data);
+                //console.log('err.response.data: ' + err.response.data);
                 setErrorMsg(err.response.data);
                 setNoticeCnt(0);
                 setPageInfo({});
@@ -61,10 +76,10 @@ const Notice = () => {
 
     const handlePageNo = (pageNo) => {
         // 현재 페이지번호를 localStorage에 저장
-        localStorage.setItem('curPage', pageNo.toString());
+        localStorage.setItem('noticeCurPage', pageNo.toString());
 
         setPage(pageNo);
-        console.log('현재 적용되는 검색어: ' + search);
+        //console.log('현재 적용되는 검색어: ' + search);
         getNoticeList(search, pageNo); // setPage(pageNo)는 업데이트가 지연되기 때문에, state인 page가 아니라 전달인자 pageNo로 요청해야함
     };
     const handleSearchChange = (event) => {
@@ -75,6 +90,13 @@ const Notice = () => {
         setSearch(tmpSearch);
         setPage(1);
         getNoticeList(tmpSearch, 1);
+    }
+    // 엔터키로 검색 수행
+    const handleKeyPress = (e) => {
+        // 현재 검색값을 localStorage에 저장
+        localStorage.setItem('noticeSearchTerm', tmpSearch);
+
+        if (e.key==="Enter") handleSearch();
     }
 
     // 페이지네이션
@@ -108,13 +130,14 @@ const Notice = () => {
     // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
     const navigate = useNavigate();
     const makeFlexibleLink = (post) => {
-        // alert('no, search, page: ' + post.no + ", " + search + ", " + page);
+        // //console.log('no, search, page: ' + post.no + ", " + search + ", " + page);
         const linkTo = `/noticedetail/${post.no}` +
                         (search ? `/${search}` : '') +
                         (page ? `/${page}` : '');
         navigate(linkTo, {replace:false});
     }
 
+    
 
     return (
         <>
@@ -128,7 +151,7 @@ const Notice = () => {
                 <div className={style.aboveTable}>
                     <h5>총 {noticeCnt}건 현재 {pageInfo.curPage}/{pageInfo.allPage}페이지</h5>
                     <div className={style.searchBar}>
-                        <input type="text" onChange={handleSearchChange}/>
+                        <input type="text" onChange={handleSearchChange} onKeyDown={(e)=>handleKeyPress(e)}/>
                         <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} onClick={handleSearch}/>
                     </div>
                 </div>

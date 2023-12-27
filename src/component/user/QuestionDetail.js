@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
+import { urlroot } from "../../config";
 
 const QuestionDetail = (props) => {
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
   const no = useParams();
   const [question, setQuestion] = useState({});
   const [answer, setAnswer] = useState({});
@@ -18,19 +19,20 @@ const QuestionDetail = (props) => {
   };
   useEffect(() => {
     props.setIsPopup(true);
-    console.log(no);
+    //console.log(no);
     const num = no.no;
-    console.log(num);
+    //console.log(num);
     axios
-      .get(`http://localhost:8090/questiondetail/${num}`)
+      .get(`${urlroot}/questiondetail/${num}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setQuestion(res.data.question);
         setAnswer(res.data.answer);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
+      
   }, [no]);
   const close = (e) => {
     e.preventDefault();
@@ -121,7 +123,7 @@ const QuestionDetail = (props) => {
                 </Label>
 
                 <Input
-                  type="text"
+                  type="textarea"
                   name="answer"
                   defaultValue={answer.content}
                   readOnly
@@ -129,8 +131,10 @@ const QuestionDetail = (props) => {
                     minHeight: "150px",
                     resize: "none",
                     backgroundColor: "#f5f5f56b",
+                    padding:'20px',
                   }}
-                ></Input>
+                >
+                </Input>
               </FormGroup>
             </>
           )}

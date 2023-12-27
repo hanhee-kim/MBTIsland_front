@@ -13,6 +13,7 @@ import NoteDetail from "./NoteDetail";
 import { Dropdown } from "bootstrap";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { urlroot } from "../../config";
 
 const MyNote = () => {
   const [initData, setInitData] = useState(true);
@@ -32,13 +33,24 @@ const MyNote = () => {
 
   const goNoteDetail = (e, note) => {
     //tr클릭시
-    if (note.receiveUsername == user.username) {
+    if (note.receiveUsername == user.username) { //받은 쪽지일경우
+
+      axios
+        .put(`${urlroot}/readnote?noteNo=${note.noteNo}`)
+        .then((res)=>{
+          //console.log(res);
+        })
+        .catch((err)=>{
+          //console.log(err);
+        })
       const url = "/notedetail/" + note.noteNo;
       window.open(
         url,
         "_blank",
         "width=650,height=700,location=no,status=no,scrollbars=yes"
       );
+      //
+      getMyNoteList(user.username,noteType, readType, page);
     } else if (note.sentUsername == user.username) {
       const url = "/sentnotedetail/" + note.noteNo;
       window.open(
@@ -49,12 +61,12 @@ const MyNote = () => {
     }
   };
   const [openDropdown, setOpenDropdown] = useState(false);
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
 
   const getMyNoteList = (username, noteType, readType, page) => {
-    let defaultUrl = "http://localhost:8090/notelistofuser";
-    console.log(user.username);
-    console.log(username);
+    let defaultUrl = `${urlroot}/notelistofuser`;
+    //console.log(user.username);
+    //console.log(username);
     defaultUrl += `?username=${username}`;
     if (noteType !== null || noteType !== "")
       //보낸쪽지인지 받은 쪽지인지 (기본 : 보낸 쪽지)
@@ -70,12 +82,12 @@ const MyNote = () => {
         username !== null || noteType !== null || readType !== null ? "&" : "?"
       }page=${page}`;
 
-    console.log("요청url:" + defaultUrl);
+    //console.log("요청url:" + defaultUrl);
 
     axios
       .get(defaultUrl)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setInitData(true);
         let pageInfo = res.data.pageInfo;
         let list = res.data.noteList;
@@ -83,7 +95,7 @@ const MyNote = () => {
         setPageInfo({ ...pageInfo });
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         setInitData(false);
       });
   };
@@ -96,22 +108,22 @@ const MyNote = () => {
   //보낸쪽지 눌렀을떄 ,받은쪽지 눌렀을때
   const changeNoteType = (e, type) => {
     setNoteType(type);
-    console.log(
-      "username : " +
-        user.username +
-        "noteT : " +
-        type +
-        "readT : " +
-        readType +
-        "page : " +
-        page
-    );
+    //console.log(
+    //   "username : " +
+    //     user.username +
+    //     "noteT : " +
+    //     type +
+    //     "readT : " +
+    //     readType +
+    //     "page : " +
+    //     page
+    // );
 
     getMyNoteList(user.username, type, readType, page);
   };
   //필터 눌렀을때
   const changeFilter = (e, type) => {
-    console.log(type);
+    //console.log(type);
     //type : all / read / noRead
     setReadType(type);
     getMyNoteList(user.username, noteType, type, page);
@@ -154,7 +166,7 @@ const MyNote = () => {
   };
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
-    console.log("***페이지이동***");
+    //console.log("***페이지이동***");
     getMyNoteList(user.username, noteType, readType, pageNo);
   };
   return (
@@ -251,16 +263,16 @@ const MyNote = () => {
             <div className={style.tableDiv}>
               <Table className="table-hover" style={{ minWidth: "770px" }}>
                 <thead>
-                  <tr row className="text-center">
+                  <tr className="text-center">
                     <th scope="col" sm={1} style={{ minWidth: "50px" }}>
                       번호
                     </th>
                     {noteType === "sent" ? (
-                      <th scope="col" sm={1} style={{ minWidth: "63px" }}>
+                      <th scope="col" sm={1} style={{ minWidth: "130px" }}>
                         받는이
                       </th>
                     ) : (
-                      <th scope="col" sm={1} style={{ minWidth: "63px" }}>
+                      <th scope="col" sm={1} style={{ minWidth: "130px" }}>
                         보낸이
                       </th>
                     )}
@@ -289,11 +301,11 @@ const MyNote = () => {
                           {(page - 1) * 10 + index + 1}
                         </td>
                         {noteType === "sent" ? (
-                          <td sm={1} className="text-center">
+                          <td sm={1} className="text-center" style={{minWidth:'110px'}}>
                             {note.receiveUserNick}
                           </td>
                         ) : (
-                          <td sm={1} className="text-center">
+                          <td sm={1} className="text-center" style={{minWidth:'110px'}}>
                             {note.sentUserNick}
                           </td>
                         )}

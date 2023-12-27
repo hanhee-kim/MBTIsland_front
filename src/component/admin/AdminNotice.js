@@ -2,12 +2,13 @@ import { Nav, NavItem, NavLink, Table, Input } from "reactstrap";
 import styleFrame from "../../css/admin/AdminFrame.module.css";
 import style from "../../css/admin/AdminNotice.module.css";
 import React, { useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import AdminNav from "./AdminNav";
 import axios from "axios";
+import { urlroot } from "../../config";
+import Swal from "sweetalert2";
 
 const AdminNotice = () => {
-
     const [noticeList, setNoticeList] = useState([]); // 페이지당 게시글목록 
     const [noticeCnts, setNoticeCnts] = useState({'totalCnt':0, 'displayCnt':0, 'hiddenCnt':0}); // 표시할 게시글수들
     const [search, setSearch] = useState(null); // 검색어
@@ -25,24 +26,97 @@ const AdminNotice = () => {
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
+
+
+    const location = useLocation();
+    useEffect(() => {
+        // 로컬 스토리지에서 이전목록값을 읽어서 렌더링되게해야함
+        const savedState = localStorage.getItem('adminNoticeValue');
+        const initialState = savedState ? JSON.parse(savedState) : { search: null, hidden: null, page: 1 };
     
+        // 상세/폼에서 돌아온 경우에만 로컬스토리지의 이전목록값 사용
+        if (location.state && location.state.fromDetail) {
+            setSearch(initialState.search);
+            setHidden(initialState.hidden);
+            setPage(initialState.page);
+            setActiveFilter(initialState.hidden);
+            getNoticeList(initialState.search, initialState.hidden, initialState.page);
+        } else {
+            // 그 외의 경우에는 초기값 사용하여 렌더링
+            setSearch(null);
+            setHidden(null);
+            setActiveFilter(null);
+            setPage(1);
+            getNoticeList(null, null, 1);
+        }
+
+        // 로컬스토리지 초기화
+        localStorage.removeItem("adminNoticeValue");
+    }, []);
+
+
+    // 내비 바의 '공지사항 목록' 재클릭시 초기상태로 재렌더링하게함
+    useEffect(() => {
+        getNoticeList(null, null, 1);
+        setSearch(null);
+        setHidden(null);
+        setPage(1);
+        setPageInfo({});
+        setTmpSearch(null);
+        setActiveFilter(null);
+        setErrorMsg(null);
+    }, [location]);
+
+    // localStorage에서 목록의 값을 읽어서 렌더링
+    useEffect(() => {
+        if (!location.state || !location.state.fromDetail) {
+            const savedState = localStorage.getItem('adminNoticeValue');
+            const initialState = savedState ? JSON.parse(savedState) : { search: null, hidden: null, page: 1 };
+
+            setSearch(initialState.search);
+            setHidden(initialState.hidden);
+            setPage(initialState.page);
+
+            getNoticeList(initialState.search, initialState.hidden, initialState.page);
+        }
+    }, []);
+
 
     useEffect(() => {
         getNoticeList(search, hidden, page);
     }, [afterDelOrHide]); // 의존성배열을 비우면 useEffect는 컴포넌트가 처음 렌더링될때에만 실행되고 state를 넣으면 state값이 업데이트될때마다 실행됨
 
+
+    const updateLocalStorage = (newValue) => {
+        const currentValue = {
+            search: search,
+            hidden: hidden,
+            page: page,
+        };
+        //console.log('$$$ 로컬스토리지에 저장될 currentValue: ', currentValue);
+        localStorage.setItem('adminNoticeValue', JSON.stringify({ ...currentValue, ...newValue }));
+    };
+
+
+    // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
+    const navigate = useNavigate();
+    const makeFlexibleLink = (post) => {
+        const linkTo = `/adminnoticeform/${post.no}`; // 관리자페이지의 공지사항폼 컴포넌트
+        navigate(linkTo, {replace:false});
+    }
+
     const getNoticeList = (search, hidden, page) => {
-        let defaultUrl = 'http://localhost:8090/noticelist';
+        let defaultUrl = `${urlroot}/noticelist`;
 
         if (search !== null) defaultUrl += `?search=${search}`;
         if (hidden !== null) defaultUrl += `${search !== null ? '&' : '?'}hidden=${hidden}`;
         if (page !== null) defaultUrl += `${search !== null || hidden !== null ? '&' : '?'}page=${page}`;
 
-        console.log('요청url:' + defaultUrl);
+        //console.log('요청url:' + defaultUrl);
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
+            //console.log(res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.noticeList;
             let noticeCnts = res.data.noticeCnts;
@@ -56,9 +130,9 @@ const AdminNotice = () => {
             setHidden(hidden); // 필터적용된 상태에서 페이지이동시 필터유지되게함
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             if(err.response && err.response.data) {
-                console.log('err.response.data: ' + err.response.data);
+                //console.log('err.response.data: ' + err.response.data);
                 setErrorMsg(err.response.data);
                 setNoticeCnts({'totalCnt':0, 'displayCnt':0, 'hiddenCnt':0});
             }
@@ -67,29 +141,42 @@ const AdminNotice = () => {
 
     const handlePageNo = (pageNo) => {
         setPage(pageNo);
-        console.log('***클릭된 pageNo:' + pageNo);
-        console.log('***변경된 state page값:' + page); // state는 ui보다 한박자 늦다
-        console.log('현재 적용되는 필터값: ' + hidden);
-        console.log('현재 적용되는 검색어: ' + search);
+        setCheckItems([]);
+        //console.log('***클릭된 pageNo:' + pageNo);
+        //console.log('***변경된 state page값:' + page); // state는 ui보다 한박자 늦다
+        //console.log('현재 적용되는 필터값: ' + hidden);
+        //console.log('현재 적용되는 검색어: ' + search);
         getNoticeList(search, hidden, pageNo); // 페이지변경시 필터 유지, 검색어 유지해야함
+
+        updateLocalStorage({ page: pageNo });
     };
     const handleFilterChange = (hidden) => {
         getNoticeList(search, hidden, 1); // 필터변경시 페이지 리셋, 검색어는 유지해야함
         setActiveFilter(hidden);
+        setCheckItems([]);
+
+        updateLocalStorage({ hidden: hidden });
     };
     const handleSearchChange = (event) => {
         const searchTerm = event.target.value;
         setTmpSearch(searchTerm);
     };
     const handleSearch = () => {
-        console.log('검색 수행');
+        //console.log('검색 수행');
         setSearch(tmpSearch);
         setHidden(null);
         setActiveFilter(null);
+        setCheckItems([]);
         getNoticeList(tmpSearch, null, 1); // 검색수행시 페이지 리셋, 필터 리셋해야함 
         // cf. setSearch와 setHidden은 비동기적으로 state를 업데이트하기 때문에(즉시 업데이트x) 
         // tmpSearch대신 search, null대신 hidden을 넣으면 업데이트 이전의 state값이 들어가게된다
+
+        updateLocalStorage({ search: tmpSearch });
     };
+    // 엔터키로 검색 수행
+    const handleKeyPress = (e) => {
+        if (e.key==="Enter") handleSearch();
+    }
 
     
     // 체크 선택과 해제
@@ -114,36 +201,82 @@ const AdminNotice = () => {
 
     // 일괄 숨김처리
     const hideNotice = () => {
-        console.log('체크된 항목:' + checkItems);
-        const isConfirmed =window.confirm('선택 항목을 숨김처리하시겠습니까?');
-        if(isConfirmed) {
-            axios.get(`http://localhost:8090/hidenotice/${checkItems}`)
-            .then(res => {
-                alert('완료되었습니다.');
-                setCheckItems([]);
-                setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
-            })
-            .catch(err => {
-                console.log(err);
-            })
-        };
+        // console.log('체크된 항목:' + checkItems);
+        if(checkItems.length===0) {
+            Swal.fire({
+                title: "체크된 항목이 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
+        Swal.fire({
+            title: '선택항목을 처리하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.get(`${urlroot}/hidenotice/${checkItems}`)
+                    .then(res => {
+                        Swal.fire({
+                            title: "완료되었습니다.",
+                            icon: "success",
+                        });
+                        setCheckItems([]);
+                        setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
+                    })
+                    .catch(err => {
+                        //console.log(err);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error'
+                        });
+                    });
+            }
+        });
     }
 
     // 일괄 삭제처리
     const deleteNotice = () => {
-        console.log('체크된 항목:' + checkItems);
-        const isConfirmed =window.confirm('선택 항목을 삭제하시겠습니까?');
-        if(isConfirmed) {
-            axios.delete(`http://localhost:8090/deletenotice/${checkItems}`)
-            .then(res => {
-                alert('완료되었습니다.');
-                setCheckItems([]);
-                setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
-            })
-            .catch(err => {
-                console.log(err);
-            })
-        };
+        // console.log('체크된 항목:' + checkItems);
+        if(checkItems.length===0) {
+            Swal.fire({
+                title: "체크된 항목이 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
+        Swal.fire({
+            title: '선택항목을 삭제하시겠습니까?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${urlroot}/deletenotice/${checkItems}`)
+                    .then(res => {
+                        Swal.fire({
+                            title: "완료되었습니다.",
+                            icon: "success",
+                        });
+                        setCheckItems([]);
+                        setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
+                    })
+                    .catch(err => {
+                        //console.log(err);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error'
+                        });
+                    });
+            }
+        });
     }
 
     // 페이지네이션
@@ -174,6 +307,8 @@ const AdminNotice = () => {
         );
     }
 
+    
+
     return (
         <>
         <div>
@@ -186,7 +321,7 @@ const AdminNotice = () => {
                         <span className={`${style.filterBtn} ${activeFilter==='Y'? style.filterActive :''}`} onClick={() => handleFilterChange("Y")}>숨김 : {noticeCnts.hiddenCnt}</span>
                     </div>
                     <div className={style.searchBar}>
-                        <input type="text" onChange={handleSearchChange}/>
+                        <input type="text" onChange={handleSearchChange} onKeyDown={(e)=>handleKeyPress(e)}/>
                         <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} onClick={handleSearch}/>
                     </div>
                 </div>
@@ -219,7 +354,7 @@ const AdminNotice = () => {
                                                             onChange={(e)=>handleSingleCheck(e.target.checked, post.no)}
                                                             checked={checkItems.includes(post.no)? true: false}/> 
                                     </td>
-                                    <td>{post.title}</td>
+                                    <td onClick={()=>makeFlexibleLink(post)}>{post.title}</td>
                                     <td>{formatDate(post.writeDate)}</td>
                                     <td>
                                         {post.isHidden==='N'? (

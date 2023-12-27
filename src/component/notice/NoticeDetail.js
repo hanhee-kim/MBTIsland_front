@@ -3,9 +3,15 @@ import React, { useEffect, useState } from "react";
 import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import { Popover, PopoverBody, PopoverHeader } from "reactstrap";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { urlroot } from "../../config";
+import Swal from "sweetalert2";
 
 const NoticeDetail = () => {
     
+    // 로그인정보 가져오기
+    const user = useSelector((state) => state.persistedReducer.user);
+
     const { no, search, page } = useParams();
     const location = useLocation();
 
@@ -25,14 +31,14 @@ const NoticeDetail = () => {
     }, [no]);
 
     const getNoticeDetail = (no) => {
-        axios.get(`http://localhost:8090/noticedetail/${no}`)
+        axios.get(`${urlroot}/noticedetail/${no}`)
         .then(res=> {
-            console.log(res);
+            //console.log(res);
             let notice = res.data.notice;
             setNotice(notice);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     }
     
@@ -54,39 +60,71 @@ const NoticeDetail = () => {
 
     const hideNotice = () => {
         let noArr = [notice.no];
-        const isConfirmed =window.confirm('게시글을 숨김처리하시겠습니까?');
-        if(isConfirmed) {
-            axios.get(`http://localhost:8090/hidenotice/${noArr}`)
-            .then(res => {
-                alert('완료되었습니다.');
-                goToPreviousList();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        } 
+
+        Swal.fire({
+            title: '게시글을 숨김처리하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.get(`${urlroot}/hidenotice/${noArr}`)
+                    .then(res => {
+                        Swal.fire({
+                            title: "완료되었습니다.",
+                            icon: "success",
+                        });
+                        goToPreviousList();
+                    })
+                    .catch(err => {
+                        //console.log(err);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error'
+                        });
+                    });
+            }
+        });
+
         setOpen(false);
     }
+
     const deleteNotice = () => {
         let noArr = [notice.no];
-        const isConfirmed =window.confirm('게시글을 삭제하시겠습니까?');
-        if(isConfirmed) {
-            axios.delete(`http://localhost:8090/deletenotice/${noArr}`)
-            .then(res => {
-                alert('완료되었습니다.');
-                goToPreviousList();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        }
+
+        Swal.fire({
+            title: '게시글을 삭제하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${urlroot}/deletenotice/${noArr}`)
+                    .then(res => {
+                        Swal.fire({
+                            title: "완료되었습니다.",
+                            icon: "success",
+                        });
+                        goToPreviousList();
+                    })
+                    .catch(err => {
+                        //console.log(err);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error'
+                        });
+                    });
+            }
+        });
+
         setOpen(false);
     }
-    
-    const modifyNotice = () => {
-        console.log('수정 팝오버 버튼 클릭');
-        setOpen(false);
-    };
 
     // 목록으로 가기 버튼
     const navigate = useNavigate();
@@ -104,14 +142,15 @@ const NoticeDetail = () => {
                 <div className={style.postArea}>
 
                     {/* 로그인유저가 관리자일때만 표시 */}
-                    <div>
-                        <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="popover1"/>
-                        <Popover  className={style.popover} placement="bottom" isOpen={open} target="popover1" toggle={()=>setOpen(!open)}>
-                            <PopoverBody className={style.popoverItem} onClick={()=>hideNotice()}>숨김</PopoverBody>
-                            <PopoverBody className={style.popoverItem} onClick={()=>modifyNotice()}>수정</PopoverBody>
-                            <PopoverBody className={style.popoverItem} onClick={()=>deleteNotice()}>삭제</PopoverBody>
-                        </Popover><br/><br/><br/>
-                    </div>
+                    {user.username!=="" && user.userRole==='ROLE_ADMIN' && (
+                        <div>
+                            <img src={"/popover-icon.png" } alt="..." className={style.popoverIcon} onClick={()=>setOpen(!open)} id="popover1"/>
+                            <Popover  className={style.popover} placement="bottom" isOpen={open} target="popover1" toggle={()=>setOpen(!open)}>
+                                <PopoverBody className={style.popoverItem} onClick={()=>hideNotice()}>숨김</PopoverBody>
+                                <PopoverBody className={style.popoverItem} onClick={()=>deleteNotice()}>삭제</PopoverBody>
+                            </Popover><br/><br/><br/>
+                        </div>
+                    )}
                     
                     {notice? (
                         <>

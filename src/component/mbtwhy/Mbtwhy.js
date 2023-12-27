@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
 import {
     FormGroup,
     Col,
@@ -7,31 +8,25 @@ import {
     Button,
     Popover,
     PopoverBody } from "reactstrap";
+import Swal from "sweetalert2";
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 import style from "../../css/mbtwhy/Mbtwhy.module.css";
 
 function Mbtwhy() {
+    // 로그인 유저 정보]
+    const user = useSelector((state) => state.persistedReducer.user);
 
-    // 인기 게시글 더미 데이터
+    // 인기 게시글
     const [hotMbtwhy, setHotMbtwhy] = useState({});
 
     // Mbtwhy 게시글 목록
     const [mbtwhyList, setMbtwhyList] = useState([]);
 
-    // Mbtwhy 게시글 수
-    // const [mbtwhyCnt, setMbtwhyCnt] = useState(0);
-
     // URL 파라미터
     // MBTI 유형, 페이지 번호, 정렬 옵션, 검색 값
     const {mbti} = useParams();
-    // const formatMbti = mbti.startsWith(':') ? mbti.substring(1) : mbti;
-    // const formatPage = page.startsWith(':') ? page.substring(1) : page;
-    // const formatSort = sort.startsWith(':') ? sort.substring(1) : sort;
-    // const formatSearch = search.startsWith(':') ? search.substring(1) : search;
-
-    // const [mbti, setMbti] = useState(mbtiType);
-    // console.log(mbti);
 
     // 페이징 상태 값
     const [page, setPage] = useState(1);
@@ -48,8 +43,50 @@ function Mbtwhy() {
     
     // 정렬 드롭다운 open 여부
     const [open, setOpen] = useState(false);
-    
 
+    // 절대시간
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}`;
+    };
+        
+    // 상대시간(시간차)
+    const formatDatetimeGap = (dateString) => {
+        const date = new Date(dateString);
+        const currentDate = new Date();
+        const datetimeGap = currentDate - date;
+        const seconds = Math.floor(datetimeGap/1000);
+        const minutes = Math.floor(seconds/60);
+        const hours = Math.floor(minutes/60);
+        const days = Math.floor(hours/24);
+        const weeks = Math.floor(days/7);
+        const months = Math.floor(weeks/4);
+        const years = Math.floor(months/12);
+    
+        // if(seconds<60) {
+        //     return `${seconds}초 전`;
+        // } 
+        // else 
+        if(minutes<60) {
+            return `${minutes}분 전`;
+        } else if(hours<24) {
+            return `${hours}시간 전`;
+        } else if(days<7) {
+            return `${days}일 전`;
+        } else if(weeks<4) {
+            return `${weeks}주 전`;
+        } else if(months<12) {
+            return `${months}달 전`;
+        } else {
+            return `${years}년 전`;
+        }
+    }
+    
     // navigate
     const navigate = useNavigate();
 
@@ -61,54 +98,66 @@ function Mbtwhy() {
 
     // mbtwhydetail 이동
     const goMbtwhyDetail = (no) => {
-        let defaultUrl = `/mbtwhydetail/${mbti}/${no}/1`;
-        // if(mbti !== null) defaultUrl += `/${mbti}`;
-        // if(no !== null) defaultUrl += `/${no}`;
-        // if(page !== null) defaultUrl += `/${page}`;
-        // if(sort !== null) defaultUrl += `/${sort}`;
-        // if(search) defaultUrl += `/${search}`;
+        let defaultUrl = `/mbtwhydetail/${no}/${mbti}`;
 
         navigate(defaultUrl);
     }
 
     // mbtwhywrite 이동
     const goMbtwhyWrite = () => {
+        if(!user.username) {
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.isBanned==="Y") {
+            Swal.fire({
+                title: "정지 상태에서는 글을 작성하실 수 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.userRole==="ROLE_ADMIN") {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
         let defaultUrl = `/mbtwhywrite`;
         if(mbti !== null) defaultUrl += `/${mbti}`;
         
         navigate(defaultUrl);
-    }
+    };
     
     // 게시글 목록 조회
-    const getMbtwhyList = (pageNo, searchValue, sortType) => {
-        let defaultUrl = `http://localhost:8090/mbtwhy?mbti=${mbti}`;
-        if(page !== null) defaultUrl += `&page=${pageNo}`;
-        if(search !== null) defaultUrl += `&search=${searchValue}`;
-        if(sort !== null) defaultUrl += `&sort=${sortType}`;
+    const getMbtwhyList = (page, search, sort) => {
+        let defaultUrl = `${urlroot}/mbtwhy?mbti=${mbti}&page=${page}`;
+        if(search !== "") defaultUrl += `&search=${search}`;
+        if(sort !== "") defaultUrl += `&sort=${sort}`;
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
             let pageInfo = res.data.pageInfo;
-            let list = res.data.mbtwhyList;
-            let mbtwhyHot = res.data.mbtwhyHot;
-            // let mbtwhyCnt = res.data.mbtwhyCnt;
+            let mbtwhyList = res.data.mbtwhyList;
+            let hotMbtwhy = res.data.hotMbtwhy;
 
-            setMbtwhyList([...list]);
-            setPageInfo({...pageInfo});
-            setHotMbtwhy({...mbtwhyHot});
-            // setMbtwhyCnt(mbtwhyCnt);
+            setMbtwhyList([...mbtwhyList]);
+            setHotMbtwhy({...hotMbtwhy});
             
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
-            }
+            setPageInfo({...pageInfo});
+            setPage(page);
         })
         .catch(err=> {
-            console.log(err);
-            setMbtwhyList([]);
-            setPageInfo({});
-            setHotMbtwhy({});
+            // console.log(err);
+            // setMbtwhyList([]);
+            // setHotMbtwhy({});
+            // setPageInfo({});
             // setMbtwhyCnt(0);
         })
     };
@@ -141,10 +190,9 @@ function Mbtwhy() {
         const searchInput = document.getElementById("searchInput");
         searchInput.value = null;
 
-        console.log("ㅋㅋ");
         setMbtiColorTo();
         setPage(1);
-        setSearch("")
+        setSearch("");
         setSort("최신순");
         getMbtwhyList(1, "", "최신순");
     }, [mbti]);
@@ -216,7 +264,7 @@ function Mbtwhy() {
         setOpen(!open);
         getMbtwhyList(page, search, sortType);
         // getMbtwhyList();
-    }
+    };
 
     // Toggle 핸들링
     const handleToggle = () => {
@@ -248,13 +296,13 @@ function Mbtwhy() {
                 )}
             </div>
         );
-    }
+    };
 
     const buttonStyle = {
         background:"white",
         color:"black",
         border:"1px solid lightgray"
-    }
+    };
 
     return (
         <div className={style.container}>
@@ -263,13 +311,15 @@ function Mbtwhy() {
                 {/* 게시판 헤더 영역 */}
                 <div className={style.pageHeader} style={{borderColor:`${mbtiColor}`}}>
                     <h1>{mbti}</h1>
-                    <h6 onClick={()=>goMbtwhyWrite()}>글 작성</h6>
-                    <button className={style.popoverButton} onClick={()=>setOpen(!open)} id="Popover1"><img src={"/sortIcon.png" } alt="" className={style.sortImg} />{!sort? "최신순" : sort}</button>
-                    <Popover placement="bottom" isOpen={open} target="Popover1" toggle={()=>handleToggle()}>
-                        <PopoverBody className={style.popoverItem} onClick={()=>handleSort("최신순")}>최신순</PopoverBody>
-                        <PopoverBody className={style.popoverItem} onClick={()=>handleSort("조회순")}>조회순</PopoverBody>
-                        <PopoverBody className={style.popoverItem} onClick={()=>handleSort("추천순")}>추천순</PopoverBody>
-                    </Popover>
+                    <div style={{display:"flex"}}>
+                        <div className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</div>
+                        <button className={style.popoverButton} onClick={()=>setOpen(!open)} id="Popover1"><img src={"/sortIcon.png" } alt="" className={style.sortImg} />{!sort? "최신순" : sort}</button>
+                        <Popover placement="bottom" isOpen={open} target="Popover1" toggle={()=>handleToggle()}>
+                            <PopoverBody className={style.popoverItem} onClick={()=>handleSort("최신순")}>최신순</PopoverBody>
+                            <PopoverBody className={style.popoverItem} onClick={()=>handleSort("조회순")}>조회순</PopoverBody>
+                            <PopoverBody className={style.popoverItem} onClick={()=>handleSort("추천순")}>추천순</PopoverBody>
+                        </Popover>
+                    </div>
                 </div>
 
                 {/* 일간 인기 게시글 영역 */}
@@ -285,7 +335,7 @@ function Mbtwhy() {
                                 {hotMbtwhy.writerNickname}
                             </div>
                             <div className={style.boardDate}>
-                                {hotMbtwhy.writeDate}
+                                {formatDatetimeGap(hotMbtwhy.writeDate)}
                             </div>
                             <div className={style.boardContent}>
                                 {hotMbtwhy.content}
@@ -310,7 +360,7 @@ function Mbtwhy() {
 
                 {/* 게시글 영역 */}
                 <div className={style.sectionBoards}>
-                    {mbtwhyList.length !== 0 && mbtwhyList.map(mbtwhy => {
+                    {mbtwhyList.length !== 0? mbtwhyList.map(mbtwhy => {
                         return (
                             <div className={style.sectionBoard} key={mbtwhy.no} onClick={()=>goMbtwhyDetail(mbtwhy.no)}>
                                 <div className={style.boardWriter}>
@@ -319,7 +369,7 @@ function Mbtwhy() {
                                     {mbtwhy.writerNickname}
                                 </div>
                                 <div className={style.boardDate}>
-                                    {mbtwhy.writeDate}
+                                    {formatDatetimeGap(mbtwhy.writeDate)}
                                 </div>
                                 <div className={style.boardContent}>
                                     {mbtwhy.content}
@@ -340,11 +390,14 @@ function Mbtwhy() {
                                 </div>
                             </div>
                         )
-                    })}
+                    }):
+                    <div className={style.noMbtwhy}>
+                        <h3>게시글이 없습니다.</h3>
+                    </div>}
                 </div>
 
                 {/* 페이징 영역 */}
-                {PaginationInside()}
+                {mbtwhyList.length===0?<></>:<PaginationInside/>}
 
                 {/* 검색 영역 */}
                 <FormGroup row className={style.sectionSearch}>
@@ -387,6 +440,11 @@ function Mbtwhy() {
                     <div style={{backgroundColor:"#35598F"}} onClick={()=>goMbtwhy("entj")}><h5>ENTJ</h5></div>
                 </div>
             </div>
+            <section className={style.sectionRightArea}>
+                <div>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
+                </div>
+            </section>
         </div>
     );
 }

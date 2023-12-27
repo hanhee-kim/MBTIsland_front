@@ -14,11 +14,12 @@ import {
   ModalHeader,
   Table,
 } from "reactstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { wait } from "@testing-library/user-event/dist/utils";
+import { urlroot } from "../../config";
 
-const MyQnA = (props) => {
+const MyQnA = () => {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [answered, setAnswered] = useState(null);
   const [page, setPage] = useState(1);
@@ -31,12 +32,25 @@ const MyQnA = (props) => {
     const day = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
+  const registration = useSelector((state) => state.persistedReducer.isRegistration);
+  const dispatch = useDispatch();
+  // const isRegistration = props.isRegistration;
   useEffect(() => {
     getMyQnaList(user.username, answered, page);
   }, []);
+  useEffect(() => {
+    //console.log("여기는 오는지");
+    if(registration){
+
+      getMyQnaList(user.username, answered, page);
+      // setIsRegistration(false);
+      dispatch({type:"isReg",payload:false});
+    }
+  },[registration]);
   const getMyQnaList = (username, answered, page) => {
-    let defaultUrl = "http://localhost:8090/questionlist";
+    
+    let defaultUrl = `${urlroot}/questionlist`;
 
     defaultUrl += `?user=${username}`;
     if (answered !== null)
@@ -46,7 +60,7 @@ const MyQnA = (props) => {
       defaultUrl += `${
         username !== null || answered !== null ? "&" : "?"
       }page=${page}`;
-    console.log("요청url:" + defaultUrl);
+    //console.log("요청url:" + defaultUrl);
 
     axios
       .get(defaultUrl)
@@ -55,9 +69,10 @@ const MyQnA = (props) => {
         let list = res.data.questionList;
         setQnaList([...list]);
         setPageInfo({ ...pageInfo });
+
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   };
   const openQnaWrite = () => {
@@ -71,7 +86,7 @@ const MyQnA = (props) => {
   };
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
-    console.log("***페이지이동***");
+    //console.log("***페이지이동***");
     getMyQnaList(user.username, answered, pageNo);
   };
   // 페이지네이션
@@ -111,7 +126,7 @@ const MyQnA = (props) => {
   };
   //tr 클릭시
   const goQuestionDeatail = (e, no) => {
-    // console.log("tr클릭" + no);
+    // //console.log("tr클릭" + no);
     const url = "/questiondetail/" + no;
     window.open(
       url,
@@ -120,10 +135,10 @@ const MyQnA = (props) => {
     );
   };
   const call = (answered) => {
-    console.log(answered);
+    //console.log(answered);
   };
   const changeFilter = (e, answerType) => {
-    console.log(answerType);
+    //console.log(answerType);
 
     if (answerType === null) {
       setAnswered(null);
@@ -198,7 +213,7 @@ const MyQnA = (props) => {
             <div className={style.tableDiv}>
               <Table className="table-hover" style={{ minWidth: "770px" }}>
                 <thead>
-                  <tr row className="text-center">
+                  <tr className="text-center">
                     <th scope="col" sm={1} style={{ minWidth: "52px" }}>
                       번호
                     </th>

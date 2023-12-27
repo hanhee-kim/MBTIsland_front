@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import style from "../../css/common/common.css";
 import { Form, Button, FormGroup, Input, Label } from "reactstrap";
 import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { urlroot } from "../../config";
 
 const QnAWrite = (props) => {
-  const user = useSelector((state) => state.persistedReducer.user.user);
-
+  const user = useSelector((state) => state.persistedReducer.user);
+  const dispatch = useDispatch();
   useEffect(() => {
     props.setIsPopup(true);
-    // props.setCurLocation("qnawrite");
   }, []);
   const [question, setQuestion] = useState({
     title: "",
@@ -21,9 +21,9 @@ const QnAWrite = (props) => {
   const changeQna = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    console.log(name + value);
+    //console.log(name + value);
     setQuestion({ ...question, writerId: user.username, [name]: value });
-    console.log(question);
+    //console.log(question);
   };
 
   const close = (e) => {
@@ -32,13 +32,14 @@ const QnAWrite = (props) => {
   };
   const submit = (e) => {
     e.preventDefault();
-    console.log(question.writerId);
-    console.log(user.username);
+    //console.log(question.writerId);
+    //console.log(user.username);
     //데이터 전달
     axios
-      .post("http://localhost:8090/questionwrite", question)
+      .post(`${urlroot}/questionwrite`, question)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
+        dispatch({type:"isReg",payload:true});
         Swal.fire({
           title: "문의가 등록되었습니다.",
           icon: "success",
@@ -47,7 +48,7 @@ const QnAWrite = (props) => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         Swal.fire({
           title: "문의 등록에 실패했습니다.",
           icon: "error",

@@ -1,5 +1,6 @@
 .container {
     margin-top: 90px;
+    margin-bottom: 90px;
 }
 
 .sectionCenter {
@@ -15,6 +16,17 @@
 .pageHeader > h1 {
     width: 70%;
     text-align: left;
+    cursor: default;
+}
+
+.sendNoteIcon {
+    width: 18px;
+    height: 18px;
+    margin-top: 7px;
+    margin-left: 5px;
+    cursor: pointer;
+    position: relative;
+    bottom: 2px;
 }
 
 .popoverButton {
@@ -83,6 +95,7 @@
     width: 700px;
     text-align: left;
     margin-bottom: 30px;
+    white-space: pre;
 }
 
 .boardLow {
@@ -122,6 +135,7 @@
 .sectionComment {
     padding: 25px;
     border-bottom: solid #C5C5C5 1px;
+    white-space: pre;
 }
 
 .sectionComment > div{
@@ -135,6 +149,7 @@
 
 .commentCountDiv > div {
     font-weight: bold;
+    cursor: default;
 }
 
 .sectionDeletedComment {
@@ -147,6 +162,10 @@
     text-align: center;
     align-items: center;
     line-height: 120px;
+}
+
+.noComment {
+    color: #C5C5C5;
 }
 
 .paging {
@@ -162,10 +181,14 @@
     font-size: 18px;
     width: 32px;
     height: 32px;
-    line-height: 32px;
-    border:0px solid white;
+    border: 0px solid white;
     text-align: center;
+    line-height: 32px;
     cursor: pointer;
+}
+
+.activePage {
+    border: 1px solid #A3A3A3 !important;
 }
 
 .postCommentDiv {
@@ -176,6 +199,7 @@
 .sectionPostReply {
     display: flex;
     justify-content: space-between;
+    white-space: pre;
 }
 
 .sectionReply {
@@ -183,6 +207,7 @@
     justify-content: space-between;
     padding: 25px;
     border-bottom: solid #C5C5C5 2px;
+    white-space: pre;
 }
 
 .sectionReply > div {
@@ -192,4 +217,24 @@
 .replyArrowImg {
     height: 30px;
     margin-right: 10px;
+}
+
+.sectionRightArea {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.sectionRightArea>div {
+    /* border: dashed red 3px; */
+    /* padding-right: 100px; */
+    /* position: sticky; */
+    position:fixed;
+    right: 100px;
+    bottom: 40px;
+}
+
+.movetopIcon {
+    float: right;
+    width: 50px;
+    cursor: pointer;
 }

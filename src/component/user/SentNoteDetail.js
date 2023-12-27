@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { urlroot } from "../../config";
 
 const SentNoteDetail = (props) => {
   const {noteNo} = useParams();
@@ -24,16 +25,16 @@ const close = (e) => {
 useEffect(()=>{
   props.setIsPopup(true);
   let userType = "sent";
-  console.log(`http://localhost:8090/notedetail/${noteNo}/${userType}`);
+  //console.log(`${urlroot}/notedetail/${noteNo}/${userType}`);
   axios
-      .get(`http://localhost:8090/notedetail/${noteNo}/${userType}`)
+      .get(`${urlroot}/notedetail/${noteNo}/${userType}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setNote(res.data);
         // setAnswer(res.data.answer);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
 },[])
 

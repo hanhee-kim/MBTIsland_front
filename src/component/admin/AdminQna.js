@@ -5,9 +5,10 @@ import styleFrame from "../../css/admin/AdminFrame.module.css";
 import style from "../../css/admin/AdminNotice.module.css";
 import styleQna from "../../css/admin/AdminQna.module.css";
 import React, { useEffect, useState } from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import AdminNav from "./AdminNav";
 import axios from "axios";
+import { urlroot } from "../../config";
 
 const AdminQna = () => {
 
@@ -29,23 +30,89 @@ const AdminQna = () => {
         return `${year}-${month}-${day}`;
     };
 
+    // 내비 바의 '문의 답변' 재클릭시 초기상태로 재렌더링하게함
+    const location = useLocation();
     useEffect(() => {
-        getQuestionList(search, answered, page, username);
+        getQuestionList(null, null, 1, null);
+        setSearch(null);
+        setAnswered(null);
+        setPage(1);
+        setPageInfo({});
+        setTmpSearch(null);
+        setUsername(null);
+        setActiveFilter(null);
+        setErrorMsg(null);
+    }, [location]);
+
+    // localStorage에서 목록의 값을 읽어서 렌더링
+    useEffect(() => {
+        // 로컬 스토리지에서 이전목록값을 읽어서 렌더링되게해야함
+        const savedState = localStorage.getItem('adminQuestionValue');
+        const initialState = savedState ? JSON.parse(savedState) : { search: null, answered: null, page: 1, username: null };
+    
+        // 상세/폼에서 돌아온 경우에만 로컬스토리지의 이전목록값 사용
+        if (location.state && location.state.fromDetail) {
+            setSearch(initialState.search);
+            setAnswered(initialState.answered);
+            setPage(initialState.page);
+            setUsername(initialState.username);
+            setActiveFilter(initialState.answered);
+            getQuestionList(initialState.search, initialState.answered, initialState.page, initialState.username);
+        } else {
+            // 그 외의 경우에는 초기값 사용하여 렌더링
+            setSearch(null);
+            setAnswered(null);
+            setActiveFilter(null);
+            setPage(1);
+            getQuestionList(null, null, 1, null);
+
+        }
+
+        // 로컬스토리지 초기화
+        localStorage.removeItem("adminQuestionValue");
     }, []);
 
+    const updateLocalStorage = (newValue) => {
+        const currentValue = {
+            search: search,
+            answered: answered,
+            page: page,
+            username: username,
+        };
+        // //console.log('$$$ 로컬스토리지에 저장될 currentValue: ', currentValue);
+        localStorage.setItem('adminQuestionValue', JSON.stringify({ ...currentValue, ...newValue }));
+    };
+
+    useEffect(() => {
+
+        // AdminQnaForm.js에서 특정유저의 문의글모아보기 클릭시 파라미터와 함께 navigate됨
+        const searchParams = new URLSearchParams(location.search);
+        const writerId = searchParams.get('writerId');
+        if (writerId) {
+            //console.log(`모아볼 아이디: ${writerId}`);
+            getQuestionList(search, null, 1, writerId);
+            setUsername(writerId);
+
+            updateLocalStorage({ username: writerId });
+
+        } else {
+            getQuestionList(search, answered, page, username);
+        }
+    }, [location.search]);
+
     const getQuestionList = (search, answered, page, username) => {
-        let defaultUrl = 'http://localhost:8090/questionlist';
+        let defaultUrl = `${urlroot}/questionlist`;
 
         if (search !== null) defaultUrl += `?search=${search}`;
         if (answered !== null) defaultUrl += `${search !== null ? '&' : '?'}answered=${answered}`;
         if (page !== null) defaultUrl += `${search !== null || answered !== null ? '&' : '?'}page=${page}`;
         if (username !== null) defaultUrl += `${search !== null || answered !== null || page !== null ? '&' : '?'}username=${username}`;
 
-        console.log('요청url:' + defaultUrl);
+        //console.log('요청url:' + defaultUrl);
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
+            //console.log(res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.questionList;
             let questionCnts = res.data.questionCnts;
@@ -57,9 +124,9 @@ const AdminQna = () => {
             setUsername(username);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             if(err.response && err.response.data) {
-                console.log('err.response.data: ' + err.response.data);
+                //console.log('err.response.data: ' + err.response.data);
                 setErrorMsg(err.response.data);
                 setQuestionCnts({'totalCnt':0, 'answeredCnt':0, 'answeredNotCnt':0});
             }
@@ -68,29 +135,39 @@ const AdminQna = () => {
 
     const handlePageNo = (pageNo) => {
         setPage(pageNo);
-        console.log('***페이지이동***')
-        console.log('현재 적용되는 필터값: ' + answered);
-        console.log('현재 적용되는 검색어: ' + search);
-        getQuestionList(search, answered, pageNo, username); 
+        //console.log('***페이지이동***')
+        //console.log('현재 적용되는 필터값: ' + answered);
+        //console.log('현재 적용되는 검색어: ' + search);
+        getQuestionList(search, answered, pageNo, username);
+        
+        updateLocalStorage({ page: pageNo });
     };
     const handleFilterChange = (answered) => {
-        console.log('***필터변경***')
-        console.log('현재 적용되는 필터값: ' + answered);
-        console.log('현재 적용되는 검색어: ' + search);
+        //console.log('***필터변경***')
+        //console.log('현재 적용되는 필터값: ' + answered);
+        //console.log('현재 적용되는 검색어: ' + search);
         getQuestionList(search, answered, 1, username);
         setActiveFilter(answered);
+
+        updateLocalStorage({ answered: answered });
     };
     const handleSearchChange = (event) => {
         const searchTerm = event.target.value;
         setTmpSearch(searchTerm);
     };
     const handleSearch = () => {
-        console.log('검색 수행');
+        //console.log('검색 수행');
         setSearch(tmpSearch);
         setAnswered(null);
         setActiveFilter(null);
         getQuestionList(tmpSearch, null, 1, username);
+
+        updateLocalStorage({ search: tmpSearch });
     };
+    // 엔터키로 검색 수행
+    const handleKeyPress = (e) => {
+        if (e.key==="Enter") handleSearch();
+    }
 
     // 팝오버 오픈 상태
     const [openList, setOpenList] = useState([]);
@@ -107,28 +184,31 @@ const AdminQna = () => {
         setOpenList(newOpenList);
     };
 
-    const clickPopoverBody = (writerId) => {
-        console.log('모아볼 writerId: ', writerId);
+    const getQuestionListOfWriterId = (writerId) => {
+        //console.log('모아볼 writerId: ', writerId);
         getQuestionList(search, null, 1, writerId); // 문의글모아보기 클릭시 검색값은 유지, answered와 page는 초기값으로 목록 요청
         setUsername(writerId);
+        setActiveFilter(null);
+        setAnswered(null);
+        setPage(1);
     }
 
 
 
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
-    // useEffect(() => {
-    //     const clickOutsidePopover = (event) => {
-    //         const popoverElements = document.querySelectorAll(".popover");
-    //         // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
-    //         if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
-    //             setOpen(false);
-    //         } 
-    //     };
-    //     document.addEventListener("mousedown", clickOutsidePopover);
-    //     return () => {
-    //         document.removeEventListener("mousedown", clickOutsidePopover);
-    //     };
-    // }, []);
+    useEffect(() => {
+        const clickOutsidePopover = (event) => {
+            const popoverElements = document.querySelectorAll(".popover");
+            // 조건식: 팝오버 요소들을 배열로 변환하여 각각의 요소에 클릭된 요소가 포함되어있지 않다면
+            if (Array.from(popoverElements).every((popover) => !popover.contains(event.target))) {
+                setOpenList(questionList.map(() => false));
+            } 
+        };
+        document.addEventListener("mousedown", clickOutsidePopover);
+        return () => {
+            document.removeEventListener("mousedown", clickOutsidePopover);
+        };
+    }, []);
 
 
     // 페이지네이션
@@ -159,6 +239,13 @@ const AdminQna = () => {
         );
     }
 
+    // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
+    const navigate = useNavigate();
+    const goToAdminQnaForm = (postNo) => {
+        const linkTo = `/adminqna/form/${postNo}`;
+        navigate(linkTo); // 리다이렉트
+    };
+
     return (
         <>
         <div>
@@ -171,7 +258,7 @@ const AdminQna = () => {
                         <span className={`${style.filterBtn} ${activeFilter==='N'? style.filterActive :''}`} onClick={() => handleFilterChange("N")}>미처리 : {questionCnts.answeredNotCnt}</span>
                     </div>
                     <div className={style.searchBar}>
-                        <input type="text" onChange={handleSearchChange}/>
+                        <input type="text" onChange={handleSearchChange} onKeyDown={(e)=>handleKeyPress(e)}/>
                         <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} onClick={handleSearch}/>
                     </div>
                 </div>
@@ -195,10 +282,10 @@ const AdminQna = () => {
                                 <tr key={post.no} className={post.isAnswered==='Y'? styleQna.completedQna : ''}>
                                     <td>{post.no}</td>
                                     <td>{formatDate(post.writeDate)}</td>
-                                    <td>{post.title}</td>
+                                    <td onClick={()=> goToAdminQnaForm(post.no)}>{post.title}</td>
                                     <td onClick={() => togglePopover(index)} id={`popover${index}`}>{post.writerId}</td>
                                     <Popover className={styleQna.popover} placement="bottom" isOpen={openList[index]} target={`popover${index}`} toggle={() => togglePopover(index)}>
-                                        <PopoverBody className={styleQna.popoverItem} onClick={() => clickPopoverBody(post.writerId)}>문의글 모아보기</PopoverBody>
+                                        <PopoverBody className={styleQna.popoverItem} onClick={() => getQuestionListOfWriterId(post.writerId)}>문의글 모아보기</PopoverBody>
                                     </Popover>
                                     <td>{post.isAnswered==='N'? ('미처리') : ('처리')}</td>
                                 </tr>

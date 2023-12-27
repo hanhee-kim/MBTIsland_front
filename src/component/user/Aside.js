@@ -8,7 +8,7 @@ const Aside = (props) => {
   //state,effect...
   // URL의 path값을 받아올 수 있다.
   const pathName = useLocation().pathname;
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
   const navigate = useNavigate();
   // const menus = [
   //   { name: "프로필", path: "/profile" },
@@ -23,6 +23,7 @@ const Aside = (props) => {
     { name: "프로필", path: "/mypage/profile" },
     { name: "MBTWHY", path: "/mypage/mbtwhy" },
     { name: "MBTMI", path: "/mypage/mbtmi" },
+    { name: "MBATTLE", path: "/mypage/mbattle" },
     { name: "문의함", path: "/mypage/qna" },
     { name: "북마크", path: "/mypage/bookmark" },
     { name: "알림함", path: "/mypage/alarm" },
@@ -71,7 +72,7 @@ const Aside = (props) => {
   // };
   const changePage = props.changePage;
   const changePath = (e, path) => {
-    console.log("e" + e + " path:" + path);
+    //console.log("e" + e + " path:" + path);
     changePage(path);
     navigate(path);
   };

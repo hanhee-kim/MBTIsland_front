@@ -1,71 +1,156 @@
 import { useState, useRef } from "react";
 import { useNavigate } from 'react-router';
+import { useSelector } from "react-redux";
 import {
     Button,
     Input
 } from "reactstrap";
+import Swal from "sweetalert2";
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 import style from "../../css/mbattle/MBattleForm.module.css";
 
 function MBattleWrite() {
-    const [board, setBoard] = useState({title:'',subject1:'',subject2:'',file1:'',file2:''});
+    // 로그인 유저 정보
+    const user = useSelector((state) => state.persistedReducer.user);
+
     const imgBoxRef1 = useRef();
     const imgBoxRef2 = useRef();
     const navigate = useNavigate();
+    
+    // mbattle 게시글
+    const [mbattle, setMbattle] = useState({
+        title: "",
+        voteItem1: "",
+        voteItem2: "",
+        fileIdx1: "",
+        fileIdx2: "",
+        writerId: user.username,
+        writerNickname: user.userNickname,
+        writerMbti: user.userMbti,
+        writerMbtiColor: user.userMbtiColor
+    });
 
+    // 파일 목록
+    const [files, setFiles] = useState([]);
+
+    // mbattle 필드값 변경
     const change = (e) => {
         const name = e.target.name;
         const value = e.target.value;
-        setBoard({...board, [name]:value});
-    }
+        setMbattle({...mbattle, [name]:value});
+    };
 
     // 파일이 변경될 때 호출
     const fileChange = (e) => {
         const name = e.target.name;
         const value = e.target.value
+
+        // 파일 디렉토리를 열었지만 취소 버튼을 클릭한 경우, 코드 실행 X
         // 실제 추가된 파일이 있을 때 (파일의 크기가 0보다 클 때)
-        // 파일 디렉토리를 열었지만 취소 버튼을 클릭한 경우
         if(e.target.files.length > 0) {
+            const newFiles = [...files];
             // files 배열에 추가
             // 얕은 복사로 추가할 파일을 배열에 넣음
-            setBoard({...board, [name]:value});
-        }
-    
-        // 기존 img 태그 영역의 이미지를 변경하는 코드
-        // 파라미터 e에서 file 경로를 가져옴
-        if(e.target.files!==null) {
+            if(name==="fileIdx1") {
+                newFiles[0] = e.target.files[0];
+                setFiles(newFiles);
+                // setFiles([...files, e.target.files[0]]);
+            } else if (name==="fileIdx2") {
+                newFiles[1] = e.target.files[0];
+                setFiles(newFiles);
+                // setFiles([...files, e.target.files[0]]);
+            }
+
+            // mbattle 파일 인덱스 set
+            setMbattle({...mbattle, [name]: value});
+
+            // 기존 img 태그 영역의 이미지를 변경하는 코드
+            // 파라미터 e에서 file 경로를 가져옴
             const imageSrc = URL.createObjectURL(e.target.files[0]); // img 태그에서 가리키는 imgBoxRef에 file 경로 설정
-            if(name==="file1") {
+            if(name==="fileIdx1") {
                 imgBoxRef1.current.src = imageSrc;
-                imgBoxRef1.current.width = 290;
-                imgBoxRef1.current.height = 290;
-            } else if(name==="file2") {
+                imgBoxRef1.current.width = 300;
+                imgBoxRef1.current.height = 300;
+            } else if(name==="fileIdx2") {
                 imgBoxRef2.current.src = imageSrc;
                 imgBoxRef2.current.width = 300;
                 imgBoxRef2.current.height = 300;
             }
         }
+    };
 
-    }
-    const submit = (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append("title", board.title);
-        formData.append("subject1", board.subject1);
-        formData.append("subject2", board.subject1);
-        formData.append("file1", board.file1);
-        formData.append("file2", board.file2);
-        // formData.append("file", files);
     
-        axios.post("http://localhost:8090/mbattlewrite/", formData)
+    // 이미지 삭제
+    const fileDelete = (idx) => {
+        const newFiles = [...files];
+        // files 배열에 추가
+        // 얕은 복사로 추가할 파일을 배열에 넣음
+        if(idx==="fileIdx1") {
+            newFiles.splice(0, 1);
+            setFiles(newFiles);
+
+            imgBoxRef1.current.src = "/attachIcon.png";
+            imgBoxRef1.current.width = 200;
+            imgBoxRef1.current.height = 200;
+        } else if (idx==="fileIdx2") {
+            newFiles.splice(1, 1);
+            setFiles(newFiles);
+
+            imgBoxRef2.current.src = "/attachIcon.png";
+            imgBoxRef2.current.width = 200;
+            imgBoxRef2.current.height = 200;
+        }
+
+        // mbattle 파일 인덱스 set
+        setMbattle({...mbattle, [idx]: ""});
+    };
+
+    // 게시글 작성
+    const postMbattle = () => {
+        if((mbattle.fileIdx1.length===0 && mbattle.fileIdx2.length!==0) || (mbattle.fileIdx1.length!==0 && mbattle.fileIdx2.length===0)) {
+            Swal.fire({
+                title: "파일을 모두 첨부해주세요.",
+                icon: "warning",
+            });
+            return;
+        } else if (mbattle.title==="") {
+            Swal.fire({
+                title: "제목을 입력해주세요.",
+                icon: "warning",
+            });
+            return;
+        } else if((mbattle.voteItem1==="" && mbattle.voteItem2!=="") || (mbattle.voteItem1!=="" && mbattle.voteItem2==="")) {
+            Swal.fire({
+                title: "주제를 모두 입력해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("title", mbattle.title);
+        formData.append("voteItem1", mbattle.voteItem1);
+        formData.append("voteItem2", mbattle.voteItem2);
+        formData.append("fileIdx1", mbattle.fileIdx1);
+        formData.append("fileIdx2", mbattle.fileIdx2);
+        formData.append("writerId", mbattle.writerId);
+        formData.append("writerNickname", mbattle.writerNickname);
+        formData.append("writerMbti", mbattle.writerMbti);
+        formData.append("writerMbtiColor", mbattle.writerMbtiColor);
+        
+        for(let file of files) {
+            formData.append("files", file);
+        }
+    
+        axios.post(`${urlroot}/mbattlewrite/`, formData)
         .then(res=> {
-            console.log(res);
-            let boardNum = res.data;
-            navigate(`/detailform/after-modify/${boardNum}`);
+            let no = res.data.no;
+            navigate(`/mbattledetail/${no}`);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     }
 
@@ -74,20 +159,20 @@ function MBattleWrite() {
         height:"50px",
         resize:"none",
         margin:"0 auto"
-    }
+    };
 
     const inputSubject = {
         width:"300px",
         height:"100px",
         resize:"none"
-    }
+    };
 
     const buttonStyle = {
         background:"white",
         color:"black",
         border:"1px solid lightgray",
         margin:"10px"
-    }
+    };
     
     return (
         <div className={style.container}>
@@ -114,58 +199,66 @@ function MBattleWrite() {
                         cols="40"
                         rows="15"
                         required="required"
-                        value={board.title}
+                        value={mbattle.title}
                         placeholder="제목을 입력해주세요."
                     />
 
                     {/* 사진, 주제 작성 */}
                     <div className={style.sectionSubject}>
                         <div>
-                            <div className={style.inputFileDiv} onClick={()=>document.getElementById("file1").click()} >
+                            <button onClick={()=>fileDelete("fileIdx1")}>X</button>
+                            <div className={style.inputFileDiv} onClick={()=>document.getElementById("fileIdx1").click()} >
                                 <img src="/attachIcon.png" alt="" ref={imgBoxRef1} width="200px" height="200px"/>
-                                    <Input type="file" id="file1" name="file1" accept="image/*" onChange={fileChange} hidden/>
+                                    <Input type="file" id="fileIdx1" name="fileIdx1" accept="image/*" onChange={fileChange} hidden/>
                             </div>
-                            항목1
+                            주제1
                             <Input 
                                 style={inputSubject}
                                 type="textarea"
-                                id="subject1"
-                                name="subject1"
+                                id="voteItem1"
+                                name="voteItem1"
                                 onChange={change}
                                 cols="40"
                                 rows="15"
                                 required="required"
-                                value={board.subject1}
+                                value={mbattle.voteItem1}
                                 placeholder="주제를 입력해주세요."
                             />
                         </div>
                         <div>
-                            <div className={style.inputFileDiv} onClick={()=>document.getElementById("file2").click()}>
+                            <button onClick={()=>fileDelete("fileIdx2")}>X</button>
+                            <div className={style.inputFileDiv} onClick={()=>document.getElementById("fileIdx2").click()}>
                                 <img src="/attachIcon.png" alt="" ref={imgBoxRef2} width="200px" height="200px"/>
-                                    <Input type="file" id="file2" name="file2" accept="image/*" onChange={fileChange} hidden/>
+                                    <Input type="file" id="fileIdx2" name="fileIdx2" accept="image/*" onChange={fileChange} hidden/>
                             </div>
-                            항목1
+                            주제2
                             <Input 
                                 style={inputSubject}
                                 type="textarea"
-                                id="subject2"
-                                name="subject2"
+                                id="voteItem2"
+                                name="voteItem2"
                                 onChange={change}
                                 cols="40"
                                 rows="15"
                                 required="required"
-                                value={board.subject2}
+                                value={mbattle.voteItem2}
                                 placeholder="주제를 입력해주세요."
                             />
                         </div>
                     </div>
 
                     <div className={style.ButtonDiv}>
-                        <Button style={buttonStyle} onClick={submit}>등록</Button>
-                        <Button style={buttonStyle} href="mbattle">취소</Button>
+                        <Button style={buttonStyle} onClick={()=>postMbattle()}>등록</Button>
+                        <Button style={buttonStyle} href="mbattle/1">취소</Button>
                     </div>
                 </div>
             </div>
+
+            <section className={style.sectionRightArea}>
+                <div>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
+                </div>
+            </section>
         </div>
     );
 }

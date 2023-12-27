@@ -1,25 +1,23 @@
-import { useReducer } from "react";
-import { useSelector } from "react-redux";
-
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { Button } from 'reactstrap';
-import { FormGroup } from 'reactstrap';
-import { Input } from 'reactstrap';
-import { Label } from 'reactstrap';
-import { Form } from 'reactstrap';
+import {
+  Button,
+  FormGroup,
+  Input,
+  Label,
+  Form
+} from 'reactstrap';
 import Swal from "sweetalert2";
+import axios from 'axios';
+import { urlroot } from "../../config";
 
 const ReportWrite = (props) => {
-  const {reportedId, reportedTable} = useParams();
-  const formatReportedId = reportedId.startsWith(':') ? reportedId.substring(1) : reportedId;
-  const formatReportedITable = reportedTable.startsWith(':') ? reportedTable.substring(1) : reportedTable;
+  // 신고 정보 props
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const serializedReportData = urlParams.get('data');
+  const reportData = JSON.parse(decodeURIComponent(serializedReportData));
 
-  const [report,setReport] = useState({
-    reportedId:formatReportedId,
-    reportedTable:formatReportedITable,
-    reportType:""
-  });
+  const [report,setReport] = useState(reportData);
   
   useEffect(() => {
     props.setIsPopup(true);
@@ -30,17 +28,31 @@ const ReportWrite = (props) => {
     window.close();
   };
   
-  const send = (e) => {
-    e.preventDefault();
-    
-    // report send
-    Swal.fire({
-      title: "신고 완료",
-      icon: "success",
-    }).then(function () {
-      window.close();
+  const sendReport = () => {
+    let defaultUrl = `${urlroot}/report`;
+    axios.post(defaultUrl, report)
+    .then(res=> {
+      Swal.fire({
+        title: "신고 완료",
+        icon: "success",
+      }).then(function () {
+        window.close();
+      });
+    })
+    .catch(err=> {
+      //console.log(err);
+      Swal.fire({
+        title: "신고 실패",
+        icon: "fail",
+      }).then(function () {
+        window.close();
+      });
     });
   };
+
+  // useEffect(()=> {
+  //   console.log("신고 정보:", report);
+  // }, [report]);
 
   return (
   <div>
@@ -71,12 +83,12 @@ const ReportWrite = (props) => {
               sm={5}
               type="select"
               name="reportType"
-              onChange={(e)=>setReport({...report,reportType:e.target.value})}
+              onChange={(e)=>setReport({...report, reportReason:e.target.value})}
               style={{ width: "150px"}}
             >
-              <option>광고</option>
-              <option>도배</option>
-              <option>욕설</option>
+              <option value="광고">광고</option>
+              <option value="도배">도배</option>
+              <option value="욕설">욕설</option>
             </Input>
 
           </FormGroup>
@@ -91,7 +103,7 @@ const ReportWrite = (props) => {
             <Button color="light" onClick={close}>
               취소
             </Button>
-            <Button color="dark" onClick={send}>
+            <Button color="dark" onClick={()=>sendReport()}>
               신고
             </Button>
           </FormGroup>

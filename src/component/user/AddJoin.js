@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { Button, Col, Form, FormGroup, Input, Label } from "reactstrap";
+import { urlroot } from "../../config";
 
 const AddJoin = () => {
   //css
@@ -46,18 +47,17 @@ const AddJoin = () => {
     borderColor: "gray",
   };
   //state,effect,...
-  const token = useSelector((state) => state.persistedReducer.token.token);
-  const user = useSelector((state) =>  state.persistedReducer.user.user)
+  const token = useSelector((state) => state.persistedReducer.token);
+  const user = useSelector((state) =>  state.persistedReducer.user)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [emailCode, setEmailCode] = useState("");
 
   const [mbtiCheckEI, setMbtiCheckEI] = useState("E");
   const [mbtiCheckNS, setMbtiCheckNS] = useState("N");
   const [mbtiCheckTF, setMbtiCheckTF] = useState("T");
   const [mbtiCheckPJ, setMbtiCheckPJ] = useState("P");
   useEffect(()=>{
-    console.log(token);
+    //console.log(token);
   },[])
   //function
   const addJoin = (e) => {
@@ -65,32 +65,24 @@ const AddJoin = () => {
     const userMbti= mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ;
     
     axios
-    .get(`http://localhost:8090/guest/${userMbti}`,{
+    .get(`${urlroot}/guest/${userMbti}`,{
       headers : {
         Authorization : token,
       }
     })
     .then(res=> {            
-      console.log(res);
-      console.log("data:"+res.data);
+      //console.log(res);
+      //console.log("data:"+res.data);
       // setUser(res.data);
       dispatch({type:"user",payload:res.data});
-      console.log(user.userMbti);
+      //console.log(user.userMbti);
       navigate("/");
     })
     .catch(err=> {
-      console.log("user가져오기 에러");
-      console.log(err);
+      //console.log("user가져오기 에러");
+      //console.log(err);
     })
   };
-  // const change = (e) => {
-  //   setUser({ ...user });
-  //   console.log("user:" + user.userMbti + "email:" + user.userEmail);
-  // };
-  // const codeChange = (e) => {
-  //   setEmailCode(e.target.value);
-  //   console.log(emailCode);
-  // };
   const mbtiEIClick = (e, ei) => {
     e.stopPropagation();
     setMbtiCheckEI(ei);
@@ -114,7 +106,7 @@ const AddJoin = () => {
   return (
     <div>
       <Form style={addJoinFormStyle}>
-        <FormGroup row style={{ justifyContent: "center" }}>
+        <FormGroup row style={{ justifyContent: "center",textAlign:'center' }}>
           <h3 style={{ fontSize: "40px" }}>ADD</h3>
         </FormGroup>
         <FormGroup>
@@ -122,7 +114,7 @@ const AddJoin = () => {
             * 필수입력 정보 미추가시 정상 이용이 불가합니다. *
           </Label>
         </FormGroup>
-        <FormGroup tag="fieldset" style={{ display: "flex", gap: "10px" }} row>
+        <FormGroup style={{ display: "flex", gap: "10px" }}>
           <Label for="mbti" sm={3}>
             MBTI
           </Label>
@@ -210,51 +202,6 @@ const AddJoin = () => {
             </FormGroup>
           </div>
         </FormGroup>
-        {/* <FormGroup row>
-          <Label for="userEmail" sm={3}>
-            이메일
-          </Label>
-          <Col sm={7}>
-            <Input
-              type="text"
-              name="userEmail"
-              id="userEmail"
-              placeholder="Email 입력하세요."
-              onChange={change}
-            />
-          </Col>
-          <Col sm={2}>
-            <Button
-              color="white"
-              style={{ border: "1px solid black", fontWeight: "600" }}
-            >
-              보내기
-            </Button>
-          </Col>
-        </FormGroup>
-        <FormGroup row>
-          <Label for="emailCode" sm={3}>
-            인증코드
-          </Label>
-          <Col sm={7}>
-            <Input
-              type="text"
-              name="emailCode"
-              id="emailCode"
-              placeholder="인증코드를 입력하세요."
-              onChange={codeChange}
-            />
-          </Col>
-          <Col sm={2}>
-            <Button
-              color="white"
-              style={{ border: "1px solid black", fontWeight: "600" }}
-            >
-              인증
-            </Button>
-          </Col>
-        </FormGroup> */}
-
         <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
           <Button
             color="dark"

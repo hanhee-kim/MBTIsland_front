@@ -14,6 +14,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 // import { Button, Table } from 'reactstrap';
+import { urlroot } from "../../config";
 
 const MyAlarm = () => {
   const [page, setPage] = useState(1);
@@ -33,14 +34,14 @@ const MyAlarm = () => {
     const day = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
 
   useEffect(() => {
     getMyAlarmList(user.username, type, page);
   }, []);
 
   const getMyAlarmList = (username, type, page) => {
-    let defaultUrl = "http://localhost:8090/alarmList";
+    let defaultUrl = `${urlroot}/alarmList`;
     defaultUrl += `?username=${username}`;
     if (type != null) {
       defaultUrl += `&type=${type}`;
@@ -48,25 +49,26 @@ const MyAlarm = () => {
     if (page !== null || page !== "") {
       defaultUrl += `&page=${page}`;
     }
-    console.log("요청url : " + defaultUrl);
+    //console.log("요청url : " + defaultUrl);
 
     axios
       .get(defaultUrl)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
+        //console.log(res);
         let pageInfo = res.data.pageInfo;
         let list = res.data.alarmList;
         setAlarmList([...list]);
         setPageInfo({ ...pageInfo });
       })
       .catch((err) => {
-        console.log(err);
-        console.log(err.response.data);
+        // console.log(err);
+        // console.log(err.response.data);
         if (
           err.response.data.err == "해당 알림없음." ||
           err.response.data.err == "알림에 대한 해당 댓글이 존재하지 않음"
         ) {
-          console.log(alarmList);
+          //console.log(alarmList);
           setAlarmList(err.response.data.alarmList);
         }
       });
@@ -75,7 +77,7 @@ const MyAlarm = () => {
   // 체크박스 단일 선택
   const handleSingleCheck = (checked, no) => {
     if (checked) {
-      console.log(checkItems);
+      //console.log(checkItems);
       // 단일 선택 시 체크된 아이템을 배열에 추가
       setCheckItems((prev) => [...prev, no]);
     } else {
@@ -89,7 +91,7 @@ const MyAlarm = () => {
     if (checked) {
       // 전체 선택 클릭 시 데이터의 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트
       const noArray = [];
-      alarmList.forEach((el) => noArray.push(el.no));
+      alarmList.forEach((el) => noArray.push(el.alarmNo));
       setCheckItems(noArray);
     } else {
       // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
@@ -97,13 +99,20 @@ const MyAlarm = () => {
     }
   };
   const readAlarm = () => {
+    if(checkItems.length===0) {
+      Swal.fire({
+          title: "체크된 항목이 없습니다.",
+          icon: "warning",
+      });
+      return;
+    }
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     //  알람삭제 ? 읽음처리 ?
     let arrayItems = checkItems.join(",");
     axios
-      .put(`http://localhost:8090/updatealarmisread?arrayItems=${arrayItems}`)
+      .put(`${urlroot}/updatealarmisread?arrayItems=${arrayItems}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setFilterChange("읽음처리");
         setCheckItems([]);
         Swal.fire({
@@ -113,7 +122,7 @@ const MyAlarm = () => {
         getMyAlarmList(user.username, type, page);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        //console.log(err.response.data);
         let errLog = err.response.data;
         Swal.fire({
           title: "읽음처리 실패!",
@@ -124,11 +133,9 @@ const MyAlarm = () => {
   };
   const allRaed = () => {
     axios
-      .put(
-        `http://localhost:8090/updatealarmisreadall?username=${user.username}`
-      )
+      .put(`${urlroot}/updatealarmisreadall?username=${user.username}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setFilterChange("모두읽음처리");
         setCheckItems([]);
         Swal.fire({
@@ -138,7 +145,7 @@ const MyAlarm = () => {
         getMyAlarmList(user.username, type, page);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        //console.log(err.response.data);
         let errLog = err.response.data;
         Swal.fire({
           title: "모두 읽음 처리 실패!",
@@ -159,21 +166,40 @@ const MyAlarm = () => {
     setFilterChange("타입필터적용");
     getMyAlarmList(user.username, type, page);
   };
+  //tr클릭시 해당알림의 게시글로 이동할때 알림컬럼을 읽음처리
+  const checkAlarm = (no) => {
+    axios
+      .put(`${urlroot}/checkalarm/${no}`)
+      .then((res) => {
+        //console.log(res.data);
+      })
+      .catch((err) => {});
+  };
   //tr클릭시 해당알림의 게시글로 이동할때
   const goDetail = (e, alarm) => {
     //useNavigate();사용해서
     const no = alarm.detailNo;
+    const mbti = alarm.detailMbti;
+    //console.log(user.username, type, page);
     switch (alarm.detailType) {
       case "MBTMI":
-        navigate("/mbtmidetail/" + no);
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
+        navigate("/mbtmidetail/" + no );
         break;
       case "MBTWHY":
-        navigate("/mbtwhydetail/" + no);
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
+        navigate("/mbtwhydetail/" + no + "/" + mbti );
         break;
       case "MBATTLE":
-        navigate("/mbattledetail/" + no);
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
+        navigate("/mbattledetail/" + no );
         break;
       case "NOTE":
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
         let noteNo = no;
         const noteUrl = "/notedetail/" + noteNo;
         window.open(
@@ -183,19 +209,32 @@ const MyAlarm = () => {
         );
         break;
       case "QUESTION":
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
         const questionUrl = "/questiondetail/" + no;
         window.open(
           questionUrl,
           "_blank",
           "width=720,height=780,location=no,status=no,scrollbars=yes"
         );
-
         break;
-      case "SWAL":
+      // 쪽지 댓글 경고 제재 문의답글 ( 타입 )
+      case "WARN":
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
         Swal.fire({
-          title: "",
-          text: "",
-          icon: "",
+          title: alarm.alarmType + "가 1회",
+          text: "지금까지 총 " + alarm.warnCnt + " 회의 경고를 받으셨습니다.",
+          icon: "warning",
+        });
+        break;
+      case "BAN":
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
+        Swal.fire({
+          title: alarm.alarmType + "처리",
+          text: "정지 종료일은 " + formatDate(alarm.banDate) + "입니다.",
+          icon: "warning",
         });
         break;
       default:
@@ -239,7 +278,7 @@ const MyAlarm = () => {
   };
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
-    console.log("***페이지이동***");
+    //console.log("***페이지이동***");
     getMyAlarmList(user.username, type, pageNo);
   };
   return (
@@ -337,12 +376,7 @@ const MyAlarm = () => {
                 <tbody>
                   {alarmList.map((alarm, index) => {
                     return (
-                      <tr
-                        key={index}
-                        onClick={(e) => {
-                          goDetail(e, alarm);
-                        }}
-                      >
+                      <tr key={index}>
                         <td sm={1} className="text-center">
                           <input
                             type="checkbox"
@@ -356,13 +390,22 @@ const MyAlarm = () => {
                             }
                           />
                         </td>
-                        <td sm={2} className="text-center">
+                        <td
+                          sm={2}
+                          className="text-center"
+                          onClick={(e) => {
+                            goDetail(e, alarm);
+                          }}
+                        >
                           [ {alarm.alarmType} ]
                         </td>
                         <td
                           sm={5}
                           className="text-truncate"
                           style={{ maxWidth: "400px" }}
+                          onClick={(e) => {
+                            goDetail(e, alarm);
+                          }}
                         >
                           {alarm.alarmContent}
                         </td>
@@ -370,10 +413,19 @@ const MyAlarm = () => {
                           sm={3}
                           className="text-center"
                           style={{ minWidth: "105px" }}
+                          onClick={(e) => {
+                            goDetail(e, alarm);
+                          }}
                         >
                           {formatDate(alarm.alarmUpdateDate)}
                         </td>
-                        <td sm={1} className="text-center">
+                        <td
+                          sm={1}
+                          className="text-center"
+                          onClick={(e) => {
+                            goDetail(e, alarm);
+                          }}
+                        >
                           {alarm.alarmIsRead === "N" ? "안 읽음" : "읽음"}
                         </td>
                       </tr>

@@ -1,9 +1,50 @@
 import { Table } from "reactstrap";
-import { Link, useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux"
+import Swal from "sweetalert2";
 import style from "../../css/mbtwhy/MbtwhyMain.module.css"
 
 function MbtwhyMain() {
+    // 로그인 유저 정보
+    const user = useSelector((state) => state.persistedReducer.user);
+
+    const navigate = useNavigate();
+
+    const goMbtwhy = (mbti) => {
+        const url = `/mbtwhy/${mbti}`;
+        navigate(url);
+    }
+
+    // mbtwhywrite 이동
+    const goMbtwhyWrite = () => {
+        if(!user.username) {
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.isBanned==="Y") {
+            Swal.fire({
+                title: "정지 상태에서는 글을 작성하실 수 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.userRole==="ROLE_ADMIN") {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        let defaultUrl = `/mbtwhywrite`;
+        navigate(defaultUrl);
+    }
+
     const cardStyle = {
         display:"flex",
         width:"170px",
@@ -17,19 +58,6 @@ function MbtwhyMain() {
         cursor:"pointer"
     };
 
-    const navigate = useNavigate();
-
-    const goMbtwhy = (mbti) => {
-        const url = `/mbtwhy/${mbti}`;
-        navigate(url);
-    }
-
-    // mbtwhywrite 이동
-    const goMbtwhyWrite = () => {
-        let defaultUrl = `/mbtwhywrite`;
-        navigate(defaultUrl);
-    }
-
     return (
         <div className={style.container}>
             {/* 중앙 영역 */}
@@ -39,7 +67,7 @@ function MbtwhyMain() {
                     <h1>MBT-Why</h1>
                     <div>
                         <h6 className={style.pageHeaderContent}>원하는 MBTI 유형에게 질문을 남겨보세요!</h6>
-                        <h6 className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</h6>
+                        <div className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</div>
                     </div>
                 </div>
 
@@ -61,7 +89,7 @@ function MbtwhyMain() {
                             <td style={{...cardStyle, backgroundColor:"#D8927A"}} onClick={()=>goMbtwhy("estp")}><h1>ESTP</h1></td>
                             <td style={{...cardStyle, backgroundColor:"#F0A4AB"}} onClick={()=>goMbtwhy("esfp")}><h1>ESFP</h1></td>
                             <td style={{...cardStyle, backgroundColor:"#FFD966"}} onClick={()=>goMbtwhy("enfp")}><h1>ENFP</h1></td>
-                            <td style={{...cardStyle, backgroundColor:"#B6634A"}} onClick={()=>goMbtwhy("istj")}><h1>ENTP</h1></td>
+                            <td style={{...cardStyle, backgroundColor:"#B6634A"}} onClick={()=>goMbtwhy("entp")}><h1>ENTP</h1></td>
                         </tr>
                         <tr>
                             <td style={{...cardStyle, backgroundColor:"#596D55"}} onClick={()=>goMbtwhy("estj")}><h1>ESTJ</h1></td>
@@ -72,6 +100,11 @@ function MbtwhyMain() {
                     </tbody>
                 </Table>
             </div>
+            <section className={style.sectionRightArea}>
+                <div>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
+                </div>
+            </section>
         </div>
     );
 }

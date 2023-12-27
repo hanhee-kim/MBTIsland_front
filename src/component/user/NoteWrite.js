@@ -8,9 +8,10 @@ import { Input } from 'reactstrap';
 import { Label } from 'reactstrap';
 import { Form } from 'reactstrap';
 import Swal from "sweetalert2";
+import { urlroot } from "../../config";
 
 const NoteWrite = (props) => {
-  const user = useSelector((state) => state.persistedReducer.user.user);
+  const user = useSelector((state) => state.persistedReducer.user);
   const {receiveName,receiveNick} = useParams();
   // const formatReceiveName = receiveName.startsWith(':') ? receiveName.substring(1) : receiveName;
   // const formatReceiveNick = receiveNick.startsWith(':') ? receiveNick.substring(1) : receiveNick;
@@ -37,9 +38,9 @@ const NoteWrite = (props) => {
     let sendNote = {...note,sentUsername:user.username,sentUserNick:user.userNickname};
     //note 보내기
     axios
-      .post("http://localhost:8090/notewrite",sendNote)
+      .post(`${urlroot}/notewrite`,sendNote)
       .then((res)=>{
-        console.log(res);
+        //console.log(res);
         Swal.fire({
           title: "쪽지가 발송되었습니다.",
           icon: "success",
@@ -48,7 +49,7 @@ const NoteWrite = (props) => {
         });
       })
       .catch((err)=>{
-        console.log(err);
+        //console.log(err);
         Swal.fire({
           title: "쪽지 발송이 실패했습니다.",
           icon: "error",
