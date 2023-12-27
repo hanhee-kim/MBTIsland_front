@@ -109,10 +109,13 @@
     /* border: 3px dashed orange; */
     box-sizing: border-box;
     height: 300px;
-    width: 100%;
+    /* width: 100%; */
     min-width: 1400px;
     margin-bottom: 25px;
     overflow: hidden;
+}
+.bannerArea img {
+    height: 300px;
 }
 
 
