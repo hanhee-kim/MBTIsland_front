@@ -4,8 +4,11 @@ import React, { useEffect, useRef, useState } from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { urlroot } from "../../config";
-import ReactQuill from 'react-quill';
+import Swal from "sweetalert2";
+import ReactQuill, { Quill } from "react-quill";
 import 'react-quill/dist/quill.snow.css';
+import ImageResize from "quill-image-resize-module-react";
+Quill.register("modules/imageResize", ImageResize);
 
 const MBTmiForm = () => {
     
@@ -80,18 +83,22 @@ const MBTmiForm = () => {
 
     // 등록폼에서 저장 버튼 클릭시
     const handleFormSubmit = async () => {
-
+        
+        console.log('title: ', title, ", content: ", quillValue, ", category: "+ selectCategory, ", writerId: ", user.username, ", writerMbti: ", user.userMbti);
+        if (title==='' || quillValue==='' || selectCategory==='') {
+            Swal.fire({
+                title: "게시글 등록 실패",
+                text: "제목, 내용, 카테고리를 확인해주세요.",
+                icon: "warning",
+            });
+            return;
+        } 
         // 에디터 내용에서 이미지 태그 제거하고 텍스트만 추출
         const contentWithoutImages = quillValue.replace(/<img[^>]*>/g, "");
         setQuillValue(contentWithoutImages);
         // console.log('***contentWithoutImages: ', contentWithoutImages);
 
-        if (title==='' || quillValue==='' || selectCategory==='') {
-            alert('제목, 내용, 카테고리를 확인해주세요.');
-            return;
-        }
-        console.log('title: ', title, ", content: ", quillValue, ", category: "+ selectCategory, ", writerId: ", user.username, ", writerMbti: ", user.userMbti);
-        
+
         // 1단계: 텍스트 컨텐츠 백엔드로 전송
         const postData = {
             title: title,
@@ -116,19 +123,37 @@ const MBTmiForm = () => {
 
             for (const imgTag of imageTags) {
                 const imgSrcMatch = imgTag.match(/src\s*=\s*"([^"]+)"/);
+                const imgWidthMatch = imgTag.match(/width\s*=\s*"([^"]+)"/); // width 속성 추출
                 const imageData = imgSrcMatch ? imgSrcMatch[1] : null;
                 if (imageData) {
                     const fileIdx = await uploadImage(imageData, mbtmi.no);
-                    console.log('fileIdx: ', fileIdx)
+                    console.log('fileIdx: ', fileIdx);
+
+                    // 추가
+                    const newImgTag = `<img src="${fileIdx}" ${imgWidthMatch ? `width="${imgWidthMatch[1]}px"` : ''} />`;
+                    updatedContent = updatedContent.replace(imgTag, newImgTag);
+
                     updatedContent = updatedContent.replace(imgTag, `<img src="${fileIdx}" />`);
                 }
             }
+
+            /*
             // 이미지가 포함된 최종 컨텐츠로 업데이트
             const updateResponse = await axios.post(`${urlroot}/mbtmiContainingImgTags/${mbtmi.no}`, { content: updatedContent });
             console.log('결과: ', updateResponse);
-
+            
             // 게시글 상세 컴포넌트로 이동
-            navigate(`/mbtmidetail/${mbtmi.no}`);
+            // navigate(`/mbtmidetail/${mbtmi.no}`);
+            */
+
+            try {
+                const updateResponse = await axios.post(`${urlroot}/mbtmiContainingImgTags/${mbtmi.no}`, { content: updatedContent });
+                console.log('결과: ', updateResponse);
+                navigate(`/mbtmidetail/${mbtmi.no}`);
+            } catch (error) {
+                console.error('게시글업데이트 에러 내용:', error);
+            }
+
 
         } catch (error) {
             console.log(error);            
@@ -148,10 +173,14 @@ const MBTmiForm = () => {
             { indent: "-1" },
             { indent: "+1" },
             ],
-            ["link", "image"],
+            ["image"],
             [{ align: [] }, { color: [] }, { background: [] }],
-            ["clean"],
         ],
+
+        imageResize: {
+            parchment: Quill.import("parchment"),
+            modules: ["Resize", "DisplaySize", "Toolbar"],
+        },
     };
 
     // 리액트quill의 텍스트 스타일 지정 
@@ -221,9 +250,16 @@ const MBTmiForm = () => {
         });
     }
     // 이미지출력을 위한 처리: fileIdx가 들어간 이미지태그 이미지 URL로 교체
+    // const replaceImagePlaceholders = (content) => {
+    //     return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
+    //         return `<img src="${urlroot}/mbtmiimg/${fileIdx}" alt=''/>`;
+    //     });
+    // };
+    // 이미지 사이즈 조절 모듈 추가 이후 width 속성을 고려
     const replaceImagePlaceholders = (content) => {
-        return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
-            return `<img src="http://localhost:8090/mbtmiimg/${fileIdx}" alt=''/>`;
+        console.log('content: ', content);
+        return content.replace(/<img src="(\d+)"(.*)\/>/g, (match, fileIdx, otherAttributes) => {
+            return `<img src="${urlroot}/mbtmiimg/${fileIdx}" ${otherAttributes} alt=''/>`;
         });
     };
     
@@ -231,13 +267,15 @@ const MBTmiForm = () => {
     // 수정 폼에서의 저장 버튼 클릭시
     const modifyPost = async () => {
         try {
+            console.log("no: ", mbtmi.no, "writeDate: ", mbtmi.writeDate, "category: ", selectCategory, "title: ", title, ", content: ", content, "writerId: ", user.username);
             if (title==='' || quillValue==='' || selectCategory==='') {
-                alert('제목, 내용, 카테고리를 확인해주세요.');
+                Swal.fire({
+                    title: "게시글 등록 실패",
+                    text: "제목, 내용, 카테고리를 확인해주세요.",
+                    icon: "warning",
+                });
                 return;
             }
-            console.log("no: ", mbtmi.no, "writeDate: ", mbtmi.writeDate, "category: ", selectCategory, "title: ", title, ", content: ", content, "writerId: ", user.username);
-
-
             // 에디터 내용에서 이미지 태그 제거하고 텍스트만 추출
             const contentWithoutImages = quillValue.replace(/<img[^>]*>/g, "");
             console.log('contentWithoutImages: ', contentWithoutImages);
@@ -280,9 +318,11 @@ const MBTmiForm = () => {
 
             // 수정 완료 후 Detail.js로 이동하기
             navigate(`/mbtmidetail/${no}`)
+
         } catch (error) {
             console.error('수정 오류내용: ', error);
         }
+
     }
 
     // Base64 이미지 데이터인지 확인하는 함수
@@ -330,6 +370,7 @@ const MBTmiForm = () => {
                             onChange={handleQuillChange}
 
                             ref={quillRef}
+                            className={style.customQuill}
                         />
                         <div className={style.formBtns}>
                                 <input type="button" value="취소" onClick={goToPreviousList}/>

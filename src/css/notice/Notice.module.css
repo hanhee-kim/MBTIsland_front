@@ -180,7 +180,8 @@
     width: 100%;
     min-height: 300px; /* 게시글 내용이 적더라도 최소 높이 유지 */
     padding: 60px 0  80px 0; /* top right bottom left */
-    white-space: normal;
+    /* white-space: normal; */
+    white-space: pre;
     word-break: keep-all; /* 줄바꿈시 단어 단위 유지 */
 }
 .postBtns {

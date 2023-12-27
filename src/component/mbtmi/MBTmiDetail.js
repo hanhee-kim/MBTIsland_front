@@ -5,6 +5,7 @@ import axios from "axios";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { urlroot } from "../../config";
+import Swal from "sweetalert2";
 
 
 /* 재사용성을 높이기 위해 외부에 선언한 페이지네이션 */
@@ -97,16 +98,26 @@ const MBTmiDetail = () => {
         userMbtiColor : user.userMbtiColor
     });
     const addComment = (commentContent, parentcommentNo) => {
-        // console.log('등록될댓글내용: ', commentContent);
+        console.log('등록될댓글내용: ', commentContent);
         // console.log('부모댓글번호: ', parentcommentNo);
 
         if(user.isBanned==='Y') {
-            alert("정지 상태에서는 댓글을 작성하실 수 없습니다.");
+            Swal.fire({
+                title: "정지 상태에서는 댓글을 작성하실 수 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
+        if(!commentContent || commentContent==='') {
+            Swal.fire({
+                title: "댓글 내용을 입력해주세요.",
+                icon: "warning",
+            });
             return;
         }
 
-        // let defaultUrl = `${urlroot}/mbtmicomment?no=${no}&comment=${parentcommentNo!=='' ? comment : reply}`;
-        let defaultUrl = `${urlroot}/mbtmicomment?no=${no}&comment=${commentContent}`;
+        // 댓글내용: 포함된 개행문자가 단순 문자열로 무시되지 않고 올바르게 인코딩되어 백으로 보내지도록 직접 인코딩을 해줌
+        let defaultUrl = `${urlroot}/mbtmicomment?no=${no}&comment=${encodeURIComponent(commentContent)}`;
         if(parentcommentNo !== '') defaultUrl += `&parentcommentNo=${parentcommentNo}`
         defaultUrl += `&commentpage=${commentPage}`; // 3페이지에서 대댓글 작성시 url에 파라미터로 3페이지가 붙음
         console.log('요청url: ', defaultUrl);
@@ -199,17 +210,22 @@ const MBTmiDetail = () => {
     }
 
     // 이미지 출력 관련 처리 추가
+    // const replaceImagePlaceholders = (content) => {
+    //     return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
+    //         return `<img src=`${urlroot}/mbtmiimg/${fileIdx}` alt=''/>`;
+    //     });
+    // };
+    // 이미지 사이즈 조절 모듈 추가 이후 width 속성을 고려
     const replaceImagePlaceholders = (content) => {
-        return content.replace(/<img src="(\d+)" \/>/g, (match, fileIdx) => {
-            return `<img src="http://localhost:8090/mbtmiimg/${fileIdx}" alt=''/>`;
+        console.log('content: ', content);
+        return content.replace(/<img src="(\d+)"(.*)\/>/g, (match, fileIdx, otherAttributes) => {
+            return `<img src="${urlroot}/mbtmiimg/${fileIdx}" ${otherAttributes} alt=''/>`;
         });
     };
 
     const getMbtmiCommentList = (commentPageParam) => {
         let defaultUrl = `${urlroot}/mbtmicommentlist/${no}`;
         if(commentPageParam!==1) defaultUrl += `?commentpage=${commentPageParam}`;
-
-        // alert(defaultUrl);
 
         axios.get(defaultUrl)
         .then(res=> {
@@ -243,18 +259,36 @@ const MBTmiDetail = () => {
     }, []);
 
     const deleteMbtmi = (no) => {
-        console.log('선택한 게시글번호: ', no);
-        const isConfirmed =window.confirm('게시글을 삭제하시겠습니까?');
-        if(isConfirmed) {
-            axios.delete(`${urlroot}/deletembtmi/${no}`)
-            .then(res => {
-                alert('완료되었습니다.');
-                goToPreviousList();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        }
+        // console.log('선택한 게시글번호: ', no);
+
+        Swal.fire({
+            title: '게시글을 삭제하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${urlroot}/deletembtmi/${no}`)
+                    .then(res => {
+                        Swal.fire({
+                            title: "완료되었습니다.",
+                            icon: "success",
+                        });
+                        goToPreviousList();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error'
+                        });
+                    });
+            }
+        });
+
         setOpen(false);
     };
 
@@ -266,22 +300,36 @@ const MBTmiDetail = () => {
     };
 
     const deleteComment = (commentNo) => {
-        console.log('선택한 댓글번호: ', commentNo);
-        const isConfirmed =window.confirm('댓글을 삭제하시겠습니까?');
-        if(isConfirmed) {
-            axios.get(`${urlroot}/deletembtmicomment/${commentNo}`)
-            .then(res => {
-                console.log(res);
-                alert('완료되었습니다.');
+        // console.log('선택한 댓글번호: ', commentNo);
 
-                // console.log('commentPage: ', commentPage);
-                getMbtmiCommentList(commentPage); // 이 함수를 호출하여 댓글목록 재조회하여 재렌더링 시킨다
-                
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        }
+        Swal.fire({
+            title: '댓글을 삭제하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.get(`${urlroot}/deletembtmicomment/${commentNo}`)
+                    .then(res => {
+                        Swal.fire({
+                            title: "완료되었습니다.",
+                            icon: "success",
+                        });
+                        getMbtmiCommentList(commentPage); // 이 함수를 호출하여 댓글목록 재조회하여 재렌더링 시킨다
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error'
+                        });
+                    });
+            }
+        });    
+
         setOpen(false);
     };
 
@@ -295,7 +343,24 @@ const MBTmiDetail = () => {
     const [recommendCount, setRecommendCount] = useState();
     const mbtmiRecommend = () => {
         if(!user.username) {
-            alert("로그인해주세요.");
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+        if(user.isBanned==='Y') {
+            Swal.fire({
+                title: "정지상태로 추천이 불가합니다.",
+                icon: "warning",
+            });
+            return;
+        }
+        if(user.userRole==='ROLE_ADMIN') {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
         // console.log('추천값 출력: ', recommend);
@@ -322,7 +387,24 @@ const MBTmiDetail = () => {
     const [isBookmarked, setIsBookmarked] = useState(false);
     const mbtmiBookmark = () => {
         if(!user.username) {
-            alert("로그인해주세요.");
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+        if(user.isBanned==='Y') {
+            Swal.fire({
+                title: "정지상태로 북마크 불가합니다.",
+                icon: "warning",
+            });
+            return;
+        }
+        if(user.userRole==='ROLE_ADMIN') {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
         console.log('북마크값 출력: ', bookmark);
@@ -342,7 +424,25 @@ const MBTmiDetail = () => {
     const openReportWrite = (reportTarget, reportTargetFrom) => {
         // console.log('신고대상 reportTarget(객체): ', reportTarget, ", reportTargetFrom(테이블명): ", reportTargetFrom);
         if(!user.username) {
-            alert("로그인해주세요.");
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+        if(user.isBanned==='Y') {
+            Swal.fire({
+                title: "정지상태로 신고 불가합니다.",
+                icon: "warning",
+            });
+            return;
+        }
+        if(user.userRole==='ROLE_ADMIN') {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
+
             return;
         }
 
@@ -398,7 +498,24 @@ const MBTmiDetail = () => {
     // 쪽지보내기 아이콘 클릭시(게시글, Comment, Reply)
     const sendNote = (receiveUsername, receiveNickname) => {
         if(!user.username) {
-            alert("로그인해주세요.");
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+        if(user.isBanned==='Y') {
+            Swal.fire({
+                title: "정지 상태에서는 쪽지를 보내실 수 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
+        if(user.userRole==='ROLE_ADMIN') {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
 
@@ -415,7 +532,6 @@ const MBTmiDetail = () => {
     // 목록으로 가기 버튼
     const navigate = useNavigate();
     const goToPreviousList = () => {
-        // navigate(-1); // 수정 직후였다면 수정폼으로 돌아가게된다
         navigate(`/mbtmi`, { state: { fromDetail: true } }); 
         // 두번째 인자를 통해 MBTmiDetail.js에서의 이동과 header.js의 메뉴 선택을 통한 이동을 구분하여 후자만 초기값으로 렌더링 되게함
     };
@@ -462,6 +578,21 @@ const MBTmiDetail = () => {
 
         const [isReplying, setIsReplying] = useState(false); // 답글쓰기중인지 여부를 저장하여 true일때 input 표시하기 위한 state변수
         const handleReply = () => {
+            if(user?.username===undefined || user?.username==="") {
+                Swal.fire({
+                    title: "로그인해주세요.",
+                    icon: "warning",
+                });
+                return;
+            }
+            if(user.userRole==='ROLE_ADMIN') {
+                Swal.fire({
+                    title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                    icon: "warning",
+                });
+                return;
+            }
+
             setIsReplying(!isReplying);
         };
 
@@ -489,7 +620,9 @@ const MBTmiDetail = () => {
                         </div>
                         <div className={style.commentTd3row}>
                             <small>{formatDatetimeGap(comment.writeDate)}</small>
-                            {user.username!=="" && !isRemovedOrBlockedComment && (
+                            {console.log('유저 있는지 확인: ', user.username)}
+                            {/* {user?.username!==undefined && user?.username!=="" && !isRemovedOrBlockedComment && ( */}
+                            {!isRemovedOrBlockedComment && (
                                 <small onClick={handleReply}>답글쓰기</small>
                             )}
                             {user.username!=="" && !isRemovedOrBlockedComment && (
@@ -516,7 +649,7 @@ const MBTmiDetail = () => {
                         </span>
                     </div>
                     <div>
-                        <input type="text" className={style.commentInput} placeholder="댓글을 입력해주세요" id="comment" name="comment" onChange={(e)=>setTmpReplyContent(e.target.value)} required="required" value={tmpReplyContent}/>
+                        <textarea className={style.commentInput} placeholder="댓글을 입력해주세요" id="comment" name="comment" onChange={(e)=>setTmpReplyContent(e.target.value)} required="required" value={tmpReplyContent}/>
                     </div>
                 </div>
                 </td></tr>
@@ -655,7 +788,7 @@ const MBTmiDetail = () => {
                     {/* <PaginationOutside pageInfo={commentPageInfo} handlePageNo={handlePageNo} /> */}
 
                     {/* 댓글 입력란 */}
-                    {user.userRole === "ROLE_USER" && (
+                    {user?.userRole === "ROLE_USER" && (
                         <div className={style.commentWriteArea}>
                             <div>
                                 <span>
@@ -667,7 +800,7 @@ const MBTmiDetail = () => {
                                 </span>
                             </div>
                             <div>
-                                <input type="text" className={style.commentInput} placeholder="댓글을 입력해주세요" id="comment" name="comment" onChange={(e)=>setComment(e.target.value)} required="required" value={comment}/>
+                                <textarea className={style.commentInput} placeholder="댓글을 입력해주세요" id="comment" name="comment" onChange={(e)=>setComment(e.target.value)} required="required" value={comment}/>
                             </div>
                         </div> )}
                 </div>
