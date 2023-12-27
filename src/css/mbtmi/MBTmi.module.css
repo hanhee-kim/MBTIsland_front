@@ -80,6 +80,10 @@
 }
 .weeklyPostsTable {
     width: 100%;
+
+    position: relative;
+    top: 7px;
+    /* background-color: ghostwhite; */
 }
 .weeklyPostsTable>tbody {
     line-height: 100%;
