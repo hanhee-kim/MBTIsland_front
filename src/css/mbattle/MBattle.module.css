@@ -160,6 +160,10 @@
 .sectionRightArea {
     display: flex;
     flex-direction: column-reverse;
+
+    /* 푸터에 배경이미지 추가 후 플로팅버튼을 가리지 않도록 추가 */
+    position: relative;
+    z-index: 10;
 }
 
 .sectionRightArea>div {
