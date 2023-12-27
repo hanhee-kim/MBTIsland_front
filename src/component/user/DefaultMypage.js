@@ -239,12 +239,12 @@ const DefaultMypage = (props) => {
       title:"정말 탈퇴하시겠습니까?",
       html:
         '작성 게시물은 탈퇴해도 사라지지 않습니다.<br>'+
-         'MBTIsland의 소유입니다. <br> ',
-        // + '탈퇴 후 3개월 이내에 복구가 가능합니다.',
-      icon:'warning',
+         'MBTIsland의 소유입니다. <br> '
+        + '탈퇴 후 같은 이메일로 재가입이 불가합니다.',
+      icon:'question',
       showCancelButton: true,  
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
       confirmButtonText: "탈퇴",
       cancelButtonText:'취소',
       }).then((result) => {
@@ -257,8 +257,6 @@ const DefaultMypage = (props) => {
           })
             .then((res) => {
               console.log(res);
-
-
               Swal.fire({
                 title: "탈퇴완료되었습니다!",
                 text: "MBTIsland는 언제나 여러분을 기다리겠습니다.",

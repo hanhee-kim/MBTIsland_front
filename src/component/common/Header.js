@@ -11,12 +11,19 @@ const Header = () => {
   // const token = useSelector((state) => state.persistedReducer.token);
   const user = useSelector((state) => state.persistedReducer.user);
   const uri = useLocation().pathname;
-  const [alarmCnt,setAlarmCnt] = useState(0);
-  const [noteCnt,setNoteCnt] = useState(0);
+  const [alarmCnt, setAlarmCnt] = useState(0);
+  const [noteCnt, setNoteCnt] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   // const localUser = localStorage.getItem("user");
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
   // 읽지않은 쪽지리스트
   const [messagesNotRead, setMessagesNotRead] = useState([]);
   // 미확인 알림리스트
@@ -51,12 +58,11 @@ const Header = () => {
     // //컴포넌트 마운트될 때 실행할 interval(10초마다 실행)
     const intervalId = setInterval(() => {
       getNoteListAndAlarmList();
-    },10000);
+    }, 10000);
     // 컴포넌트가 언마운트될 때 clearInterval을 통해 정리
     return () => {
       clearInterval(intervalId);
     };
-    
   }, []);
 
   // 팝오버 여닫힘 상태
@@ -71,24 +77,24 @@ const Header = () => {
       [popoverKey]: !prevState[popoverKey],
     }));
   };
-  const getNoteListAndAlarmList = async() => {
+  const getNoteListAndAlarmList = async () => {
     await axios
-        .get(`${urlroot}/getnoteandalarm?username=${user.username}`)
-        .then((res) => {
-          console.log(res);
-          //alarmList
-          setAlertNotRead(res.data.alarmList);
-          //alarmCnt
-          setAlarmCnt(res.data.alarmCnt);
-          //noteList
-          setMessagesNotRead(res.data.noteList);
-          //noteCnt
-          setNoteCnt(res.data.noteCnt);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-  }
+      .get(`${urlroot}/getnoteandalarm?username=${user.username}`)
+      .then((res) => {
+        console.log(res);
+        //alarmList
+        setAlertNotRead(res.data.alarmList);
+        //alarmCnt
+        setAlarmCnt(res.data.alarmCnt);
+        //noteList
+        setMessagesNotRead(res.data.noteList);
+        //noteCnt
+        setNoteCnt(res.data.noteCnt);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
     // 팝오버 바깥영역 클릭시 모든 팝오버 닫기
     //
@@ -123,112 +129,103 @@ const Header = () => {
     });
   }, [uri]);
 
-
   //알림 모두읽음 버튼
   const allReadAlarm = (e) => {
     console.log("allreadAlarm");
     axios
-    .put(
-      `${urlroot}/updatealarmisreadall?username=${user.username}`
-    )
-    .then((res) => {
-      console.log(res);
-      //데이터 다시 불러오기
-      getNoteListAndAlarmList();
-    })
-    .catch((err) => {
-      console.log(err.response.data);
-      let errLog = err.response.data;
-    });
-  }
+      .put(`${urlroot}/updatealarmisreadall?username=${user.username}`)
+      .then((res) => {
+        console.log(res);
+        //데이터 다시 불러오기
+        getNoteListAndAlarmList();
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        let errLog = err.response.data;
+      });
+  };
   //노트 모두읽음 버튼
   const allReadNote = (e) => {
     console.log("allreadNote");
     axios
-    .put(
-      `${urlroot}/updatenoteisreadall?username=${user.username}`
-    )
-    .then((res)=>{
-      console.log("성공");
-      getNoteListAndAlarmList();
-    })
-    .catch((err)=>{
-
-    })
-  }
+      .put(`${urlroot}/updatenoteisreadall?username=${user.username}`)
+      .then((res) => {
+        console.log("성공");
+        getNoteListAndAlarmList();
+      })
+      .catch((err) => {});
+  };
   //알림 클릭시
-  const goAlarmDetail = (e,index,alarm) => {
+  const goAlarmDetail = (e, index, alarm) => {
     console.log(e);
     //navigate()
     console.log(alarm.detailType);
     console.log(alarm.detailNo);
     console.log(alarm.detailMbti);
-    switch (alarm.detailType){
-      case "NOTE" :
+    switch (alarm.detailType) {
+      case "NOTE":
         checkAlarm(alarm.alarmNo);
-        goNoteDetail(e,alarm.detailNo);
+        goNoteDetail(e, alarm.detailNo);
         break;
-      case "MBTMI" :
+      case "MBTMI":
         checkAlarm(alarm.alarmNo);
         navigate(`/mbtmidetail/${alarm.detailNo}`);
         getNoteListAndAlarmList();
         break;
-      case "MBTWHY" :
+      case "MBTWHY":
         checkAlarm(alarm.alarmNo);
-        navigate(`/mbtwhydetail/${alarm.detailMbti}/${alarm.detailNo}/1`);
+        navigate(`/mbtwhydetail/${alarm.detailNo}/${alarm.detailMbti}`);
         getNoteListAndAlarmList();
         break;
-      case "MBTTLE" :
+      case "MBATTLE":
         checkAlarm(alarm.alarmNo);
-        navigate(`/mbattledetail/${alarm.detailNo}/1`);
+        navigate(`/mbattledetail/${alarm.detailNo}`);
         getNoteListAndAlarmList();
         break;
-      case "QUESTION" :
+      case "QUESTION":
         checkAlarm(alarm.alarmNo);
         goQuestionDetail(alarm.detailNo);
         getNoteListAndAlarmList();
         break;
-      case "WARN" :
+      case "WARN":
         checkAlarm(alarm.alarmNo);
         Swal.fire({
-          title: alarm.alarmType+"",
-          text: "",
-          icon: "",
+          title: alarm.alarmType + "가 1회",
+          text: "지금까지 총 " + alarm.warnCnt + " 회의 경고를 받으셨습니다.",
+          icon: "warning",
         });
         getNoteListAndAlarmList();
         break;
       case "BAN":
         checkAlarm(alarm.alarmNo);
         Swal.fire({
-          title: alarm.alarmType+"",
-          text: "",
-          icon: "",
+          title: alarm.alarmType + "처리",
+          text: "정지 종료일은 " + formatDate(alarm.banDate) + "입니다.",
+          icon: "warning",
         });
         getNoteListAndAlarmList();
         break;
       default:
     }
-  }
+  };
   const checkAlarm = (no) => {
     axios
       .put(`${urlroot}/checkalarm/${no}`)
-      .then((res)=>{
+      .then((res) => {
         console.log(res.data);
       })
-      .catch((err)=>{
-
-      })
-  }
-  const goQuestionDetail = (no) =>{
+      .catch((err) => {});
+  };
+  const goQuestionDetail = (no) => {
     const noteUrl = "/questiondetail/" + no;
     window.open(
       noteUrl,
       "_blank",
       "width=650,height=700,location=no,status=no,scrollbars=yes"
     );
-  }
+  };
   //쪽지 클릭시
-  const goNoteDetail = (e,no) => {
+  const goNoteDetail = (e, no) => {
     console.log(e);
     const noteUrl = "/notedetail/" + no;
     window.open(
@@ -237,7 +234,7 @@ const Header = () => {
       "width=650,height=700,location=no,status=no,scrollbars=yes"
     );
     getNoteListAndAlarmList();
-  }
+  };
   return (
     <div className={style.header}>
       <ul className={style.navItems}>
@@ -254,7 +251,7 @@ const Header = () => {
               />
             </Link>
           </li>
-          
+
           <li
             className={
               uri.includes("/mbtmi")
@@ -329,7 +326,10 @@ const Header = () => {
                   {/* 미확인 알림 수 표시 */}
                   <Link to={"/mypage/alarm"} className={style.popoverLink}>
                     <div className={style.popoverTopArea}>
-                      <span className={style.newAlarm}>새로운 알림 ({alarmCnt})</span>&nbsp;
+                      <span className={style.newAlarm}>
+                        새로운 알림 ({alarmCnt})
+                      </span>
+                      &nbsp;
                       <span>&gt;</span>
                     </div>
                   </Link>
@@ -341,12 +341,16 @@ const Header = () => {
                       (alert, index) =>
                         index < 5 && (
                           <div key={index} className={style.alertContentAndCnt}>
-                            <div className={style.alertContent} onClick={(e)=>goAlarmDetail(e,index,alert)}>
-                            {alert.alarmType === "댓글" ?
-                              `내 게시글의 새 ${alert.alarmType}이 있습니다.`:`새 ${alert.alarmType}가 있습니다`
-                              }
+                            <div
+                              className={style.alertContent}
+                              onClick={(e) => goAlarmDetail(e, index, alert)}
+                            >
+                              {alert.alarmType === "댓글"
+                                ? `내 ${alert.detailType} 게시글의 새 ${alert.alarmType}이 있습니다.`
+                                : `새 ${alert.alarmType}가 있습니다`}
                             </div>
-                            {alert.alarmType === "댓글" && `(${alert.alarmCnt})`}
+                            {alert.alarmType === "댓글" &&
+                              `(${alert.alarmCnt})`}
                           </div>
                         )
                     )
@@ -369,7 +373,12 @@ const Header = () => {
                   {/* 모두확인 버튼 */}
                   {alarmCnt > 0 && (
                     <div className={style.popoverBtnArea}>
-                      <button className={style.readAllBtn} onClick={(e)=>allReadAlarm(e)}>모두 확인</button>
+                      <button
+                        className={style.readAllBtn}
+                        onClick={(e) => allReadAlarm(e)}
+                      >
+                        모두 확인
+                      </button>
                     </div>
                   )}
                 </PopoverBody>
@@ -403,7 +412,10 @@ const Header = () => {
                   {/* 읽지 않은 쪽지 수 표시 */}
                   <Link to={"/mypage/note"} className={style.popoverLink}>
                     <div className={style.popoverTopArea}>
-                      <span className={style.newNote}>새로운 쪽지 ({noteCnt})</span>&nbsp;
+                      <span className={style.newNote}>
+                        새로운 쪽지 ({noteCnt})
+                      </span>
+                      &nbsp;
                       <span>&gt;</span>
                     </div>
                   </Link>
@@ -415,7 +427,10 @@ const Header = () => {
                       (note, index) =>
                         index < 5 && (
                           <div key={index}>
-                            <div className={style.messageTitle} onClick={(e)=>goNoteDetail(e,note.noteNo)}>
+                            <div
+                              className={style.messageTitle}
+                              onClick={(e) => goNoteDetail(e, note.noteNo)}
+                            >
                               {`[${note.sentUserNick}]  ${note.noteContent}`}
                             </div>
                           </div>
@@ -440,7 +455,12 @@ const Header = () => {
                   {/* 모두확인 버튼 */}
                   {noteCnt > 0 && (
                     <div className={style.popoverBtnArea}>
-                      <button className={style.readAllBtn} onClick={(e)=>allReadNote(e)}>모두 확인</button>
+                      <button
+                        className={style.readAllBtn}
+                        onClick={(e) => allReadNote(e)}
+                      >
+                        모두 확인
+                      </button>
                     </div>
                   )}
                 </PopoverBody>

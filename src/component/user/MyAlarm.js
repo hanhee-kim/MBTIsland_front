@@ -125,9 +125,7 @@ const MyAlarm = () => {
   };
   const allRaed = () => {
     axios
-      .put(
-        `${urlroot}/updatealarmisreadall?username=${user.username}`
-      )
+      .put(`${urlroot}/updatealarmisreadall?username=${user.username}`)
       .then((res) => {
         console.log(res);
         setFilterChange("모두읽음처리");
@@ -164,30 +162,26 @@ const MyAlarm = () => {
   const checkAlarm = (no) => {
     axios
       .put(`${urlroot}/checkalarm/${no}`)
-      .then((res)=>{
+      .then((res) => {
         console.log(res.data);
       })
-      .catch((err)=>{
-      })
-  }
+      .catch((err) => {});
+  };
   //tr클릭시 해당알림의 게시글로 이동할때
   const goDetail = (e, alarm) => {
     //useNavigate();사용해서
     const no = alarm.detailNo;
-    const mbti = alarm.detailMbti
+    const mbti = alarm.detailMbti;
     checkAlarm(no);
     switch (alarm.detailType) {
       case "MBTMI":
-        navigate("/mbtmidetail/" + no + "/1");
-        // navigate("/mbtmidetail/" + no);
+        navigate("/mbtmidetail/" + no );
         break;
       case "MBTWHY":
-        navigate("/mbtwhydetail/" + mbti + "/" + no + "/1");
-        // navigate("/mbtwhydetail/" + mbti + "/" + no);
+        navigate("/mbtwhydetail/" + no + "/" + mbti );
         break;
       case "MBATTLE":
-        navigate("/mbattledetail/" + no + "/1");
-        // navigate("/mbattledetail/" + no);
+        navigate("/mbattledetail/" + no );
         break;
       case "NOTE":
         let noteNo = no;
@@ -206,19 +200,19 @@ const MyAlarm = () => {
           "width=720,height=780,location=no,status=no,scrollbars=yes"
         );
         break;
-// 쪽지 댓글 경고 제재 문의답글 ( 타입 )
+      // 쪽지 댓글 경고 제재 문의답글 ( 타입 )
       case "WARN":
         Swal.fire({
-          title: alarm.alarmType+"",
-          text: "",
-          icon: "",
+          title: alarm.alarmType + "가 1회",
+          text: "지금까지 총 " + alarm.warnCnt + " 회의 경고를 받으셨습니다.",
+          icon: "warning",
         });
         break;
       case "BAN":
         Swal.fire({
-          title: alarm.alarmType+"",
-          text: "",
-          icon: "",
+          title: alarm.alarmType + "처리",
+          text: "정지 종료일은 " + formatDate(alarm.banDate) + "입니다.",
+          icon: "warning",
         });
         break;
       default:
@@ -360,10 +354,7 @@ const MyAlarm = () => {
                 <tbody>
                   {alarmList.map((alarm, index) => {
                     return (
-                      <tr
-                        key={index}
-                        
-                      >
+                      <tr key={index}>
                         <td sm={1} className="text-center">
                           <input
                             type="checkbox"
@@ -377,9 +368,13 @@ const MyAlarm = () => {
                             }
                           />
                         </td>
-                        <td sm={2} className="text-center" onClick={(e) => {
-                          goDetail(e, alarm);
-                        }}>
+                        <td
+                          sm={2}
+                          className="text-center"
+                          onClick={(e) => {
+                            goDetail(e, alarm);
+                          }}
+                        >
                           [ {alarm.alarmType} ]
                         </td>
                         <td
@@ -402,9 +397,13 @@ const MyAlarm = () => {
                         >
                           {formatDate(alarm.alarmUpdateDate)}
                         </td>
-                        <td sm={1} className="text-center" onClick={(e) => {
-                          goDetail(e, alarm);
-                        }}>
+                        <td
+                          sm={1}
+                          className="text-center"
+                          onClick={(e) => {
+                            goDetail(e, alarm);
+                          }}
+                        >
                           {alarm.alarmIsRead === "N" ? "안 읽음" : "읽음"}
                         </td>
                       </tr>
