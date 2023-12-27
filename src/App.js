@@ -178,7 +178,7 @@ function App() {
               <Route exact path="/mbattlewrite" element={<MBattleWrite />} />
               <Route exact path="/mbattledetail/:no" element={<MBattleDetail />} />
               <Route exact path="/adminreport" element={<AdminFrame />}>
-                <Route exact path="/adminreport/detail/:no/:page/:filter/:boardtype/:reporttype" element={<AdminReportDetail />} />
+                <Route exact path="/adminreport/detail/:no/:page?/:filter?/:boardtype?/:reporttype?" element={<AdminReportDetail />} />
               </Route>
               <Route exact path="/adminban" element={<AdminFrame />} >
                 <Route exact path="/adminban/detail/:username" element={<AdminBanDetail />} />

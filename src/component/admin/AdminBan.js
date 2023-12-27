@@ -2,17 +2,16 @@ import {
     FormGroup,
     Col,
     Input,
-    Button,
-    Pagination,
-    PaginationItem,
-    PaginationLink } from "reactstrap";
+    Button
+} from "reactstrap";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import styleFrame from "../../css/admin/AdminFrame.module.css";
-import style from "../../css/admin/AdminReport.module.css";
 import AdminNav from "./AdminNav";
 import { urlroot } from "../../config";
+
+import styleFrame from "../../css/admin/AdminFrame.module.css";
+import style from "../../css/admin/AdminReport.module.css";
 
 const AdminBan = () => {
     const [banList, setBanList] = useState([]);
@@ -144,7 +143,6 @@ const AdminBan = () => {
                         <Button style={buttonStyle} onClick={()=>handleSearch()}>검색</Button>
                     </Col>
                 </FormGroup>
-                {/* 검색 영역 */}
             
                 {/* 분류 영역 */}
                 <div className={style.filterBtns}>
@@ -154,7 +152,6 @@ const AdminBan = () => {
                         <span className={`${style.filterBtn} ${filter==="N"? style.filterActive :""}`} onClick={() => handleFilter("N")}>정상</span>
                     </div>
                 </div>
-                {/* 분류 영역 */}
 
                 {/* 게시글 영역 */}
                 <table className={style.boardTable}>
@@ -166,7 +163,7 @@ const AdminBan = () => {
                     <tbody>
                         {banList.length !== 0 && banList.map(ban => {
                             return (
-                                    <tr key={ban.userIdx} onClick={()=>goBanDetail(ban.username)}>
+                                    <tr key={ban.userIdx} className={style.sectionTr} onClick={()=>goBanDetail(ban.username)}>
                                         <td>{ban.username}</td>
                                         <td>{ban.userWarnCnt}</td>
                                         <td>{ban.userBanCnt}</td>
@@ -177,7 +174,6 @@ const AdminBan = () => {
                         })}
                     </tbody>
                 </table><br/>
-                {/* 게시글 영역 */}
 
                 {/* 페이징 영역 */}
                 {banList.length===0?<></>:<PaginationInside/>}

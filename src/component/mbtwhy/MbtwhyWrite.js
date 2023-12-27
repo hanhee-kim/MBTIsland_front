@@ -104,7 +104,7 @@ function MbtwhyWrite() {
         
         let defaultUrl = `${urlroot}/mbtwhywrite?`;
         if(mbtiValue !== null) defaultUrl += `mbti=${mbtiValue.toUpperCase()}`;
-        if(content !== null) defaultUrl += `&content=${content}`;
+        if(content !== null) defaultUrl += `&content=${encodeURIComponent(content)}`;
 
         axios.post(defaultUrl, sendUser)
         .then(res=> {

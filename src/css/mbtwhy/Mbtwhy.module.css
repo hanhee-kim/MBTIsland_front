@@ -99,6 +99,7 @@
     text-align: left;
     margin-bottom: 30px;
     padding-left: 35px;
+    white-space: pre;
 }
 
 .boardLow {

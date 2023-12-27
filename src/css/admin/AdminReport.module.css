@@ -47,6 +47,18 @@
     padding: 10px;
 }
 
+.sectionTr {
+    cursor: pointer;
+}
+
+.mbtmiTr {
+
+}
+
+.mbtmiTr img {
+    max-width: 700px;
+}
+
 .boardContent {
     display: -webkit-box;
     -webkit-line-clamp: 1;

@@ -9,10 +9,10 @@ import {
     Input,
     Button } from "reactstrap";
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 import style from "../../css/mbattle/MBattle.module.css";
 import Swal from "sweetalert2";
-import { urlroot } from "../../config";
 
 function MBattle() {
     // 로그인 유저 정보]
