@@ -202,7 +202,13 @@ const AdminNotice = () => {
     // 일괄 숨김처리
     const hideNotice = () => {
         // console.log('체크된 항목:' + checkItems);
-
+        if(checkItems.length===0) {
+            Swal.fire({
+                title: "체크된 항목이 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
         Swal.fire({
             title: '선택항목을 처리하시겠습니까?',
             icon: 'question',
@@ -236,7 +242,13 @@ const AdminNotice = () => {
     // 일괄 삭제처리
     const deleteNotice = () => {
         // console.log('체크된 항목:' + checkItems);
-
+        if(checkItems.length===0) {
+            Swal.fire({
+                title: "체크된 항목이 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
         Swal.fire({
             title: '선택항목을 삭제하시겠습니까?',
             icon: 'warning',

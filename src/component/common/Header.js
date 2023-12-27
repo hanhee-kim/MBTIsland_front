@@ -341,16 +341,16 @@ const Header = () => {
                       (alert, index) =>
                         index < 5 && (
                           <div key={index} className={style.alertContentAndCnt}>
-                            <div
-                              className={style.alertContent}
-                              onClick={(e) => goAlarmDetail(e, index, alert)}
-                            >
-                              {alert.alarmType === "댓글"
-                                ? `내 ${alert.detailType} 게시글의 새 ${alert.alarmType}이 있습니다.`
-                                : `새 ${alert.alarmType}가 있습니다`}
+                            <div className={style.alertContent} onClick={(e) => goAlarmDetail(e, index, alert)}>
+                              
+                              {alert.alarmType === "댓글"? `${alert.alarmCnt}개의 새 ${alert.alarmType}이 있습니다.`
+                              : alert.alarmType === "쪽지"? `새 ${alert.alarmType}가 도착했습니다.`
+                              : alert.alarmType === "답글"? `문의글에 ${alert.alarmType}이 달렸습니다.`
+                              : alert.alarmType === "경고"? `경고처분을 받았습니다.`
+                              : `정지처분을 받았습니다.` 
+                              }
+
                             </div>
-                            {alert.alarmType === "댓글" &&
-                              `(${alert.alarmCnt})`}
                           </div>
                         )
                     )
@@ -431,7 +431,7 @@ const Header = () => {
                               className={style.messageTitle}
                               onClick={(e) => goNoteDetail(e, note.noteNo)}
                             >
-                              {`[${note.sentUserNick}]  ${note.noteContent}`}
+                              {`${note.sentUserNick}에게 쪽지를 받았습니다.`}
                             </div>
                           </div>
                         )
