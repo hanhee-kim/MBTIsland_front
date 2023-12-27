@@ -361,6 +361,7 @@ const MBTmiForm = () => {
                             onChange={handleQuillChange}
 
                             ref={quillRef}
+                            className={style.customQuill}
                         />
                         <div className={style.formBtns}>
                                 <input type="button" value="취소" onClick={goToPreviousList}/>

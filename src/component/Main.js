@@ -259,7 +259,7 @@ const Main = () => {
             <Link to={"/mbattle"}>
               <div className={style.boardTitleB}>
                   <div className={style.boardTitleTextArea}>
-                      <p>MBT-BATTLE</p>
+                      <p>M-BATTLE</p>
                       <p>MBTI 유형 별 성향을 알아보세요!</p>
                   </div>
                   <div>
