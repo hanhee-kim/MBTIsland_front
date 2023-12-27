@@ -51,7 +51,6 @@ const AddJoin = () => {
   const user = useSelector((state) =>  state.persistedReducer.user)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [emailCode, setEmailCode] = useState("");
 
   const [mbtiCheckEI, setMbtiCheckEI] = useState("E");
   const [mbtiCheckNS, setMbtiCheckNS] = useState("N");
@@ -84,14 +83,6 @@ const AddJoin = () => {
       console.log(err);
     })
   };
-  // const change = (e) => {
-  //   setUser({ ...user });
-  //   console.log("user:" + user.userMbti + "email:" + user.userEmail);
-  // };
-  // const codeChange = (e) => {
-  //   setEmailCode(e.target.value);
-  //   console.log(emailCode);
-  // };
   const mbtiEIClick = (e, ei) => {
     e.stopPropagation();
     setMbtiCheckEI(ei);
@@ -123,7 +114,7 @@ const AddJoin = () => {
             * 필수입력 정보 미추가시 정상 이용이 불가합니다. *
           </Label>
         </FormGroup>
-        <FormGroup tag="fieldset" style={{ display: "flex", gap: "10px" }} row>
+        <FormGroup style={{ display: "flex", gap: "10px" }}>
           <Label for="mbti" sm={3}>
             MBTI
           </Label>
@@ -211,51 +202,6 @@ const AddJoin = () => {
             </FormGroup>
           </div>
         </FormGroup>
-        {/* <FormGroup row>
-          <Label for="userEmail" sm={3}>
-            이메일
-          </Label>
-          <Col sm={7}>
-            <Input
-              type="text"
-              name="userEmail"
-              id="userEmail"
-              placeholder="Email 입력하세요."
-              onChange={change}
-            />
-          </Col>
-          <Col sm={2}>
-            <Button
-              color="white"
-              style={{ border: "1px solid black", fontWeight: "600" }}
-            >
-              보내기
-            </Button>
-          </Col>
-        </FormGroup>
-        <FormGroup row>
-          <Label for="emailCode" sm={3}>
-            인증코드
-          </Label>
-          <Col sm={7}>
-            <Input
-              type="text"
-              name="emailCode"
-              id="emailCode"
-              placeholder="인증코드를 입력하세요."
-              onChange={codeChange}
-            />
-          </Col>
-          <Col sm={2}>
-            <Button
-              color="white"
-              style={{ border: "1px solid black", fontWeight: "600" }}
-            >
-              인증
-            </Button>
-          </Col>
-        </FormGroup> */}
-
         <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
           <Button
             color="dark"
