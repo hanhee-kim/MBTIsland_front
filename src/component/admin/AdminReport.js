@@ -17,9 +17,6 @@ import styleFrame from "../../css/admin/AdminFrame.module.css";
 import style from "../../css/admin/AdminReport.module.css";
 
 const AdminReport = () => {
-    // 로그인 유저 정보
-    const user = useSelector((state) => state.persistedReducer.user.user);
-
     // 신고 게시글 목록
     const [reportList, setReportList] = useState([]);
 
@@ -98,14 +95,14 @@ const AdminReport = () => {
     };
 
     // filter 핸들링
-    const handleSort = (filter) => {
+    const handleFilter = (filter) => {
         setFilter(filter);
-        getReportList(page, filter, boardType, reportType);
+        getReportList(page, filter);
     };
 
-    // search 핸들링 (boardType, reportType)
+    // search 핸들링
     const handleSearch = () => {
-        getReportList(page, filter, boardType, reportType);
+        getReportList(page, filter);
     };
 
     // 페이지네이션
@@ -179,9 +176,9 @@ const AdminReport = () => {
                 {/* 분류 영역 */}
                 <div className={style.filterBtns}>
                     <div>
-                        <span className={`${style.filterBtn} ${filter==="all"? style.filterActive :""}`} onClick={() => handleSort("all")}>전체</span>
-                        <span className={`${style.filterBtn} ${filter==="Y"? style.filterActive :""}`} onClick={() => handleSort("Y")}>처리</span>
-                        <span className={`${style.filterBtn} ${filter==="N"? style.filterActive :""}`} onClick={() => handleSort("N")}>미처리</span>
+                        <span className={`${style.filterBtn} ${filter==="all"? style.filterActive :""}`} onClick={() => handleFilter("all")}>전체</span>
+                        <span className={`${style.filterBtn} ${filter==="Y"? style.filterActive :""}`} onClick={() => handleFilter("Y")}>처리</span>
+                        <span className={`${style.filterBtn} ${filter==="N"? style.filterActive :""}`} onClick={() => handleFilter("N")}>미처리</span>
                     </div>
                 </div>
                 {/* 분류 영역 */}
@@ -216,11 +213,9 @@ const AdminReport = () => {
                         })}
                     </tbody>
                 </table><br/>
-                {/* 게시글 영역 */}
 
                 {/* 페이징 영역 */}
                 {reportList.length===0?<></>:<PaginationInside/>}
-                {/* 페이징 영역 */}
             </div>
         </div>
         </>

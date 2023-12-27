@@ -53,6 +53,7 @@ import MBattleDetail from "./component/mbattle/MBattleDetail";
 import MBattleWrite from "./component/mbattle/MBattleWrite";
 import ReportWrite from "./component/user/ReportWrite";
 import AdminReportDetail from "./component/admin/AdminReportDetail"
+import AdminBanDetail from "./component/admin/AdminBanDetail";
 import MyMbattle from "./component/user/MyMbattle";
 
 export const persistor = persistStore(store);
@@ -161,7 +162,7 @@ function App() {
                 element={<NoticeDetail />}
               />
               <Route exact path="/adminnotice/:search?/:hidden?/:page?" element={<AdminFrame />} />
-              <Route exact path="/adminnoticeform/:no/:search?/:hidden?/:page?" element={<AdminFrame />} />
+              <Route exact path="/adminnoticeform/:no?/:search?/:hidden?/:page?" element={<AdminFrame />} />
               {/* 중첩 라우팅 */}
               <Route path="/adminqna" element={<AdminFrame />}>
                 <Route path="/adminqna/form/:no" element={<AdminQnaForm />} />
@@ -179,8 +180,9 @@ function App() {
               <Route exact path="/adminreport" element={<AdminFrame />}>
                 <Route exact path="/adminreport/detail/:no/:page/:filter/:boardtype/:reporttype" element={<AdminReportDetail />} />
               </Route>
-              <Route exact path="/adminban" element={<AdminFrame />} />
-              <Route exact path="/adminbandetail" element={<AdminFrame />} />
+              <Route exact path="/adminban" element={<AdminFrame />} >
+                <Route exact path="/adminban/detail/:username" element={<AdminBanDetail />} />
+              </Route>
               <Route
                 exact
                 path="/reportwrite"

@@ -1,7 +1,4 @@
 import {
-    Nav,
-    NavItem,
-    NavLink,
     FormGroup,
     Col,
     Input,
@@ -9,7 +6,8 @@ import {
     Pagination,
     PaginationItem,
     PaginationLink } from "reactstrap";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styleFrame from "../../css/admin/AdminFrame.module.css";
 import style from "../../css/admin/AdminReport.module.css";
@@ -17,186 +15,117 @@ import AdminNav from "./AdminNav";
 import { urlroot } from "../../config";
 
 const AdminBan = () => {
-    const [boards, setBoards] = useState([
-        {
-            num:1,
-            userId:"user01",
-            warningCount: 3,
-            banCount: 1,
-            isBanned:"활동 정지",
-            banStartDate:"2023.11.11",
-            banEndDate:"2023.11.25"
-        },
-        {
-            num:2,
-            userId:"user02",
-            warningCount: 1,
-            banCount: 0,
-            isBanned:"정상",
-            banStartDate:"",
-            banEndDate:""
-        },
-        {
-            num:3,
-            userId:"user03",
-            warningCount: 1,
-            banCount: 0,
-            isBanned:"정상",
-            banStartDate:"",
-            banEndDate:""
-        },        
-        {
-            num:4,
-            userId:"user04",
-            warningCount: 6,
-            banCount: 2,
-            isBanned:"활동 정지",
-            banStartDate:"2023.11.01",
-            banEndDate:"2023.11.30"
-        },
-        {
-            num:5,
-            userId:"user05",
-            warningCount: 2,
-            banCount: 0,
-            isBanned:"정상",
-            banStartDate:"",
-            banEndDate:""
-        },
-        {
-            num:6,
-            userId:"user06",
-            warningCount: 3,
-            banCount: 1,
-            isBanned:"활동 정지",
-            banStartDate:"2023.11.11",
-            banEndDate:"2023.11.25"
-        },
-        {
-            num:7,
-            userId:"user07",
-            warningCount: 4,
-            banCount: 1,
-            isBanned:"활동 정지",
-            banStartDate:"2023.11.11",
-            banEndDate:"2023.11.25"
-        },
-        {
-            num:8,
-            userId:"user08",
-            warningCount: 4,
-            banCount: 1,
-            isBanned:"활동 정지",
-            banStartDate:"2023.11.11",
-            banEndDate:"2023.11.25"
-        },
-        {
-            num:9,
-            userId:"user09",
-            warningCount: 8,
-            banCount: 2,
-            isBanned:"활동 정지",
-            banStartDate:"2023.11.01",
-            banEndDate:"2023.11.30"
-        },
-        {
-            num:10,
-            userId:"user10",
-            warningCount: 1,
-            banCount: 0,
-            isBanned:"정상",
-            banStartDate:"",
-            banEndDate:""
-        }
-    ]);
+    const [banList, setBanList] = useState([]);
+
+    // 필터링 값
+    const [filter, setFilter] = useState("all");
 
     // 페이징 상태 값
-    const [pageBtn, setPageBtn] = useState([]);
+    const [page, setPage] = useState(1);
     const [pageInfo, setPageInfo] = useState({});
-    
-    // pageChange 함수를 호출한 페이징 영역에서 페이징 항목(1, 2, 3...)들을 인자로 받아옴
-    const pageChange = (repage) => {
-        // 검색되었다면 (isSearch가 true인 경우)
-        if(isSearch) reqBoardSearch(repage);
-        // 검색되지 않았다면 (isSearch가 false인 경우)
-        else reqBoardList(repage);
-    };
 
     // 검색이 되었는지 여부
     // 검색되면 true로
     const [isSearch, setIsSearch] = useState(false);
+    const [username, setUsername] = useState("");
 
-    const [id, setId] = useState('');
-
-    const searchSubmit = () => {
-        reqBoardSearch(1);
+    // 절대시간
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
     };
 
-    // url에 파라미터로 줄 변수 repage
-    const reqBoardList = (repage) => {
-        // if(!repage) repage = 1;
-        axios.get(`${urlroot}/adminban/${repage}`)
+    // navigate
+    const navigate = useNavigate();
+
+    // reportDetail 이동
+    const goBanDetail = (username) => {
+        let defaultUrl = `/adminban/detail/${username}`;
+        navigate(defaultUrl, {replace:false});
+    };
+
+    // 밴 목록 조회
+    const getBanList = (page, filter) => {
+        let defaultUrl = `${urlroot}/adminban?page=${page}&filter=${filter}`;
+        if(username !== "") defaultUrl += `&username=${username}`;
+
+        axios.get(defaultUrl)
         .then(res=> {
             console.log(res);
             let pageInfo = res.data.pageInfo;
-            let list = res.data.boardList;
+            let banList = res.data.banList;
 
-            setBoards([...list]);
+            console.log(banList);
+
+            setBanList([...banList]);
             
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
-            }
-            setPageBtn(btn);
+            setPage(page);
             setPageInfo({...pageInfo});
-
-            // 검색이 아닌, 페이징된 상태이므로
-            // 검색 여부를 위한 isSearch 변수를 false로
-            setIsSearch(false);
         })
         .catch(err=> {
             console.log(err);
+            // setBanList([]);
+            // setPageInfo({});
         })
     };
 
+    // page 핸들링
+    const handlePage = (pageNo) => {
+        setPage(pageNo);
+        getBanList(pageNo, filter);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
-    // 페이지 별 검색
-    const reqBoardSearch = (repage) => {
-        if(id==='') {
-            alert('아이디를 입력하세요.');
-            return;
+    // filter 핸들링
+    const handleFilter = (filter) => {
+        setFilter(filter);
+        getBanList(page, filter);
+    };
+
+    // search 핸들링 (boardType, reportType)
+    const handleSearch = () => {
+        getBanList(page, filter);
+    };
+
+    useEffect(() => {
+        getBanList(page, filter);
+    }, []);
+
+    // 페이지네이션
+    const PaginationInside = () => {
+        const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
+        for(let i=pageInfo.startPage; i<=pageInfo.endPage; i++) {
+            pageGroup.push(
+                <span key={i} className={`${page===i? style.activePage: ''}`} onClick={()=>handlePage(i)}>{i}</span>
+            )
         }
-
-        axios.get(`${urlroot}/boardsearch/${repage}/${id}`)
-        .then(res=> {
-            console.log(res);
-
-            let pageInfo = res.data.pageInfo;
-            let list = res.data.boardList;
-
-            setBoards([...list]);
-            
-            let btn = [];
-            for(let i = pageInfo.startPage;i <= pageInfo.endPage;i++) {
-                btn.push(i)
-            }
-            setPageBtn(btn);
-            setPageInfo({...pageInfo});
-
-            // 검색이 아닌, 페이징된 상태이므로
-            // 검색 여부를 위한 isSearch 변수를 false로
-            setIsSearch(true);
-        })
-        .catch(err=> {
-            console.log(err);
-        });
+        return (
+            <div className={style.paging}>
+                {!(pageInfo.startPage===1) && (
+                    <>
+                        <span onClick={()=>handlePage(1)}>≪</span>
+                        <span onClick={()=>handlePage(pageInfo.startPage-10)}>&lt;</span>
+                    </>
+                )}
+                {pageGroup}
+                {!(pageInfo.endPage===pageInfo.allPage) && (
+                    <>
+                        <span onClick={()=>handlePage(pageInfo.endPage+1)}>&gt;</span>
+                        <span onClick={()=>handlePage(pageInfo.allPage)}>≫</span>
+                    </>
+                )}
+            </div>
+        );
     };
 
     const buttonStyle = {
         background:"white",
         color:"black",
         border:"1px solid lightgray"
-    }
+    };
 
     return (
         <>
@@ -209,19 +138,21 @@ const AdminBan = () => {
                         &nbsp;&nbsp;&nbsp;&nbsp;아이디
                     </Col>
                     <Col sm={2}>
-                        <Input type='text' name="id" onChange={(e)=>setId(e.target.value)}/>
+                        <Input type='text' name="username" onChange={(e)=>setUsername(e.target.value)}/>
                     </Col>
                     <Col sm={2}>
-                        <Button style={buttonStyle} onClick={searchSubmit}>검색</Button>
+                        <Button style={buttonStyle} onClick={()=>handleSearch()}>검색</Button>
                     </Col>
                 </FormGroup>
                 {/* 검색 영역 */}
             
                 {/* 분류 영역 */}
-                <div className={style.sortDiv}>
-                    <div>전체</div>&nbsp;&nbsp;&nbsp;
-                    <div style={{color:"#C5C5C5"}}>활동 정지</div>&nbsp;&nbsp;&nbsp;
-                    <div style={{color:"#C5C5C5"}}>정상</div>&nbsp;&nbsp;&nbsp;
+                <div className={style.filterBtns}>
+                    <div>
+                        <span className={`${style.filterBtn} ${filter==="all"? style.filterActive :""}`} onClick={() => handleFilter("all")}>전체</span>
+                        <span className={`${style.filterBtn} ${filter==="Y"? style.filterActive :""}`} onClick={() => handleFilter("Y")}>활동 정지</span>
+                        <span className={`${style.filterBtn} ${filter==="N"? style.filterActive :""}`} onClick={() => handleFilter("N")}>정상</span>
+                    </div>
                 </div>
                 {/* 분류 영역 */}
 
@@ -233,14 +164,14 @@ const AdminBan = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {boards.length !== 0 && boards.map(board => {
+                        {banList.length !== 0 && banList.map(ban => {
                             return (
-                                    <tr key={board.num}>
-                                        <td>{board.userId}</td>
-                                        <td>{board.warningCount}</td>
-                                        <td>{board.banCount}</td>
-                                        <td>{board.isBanned}</td>
-                                        <td>{board.banStartDate} ~ {board.banEndDate}</td>
+                                    <tr key={ban.userIdx} onClick={()=>goBanDetail(ban.username)}>
+                                        <td>{ban.username}</td>
+                                        <td>{ban.userWarnCnt}</td>
+                                        <td>{ban.userBanCnt}</td>
+                                        <td>{ban.isBanned==="Y"? <>정지</>:<>정상</>}</td>
+                                        <td>{ban.banDate===null?<></>:<>~ {formatDate(ban.banDate)}</>}</td>
                                     </tr>
                             )
                         })}
@@ -249,40 +180,7 @@ const AdminBan = () => {
                 {/* 게시글 영역 */}
 
                 {/* 페이징 영역 */}
-                <Pagination aria-label="Page navigation example" className={style.pagingLabel}>
-                    {
-                        pageInfo.curPage===1?
-                        <PaginationItem disabled>
-                            <PaginationLink previous href="#" />
-                        </PaginationItem>:
-                        <PaginationItem>
-                            {/* <PaginationLink previous href={"/list/" + (pageInfo.curPage - 1)} /> */}
-                            <PaginationLink previous onClick={()=>pageChange(pageInfo.curPage-1)}/>
-                        </PaginationItem>
-                    }
-
-                    {                   
-                        pageBtn.map(item=>{
-                            return(
-                                <PaginationItem key={item} className={item===pageInfo.curPage? 'active':''}>
-                                    {/* <PaginationLink href={"/list/" + item}> */}
-                                    {/* 고유한 id를 넘겨줌 */}
-                                    <PaginationLink onClick={() => pageChange(item)}>
-                                        {item}
-                                    </PaginationLink>
-                                </PaginationItem>                            
-                            )
-                        })
-                    }
-
-                    {
-                        <PaginationItem disabled={pageInfo.curPage === pageInfo.endPage}>
-                            {/* <PaginationLink next href={"/list/" + (pageInfo.curPage + 1)}/> */}
-                            <PaginationLink next onClick={()=>pageChange(pageInfo.curPage+1)}/>
-                        </PaginationItem>
-                    }
-                </Pagination>
-                {/* 페이징 영역 */}
+                {banList.length===0?<></>:<PaginationInside/>}
             </div>
         </div>
         </>

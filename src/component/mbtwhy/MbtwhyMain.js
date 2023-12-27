@@ -1,7 +1,7 @@
 import { Table } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux"
-
+import Swal from "sweetalert2";
 import style from "../../css/mbtwhy/MbtwhyMain.module.css"
 
 function MbtwhyMain() {
@@ -18,7 +18,26 @@ function MbtwhyMain() {
     // mbtwhywrite 이동
     const goMbtwhyWrite = () => {
         if(!user.username) {
-            alert("로그인해주세요.");
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.isBanned==="Y") {
+            Swal.fire({
+                title: "정지 상태에서는 글을 작성하실 수 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.userRole==="ROLE_ADMIN") {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
 
@@ -81,6 +100,11 @@ function MbtwhyMain() {
                     </tbody>
                 </Table>
             </div>
+            <section className={style.sectionRightArea}>
+                <div>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
+                </div>
+            </section>
         </div>
     );
 }

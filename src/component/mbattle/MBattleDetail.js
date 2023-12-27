@@ -18,6 +18,7 @@ import {
     Legend,
     ResponsiveContainer
 } from 'recharts';
+import Swal from "sweetalert2";
 import axios from 'axios';
 import { urlroot } from "../../config";
 
@@ -64,20 +65,6 @@ function MBattleDetail() {
         voterId: user.username,
         voteItem: ""
     });
-
-    // 투표 결과 데이터 (글 번호, 투표 항목, I, E, S, N, T, F, J, P)
-    // const [result, setResult] = useState({
-    //     mbattleNo: no,
-    //     voteItem: "",
-    //     I: "",
-    //     E: "",
-    //     S: "",
-    //     N: "",
-    //     T: "",
-    //     F: "",
-    //     J: "",
-    //     P: ""
-    // });
 
     const [voteCnt1, setVoteCnt1] = useState(0);
 
@@ -225,8 +212,26 @@ function MBattleDetail() {
     // 신고 팝오버 열기
     const openReportWrite = (report, reportedTable) => {
         if(!user.username) {
-            alert("로그인해주세요.");
-            setOpen(!open);
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.isBanned==="Y") {
+            Swal.fire({
+                title: "정지 상태에서는 신고 불가합니다.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.userRole==="ROLE_ADMIN") {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
         
@@ -275,7 +280,7 @@ function MBattleDetail() {
                 reportType: "댓글",
                 tableType: reportedTable,
                 reportedPostNo: mbattle.no,
-                reportedCommentNo: report.no,
+                reportedCommentNo: report.commentNo,
                 reportedId: report.writerId,
                 // reportedTitle:, // 제목 없음
                 reportedContent: report.commentContent,
@@ -443,7 +448,26 @@ function MBattleDetail() {
     // 게시글 북마크
     const mbattleBookmark = () => {
         if(!user.username) {
-            alert("로그인해주세요.");
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.isBanned==="Y") {
+            Swal.fire({
+                title: "정지 상태에서는 북마크 불가합니다.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.userRole==="ROLE_ADMIN") {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
 
@@ -457,11 +481,6 @@ function MBattleDetail() {
 
     // 게시글 삭제
     const mbattleDelete = () => {
-        if(!user.username) {
-            alert("로그인해주세요.");
-            return;
-        }
-        
         const isConfirmed = window.confirm("게시글을 삭제하시겠습니까?");
         if(isConfirmed) {
             axios.delete(`${urlroot}/mbattledelete/${no}`)
@@ -479,7 +498,26 @@ function MBattleDetail() {
     // 투표
     const voteItem = (vote) => {
         if(!user.username) {
-            alert("로그인해주세요.");
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.isBanned==="Y") {
+            Swal.fire({
+                title: "정지 상태에서는 투표 불가합니다.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.userRole==="ROLE_ADMIN") {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
 
@@ -535,8 +573,26 @@ function MBattleDetail() {
     // 댓글 작성
     const postComment = (commentValue) => {
         if(!user.username) {
-            alert("로그인해주세요.");
-            setInputCommentValue("");
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.isBanned==="Y") {
+            Swal.fire({
+                title: "정지 상태에서는 댓글을 작성하실 수 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.userRole==="ROLE_ADMIN") {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
 
@@ -555,6 +611,14 @@ function MBattleDetail() {
 
     // 댓글 삭제
     const commentDelete = (commentNo) => {
+        if(!user.username) {
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+    
         const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
         if(isConfirmed) {
             axios.get(`${urlroot}/mbattlecommentdelete/${commentNo}`)
@@ -970,27 +1034,37 @@ function MBattleDetail() {
                     {comments.length===0?<></>:<PaginationInside/>}
 
                     {/* 댓글 달기 */}
-                    <div>
-                        <Input
-                            style={inputComment}
-                            type="textarea"
-                            id="comment"
-                            name="comment"
-                            onChange={commentChange}
-                            cols="40"
-                            rows="15"
-                            required="required"
-                            value={inputCommentValue}
-                            placeholder="댓글을 입력해주세요."
-                        />
-                        <div className={style.postCommentDiv}>
-                            <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue, "")}>등록</Button>
+                    {user.userRole==="ROLE_ADMIN" || !user.username?
+                        <></>
+                        :
+                        <div>
+                            <Input
+                                style={inputComment}
+                                type="textarea"
+                                id="comment"
+                                name="comment"
+                                onChange={commentChange}
+                                cols="40"
+                                rows="15"
+                                required="required"
+                                value={inputCommentValue}
+                                placeholder="댓글을 입력해주세요."
+                            />
+                            <div className={style.postCommentDiv}>
+                                <Button style={buttonStyle} onClick={()=>postComment(inputCommentValue, "")}>등록</Button>
+                            </div>
                         </div>
-                    </div>
+                    }
 
                 </div>
                 {/* 댓글 영역 */}
             </div>
+
+            <section className={style.sectionRightArea}>
+                <div>
+                    <a href="#top"><img src={"/movetopIcon.png" } alt="top" className={style.movetopIcon}/></a>
+                </div>
+            </section>
         </div>
     );
 }

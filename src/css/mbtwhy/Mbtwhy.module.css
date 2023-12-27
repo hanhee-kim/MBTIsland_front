@@ -16,14 +16,6 @@
     justify-content: space-between;
 }
 
-/* .sortStyle {
-    margin: 0 auto;
-    border: none;
-    box-shadow: none;
-    background-color: white;
-    color: black;
-} */
-
 .pageHeader > h1 {
     width: 70%;
     text-align: left;
@@ -178,4 +170,24 @@
 .activePage {
     border: 1px solid #A3A3A3 !important;
     background: #f8f8f8;
+}
+
+.sectionRightArea {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.sectionRightArea>div {
+    /* border: dashed red 3px; */
+    /* padding-right: 100px; */
+    /* position: sticky; */
+    position:fixed;
+    right: 100px;
+    bottom: 40px;
+}
+
+.movetopIcon {
+    float: right;
+    width: 50px;
+    cursor: pointer;
 }
