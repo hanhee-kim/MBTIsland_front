@@ -179,7 +179,7 @@ const Login = () => {
       }}
     >
       <Form style={loginFormStyle}>
-        <FormGroup row style={{ justifyContent: "center" }}>
+        <FormGroup row style={{ justifyContent: "center" ,textAlign:'center'}}>
           <h3 style={{ fontSize: "40px" }}>LOGIN</h3>
         </FormGroup>
         <FormGroup row style={{ justifyContent: "center" }}>
