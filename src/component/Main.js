@@ -88,7 +88,7 @@ const Main = () => {
   const getMbattleList = async () => {
     try {
       const response = await axios.get(`${urlroot}/mbattle`);
-      console.log('getMbattleList 요청결과: ', response);
+      // console.log('getMbattleList 요청결과: ', response);
       let mbattleList = response.data.mbattleList;
       setMbattleList([...mbattleList]);
     } catch (error) {

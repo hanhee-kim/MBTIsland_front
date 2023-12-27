@@ -55,10 +55,10 @@ const Header = () => {
     }
     //먼저 한번 실행
     getNoteListAndAlarmList();
-    // //컴포넌트 마운트될 때 실행할 interval(10초마다 실행)
+    // //컴포넌트 마운트될 때 실행할 interval(1초마다 실행)
     const intervalId = setInterval(() => {
       getNoteListAndAlarmList();
-    }, 10000);
+    }, 1000);
     // 컴포넌트가 언마운트될 때 clearInterval을 통해 정리
     return () => {
       clearInterval(intervalId);
@@ -81,7 +81,8 @@ const Header = () => {
     await axios
       .get(`${urlroot}/getnoteandalarm?username=${user.username}`)
       .then((res) => {
-        console.log(res);
+        console.log('getNoteListAndAlarmList 결과: ', res);
+
         //alarmList
         setAlertNotRead(res.data.alarmList);
         //alarmCnt
@@ -427,11 +428,8 @@ const Header = () => {
                       (note, index) =>
                         index < 5 && (
                           <div key={index}>
-                            <div
-                              className={style.messageTitle}
-                              onClick={(e) => goNoteDetail(e, note.noteNo)}
-                            >
-                              {`${note.sentUserNick}에게 쪽지를 받았습니다.`}
+                            <div className={style.messageTitle} onClick={(e) => goNoteDetail(e, note.noteNo)}>
+                              {`[${note.sentUserNick}]에게 쪽지를 받았습니다.`}
                             </div>
                           </div>
                         )
