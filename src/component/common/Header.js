@@ -246,7 +246,7 @@ const Header = () => {
               MBTIsland
               <img
                 src={"/desert-island.png"}
-                alt="로고이미지"
+                alt="로고"
                 width="30px"
                 className={style.logoIcon}
               />
