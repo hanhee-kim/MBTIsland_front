@@ -15,20 +15,8 @@ const AdminReportDetail = () => {
     // 글 번호, 페이지 번호, 필터링, 게시글 타입, 신고 유형
     const {no, page, filter, boardType, reportType} = useParams();
 
-    const [report, setReport] = useState({
-        // no:1,
-        // reportedId:"user01",
-        // tableType:"MB-TMI",
-        // reportType:"게시글",
-        // title:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유!",
-        // content:"리얼바카라애플카지노스팸-사다리타기게임인디벳주소긴급공유! 지금 바로 들어오세요!! 당장 당장 다앋ㅇ다아당ㅈ앙당장",
-        // files:"1,2,3",
-        // reporterId:"user99",
-        // reportDate:"2023.12.04",
-        // reportReason:"광고",
-        // isCompleted:"미처리",
-        // isWarned:"미처리"
-    });
+    // 신고 내역
+    const [report, setReport] = useState({});
 
     // 절대시간
     const formatDate = (dateString) => {
@@ -192,7 +180,7 @@ const AdminReportDetail = () => {
                         <></>
                         :<div>
                             <Button style={buttonStyle} onClick={()=>warning(report.reportedId, report.reportType, report.tableType, report.reportedPostNo, report.reportedCommentNo)}>경고</Button>
-                            <Button style={buttonStyle} onClick={()=>processing()}>처리</Button>
+                            <Button style={buttonStyle} onClick={()=>processing(report.reportType, report.tableType, report.reportedPostNo, report.reportedCommentNo)}>처리</Button>
                         </div>
                     }
                 </div>

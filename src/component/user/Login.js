@@ -238,7 +238,7 @@ const Login = () => {
           <div style={{ width: "440px", border: "1px solid gray" }}></div>
         </div>
         <div style={socialBtnStyle}>
-          <a href="${urlroot}/oauth2/authorization/kakao"
+        <a href = {`${urlroot}/oauth2/authorization/kakao`}
             // target="_blank"
           >
             <img
@@ -250,7 +250,7 @@ const Login = () => {
             />
           </a>
           <a
-            href="${urlroot}/oauth2/authorization/naver"
+            href={`${urlroot}/oauth2/authorization/naver`}
             // target="_blank"
           >
             <img

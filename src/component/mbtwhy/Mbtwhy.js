@@ -8,6 +8,7 @@ import {
     Button,
     Popover,
     PopoverBody } from "reactstrap";
+import Swal from "sweetalert2";
 import axios from 'axios';
 import { urlroot } from "../../config";
 
@@ -105,7 +106,26 @@ function Mbtwhy() {
     // mbtwhywrite 이동
     const goMbtwhyWrite = () => {
         if(!user.username) {
-            alert("로그인해주세요.");
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.isBanned==="Y") {
+            Swal.fire({
+                title: "정지 상태에서는 글을 작성하실 수 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.userRole==="ROLE_ADMIN") {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
 

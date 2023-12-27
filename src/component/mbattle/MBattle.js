@@ -11,6 +11,7 @@ import {
 import axios from 'axios';
 
 import style from "../../css/mbattle/MBattle.module.css";
+import Swal from "sweetalert2";
 import { urlroot } from "../../config";
 
 function MBattle() {
@@ -45,7 +46,26 @@ function MBattle() {
     // mbattlewrite 이동
     const goMbattleWrite = () => {
         if(!user.username) {
-            alert("로그인해주세요.");
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.isBanned==="Y") {
+            Swal.fire({
+                title: "정지 상태에서는 글을 작성하실 수 없습니다.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.userRole==="ROLE_ADMIN") {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
 
@@ -253,7 +273,7 @@ function MBattle() {
                 </div>
 
                 {/* 게시글 영역 */}
-                <div className={style.sectionBoards}>
+                <div className={style.sectionBoards} style={mbattleList.length === 0? {justifyContent:"center"}:{}}>
                     {mbattleList.length !== 0? mbattleList.map(mbattle => {
                         return (
                             <div key={mbattle.no} className={style.sectionBoard}>
@@ -294,7 +314,7 @@ function MBattle() {
                 </div>
 
                 {/* 페이징 영역 */}
-                {mbattleList.length===0?<></>:<PaginationInside/>}
+                {mbattleList.length <= 1?<></>:<PaginationInside/>}
 
                 {/* 검색 영역 */}
                 <FormGroup row className={style.sectionSearch}>

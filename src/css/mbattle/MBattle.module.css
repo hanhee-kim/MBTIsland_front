@@ -61,7 +61,7 @@
     display: flex;
     flex-wrap: wrap;
     cursor: default;
-    justify-content: center;
+    justify-content: left;
 }
 
 .sectionBoard {
@@ -147,6 +147,7 @@
 .noMbattle {
     margin: 100px;
     color:#C5C5C5;
+    justify-content: center;
 }
 
 .sectionSearch {

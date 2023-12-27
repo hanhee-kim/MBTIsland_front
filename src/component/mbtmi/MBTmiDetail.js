@@ -370,7 +370,7 @@ const MBTmiDetail = () => {
                 reportType: "댓글",
                 tableType: reportTargetFrom,
                 reportedPostNo: mbtmi.no,
-                reportedCommentNo: reportTarget.no,
+                reportedCommentNo: reportTarget.commentNo,
                 reportedId: reportTarget.writerId,
                 // reportedTitle:, // 제목 없음
                 reportedContent: reportTarget.commentContent,
