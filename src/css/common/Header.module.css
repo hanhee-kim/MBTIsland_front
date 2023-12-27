@@ -33,6 +33,9 @@
     margin-left: 15px;
     margin-right: 40px;
     width: 30px;
+    
+    position:relative;
+    bottom: 4px;
 }
 
 .navItems {
