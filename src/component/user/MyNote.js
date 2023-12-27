@@ -33,7 +33,16 @@ const MyNote = () => {
 
   const goNoteDetail = (e, note) => {
     //tr클릭시
-    if (note.receiveUsername == user.username) {
+    if (note.receiveUsername == user.username) { //받은 쪽지일경우
+
+      axios
+        .put(`${urlroot}/readnote?noteNo=${note.noteNo}`)
+        .then((res)=>{
+          //console.log(res);
+        })
+        .catch((err)=>{
+          //console.log(err);
+        })
       const url = "/notedetail/" + note.noteNo;
       window.open(
         url,
@@ -56,8 +65,8 @@ const MyNote = () => {
 
   const getMyNoteList = (username, noteType, readType, page) => {
     let defaultUrl = `${urlroot}/notelistofuser`;
-    console.log(user.username);
-    console.log(username);
+    //console.log(user.username);
+    //console.log(username);
     defaultUrl += `?username=${username}`;
     if (noteType !== null || noteType !== "")
       //보낸쪽지인지 받은 쪽지인지 (기본 : 보낸 쪽지)
@@ -73,12 +82,12 @@ const MyNote = () => {
         username !== null || noteType !== null || readType !== null ? "&" : "?"
       }page=${page}`;
 
-    console.log("요청url:" + defaultUrl);
+    //console.log("요청url:" + defaultUrl);
 
     axios
       .get(defaultUrl)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setInitData(true);
         let pageInfo = res.data.pageInfo;
         let list = res.data.noteList;
@@ -86,7 +95,7 @@ const MyNote = () => {
         setPageInfo({ ...pageInfo });
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         setInitData(false);
       });
   };
@@ -99,22 +108,22 @@ const MyNote = () => {
   //보낸쪽지 눌렀을떄 ,받은쪽지 눌렀을때
   const changeNoteType = (e, type) => {
     setNoteType(type);
-    console.log(
-      "username : " +
-        user.username +
-        "noteT : " +
-        type +
-        "readT : " +
-        readType +
-        "page : " +
-        page
-    );
+    //console.log(
+    //   "username : " +
+    //     user.username +
+    //     "noteT : " +
+    //     type +
+    //     "readT : " +
+    //     readType +
+    //     "page : " +
+    //     page
+    // );
 
     getMyNoteList(user.username, type, readType, page);
   };
   //필터 눌렀을때
   const changeFilter = (e, type) => {
-    console.log(type);
+    //console.log(type);
     //type : all / read / noRead
     setReadType(type);
     getMyNoteList(user.username, noteType, type, page);
@@ -157,7 +166,7 @@ const MyNote = () => {
   };
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
-    console.log("***페이지이동***");
+    //console.log("***페이지이동***");
     getMyNoteList(user.username, noteType, readType, pageNo);
   };
   return (
@@ -259,11 +268,11 @@ const MyNote = () => {
                       번호
                     </th>
                     {noteType === "sent" ? (
-                      <th scope="col" sm={1} style={{ minWidth: "110px" }}>
+                      <th scope="col" sm={1} style={{ minWidth: "130px" }}>
                         받는이
                       </th>
                     ) : (
-                      <th scope="col" sm={1} style={{ minWidth: "63px" }}>
+                      <th scope="col" sm={1} style={{ minWidth: "130px" }}>
                         보낸이
                       </th>
                     )}

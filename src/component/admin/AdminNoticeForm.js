@@ -52,14 +52,14 @@ const AdminNoticeForm = () => {
     const getNoticeDetail = (no) => {
         axios.get(`${urlroot}/noticedetail/${no}`)
         .then(res=> {
-            console.log('getNoticeDetail 요청결과: ', res);
+            //console.log('getNoticeDetail 요청결과: ', res);
             let notice = res.data.notice;
             setNotice(notice);
             setTitle(notice.title);
             setContent(notice.content);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     }
 
@@ -74,18 +74,18 @@ const AdminNoticeForm = () => {
                 });
                 return;
             }
-            // console.log("title: ", title, ", content: ", content, "작성자: ", user.username);
+            // //console.log("title: ", title, ", content: ", content, "작성자: ", user.username);
             let defaultUrl = `${urlroot}/noticewrite`;
             const response = await axios.post(defaultUrl, {
                                 title: title,
                                 content: content,
                                 writerId: user.username,
                             });
-            console.log('요청결과: ', response);
+            //console.log('요청결과: ', response);
             const writtenNotice = response.data.notice;
             setNotice(writtenNotice); // 재렌더링 되도록 함
         } catch (error) {
-            console.error('오류내용: ', error);
+            //console.error('오류내용: ', error);
         }
     }
     
@@ -105,7 +105,7 @@ const AdminNoticeForm = () => {
                 });
                 return;
             }
-            // console.log("no: ", notice.no, "writeDate: ", notice.writeDate, "title: ", title, ", content: ", content, "writerId: ", user.username);
+            // //console.log("no: ", notice.no, "writeDate: ", notice.writeDate, "title: ", title, ", content: ", content, "writerId: ", user.username);
             let defaultUrl = `${urlroot}/noticemodify`;
             const response = await axios.post(defaultUrl, {
                                 no: notice.no, // 수정될 게시글 번호를 전송
@@ -114,12 +114,12 @@ const AdminNoticeForm = () => {
                                 writerId: user.username,
                                 writeDate: notice.writeDate, // 기존 등록일을 전송
                             });
-            console.log('수정 요청결과: ', response);
+            //console.log('수정 요청결과: ', response);
             const modifiedNotice = response.data.notice;
             setNotice(modifiedNotice);
             setModifying(false);
         } catch (error) {
-            console.error('수정 오류내용: ', error);
+            //console.error('수정 오류내용: ', error);
         }
     }
 
@@ -146,7 +146,7 @@ const AdminNoticeForm = () => {
                         backToList();
                     })
                     .catch(err => {
-                        console.log(err);
+                        //console.log(err);
                         Swal.fire({
                             title: 'Error',
                             icon: 'error'

@@ -53,7 +53,7 @@ const AdminReportDetail = () => {
             setReport(report);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     };
 
@@ -78,7 +78,7 @@ const AdminReportDetail = () => {
             getReportDetail();
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     };
 
@@ -97,7 +97,7 @@ const AdminReportDetail = () => {
             getReportDetail();
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     };
 

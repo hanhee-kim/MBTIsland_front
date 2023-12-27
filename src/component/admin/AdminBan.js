@@ -62,7 +62,7 @@ const AdminBan = () => {
             setPageInfo({...pageInfo});
         })
         .catch(err=> {
-            console.log(err);
+            // console.log(err);
             // setBanList([]);
             // setPageInfo({});
         })

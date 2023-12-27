@@ -110,7 +110,7 @@ function MbtwhyWrite() {
             navigate(`/mbtwhydetail/${no}/${mbtiValue}`);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     };
 

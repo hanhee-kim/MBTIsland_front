@@ -28,12 +28,12 @@ const NoteDetail = (props) => {
     axios
       .get(`${urlroot}/notedetail/${noteNo}/${userType}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setNote(res.data);
         // setAnswer(res.data.answer);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
     
   }, [note.noteIsRead]);

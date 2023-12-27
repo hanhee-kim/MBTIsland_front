@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 
 /* 재사용성을 높이기 위해 외부에 선언한 페이지네이션 */
 const PaginationOutside = ({ pageInfo, handlePageNo }) => {
-    console.log('PaginationOutside에서 출력한 pageInfo : ', pageInfo);
+    //console.log('PaginationOutside에서 출력한 pageInfo : ', pageInfo);
     const isFirstGroup = pageInfo.startPage===1;
     const isLastGroup = pageInfo.endPage===pageInfo.allPage;
     const pageGroup = [];
@@ -156,7 +156,7 @@ const MBTmi = () => {
 
     // localStorage에 저장된 mbtmiListPrevValue객체를 업데이트하는 함수로, handlePageNo 등에서 호출됨
     const updateLocalStorage = (newValue) => {
-        // console.log('updateLocalStorage가 받은 인자: ', newValue);
+        // //console.log('updateLocalStorage가 받은 인자: ', newValue);
         const valueToSave = {
             curPage: page,
             curCategory: category,
@@ -166,29 +166,29 @@ const MBTmi = () => {
             checkedRadioValues: checkedRadioValues, // 라디오버튼의 checked를 유지시키기 위하여 저장
             ...newValue
         };
-        console.log('$$$ 로컬스토리지에 저장될 valueToSave: ', valueToSave);
+        //console.log('$$$ 로컬스토리지에 저장될 valueToSave: ', valueToSave);
         localStorage.setItem('mbtmiListPrevValue', JSON.stringify(valueToSave)); // localStorage에는 문자열만 저장 가능
     };
 
     const getWeeklyHotList = () => {
         axios.get(`${urlroot}/weeklyhotmbtmi`)
         .then(res=> {
-            // console.log(res);
+            // //console.log(res);
             let list = res.data.weeklyHotMbtmiList;
             setWeeklyHotList([...list]);
             setErrorMsgWeekly("");
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             if(err.response && err.response.data) {
-                console.log('err.response.data: ' + err.response.data);
+                //console.log('err.response.data: ' + err.response.data);
                 setErrorMsgWeekly(err.response.data);
             }
         })
     }
 
     const getNewlyMbtmiList = (paramCategory, paramType, paramSearch, paramPage, paramSort) => {
-        console.log('getNewlyMbtmiList이 호출됨! ', 'paramPage: ', paramPage, "paramType: ", paramType, ", checkedRadioValues: ",  checkedRadioValues);
+        //console.log('getNewlyMbtmiList이 호출됨! ', 'paramPage: ', paramPage, "paramType: ", paramType, ", checkedRadioValues: ",  checkedRadioValues);
 
         let defaultUrl = `${urlroot}/mbtmilist`;
 
@@ -198,11 +198,11 @@ const MBTmi = () => {
         if (paramPage !== "") defaultUrl += `${paramCategory !== "" || paramType !== "" || paramSearch !== "" ? '&' : '?'}page=${paramPage}`;
         if (paramSort !== "") defaultUrl += `${paramCategory !== "" || paramType !== "" || paramSearch !== "" || paramPage !== "" ? '&' : '?'}sort=${paramSort}`;
 
-        console.log('*** 요청url:' + defaultUrl);
+        //console.log('*** 요청url:' + defaultUrl);
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log('최신글목록 요청결과: ', res);
+            //console.log('최신글목록 요청결과: ', res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.mbtmiList;
             setMbtmiList([...list]);
@@ -211,7 +211,7 @@ const MBTmi = () => {
         })
         .catch(err=> {
             if(err.response && err.response.data) {
-                console.log('err.response.data: ' + err.response.data);
+                //console.log('err.response.data: ' + err.response.data);
                 setErrorMsgNewly(err.response.data);
                 setPageInfo({});
             }
@@ -241,7 +241,7 @@ const MBTmi = () => {
     }, []);
 
     const goToMbtmiForm = () => {
-        console.log('유저정보: ', user.username, ", 정지여부: ", user.isBanned);
+        //console.log('유저정보: ', user.username, ", 정지여부: ", user.isBanned);
         if(!user.username) {
             Swal.fire({
                 title: "로그인해주세요.",
@@ -276,7 +276,7 @@ const MBTmi = () => {
         updateLocalStorage({ curPage: pageNo });
 
         setPage(pageNo);
-        // console.log('현재 적용되는 검색어: ' + search);
+        // //console.log('현재 적용되는 검색어: ' + search);
         getNewlyMbtmiList(category, type, search, pageNo, sort);
     };
     const handleSearchChange = (event) => {
@@ -313,11 +313,11 @@ const MBTmi = () => {
     // MBTI필터 변경
     const [checkedRadioValues, setCheckedRadioValues] = useState({group1: '', group2: '', group3: '', group4: ''});
     const handleRadioCheck = (group, value) => {
-        // console.log('handleRadioCheck함수 실행!');
+        // //console.log('handleRadioCheck함수 실행!');
         setCheckedRadioValues(prev=> ({
             ...prev, [group]: value
         }));
-        console.log('value: ', value);
+        //console.log('value: ', value);
     };
 
     useEffect(() => {
@@ -326,7 +326,7 @@ const MBTmi = () => {
 
         // 적어도 한번 렌더링 된 이후(초기 렌더링이 아닌 경우) && 하나라도 초기값이 아닌 경우에만 실행되도록 함
         if (Object.values(checkedRadioValues).some(value => value !== ''))  {
-            console.log('checkedRadioValues: ', checkedRadioValues);
+            //console.log('checkedRadioValues: ', checkedRadioValues);
             const onlyValuesExceptKeys = Object.values(checkedRadioValues);
             setType(onlyValuesExceptKeys.join(''));
         }
@@ -337,9 +337,9 @@ const MBTmi = () => {
             // 함수를 이용하여 현재 mbti타입값을 localStorage에 저장
             updateLocalStorage({ curType: type });
 
-            // console.log("category: ", category);
-            console.log("type: ", type);
-            // console.log("search: ", search);
+            // //console.log("category: ", category);
+            //console.log("type: ", type);
+            // //console.log("search: ", search);
             setPage(page); // setPage(1)
             getNewlyMbtmiList(category, type, search, page, sort); // getNewlyMbtmiList(category, type, search, 1, sort);
         }
@@ -347,11 +347,11 @@ const MBTmi = () => {
 
     // MBTI필터, 카테고리 리셋 버튼
     const refreshFilter = (refreshTarget) => {
-        // console.log('refreshRadioCheck함수 실행!');
+        // //console.log('refreshRadioCheck함수 실행!');
         setErrorMsgNewly("");
 
         if(refreshTarget==='typeFilter') {
-            console.log('typeFilter를 리셋');
+            //console.log('typeFilter를 리셋');
             getNewlyMbtmiList(category, "", search, 1, sort);
             setCheckedRadioValues({group1: '', group2: '', group3: '', group4: ''});
             setType("");
@@ -361,7 +361,7 @@ const MBTmi = () => {
             updateLocalStorage({ curType: "", checkedRadioValues: {group1: '', group2: '', group3: '', group4: ''}, curPage: 1 });
 
         } else {
-            console.log('categoryFilter를 리셋');
+            //console.log('categoryFilter를 리셋');
             getNewlyMbtmiList("", type, search, 1, sort);
             setCategory("");
             setActiveCategory("");
@@ -414,7 +414,7 @@ const MBTmi = () => {
     // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
     const navigate = useNavigate();
     const makeFlexibleLink = (post) => {
-        // console.log('no, category, type, search, page: ' + post.no + ", " + category + ", " + type + ", " + search + ", " + page);
+        // //console.log('no, category, type, search, page: ' + post.no + ", " + category + ", " + type + ", " + search + ", " + page);
         const linkTo = `/mbtmidetail/${post.no}` +
                         (category? `/${category}` : '') +
                         (type? `/${type}` : '') +

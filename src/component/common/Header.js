@@ -15,8 +15,9 @@ const Header = () => {
   const [noteCnt, setNoteCnt] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
   // const localUser = localStorage.getItem("user");
+  const token = useSelector((state) => state.persistedReducer.token);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -29,11 +30,11 @@ const Header = () => {
   // 미확인 알림리스트
   const [alertNotRead, setAlertNotRead] = useState([]);
   useEffect(() => {
-    console.log(uri);
+    //console.log(uri);
     //토큰보내서 유저 store에 올림
-    console.log("token???:" + token);
+    //console.log("token???:" + token);
     if (token === null || token == "") {
-      console.log("token없음");
+      //console.log("token없음");
     } else {
       // user 정보
       axios
@@ -43,14 +44,13 @@ const Header = () => {
           },
         })
         .then((res) => {
-          console.log(res);
-          console.log("data:" + res.data);
-          // setUser(res.data);
+          //console.log(res);
+          //console.log("data:" + res.data);
           dispatch({ type: "user", payload: res.data });
         })
         .catch((err) => {
-          console.log("user가져오기 에러");
-          console.log(err);
+          //console.log("user가져오기 에러");
+          //console.log(err);
         });
     }
     //먼저 한번 실행
@@ -93,7 +93,7 @@ const Header = () => {
         setNoteCnt(res.data.noteCnt);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   };
   useEffect(() => {
@@ -132,37 +132,37 @@ const Header = () => {
 
   //알림 모두읽음 버튼
   const allReadAlarm = (e) => {
-    console.log("allreadAlarm");
+    //console.log("allreadAlarm");
     axios
       .put(`${urlroot}/updatealarmisreadall?username=${user.username}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         //데이터 다시 불러오기
         getNoteListAndAlarmList();
       })
       .catch((err) => {
-        console.log(err.response.data);
+        //console.log(err.response.data);
         let errLog = err.response.data;
       });
   };
   //노트 모두읽음 버튼
   const allReadNote = (e) => {
-    console.log("allreadNote");
+    //console.log("allreadNote");
     axios
       .put(`${urlroot}/updatenoteisreadall?username=${user.username}`)
       .then((res) => {
-        console.log("성공");
+        //console.log("성공");
         getNoteListAndAlarmList();
       })
       .catch((err) => {});
   };
   //알림 클릭시
   const goAlarmDetail = (e, index, alarm) => {
-    console.log(e);
+    //console.log(e);
     //navigate()
-    console.log(alarm.detailType);
-    console.log(alarm.detailNo);
-    console.log(alarm.detailMbti);
+    //console.log(alarm.detailType);
+    //console.log(alarm.detailNo);
+    //console.log(alarm.detailMbti);
     switch (alarm.detailType) {
       case "NOTE":
         checkAlarm(alarm.alarmNo);
@@ -213,7 +213,7 @@ const Header = () => {
     axios
       .put(`${urlroot}/checkalarm/${no}`)
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
       })
       .catch((err) => {});
   };
@@ -227,7 +227,7 @@ const Header = () => {
   };
   //쪽지 클릭시
   const goNoteDetail = (e, no) => {
-    console.log(e);
+    //console.log(e);
     const noteUrl = "/notedetail/" + no;
     window.open(
       noteUrl,

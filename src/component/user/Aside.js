@@ -72,7 +72,7 @@ const Aside = (props) => {
   // };
   const changePage = props.changePage;
   const changePath = (e, path) => {
-    console.log("e" + e + " path:" + path);
+    //console.log("e" + e + " path:" + path);
     changePage(path);
     navigate(path);
   };

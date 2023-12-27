@@ -40,7 +40,7 @@ const ReportWrite = (props) => {
       });
     })
     .catch(err=> {
-      console.log(err);
+      //console.log(err);
       Swal.fire({
         title: "신고 실패",
         icon: "fail",

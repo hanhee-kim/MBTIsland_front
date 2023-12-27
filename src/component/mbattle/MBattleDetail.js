@@ -434,7 +434,7 @@ function MBattleDetail() {
             // setPageInfo({...pageInfo});
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             setMbattle({});
         })
     };
@@ -494,7 +494,7 @@ function MBattleDetail() {
                     goToPreviousList();
                 })
                 .catch(err => {
-                    console.log(err);
+                    //console.log(err);
                 });
             }
         }); 
@@ -536,7 +536,7 @@ function MBattleDetail() {
             getMbattleDetail();
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     };
 
@@ -602,7 +602,7 @@ function MBattleDetail() {
             setCommentPage(commentPage);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             setComments([]);
             setCommentPageInfo({});
         });
@@ -642,7 +642,7 @@ function MBattleDetail() {
             getMbattleCommentList(commentPage);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -676,7 +676,7 @@ function MBattleDetail() {
                     getMbattleCommentList(commentPage); // 이 함수를 호출하여 댓글목록 재조회하여 재렌더링 시킨다
                 })
                 .catch(err => {
-                    console.log(err);
+                    //console.log(err);
                 });
             }
         });
@@ -718,7 +718,7 @@ function MBattleDetail() {
             navigate(0);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     };
 

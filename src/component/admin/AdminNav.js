@@ -9,7 +9,7 @@ const AdminNav = () => {
 
     const uri = useLocation().pathname;
     useEffect(() => {
-        console.log('AdminNav에서 출력: ' + uri);
+        // console.log('AdminNav에서 출력: ' + uri);
     }, [uri]);
 
     return (

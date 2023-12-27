@@ -101,7 +101,7 @@ const Join = () => {
   };
   //Input값이 변경될때
   const change = (e) => {
-    console.log("input:" + e.target.value);
+    //console.log("input:" + e.target.value);
     setUser({
       ...user,
       [e.target.name]: e.target.value,
@@ -140,7 +140,7 @@ const Join = () => {
     axios
       .get(`${urlroot}/duplicate/${user.username}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         if (res.data == "사용가능") {
           Swal.fire({
             title: "사용가능한 ID입니다.",
@@ -155,7 +155,7 @@ const Join = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         Swal.fire({
           title: "ID가 중복됩니다.",
           icon: "warning",
@@ -166,7 +166,7 @@ const Join = () => {
   const sendCode = (e) => {
     e.preventDefault();
     setSendMail(true);
-    console.log("valiEmail" + validateUserEmail());
+    //console.log("valiEmail" + validateUserEmail());
     if (!validateUserEmail()) {
       Swal.fire({
         title: "Email을 올바르게 작성해주세요.",
@@ -177,9 +177,9 @@ const Join = () => {
     axios
       .get(`${urlroot}/sendmail/${user.userEmail}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setServerEmailCode(res.data);
-        console.log("serverCode : " + res.data);
+        //console.log("serverCode : " + res.data);
         if (res.data === "email중복") {
           Swal.fire({
             title: "Email이 중복됩니다.",
@@ -195,14 +195,14 @@ const Join = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   };
   //email 코드입력후 인증버튼 눌렀을때
   const emailConfirm = (e) => {
     e.preventDefault();
     if (serverEmailCode === emailCode) {
-      console.log("code일치!");
+      //console.log("code일치!");
       setIsEmailCheck(true);
       Swal.fire({
         title: "CODE가 일치합니다!",
@@ -260,11 +260,11 @@ const Join = () => {
                     userMbti:
                       mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ,
                   };
-                  console.log(sendUser);
+                  //console.log(sendUser);
                   axios
                     .post(`${urlroot}/join`, sendUser)
                     .then((res) => {
-                      console.log(res);
+                      //console.log(res);
                       Swal.fire({
                         title:'가입이 완료되었습니다.',
                         icon:'success',
@@ -274,8 +274,8 @@ const Join = () => {
                       // window.location.href('/login');
                     })
                     .catch((err) => {
-                      console.log("err");
-                      console.log(err);
+                      //console.log("err");
+                      //console.log(err);
                     });
                   
                 } else{

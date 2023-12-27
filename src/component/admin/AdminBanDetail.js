@@ -57,7 +57,7 @@ const AdminBanDetail = () => {
             setBan(bannedUser);
         })
         .catch(err=> {
-            console.log(err);
+            // console.log(err);
         })
     };
 
@@ -75,7 +75,7 @@ const AdminBanDetail = () => {
             setPageInfo({...pageInfo});
         })
         .catch(err=> {
-            console.log(err);
+            // console.log(err);
             // setReportList([]);
             // setPageInfo({});
         })
@@ -94,7 +94,7 @@ const AdminBanDetail = () => {
             getBanDetail();
         })
         .catch(err=> {
-            console.log(err);
+            // console.log(err);
         })
     };
 

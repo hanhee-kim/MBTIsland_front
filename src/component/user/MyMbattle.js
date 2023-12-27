@@ -29,13 +29,13 @@ const MyMbattle = () => {
     axios
       .get(`${urlroot}/mbattlelistbyuser?username=${username}&page=${page}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setInitData(true);
         setPageInfo(res.data.pageInfo);
         setBattleList(res.data.mbattleList);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         setInitData(false);
       });
   }
@@ -47,8 +47,8 @@ const MyMbattle = () => {
 
   // 체크박스 단일 선택
   const handleSingleCheck = (checked, no) => {
-    console.log(no);
-    console.log(checkItems);
+    //console.log(no);
+    //console.log(checkItems);
     if (checked) {
       // 단일 선택 시 체크된 아이템을 배열에 추가
       setCheckItems((prev) => [...prev, no]);
@@ -71,10 +71,17 @@ const MyMbattle = () => {
     }
   };
   const delBattle = () => {
+    if(checkItems.length===0) {
+      Swal.fire({
+          title: "체크된 항목이 없습니다.",
+          icon: "warning",
+      });
+      return;
+    }
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     let sendArrayItems = checkItems.join(",");
-    console.log(checkItems.type);
-    console.log(checkItems);
+    //console.log(checkItems.type);
+    //console.log(checkItems);
 
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     axios
@@ -82,7 +89,7 @@ const MyMbattle = () => {
         `${urlroot}/deletembattlelist?sendArrayItems=${sendArrayItems}`
       )
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         Swal.fire({
           title: "삭제 성공!",
           icon: "success",
@@ -92,7 +99,7 @@ const MyMbattle = () => {
         getMyMbattleList(user.username, page);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   };
   //tr 클릭시 detail로 이동
@@ -103,7 +110,7 @@ const MyMbattle = () => {
 
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
-    console.log("***페이지이동***");
+    //console.log("***페이지이동***");
     getMyMbattleList(user.username,pageNo);
     //페이지가 변경되면 checkItems 빈배열로 초기화.
     setCheckItems([]);

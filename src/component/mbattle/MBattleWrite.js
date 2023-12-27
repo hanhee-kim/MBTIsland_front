@@ -150,7 +150,7 @@ function MBattleWrite() {
             navigate(`/mbattledetail/${no}`);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     }
 

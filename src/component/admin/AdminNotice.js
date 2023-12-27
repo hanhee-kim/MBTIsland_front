@@ -93,7 +93,7 @@ const AdminNotice = () => {
             hidden: hidden,
             page: page,
         };
-        console.log('$$$ 로컬스토리지에 저장될 currentValue: ', currentValue);
+        //console.log('$$$ 로컬스토리지에 저장될 currentValue: ', currentValue);
         localStorage.setItem('adminNoticeValue', JSON.stringify({ ...currentValue, ...newValue }));
     };
 
@@ -112,11 +112,11 @@ const AdminNotice = () => {
         if (hidden !== null) defaultUrl += `${search !== null ? '&' : '?'}hidden=${hidden}`;
         if (page !== null) defaultUrl += `${search !== null || hidden !== null ? '&' : '?'}page=${page}`;
 
-        console.log('요청url:' + defaultUrl);
+        //console.log('요청url:' + defaultUrl);
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
+            //console.log(res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.noticeList;
             let noticeCnts = res.data.noticeCnts;
@@ -130,9 +130,9 @@ const AdminNotice = () => {
             setHidden(hidden); // 필터적용된 상태에서 페이지이동시 필터유지되게함
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             if(err.response && err.response.data) {
-                console.log('err.response.data: ' + err.response.data);
+                //console.log('err.response.data: ' + err.response.data);
                 setErrorMsg(err.response.data);
                 setNoticeCnts({'totalCnt':0, 'displayCnt':0, 'hiddenCnt':0});
             }
@@ -142,10 +142,10 @@ const AdminNotice = () => {
     const handlePageNo = (pageNo) => {
         setPage(pageNo);
         setCheckItems([]);
-        console.log('***클릭된 pageNo:' + pageNo);
-        console.log('***변경된 state page값:' + page); // state는 ui보다 한박자 늦다
-        console.log('현재 적용되는 필터값: ' + hidden);
-        console.log('현재 적용되는 검색어: ' + search);
+        //console.log('***클릭된 pageNo:' + pageNo);
+        //console.log('***변경된 state page값:' + page); // state는 ui보다 한박자 늦다
+        //console.log('현재 적용되는 필터값: ' + hidden);
+        //console.log('현재 적용되는 검색어: ' + search);
         getNoticeList(search, hidden, pageNo); // 페이지변경시 필터 유지, 검색어 유지해야함
 
         updateLocalStorage({ page: pageNo });
@@ -162,7 +162,7 @@ const AdminNotice = () => {
         setTmpSearch(searchTerm);
     };
     const handleSearch = () => {
-        console.log('검색 수행');
+        //console.log('검색 수행');
         setSearch(tmpSearch);
         setHidden(null);
         setActiveFilter(null);
@@ -229,7 +229,7 @@ const AdminNotice = () => {
                         setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
                     })
                     .catch(err => {
-                        console.log(err);
+                        //console.log(err);
                         Swal.fire({
                             title: 'Error',
                             icon: 'error'
@@ -269,7 +269,7 @@ const AdminNotice = () => {
                         setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
                     })
                     .catch(err => {
-                        console.log(err);
+                        //console.log(err);
                         Swal.fire({
                             title: 'Error',
                             icon: 'error'

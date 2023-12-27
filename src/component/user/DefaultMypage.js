@@ -118,24 +118,24 @@ const DefaultMypage = (props) => {
     axios
       .get(`${urlroot}/mypage/${user.username}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setTotalCnt(res.data.totalCnt);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       })
   },[])
   //email작성후 보내기버튼 눌렀을때(이때 이메일 중복여부도 확인해주어야함.)
   const sendCode = (e) => {
     e.preventDefault();
-    console.log("보내기버튼클릭");
+    //console.log("보내기버튼클릭");
     if (emailRegExp.test(changeUser.userEmail)) {
       axios
         .get(`${urlroot}/sendmail/${changeUser.userEmail}`)
         .then((res) => {
-          console.log(res);
+          //console.log(res);
           setServerEmailCode(res.data);
-          console.log("serverCode : " + res.data);
+          //console.log("serverCode : " + res.data);
           if (res.data === "email중복") {
             Swal.fire({
               title: "Email이 중복됩니다.",
@@ -151,7 +151,7 @@ const DefaultMypage = (props) => {
           }
         })
         .catch((err) => {
-          console.log(err);
+          //console.log(err);
         });
     } else {
       Swal.fire({
@@ -164,7 +164,7 @@ const DefaultMypage = (props) => {
   const emailConfirm = (e) => {
     e.preventDefault();
     if (serverEmailCode === emailCode) {
-      console.log("code일치!");
+      //console.log("code일치!");
       setIsEmailCheck(true);
       Swal.fire({
         title: "CODE가 일치합니다!",
@@ -213,10 +213,10 @@ const DefaultMypage = (props) => {
     if (e.target.name == "userPassword") {
       setPwInput(true);
     }
-    console.log("input:" + e.target.value);
+    //console.log("input:" + e.target.value);
     setChangeUser({ ...changeUser, [e.target.name]: e.target.value });
-    console.log(e.target.name);
-    console.log(e.target.value);
+    //console.log(e.target.name);
+    //console.log(e.target.value);
     if (isSamePassword) {
       if (e.target.name === "userPassword") {
         setIsSamePassword(false);
@@ -256,7 +256,7 @@ const DefaultMypage = (props) => {
               }
           })
             .then((res) => {
-              console.log(res);
+              //console.log(res);
               Swal.fire({
                 title: "탈퇴완료되었습니다!",
                 text: "MBTIsland는 언제나 여러분을 기다리겠습니다.",
@@ -265,7 +265,7 @@ const DefaultMypage = (props) => {
               navigate("/logout");
             })
             .catch((err) => {
-              console.log(err);
+              //console.log(err);
             })
         }
       })
@@ -275,15 +275,15 @@ const DefaultMypage = (props) => {
     e.preventDefault();
     //수정전 mbti도 가지고가서 비교하던지, 여기서 비교하고 수정날짜도 업데이트해서 넘길지
     //mbti
-    console.log("수정버튼누름");
-    console.log(user.provider);
+    //console.log("수정버튼누름");
+    //console.log(user.provider);
     let sendUser = {
       ...changeUser,
       userMbti: mbtiCheckEI + mbtiCheckNS + mbtiCheckTF + mbtiCheckPJ,
       beforeMbti: mbti,
     };
     if (!(user.provider === "" || user.provider == null)) {
-      console.log("소셜로그인 경우");
+      //console.log("소셜로그인 경우");
       if (nickRegExp.test(changeUser.userNickname)) {
         axios
           .post(`${urlroot}/user/modify`, sendUser, {
@@ -292,10 +292,10 @@ const DefaultMypage = (props) => {
             },
           })
           .then((res) => {
-            console.log(res);
+            //console.log(res);
           })
           .catch((err) => {
-            console.log(err);
+            //console.log(err);
           });
       } else {
         Swal.fire({
@@ -306,7 +306,7 @@ const DefaultMypage = (props) => {
       }
     } else {
       //소셜아닐때 ( 닉네임 , 비밀번호(변경했다면) ,이메일 validation + email인증여부 확인)
-      console.log(changeUser);
+      //console.log(changeUser);
       if (nickRegExp.test(changeUser.userNickname)) {
         if (emailRegExp.test(changeUser.userEmail)) {
           if (isEmailCheck) {
@@ -329,7 +329,7 @@ const DefaultMypage = (props) => {
                 },
               })
               .then((res) => {
-                console.log(res);
+                //console.log(res);
                 dispatch({
                   type: "user",
                   payload: res.data,
@@ -340,7 +340,7 @@ const DefaultMypage = (props) => {
                 });
               })
               .catch((err) => {
-                console.log(err);
+                //console.log(err);
               });
           } else {
             //email 체크 안했을떄(이메일값 변경 후 인증코드 인증안했을때)

@@ -68,21 +68,21 @@ const Main = () => {
   const getMbtmiList = async () => {
     try {
       const response = await axios.get(`${urlroot}/mbtmilist`);
-      // console.log('getMbtmiList 요청결과: ', response);
+      // //console.log('getMbtmiList 요청결과: ', response);
       let mbtmiList = response.data.mbtmiList;
       setMbtmiList([...mbtmiList]);
     } catch (error) {
-      console.error('오류내용: ', error);
+      //console.error('오류내용: ', error);
     }
   }
   const getMbtwhyList = async () => {
     try {
       const response = await axios.get(`${urlroot}/mbtwhy`);
-      // console.log('getMbtwhyList 요청결과: ', response);
+      // //console.log('getMbtwhyList 요청결과: ', response);
       let mbtwhyList = response.data.mbtwhyList;
       setMbtwhyList([...mbtwhyList]);
     } catch (error) {
-      console.error('오류내용: ', error);
+      //console.error('오류내용: ', error);
     }
   }
   const getMbattleList = async () => {
@@ -92,7 +92,7 @@ const Main = () => {
       let mbattleList = response.data.mbattleList;
       setMbattleList([...mbattleList]);
     } catch (error) {
-      console.error('오류내용: ', error);
+      //console.error('오류내용: ', error);
     }
   }
 
@@ -113,7 +113,7 @@ const Main = () => {
   // 활동정지회원의 정지기간을 조회
   const banperiod = async () => {
     const response = await axios.get(`${urlroot}/usersbanperiod/${user.username}`)
-    // console.log('banperiod의 결과: ', response);
+    // //console.log('banperiod의 결과: ', response);
     const startDate = response.data.banStartDate;
     const endDate = response.data.banEndDate;
     setStartDate(startDate);
@@ -137,13 +137,13 @@ const Main = () => {
             
             {/* The slideshow/carousel */}
             <div className="carousel-inner">
-              <div className="carousel-item active" onClick={()=>console.log('배너이미지1 클릭!')}>
+              <div className="carousel-item active">
                 <img src={"/bannersample1.png"} alt="배너이미지1" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
               </div>
-              <div className="carousel-item" onClick={()=>console.log('배너이미지2 클릭!')}>
+              <div className="carousel-item">
                 <img src="/2200x300.png" alt="배너이미지2" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
               </div>
-              <div className="carousel-item" onClick={()=>console.log('배너이미지3 클릭!')}>
+              <div className="carousel-item">
                 <img src="/1800x400.png" alt="배너이미지3" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
               </div>
             </div>

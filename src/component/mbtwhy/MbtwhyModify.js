@@ -88,7 +88,7 @@ function MbtwhyModify() {
             setContent(content);
         })
         .catch(err => {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -104,7 +104,7 @@ function MbtwhyModify() {
             navigate(`/mbtwhydetail/${no}/${mbti.toLowerCase()}`);
         })
         .catch(err => {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -113,8 +113,8 @@ function MbtwhyModify() {
         getMbtwhy();
     }, []);
 
-    // useEffect(() => {
     //     console.log(content);
+    // useEffect(() => {
     // }, [content]);
 
     const pageHeader = {

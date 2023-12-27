@@ -301,7 +301,7 @@ function MbtwhyDetail() {
             }
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             setMbtwhy({});
             setComments([]);
             setCommentPageInfo({});
@@ -401,7 +401,7 @@ function MbtwhyDetail() {
                     goToPreviousList();
                 })
                 .catch(err => {
-                    console.log(err);
+                    //console.log(err);
                 });
             }
         });   
@@ -470,7 +470,7 @@ function MbtwhyDetail() {
             // setCommentPage(commentPage);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             setComments([]);
             setCommentPageInfo({});
         });
@@ -545,7 +545,7 @@ function MbtwhyDetail() {
             setCommentCount(mbtwhyCommentCount);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -580,7 +580,7 @@ function MbtwhyDetail() {
                     
                 })
                 .catch(err => {
-                    console.log(err);
+                    //console.log(err);
                 });
             }
         });

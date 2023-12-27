@@ -96,7 +96,7 @@ function MBattle() {
             setPage(page);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             // setMbattleList([]);
             // setHotMbattleList([]);
             // setPageInfo({});

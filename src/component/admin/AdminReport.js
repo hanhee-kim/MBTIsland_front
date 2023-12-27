@@ -65,7 +65,7 @@ const AdminReport = () => {
             setPageInfo({...pageInfo});
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             // setReportList([]);
             // setPageInfo({});
         })
