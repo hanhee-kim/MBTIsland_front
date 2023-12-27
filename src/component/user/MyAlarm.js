@@ -55,6 +55,7 @@ const MyAlarm = () => {
       .get(defaultUrl)
       .then((res) => {
         console.log(res);
+        console.log(res);
         let pageInfo = res.data.pageInfo;
         let list = res.data.alarmList;
         setAlarmList([...list]);
@@ -98,6 +99,13 @@ const MyAlarm = () => {
     }
   };
   const readAlarm = () => {
+    if(checkItems.length===0) {
+      Swal.fire({
+          title: "체크된 항목이 없습니다.",
+          icon: "warning",
+      });
+      return;
+    }
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     //  알람삭제 ? 읽음처리 ?
     let arrayItems = checkItems.join(",");
@@ -172,18 +180,26 @@ const MyAlarm = () => {
     //useNavigate();사용해서
     const no = alarm.detailNo;
     const mbti = alarm.detailMbti;
-    checkAlarm(no);
+    console.log(user.username, type, page);
     switch (alarm.detailType) {
       case "MBTMI":
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
         navigate("/mbtmidetail/" + no );
         break;
       case "MBTWHY":
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
         navigate("/mbtwhydetail/" + no + "/" + mbti );
         break;
       case "MBATTLE":
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
         navigate("/mbattledetail/" + no );
         break;
       case "NOTE":
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
         let noteNo = no;
         const noteUrl = "/notedetail/" + noteNo;
         window.open(
@@ -193,6 +209,8 @@ const MyAlarm = () => {
         );
         break;
       case "QUESTION":
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
         const questionUrl = "/questiondetail/" + no;
         window.open(
           questionUrl,
@@ -202,6 +220,8 @@ const MyAlarm = () => {
         break;
       // 쪽지 댓글 경고 제재 문의답글 ( 타입 )
       case "WARN":
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
         Swal.fire({
           title: alarm.alarmType + "가 1회",
           text: "지금까지 총 " + alarm.warnCnt + " 회의 경고를 받으셨습니다.",
@@ -209,6 +229,8 @@ const MyAlarm = () => {
         });
         break;
       case "BAN":
+        checkAlarm(alarm.alarmNo);
+        getMyAlarmList(user.username, type, page);
         Swal.fire({
           title: alarm.alarmType + "처리",
           text: "정지 종료일은 " + formatDate(alarm.banDate) + "입니다.",

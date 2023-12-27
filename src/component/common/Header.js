@@ -15,8 +15,9 @@ const Header = () => {
   const [noteCnt, setNoteCnt] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
   // const localUser = localStorage.getItem("user");
+  const token = useSelector((state) => state.persistedReducer.token);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -45,7 +46,6 @@ const Header = () => {
         .then((res) => {
           console.log(res);
           console.log("data:" + res.data);
-          // setUser(res.data);
           dispatch({ type: "user", payload: res.data });
         })
         .catch((err) => {
@@ -58,7 +58,7 @@ const Header = () => {
     // //컴포넌트 마운트될 때 실행할 interval(10초마다 실행)
     const intervalId = setInterval(() => {
       getNoteListAndAlarmList();
-    }, 10000);
+    }, 1000000);
     // 컴포넌트가 언마운트될 때 clearInterval을 통해 정리
     return () => {
       clearInterval(intervalId);

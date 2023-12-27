@@ -33,7 +33,16 @@ const MyNote = () => {
 
   const goNoteDetail = (e, note) => {
     //tr클릭시
-    if (note.receiveUsername == user.username) {
+    if (note.receiveUsername == user.username) { //받은 쪽지일경우
+
+      axios
+        .put(`${urlroot}/readnote?noteNo=${note.noteNo}`)
+        .then((res)=>{
+          console.log(res);
+        })
+        .catch((err)=>{
+          console.log(err);
+        })
       const url = "/notedetail/" + note.noteNo;
       window.open(
         url,
@@ -259,11 +268,11 @@ const MyNote = () => {
                       번호
                     </th>
                     {noteType === "sent" ? (
-                      <th scope="col" sm={1} style={{ minWidth: "110px" }}>
+                      <th scope="col" sm={1} style={{ minWidth: "130px" }}>
                         받는이
                       </th>
                     ) : (
-                      <th scope="col" sm={1} style={{ minWidth: "63px" }}>
+                      <th scope="col" sm={1} style={{ minWidth: "130px" }}>
                         보낸이
                       </th>
                     )}

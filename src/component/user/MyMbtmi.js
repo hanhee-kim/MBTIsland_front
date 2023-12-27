@@ -73,6 +73,13 @@ const MyMbtmi = (props) => {
     }
   };
   const delTmi = () => {
+    if(checkItems.length===0) {
+      Swal.fire({
+          title: "체크된 항목이 없습니다.",
+          icon: "warning",
+      });
+      return;
+    }
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     let sendArrayItems = checkItems.join(",");
     console.log(checkItems.type);

@@ -136,6 +136,13 @@ const MyBookmark = () => {
       }
     };
     const delBookmark = () => {
+      if(checkItems.length===0) {
+        Swal.fire({
+            title: "체크된 항목이 없습니다.",
+            icon: "warning",
+        });
+        return;
+      }
       let sendArrayItems = checkItems.join(",");
       console.log(checkItems.type);
       console.log(checkItems);
