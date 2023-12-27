@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import style from "../../css/mbtwhy/MbtwhyMain.module.css"
 
 function MbtwhyMain() {
-    // 로그인 유저 정보]
+    // 로그인 유저 정보
     const user = useSelector((state) => state.persistedReducer.user);
 
     const navigate = useNavigate();

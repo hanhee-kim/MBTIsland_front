@@ -1,14 +1,15 @@
 import {
     Button
 } from "reactstrap";
-import { useEffect, useState } from "react";
-import axios from 'axios';
-import styleFrame from "../../css/admin/AdminFrame.module.css";
-import style from "../../css/admin/AdminReport.module.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import axios from 'axios';
 import AdminNav from "./AdminNav";
 import { urlroot } from "../../config";
+
+import styleFrame from "../../css/admin/AdminFrame.module.css";
+import style from "../../css/admin/AdminReport.module.css";
 
 const AdminReportDetail = () => {
 
@@ -73,7 +74,10 @@ const AdminReportDetail = () => {
 
         axios.post(defaultUrl)
         .then(res=> {
-            alert("경고 처리 완료");
+            Swal.fire({
+                title: "경고 처리 완료",
+                icon: "warning",
+            });
             getReportDetail();
         })
         .catch(err=> {
@@ -89,7 +93,10 @@ const AdminReportDetail = () => {
 
         axios.post(defaultUrl)
         .then(res=> {
-            alert("처리 완료");
+            Swal.fire({
+                title: "처리 완료",
+                icon: "warning",
+            });
             getReportDetail();
         })
         .catch(err=> {
@@ -100,7 +107,8 @@ const AdminReportDetail = () => {
     const buttonStyle = {
         background:"white",
         color:"black",
-        border:"1px solid lightgray"
+        border:"1px solid lightgray",
+        marginLeft:"10px"
     };
 
     return (
@@ -118,7 +126,17 @@ const AdminReportDetail = () => {
                     </tr>
                     <tr>
                         <td>게시판 명</td>
-                        <td>{report.tableType}</td>
+                        <td>
+                            {report.tableType==="mbtmi" || report.tableType==="mbtmicomment"?
+                                <>MB-TMI</>
+                                :(report.tableType==="mbtwhy" || report.tableType==="mbtwhycomment"?
+                                    <>MBT-WHY</>
+                                    :(report.tableType==="mbattle" || report.tableType==="mbattlecomment" &&
+                                        <>M-BATTLE</>
+                                    )
+                                )
+                            }
+                        </td>
                     </tr>
                     <tr>
                         <td>유형</td>
@@ -133,9 +151,12 @@ const AdminReportDetail = () => {
                     }
                     <tr>
                         <td>내용</td>
-                        <td>{report.reportedContent}</td>
+                        {report.tableType==="mbtmi"?
+                            <td className={style.mbtmiTr} dangerouslySetInnerHTML={{ __html: report.reportedContent }}></td>
+                            :<td style={{whiteSpace:"pre"}}>{report.reportedContent}</td>
+                        }
                     </tr>
-                    {report.reportType==="댓글" || report.tableType==="mbtwhy"?
+                    {report.reportType==="댓글" || report.tableType==="mbtwhy" || report.tableType==="mbtmi"?
                         <></>
                         :<tr>
                             <td>사진</td>
@@ -169,7 +190,6 @@ const AdminReportDetail = () => {
                         <td>{report.isWarned==="Y"?<>경고</>:<>미경고</>}</td>
                     </tr>
                 </table><br/>
-                {/* 게시글 영역 */}
 
                 {/* 하단 버튼 영역 */}
                 <div className={style.buttonDiv}>

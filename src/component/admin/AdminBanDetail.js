@@ -1,15 +1,15 @@
 import {
-    Button,
-    Pagination,
-    PaginationItem,
-    PaginationLink } from "reactstrap";
+    Button
+} from "reactstrap";
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
-import styleFrame from "../../css/admin/AdminFrame.module.css";
-import style from "../../css/admin/AdminReport.module.css";
 import {useNavigate, useParams} from "react-router-dom";
+import Swal from "sweetalert2";
+import axios from 'axios';
 import AdminNav from "./AdminNav";
 import { urlroot } from "../../config";
+
+import styleFrame from "../../css/admin/AdminFrame.module.css";
+import style from "../../css/admin/AdminReport.module.css";
 
 const AdminBanDetail = () => {
     const {username} = useParams();
@@ -90,7 +90,10 @@ const AdminBanDetail = () => {
 
         axios.post(defaultUrl)
         .then(res=> {
-            alert("정지 처리 완료");
+            Swal.fire({
+                title: "정지 처리 완료",
+                icon: "success",
+            });
             getBanDetail();
         })
         .catch(err=> {
@@ -180,14 +183,11 @@ const AdminBanDetail = () => {
                         <td>{ban.banDate===null?<></>:<>~ {formatDate(ban.banDate)}</>}</td>
                     </tr>
                 </table><br/>
-
-                {/* 게시글 영역 */}
                 
                 {/* 분류 영역 */}
                 <div className={style.sortDiv}>
                     신고이력
                 </div>
-                {/* 분류 영역 */}
 
                 {/* 게시글 영역 */}
                 <table className={style.boardTable}>
@@ -199,7 +199,7 @@ const AdminBanDetail = () => {
                     <tbody>
                         {reportList.length !== 0 && reportList.map(report => {
                             return (
-                                <tr key={report.no} onClick={()=>goReportDetail(report.no)}>
+                                <tr key={report.no} className={style.sectionTr} onClick={()=>goReportDetail(report.no)}>
                                     <td>{report.reportReason}</td>
                                     <td>{report.reportType}</td>
                                     <td>{formatDate(report.reportDate)}</td>
@@ -209,7 +209,6 @@ const AdminBanDetail = () => {
                         })}
                     </tbody>
                 </table><br/>
-                {/* 게시글 영역 */}
 
                 {/* 하단 버튼 영역 */}
                 <div className={style.buttonDiv}>
