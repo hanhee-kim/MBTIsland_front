@@ -51,7 +51,6 @@ const AdminBanDetail = () => {
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
             let bannedUser = res.data.bannedUser;
 
             // 게시글 set
@@ -66,11 +65,9 @@ const AdminBanDetail = () => {
     const getReportList = (page) => {
         axios.get(`${urlroot}/adminreport/${username}/${page}`)
         .then(res=> {
-            console.log(res);
             let pageInfo = res.data.pageInfo;
             let reportList = res.data.reportList;
 
-            console.log(reportList);
 
             setReportList([...reportList]);
             

@@ -50,14 +50,9 @@ const ReportWrite = (props) => {
     });
   };
 
-  // const changeReportReason = (e) => {
-  //   console.log(e.target.value);
-  //   setReport({...report,reportType:e.target.value});
-  // };
-
-  useEffect(()=> {
-    console.log("신고 정보:", report);
-  }, [report]);
+  // useEffect(()=> {
+  //   console.log("신고 정보:", report);
+  // }, [report]);
 
   return (
   <div>

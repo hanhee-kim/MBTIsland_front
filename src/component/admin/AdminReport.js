@@ -56,11 +56,8 @@ const AdminReport = () => {
     const getReportList = (page, filter) => {
         axios.get(`${urlroot}/adminreport/${page}/${filter}/${boardType}/${reportType}`)
         .then(res=> {
-            console.log(res);
             let pageInfo = res.data.pageInfo;
             let reportList = res.data.reportList;
-
-            console.log(reportList);
 
             setReportList([...reportList]);
             

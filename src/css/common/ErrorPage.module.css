@@ -1,0 +1,35 @@
+.errorDiv {
+    display: flex;
+    /* width: 1660px; */
+    margin: 0 auto;
+    height: 720px;
+    margin-top: 80px;
+    justify-content: center;
+    align-items: center;
+}
+
+.errorImg {
+    margin-right: 100px;
+    width: 300px;
+    height: 300px;
+}
+
+.errorMsgDiv {
+    font-weight: 900;
+}
+
+.errorMsgDiv > h6 {
+    font-weight: 400;
+    line-height: 40px;
+    margin-top: 30px;
+}
+
+.errorMsgDiv > button {
+    width: 200px;
+    height: 60px;
+    margin-top: 50px;
+    border: solid 1px #C8C8C8;
+    border-radius: 60px;
+    font-size: x-large;
+    font-weight: 400;
+}
