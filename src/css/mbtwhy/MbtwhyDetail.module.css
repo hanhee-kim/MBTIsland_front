@@ -181,9 +181,9 @@
     font-size: 18px;
     width: 32px;
     height: 32px;
-    /* line-height: 32px; */
-    border:0px solid white;
+    border: 0px solid white;
     text-align: center;
+    line-height: 32px;
     cursor: pointer;
 }
 

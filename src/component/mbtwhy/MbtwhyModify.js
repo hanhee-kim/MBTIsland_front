@@ -101,7 +101,6 @@ function MbtwhyModify() {
         let defaultUrl = `${urlroot}/mbtwhymodify/${no}/${content}`;
         axios.post(defaultUrl)
         .then(res => {
-            //console.log(res);
             navigate(`/mbtwhydetail/${no}/${mbti.toLowerCase()}`);
         })
         .catch(err => {
@@ -114,9 +113,9 @@ function MbtwhyModify() {
         getMbtwhy();
     }, []);
 
-    useEffect(() => {
-        //console.log(content);
-    }, [content]);
+    //     console.log(content);
+    // useEffect(() => {
+    // }, [content]);
 
     const pageHeader = {
         display:"flex",

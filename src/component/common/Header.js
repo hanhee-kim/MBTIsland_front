@@ -55,10 +55,10 @@ const Header = () => {
     }
     //먼저 한번 실행
     getNoteListAndAlarmList();
-    // //컴포넌트 마운트될 때 실행할 interval(10초마다 실행)
+    // //컴포넌트 마운트될 때 실행할 interval(1초마다 실행)
     const intervalId = setInterval(() => {
       getNoteListAndAlarmList();
-    }, 1000000);
+    }, 1000);
     // 컴포넌트가 언마운트될 때 clearInterval을 통해 정리
     return () => {
       clearInterval(intervalId);
@@ -81,7 +81,8 @@ const Header = () => {
     await axios
       .get(`${urlroot}/getnoteandalarm?username=${user.username}`)
       .then((res) => {
-        //console.log(res);
+        // console.log('getNoteListAndAlarmList 결과: ', res);
+
         //alarmList
         setAlertNotRead(res.data.alarmList);
         //alarmCnt
@@ -341,16 +342,16 @@ const Header = () => {
                       (alert, index) =>
                         index < 5 && (
                           <div key={index} className={style.alertContentAndCnt}>
-                            <div
-                              className={style.alertContent}
-                              onClick={(e) => goAlarmDetail(e, index, alert)}
-                            >
-                              {alert.alarmType === "댓글"
-                                ? `내 ${alert.detailType} 게시글의 새 ${alert.alarmType}이 있습니다.`
-                                : `새 ${alert.alarmType}가 있습니다`}
+                            <div className={style.alertContent} onClick={(e) => goAlarmDetail(e, index, alert)}>
+                              
+                              {alert.alarmType === "댓글"? `${alert.alarmCnt}개의 새 ${alert.alarmType}이 있습니다.`
+                              : alert.alarmType === "쪽지"? `새 ${alert.alarmType}가 도착했습니다.`
+                              : alert.alarmType === "답글"? `문의글에 ${alert.alarmType}이 달렸습니다.`
+                              : alert.alarmType === "경고"? `경고처분을 받았습니다.`
+                              : `정지처분을 받았습니다.` 
+                              }
+
                             </div>
-                            {alert.alarmType === "댓글" &&
-                              `(${alert.alarmCnt})`}
                           </div>
                         )
                     )
@@ -427,11 +428,8 @@ const Header = () => {
                       (note, index) =>
                         index < 5 && (
                           <div key={index}>
-                            <div
-                              className={style.messageTitle}
-                              onClick={(e) => goNoteDetail(e, note.noteNo)}
-                            >
-                              {`[${note.sentUserNick}]  ${note.noteContent}`}
+                            <div className={style.messageTitle} onClick={(e) => goNoteDetail(e, note.noteNo)}>
+                              {`[${note.sentUserNick}]에게 쪽지를 받았습니다.`}
                             </div>
                           </div>
                         )

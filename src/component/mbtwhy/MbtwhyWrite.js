@@ -40,7 +40,6 @@ function MbtwhyWrite() {
     // MBTI 유형 변경
     const typeChange = (e) => {
         const optionValue = e.target.value;
-        //console.log("MBTI 선택 박스 변경값 : " + optionValue);
         setMbtiColorTo(optionValue);
         setMbtiValue(optionValue);
     };
@@ -52,7 +51,6 @@ function MbtwhyWrite() {
 
     // MBTI 색상 변경
     const setMbtiColorTo = (mbtiValue) => {
-        //console.log("MBTI 선택 박스 변경값 : " + mbtiValue);
         if(mbtiValue==="istj") {
             setMbtiColor("#C5C5C5");
         } else if (mbtiValue==="isfj") {
@@ -108,7 +106,6 @@ function MbtwhyWrite() {
 
         axios.post(defaultUrl, sendUser)
         .then(res=> {
-            //console.log(res);
             let no = res.data.no;
             navigate(`/mbtwhydetail/${no}/${mbtiValue}`);
         })

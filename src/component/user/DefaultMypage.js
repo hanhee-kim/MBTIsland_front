@@ -384,7 +384,7 @@ const DefaultMypage = (props) => {
       </div>
       <Form style={formStyle}>
         <FormGroup row style={{ justifyContent: "center" }}>
-          <h3 style={{ fontSize: "40px" }}>프로필</h3>
+          <h3 style={{ fontSize: "40px" ,textAlign:'center'}}>프로필</h3>
         </FormGroup>
         <FormGroup row>
           <Label for="username" sm={3}>

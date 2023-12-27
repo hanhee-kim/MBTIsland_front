@@ -88,7 +88,7 @@ const Main = () => {
   const getMbattleList = async () => {
     try {
       const response = await axios.get(`${urlroot}/mbattle`);
-      //console.log('getMbattleList 요청결과: ', response);
+      // console.log('getMbattleList 요청결과: ', response);
       let mbattleList = response.data.mbattleList;
       setMbattleList([...mbattleList]);
     } catch (error) {
@@ -235,7 +235,7 @@ const Main = () => {
                         <td>
                           <span className={style.postTitleAndEtc}>
                             <span className={style.overflowLong}>
-                              <Link to={`/mbtwhydetail/${post.mbtiCategory}/${post.no}/1`}>{post.content}</Link>
+                              <Link to={`/mbtwhydetail/${post.no}/${post.mbtiCategory}`}>{post.content}</Link>
                             </span>
                             <span>[{post.commentCnt}]</span>
                             <small>{formatDatetimeGap(post.writeDate)}</small>
@@ -276,7 +276,7 @@ const Main = () => {
                         <td>
                           <span className={style.postTitleAndEtc}>
                             <span className={style.overflowLong}>
-                              <Link to={`/mbattledetail/${post.no}/1`}>{post.title}</Link>
+                              <Link to={`/mbattledetail/${post.no}`}>{post.title}</Link>
                             </span>
                             <span>[{post.commentCnt}]</span>
                             <small>{formatDatetimeGap(post.writeDate)}</small>

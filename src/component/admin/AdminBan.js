@@ -53,11 +53,8 @@ const AdminBan = () => {
 
         axios.get(defaultUrl)
         .then(res=> {
-            // console.log(res);
             let pageInfo = res.data.pageInfo;
             let banList = res.data.banList;
-
-            // console.log(banList);
 
             setBanList([...banList]);
             

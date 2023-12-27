@@ -55,6 +55,7 @@ import ReportWrite from "./component/user/ReportWrite";
 import AdminReportDetail from "./component/admin/AdminReportDetail"
 import AdminBanDetail from "./component/admin/AdminBanDetail";
 import MyMbattle from "./component/user/MyMbattle";
+import ErrorPage from "./component/common/ErrorPage";
 
 export const persistor = persistStore(store);
 
@@ -188,6 +189,8 @@ function App() {
                 path="/reportwrite"
                 element={<ReportWrite setIsPopup={setIsPopup} />}
               />
+              {/* 에러 페이지 */}
+              <Route path="*" element={<ErrorPage />}/>
             </Routes>
             {!isPopup && <Footer />}
           </BrowserRouter>
