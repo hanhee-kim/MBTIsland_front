@@ -524,7 +524,7 @@ const MBTmiDetail = () => {
         window.open(
             url,
             "_blank",
-            "width=650,height=450,location=no,status=no,scrollbars=yes"
+            "width=650,height=600,location=no,status=no,scrollbars=yes"
         );
     }
 
@@ -612,7 +612,7 @@ const MBTmiDetail = () => {
                             <div className={style.commentProfileColor} style={{ background: comment.writerMbtiColor, borderColor: comment.writerMbtiColor }}/>
                             <span>{comment.writerMbti} {comment.writerNickname}</span>
                             {isPostWriterComment && <span className={style.isPostWriterComment}>작성자</span>}
-                            {!isLoginUserComment && <img src={"/sendNoteIcon.png" } alt="쪽지보내기" className={style.sendNoteIcon} onClick={()=> sendNote(mbtmi.writerId)}/>}
+                            {!isLoginUserComment && <img src={"/sendNoteIcon.png" } alt="쪽지" className={style.sendNoteIcon} onClick={()=> sendNote(comment.writerId, comment.writerNickname)}/>}
                         </div>
 
                         <div className={`${style.commentTd2row} ${isRemovedOrBlockedComment? style.deletedComment : ''}`} >
@@ -669,7 +669,7 @@ const MBTmiDetail = () => {
                         <div className={style.commentProfileColor} style={{ background: reply.writerMbtiColor, borderColor: reply.writerMbtiColor }}/>
                         <span>{reply.writerMbti} {reply.writerNickname}</span>
                         {isPostWriterComment && <span className={style.isPostWriterComment}>작성자</span>}
-                        {!isLoginUserComment && <img src={"/sendNoteIcon.png" } alt="쪽지보내기" className={style.sendNoteIcon} onClick={()=> sendNote(mbtmi.writerId)}/>}
+                        {!isLoginUserComment && <img src={"/sendNoteIcon.png" } alt="쪽지보내기" className={style.sendNoteIcon} onClick={()=> sendNote(reply.writerId, reply.writerNickname)}/>}
                     </div>
 
                     <div className={`${style.commentTd2row} ${isRemovedOrBlockedComment? style.deletedComment : ''}`}>
@@ -729,7 +729,7 @@ const MBTmiDetail = () => {
                         <div className={style.profileColor} style={{ background: mbtmi.writerMbtiColor, borderColor: mbtmi.writerMbtiColor }} />&nbsp;
                         <span>{mbtmi.writerMbti}&nbsp;{mbtmi.writerNickname}</span>
                         {mbtmi.writerId !== user.username && (
-                        <img src={"/sendNoteIcon.png" } alt="쪽지보내기" className={style.sendNoteIcon} onClick={()=> sendNote(mbtmi.writerId, mbtmi.writerNickname)}/>
+                        <img src={"/sendNoteIcon.png" } alt="쪽지" className={style.sendNoteIcon} onClick={()=> sendNote(mbtmi.writerId, mbtmi.writerNickname)}/>
                         )}
 
                         {/* <h6>{formatDate(mbtmi.writeDate)} */}
