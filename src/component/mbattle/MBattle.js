@@ -90,7 +90,9 @@ function MBattle() {
             let hotMbattleList = res.data.hotMbattleList;
 
             setMbattleList([...mbattleList]);
-            setHotMbattleList([...hotMbattleList]);
+            if(hotMbattleList) {
+                setHotMbattleList([...hotMbattleList]);
+            }
             
             setPageInfo({...pageInfo});
             setPage(page);
@@ -314,7 +316,7 @@ function MBattle() {
                 </div>
 
                 {/* 페이징 영역 */}
-                {mbattleList.length <= 1?<></>:<PaginationInside/>}
+                {mbattleList.length===0?<></>:<PaginationInside/>}
 
                 {/* 검색 영역 */}
                 <FormGroup row className={style.sectionSearch}>

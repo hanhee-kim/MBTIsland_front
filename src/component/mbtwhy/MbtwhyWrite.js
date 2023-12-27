@@ -129,7 +129,8 @@ function MbtwhyWrite() {
     const buttonStyle = {
         background:"white",
         color:"black",
-        border:"1px solid lightgray"
+        border:"1px solid lightgray",
+        margin:"10px"
     };
     
     return (
@@ -184,6 +185,7 @@ function MbtwhyWrite() {
                     />
                     <div className={style.postContentDiv}>
                         <Button style={buttonStyle} onClick={()=>postMbtwhy()}>등록</Button>
+                        <Button style={buttonStyle} onClick={()=>navigate(-1)}>취소</Button>
                     </div>
                 </div>
             </div>
