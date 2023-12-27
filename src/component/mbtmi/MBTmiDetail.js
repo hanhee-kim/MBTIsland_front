@@ -305,6 +305,10 @@ const MBTmiDetail = () => {
             alert("로그인해주세요.");
             return;
         }
+        if(user.userRole==='ROLE_ADMIN') {
+            alert("게시판 이용을 위해 일반회원으로 로그인해주세요.");
+            return;
+        }
         // console.log('추천값 출력: ', recommend);
         let defaultUrl = `${urlroot}/mbtmirecommend`;
 
@@ -332,6 +336,10 @@ const MBTmiDetail = () => {
             alert("로그인해주세요.");
             return;
         }
+        if(user.userRole==='ROLE_ADMIN') {
+            alert("게시판 이용을 위해 일반회원으로 로그인해주세요.");
+            return;
+        }
         console.log('북마크값 출력: ', bookmark);
         let defaultUrl = `${urlroot}/mbtmibookmark`;
 
@@ -350,6 +358,10 @@ const MBTmiDetail = () => {
         // console.log('신고대상 reportTarget(객체): ', reportTarget, ", reportTargetFrom(테이블명): ", reportTargetFrom);
         if(!user.username) {
             alert("로그인해주세요.");
+            return;
+        }
+        if(user.userRole==='ROLE_ADMIN') {
+            alert("게시판 이용을 위해 일반회원으로 로그인해주세요.");
             return;
         }
 
@@ -410,6 +422,10 @@ const MBTmiDetail = () => {
         }
         if(user.isBanned==='Y') {
             alert("정지 상태에서는 쪽지를 보내실 수 없습니다.");
+            return;
+        }
+        if(user.userRole==='ROLE_ADMIN') {
+            alert("게시판 이용을 위해 일반회원으로 로그인해주세요.");
             return;
         }
 
@@ -473,6 +489,15 @@ const MBTmiDetail = () => {
 
         const [isReplying, setIsReplying] = useState(false); // 답글쓰기중인지 여부를 저장하여 true일때 input 표시하기 위한 state변수
         const handleReply = () => {
+            if(user?.username===undefined || user?.username==="") {
+                alert("로그인해주세요.");
+                return;
+            }
+            if(user.userRole==='ROLE_ADMIN') {
+                alert("게시판 이용을 위해 일반회원으로 로그인해주세요.");
+                return;
+            }
+
             setIsReplying(!isReplying);
         };
 
@@ -500,7 +525,9 @@ const MBTmiDetail = () => {
                         </div>
                         <div className={style.commentTd3row}>
                             <small>{formatDatetimeGap(comment.writeDate)}</small>
-                            {user.username!=="" && !isRemovedOrBlockedComment && (
+                            {console.log('유저 있는지 확인: ', user.username)}
+                            {/* {user?.username!==undefined && user?.username!=="" && !isRemovedOrBlockedComment && ( */}
+                            {!isRemovedOrBlockedComment && (
                                 <small onClick={handleReply}>답글쓰기</small>
                             )}
                             {user.username!=="" && !isRemovedOrBlockedComment && (
@@ -666,7 +693,7 @@ const MBTmiDetail = () => {
                     {/* <PaginationOutside pageInfo={commentPageInfo} handlePageNo={handlePageNo} /> */}
 
                     {/* 댓글 입력란 */}
-                    {user.userRole === "ROLE_USER" && (
+                    {user?.userRole === "ROLE_USER" && (
                         <div className={style.commentWriteArea}>
                             <div>
                                 <span>
