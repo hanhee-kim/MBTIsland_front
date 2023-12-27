@@ -15,7 +15,6 @@ import {
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
-import localStorage from "redux-persist/es/storage";
 import Swal from "sweetalert2";
 // import { useNavigate } from "react-router-dom";
 import { urlroot } from "../../config";
@@ -91,18 +90,27 @@ const Login = () => {
     axios
       .post(`${urlroot}/login`, user)
       .then((res) => {
-        console.log(res.headers.authorization);
-        dispatch({ type: "token", payload: res.headers.authorization });
-        console.log(res.data);
-        dispatch({ type: "user", payload: res.data});
-        // localStorage.setItem("token", res.headers.authorization);
-        // localStorage.setItem("user",res.data);
-        Swal.fire({
-          title: "로그인되었습니다.",
-          icon: "success",
-        }).then(function () {
-          navigate("/"); //main으로 이동
-        });
+        if(res.data.checkLeave === "Y"){
+          console.log("탈퇴회원!")
+          Swal.fire({
+            title:'탈퇴한 회원입니다.',
+            text:'서비스 이용을 위해 회원가입을 진행해주세요.',
+            icon:'warning',
+          }).then(function (){
+            navigate('/join');
+          })
+        } else {
+          // console.log(res.headers.authorization);
+          // console.log(res.data);
+          dispatch({ type: "token", payload: res.headers.authorization });
+          dispatch({ type: "user", payload: res.data.user});
+          Swal.fire({
+            title: "로그인되었습니다.",
+            icon: "success",
+          }).then(function () {
+            navigate("/"); //main으로 이동
+          });
+        }
       })
       .catch((err) => {
         console.log(err);

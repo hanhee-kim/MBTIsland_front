@@ -174,12 +174,12 @@ const Header = () => {
         break;
       case "MBTWHY":
         checkAlarm(alarm.alarmNo);
-        navigate(`/mbtwhydetail/${alarm.detailMbti}/${alarm.detailNo}/1`);
+        navigate(`/mbtwhydetail/${alarm.detailNo}/${alarm.detailMbti}`);
         getNoteListAndAlarmList();
         break;
-      case "MBTTLE":
+      case "MBATTLE":
         checkAlarm(alarm.alarmNo);
-        navigate(`/mbattledetail/${alarm.detailNo}/1`);
+        navigate(`/mbattledetail/${alarm.detailNo}`);
         getNoteListAndAlarmList();
         break;
       case "QUESTION":
@@ -346,7 +346,7 @@ const Header = () => {
                               onClick={(e) => goAlarmDetail(e, index, alert)}
                             >
                               {alert.alarmType === "댓글"
-                                ? `내 게시글의 새 ${alert.alarmType}이 있습니다.`
+                                ? `내 ${alert.detailType} 게시글의 새 ${alert.alarmType}이 있습니다.`
                                 : `새 ${alert.alarmType}가 있습니다`}
                             </div>
                             {alert.alarmType === "댓글" &&

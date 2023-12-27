@@ -175,16 +175,13 @@ const MyAlarm = () => {
     checkAlarm(no);
     switch (alarm.detailType) {
       case "MBTMI":
-        navigate("/mbtmidetail/" + no + "/1");
-        // navigate("/mbtmidetail/" + no);
+        navigate("/mbtmidetail/" + no );
         break;
       case "MBTWHY":
-        navigate("/mbtwhydetail/" + mbti + "/" + no + "/1");
-        // navigate("/mbtwhydetail/" + mbti + "/" + no);
+        navigate("/mbtwhydetail/" + no + "/" + mbti );
         break;
       case "MBATTLE":
-        navigate("/mbattledetail/" + no + "/1");
-        // navigate("/mbattledetail/" + no);
+        navigate("/mbattledetail/" + no );
         break;
       case "NOTE":
         let noteNo = no;
