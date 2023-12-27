@@ -251,7 +251,7 @@ const Login = () => {
           >
             <img
               className="kakaLoginImg"
-              src={"../kakao_login.png"}
+              src={"/kakaoLogin.png"}
               style={{ width: "183px", height: "45px" }}
               alt="kakaoLogin"
             />
@@ -262,7 +262,7 @@ const Login = () => {
           >
             <img
               className="naverLoginImg"
-              src={"../naver_Login.png"}
+              src={"/naverLogin.png"}
               style={{ width: "183px", height: "45px" }}
               alt="naverLogin"
             />
