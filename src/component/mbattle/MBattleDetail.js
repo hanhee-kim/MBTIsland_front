@@ -828,10 +828,10 @@ function MBattleDetail() {
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart width={600} height={400} data={voteData1} layout="vertical">
                                 {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                                {/* <XAxis dataKey="name" /> */}
+                                <XAxis type="number" domain={[0, mbattle.voteCnt]}/>
                                 <YAxis type="category" dataKey="name" />
                                 <Tooltip />
-                                {/* <Legend /> */}
+                                <Legend />
                                 <Bar dataKey="투표수" fill="#FF6D6D" background={{ fill: '#eee' }} barSize={50} stroke="#000" strokeWidth={1}/>
                             </BarChart>
                         </ResponsiveContainer>
@@ -845,12 +845,12 @@ function MBattleDetail() {
                     </div>
                     <div style={{width:"600px", height:"100px"}}>
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart width={600} height={400} data={voteData2} layout="vertical">
+                            <BarChart width={600} height={400} data={voteData2} layout="vertical" >
                                 {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                                {/* <XAxis dataKey="name" /> */}
-                                <YAxis type="category" dataKey="name" />
+                                <XAxis type="number" domain={[0, mbattle.voteCnt]}/>
+                                <YAxis type="category" dataKey="name"/>
                                 <Tooltip />
-                                {/* <Legend /> */}
+                                <Legend />
                                 <Bar dataKey="투표수" fill="#7EBAFF" background={{ fill: '#eee' }} barSize={50} stroke="#000" strokeWidth={1}/>
                             </BarChart>
                         </ResponsiveContainer>
