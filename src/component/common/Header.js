@@ -81,7 +81,7 @@ const Header = () => {
     await axios
       .get(`${urlroot}/getnoteandalarm?username=${user.username}`)
       .then((res) => {
-        console.log('getNoteListAndAlarmList 결과: ', res);
+        // console.log('getNoteListAndAlarmList 결과: ', res);
 
         //alarmList
         setAlertNotRead(res.data.alarmList);
