@@ -62,8 +62,8 @@ const MyAlarm = () => {
         setPageInfo({ ...pageInfo });
       })
       .catch((err) => {
-        //console.log(err);
-        //console.log(err.response.data);
+        // console.log(err);
+        // console.log(err.response.data);
         if (
           err.response.data.err == "해당 알림없음." ||
           err.response.data.err == "알림에 대한 해당 댓글이 존재하지 않음"

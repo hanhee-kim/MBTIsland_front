@@ -106,7 +106,7 @@ const AddJoin = () => {
   return (
     <div>
       <Form style={addJoinFormStyle}>
-        <FormGroup row style={{ justifyContent: "center" }}>
+        <FormGroup row style={{ justifyContent: "center",textAlign:'center' }}>
           <h3 style={{ fontSize: "40px" }}>ADD</h3>
         </FormGroup>
         <FormGroup>
