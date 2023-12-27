@@ -6,6 +6,7 @@ import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import AdminNav from "./AdminNav";
 import axios from "axios";
 import { urlroot } from "../../config";
+import Swal from "sweetalert2";
 
 const AdminNotice = () => {
     const [noticeList, setNoticeList] = useState([]); // 페이지당 게시글목록 
@@ -48,10 +49,13 @@ const AdminNotice = () => {
             setPage(1);
             getNoticeList(null, null, 1);
         }
-    }, [location]);
-/*
+
+        // 로컬스토리지 초기화
+        localStorage.removeItem("adminNoticeValue");
+    }, []);
+
+
     // 내비 바의 '공지사항 목록' 재클릭시 초기상태로 재렌더링하게함
-    const location = useLocation();
     useEffect(() => {
         getNoticeList(null, null, 1);
         setSearch(null);
@@ -76,7 +80,7 @@ const AdminNotice = () => {
             getNoticeList(initialState.search, initialState.hidden, initialState.page);
         }
     }, []);
-*/
+
 
     useEffect(() => {
         getNoticeList(search, hidden, page);
@@ -197,36 +201,70 @@ const AdminNotice = () => {
 
     // 일괄 숨김처리
     const hideNotice = () => {
-        console.log('체크된 항목:' + checkItems);
-        const isConfirmed =window.confirm('선택 항목을 숨김처리하시겠습니까?');
-        if(isConfirmed) {
-            axios.get(`${urlroot}/hidenotice/${checkItems}`)
-            .then(res => {
-                alert('완료되었습니다.');
-                setCheckItems([]);
-                setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
-            })
-            .catch(err => {
-                console.log(err);
-            })
-        };
+        // console.log('체크된 항목:' + checkItems);
+
+        Swal.fire({
+            title: '선택항목을 처리하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.get(`${urlroot}/hidenotice/${checkItems}`)
+                    .then(res => {
+                        Swal.fire({
+                            title: "완료되었습니다.",
+                            icon: "success",
+                        });
+                        setCheckItems([]);
+                        setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error'
+                        });
+                    });
+            }
+        });
     }
 
     // 일괄 삭제처리
     const deleteNotice = () => {
-        console.log('체크된 항목:' + checkItems);
-        const isConfirmed =window.confirm('선택 항목을 삭제하시겠습니까?');
-        if(isConfirmed) {
-            axios.delete(`${urlroot}/deletenotice/${checkItems}`)
-            .then(res => {
-                alert('완료되었습니다.');
-                setCheckItems([]);
-                setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
-            })
-            .catch(err => {
-                console.log(err);
-            })
-        };
+        // console.log('체크된 항목:' + checkItems);
+
+        Swal.fire({
+            title: '선택항목을 삭제하시겠습니까?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${urlroot}/deletenotice/${checkItems}`)
+                    .then(res => {
+                        Swal.fire({
+                            title: "완료되었습니다.",
+                            icon: "success",
+                        });
+                        setCheckItems([]);
+                        setAfterDelOrHide(true); // 의존성배열에 추가된 sate를 변경시킴으로써 목록을 다시 조회하여 렌더링되게함
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error'
+                        });
+                    });
+            }
+        });
     }
 
     // 페이지네이션

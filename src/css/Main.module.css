@@ -102,7 +102,7 @@
 
 /* 배너 */
 .bannerArea {
-    border: 3px dashed orange;
+    /* border: 3px dashed orange; */
     box-sizing: border-box;
     height: 300px;
     width: 100%;

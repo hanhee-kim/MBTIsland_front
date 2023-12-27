@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { urlroot } from "../../config";
+import Swal from "sweetalert2";
 import ReactQuill, { Quill } from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import ImageResize from "quill-image-resize-module-react";
@@ -85,7 +86,11 @@ const MBTmiForm = () => {
         
         console.log('title: ', title, ", content: ", quillValue, ", category: "+ selectCategory, ", writerId: ", user.username, ", writerMbti: ", user.userMbti);
         if (title==='' || quillValue==='' || selectCategory==='') {
-            alert('제목, 내용, 카테고리를 확인해주세요.');
+            Swal.fire({
+                title: "게시글 등록 실패",
+                text: "제목, 내용, 카테고리를 확인해주세요.",
+                icon: "warning",
+            });
             return;
         } 
         // 에디터 내용에서 이미지 태그 제거하고 텍스트만 추출
@@ -264,7 +269,11 @@ const MBTmiForm = () => {
         try {
             console.log("no: ", mbtmi.no, "writeDate: ", mbtmi.writeDate, "category: ", selectCategory, "title: ", title, ", content: ", content, "writerId: ", user.username);
             if (title==='' || quillValue==='' || selectCategory==='') {
-                alert('제목, 내용, 카테고리를 확인해주세요.');
+                Swal.fire({
+                    title: "게시글 등록 실패",
+                    text: "제목, 내용, 카테고리를 확인해주세요.",
+                    icon: "warning",
+                });
                 return;
             }
             // 에디터 내용에서 이미지 태그 제거하고 텍스트만 추출

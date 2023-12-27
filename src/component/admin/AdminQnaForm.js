@@ -11,6 +11,7 @@ import { useNavigate, useParams } from 'react-router';
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { urlroot } from "../../config";
+import Swal from "sweetalert2";
 
 const AdminQnaForm = () => {
 
@@ -72,15 +73,25 @@ const AdminQnaForm = () => {
     }
 
      // 이전(목록이동) 버튼
+    // const goToPreviousList = () => {
+    //     navigate(`/adminqna`);
+    // }
     const goToPreviousList = () => {
-        navigate(`/adminqna`);
-    }
+        const savedState = localStorage.getItem('adminQuestionValue');
+        const previousState = savedState ? JSON.parse(savedState) : {};
+        navigate('/adminqna', { state: { fromDetail: true, ...previousState } });
+    };
+
 
     const addPost = async () => {
         console.log('답변 등록 버튼 클릭');
         try {
             if(!content) {
-                alert('답변 내용을 입력하세요.');
+                Swal.fire({
+                    title: "답변 등록 실패",
+                    text: "답변 내용을 입력하세요.",
+                    icon: "warning",
+                });
                 return;
             }
             console.log("content: ", content, ", writerId: ", user.username, "문의글번호인 파라미터no: ", no, ", 문의글제목: ", question.title, ", 문의글작성자: ", question.writerId);

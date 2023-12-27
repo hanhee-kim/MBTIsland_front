@@ -23,13 +23,27 @@ const Notice = () => {
 
     useEffect(() => {
         // localStorage에 저장된 페이지 정보를 읽음
-        const storedInfo = localStorage.getItem('curPage');
-        if(storedInfo) {
-            setPage(parseInt(storedInfo, 10)); // 페이지넘버
+        const noticeCurPage = localStorage.getItem('noticeCurPage');
+        const noticeSearchTerm = localStorage.getItem('noticeSearchTerm');
+        if(noticeCurPage) {
+            setPage(parseInt(noticeCurPage, 10));
+        } else {
+            setPage(1);
         }
-
-        getNoticeList(search, page);
+        if(noticeSearchTerm) {
+            setSearch(noticeSearchTerm);
+        } else {
+            setSearch(null);
+        }
+        // 로컬스토리지 초기화
+        localStorage.removeItem("noticeCurPage");
+        localStorage.removeItem("noticeSearchTerm");
+        
     }, []);
+    
+    useEffect(()=> {
+        getNoticeList(search, page);
+    }, [page, search])
     
     const getNoticeList = (search, page) => {
         let defaultUrl = `${urlroot}/noticelist?hidden=N`;
@@ -62,7 +76,7 @@ const Notice = () => {
 
     const handlePageNo = (pageNo) => {
         // 현재 페이지번호를 localStorage에 저장
-        localStorage.setItem('curPage', pageNo.toString());
+        localStorage.setItem('noticeCurPage', pageNo.toString());
 
         setPage(pageNo);
         console.log('현재 적용되는 검색어: ' + search);
@@ -79,6 +93,9 @@ const Notice = () => {
     }
     // 엔터키로 검색 수행
     const handleKeyPress = (e) => {
+        // 현재 검색값을 localStorage에 저장
+        localStorage.setItem('noticeSearchTerm', tmpSearch);
+
         if (e.key==="Enter") handleSearch();
     }
 
@@ -113,7 +130,7 @@ const Notice = () => {
     // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
     const navigate = useNavigate();
     const makeFlexibleLink = (post) => {
-        // alert('no, search, page: ' + post.no + ", " + search + ", " + page);
+        // console.log('no, search, page: ' + post.no + ", " + search + ", " + page);
         const linkTo = `/noticedetail/${post.no}` +
                         (search ? `/${search}` : '') +
                         (page ? `/${page}` : '');

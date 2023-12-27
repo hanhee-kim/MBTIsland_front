@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { urlroot } from "../../config";
 import { useLocation } from 'react-router';
+import Swal from "sweetalert2";
 
 const AdminNoticeForm = () => {
 
@@ -66,7 +67,11 @@ const AdminNoticeForm = () => {
     const addPost = async () => {
         try {
             if(!title || !content) {
-                alert('제목과 내용을 입력하세요.');
+                Swal.fire({
+                    title: "공지사항 등록 실패",
+                    text: "제목, 내용을 입력하세요.",
+                    icon: "warning",
+                });
                 return;
             }
             // console.log("title: ", title, ", content: ", content, "작성자: ", user.username);
@@ -93,7 +98,11 @@ const AdminNoticeForm = () => {
     const modifyPost = async () => {
         try {
             if(!title || !content) {
-                alert('제목과 내용을 입력하세요.');
+                Swal.fire({
+                    title: "공지사항 수정 실패",
+                    text: "제목, 내용을 입력하세요.",
+                    icon: "warning",
+                });
                 return;
             }
             // console.log("no: ", notice.no, "writeDate: ", notice.writeDate, "title: ", title, ", content: ", content, "writerId: ", user.username);
@@ -117,17 +126,34 @@ const AdminNoticeForm = () => {
     // 삭제 버튼 클릭시
     const deleteNotice = () => {
         let noArr = [notice.no];
-        const isConfirmed =window.confirm('삭제하시겠습니까?');
-        if(isConfirmed) {
-            axios.delete(`${urlroot}/deletenotice/${noArr}`)
-            .then(res => {
-                alert('완료되었습니다.');
-                backToList();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        }
+
+        Swal.fire({
+            title: '삭제하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${urlroot}/deletenotice/${noArr}`)
+                    .then(res => {
+                        Swal.fire({
+                            title: "완료되었습니다.",
+                            icon: "success",
+                        });
+                        backToList();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error'
+                        });
+                    });
+            }
+        });
     }
 
     return (

@@ -16,6 +16,7 @@ import AdminBanDetail from "./AdminBanDetail";
 import { Outlet } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { urlroot } from "../../config";
+import Swal from "sweetalert2";
 
 const AdminFrame = () => {
 
@@ -26,7 +27,10 @@ const AdminFrame = () => {
     // 관리자 로그인되지 않은 상태로 관리자페이지 url요청시(비정상 접근 처리)
     useEffect(() => {
         if(uri.includes('/admin') && user?.userRole !== "ROLE_ADMIN") {
-            alert("허용되지 않은 접근입니다.");
+            Swal.fire({
+                title: "허용되지 않은 접근입니다.",
+                icon: "warning",
+            });
             navigate(-1);
             // window.location.replace("/");
         }

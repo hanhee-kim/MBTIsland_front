@@ -44,6 +44,45 @@ const AdminQna = () => {
         setErrorMsg(null);
     }, [location]);
 
+    // localStorage에서 목록의 값을 읽어서 렌더링
+    useEffect(() => {
+        // 로컬 스토리지에서 이전목록값을 읽어서 렌더링되게해야함
+        const savedState = localStorage.getItem('adminQuestionValue');
+        const initialState = savedState ? JSON.parse(savedState) : { search: null, answered: null, page: 1, username: null };
+    
+        // 상세/폼에서 돌아온 경우에만 로컬스토리지의 이전목록값 사용
+        if (location.state && location.state.fromDetail) {
+            setSearch(initialState.search);
+            setAnswered(initialState.answered);
+            setPage(initialState.page);
+            setUsername(initialState.username);
+            setActiveFilter(initialState.answered);
+            getQuestionList(initialState.search, initialState.answered, initialState.page, initialState.username);
+        } else {
+            // 그 외의 경우에는 초기값 사용하여 렌더링
+            setSearch(null);
+            setAnswered(null);
+            setActiveFilter(null);
+            setPage(1);
+            getQuestionList(null, null, 1, null);
+
+        }
+
+        // 로컬스토리지 초기화
+        localStorage.removeItem("adminQuestionValue");
+    }, []);
+
+    const updateLocalStorage = (newValue) => {
+        const currentValue = {
+            search: search,
+            answered: answered,
+            page: page,
+            username: username,
+        };
+        // console.log('$$$ 로컬스토리지에 저장될 currentValue: ', currentValue);
+        localStorage.setItem('adminQuestionValue', JSON.stringify({ ...currentValue, ...newValue }));
+    };
+
     useEffect(() => {
 
         // AdminQnaForm.js에서 특정유저의 문의글모아보기 클릭시 파라미터와 함께 navigate됨
@@ -53,6 +92,8 @@ const AdminQna = () => {
             console.log(`모아볼 아이디: ${writerId}`);
             getQuestionList(search, null, 1, writerId);
             setUsername(writerId);
+
+            updateLocalStorage({ username: writerId });
 
         } else {
             getQuestionList(search, answered, page, username);
@@ -97,7 +138,9 @@ const AdminQna = () => {
         console.log('***페이지이동***')
         console.log('현재 적용되는 필터값: ' + answered);
         console.log('현재 적용되는 검색어: ' + search);
-        getQuestionList(search, answered, pageNo, username); 
+        getQuestionList(search, answered, pageNo, username);
+        
+        updateLocalStorage({ page: pageNo });
     };
     const handleFilterChange = (answered) => {
         console.log('***필터변경***')
@@ -105,6 +148,8 @@ const AdminQna = () => {
         console.log('현재 적용되는 검색어: ' + search);
         getQuestionList(search, answered, 1, username);
         setActiveFilter(answered);
+
+        updateLocalStorage({ answered: answered });
     };
     const handleSearchChange = (event) => {
         const searchTerm = event.target.value;
@@ -116,6 +161,8 @@ const AdminQna = () => {
         setAnswered(null);
         setActiveFilter(null);
         getQuestionList(tmpSearch, null, 1, username);
+
+        updateLocalStorage({ search: tmpSearch });
     };
     // 엔터키로 검색 수행
     const handleKeyPress = (e) => {

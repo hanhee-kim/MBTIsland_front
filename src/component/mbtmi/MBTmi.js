@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { urlroot } from "../../config";
+import Swal from "sweetalert2";
 
 
 
@@ -242,15 +243,24 @@ const MBTmi = () => {
     const goToMbtmiForm = () => {
         console.log('유저정보: ', user.username, ", 정지여부: ", user.isBanned);
         if(!user.username) {
-            alert("로그인해주세요.");
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
         if(user.isBanned==='Y') {
-            alert("정지 상태에서는 글을 작성하실 수 없습니다.");
+            Swal.fire({
+                title: "정지 상태에서는 글을 작성하실 수 없습니다.",
+                icon: "warning",
+            });
             return;
         }
         if(user.userRole==='ROLE_ADMIN') {
-            alert("게시판 이용을 위해 일반회원으로 로그인해주세요.");
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
             return;
         }
         
@@ -404,7 +414,7 @@ const MBTmi = () => {
     // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
     const navigate = useNavigate();
     const makeFlexibleLink = (post) => {
-        // alert('no, category, type, search, page: ' + post.no + ", " + category + ", " + type + ", " + search + ", " + page);
+        // console.log('no, category, type, search, page: ' + post.no + ", " + category + ", " + type + ", " + search + ", " + page);
         const linkTo = `/mbtmidetail/${post.no}` +
                         (category? `/${category}` : '') +
                         (type? `/${type}` : '') +
