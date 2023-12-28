@@ -23,7 +23,7 @@
 
 .section {
     /* border: 1px solid red; */
-    min-height: 600px; /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
+    min-height: 750px; /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
     width: 883px;
     font-size: 20px;
 }
@@ -116,7 +116,24 @@
 }
 .bannerArea img {
     height: 300px;
+
+    cursor: pointer;
 }
+
+
+.bannerDiv1 {
+    background: #CCEDFF;
+}
+.bannerDiv2 {
+    /* background: #121318; */
+    background: linear-gradient(to right, #2C2340 0%, #2E2341 50%, black 100%);
+}
+.bannerDiv3 {
+    background: #33A474;
+}
+
+
+
 
 
 /* 게시판별 최신글 목록 */
@@ -124,11 +141,13 @@
     padding: 6px 30px;
     width: 883px;
     font-size: 16px;
-    /* background: honeydew; */
 }
 .table {
     width: 100%;
     margin-bottom: 15px;
+}
+.table>tbody>tr {
+    cursor: pointer;
 }
 .table>tbody>tr:not(:first-child) {
     border-top: 1px solid #9B9B9B;

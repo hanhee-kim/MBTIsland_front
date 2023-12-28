@@ -11,13 +11,14 @@
 }
 
 .pageHeader {
+    width: 600px;
     display: flex;
     border-bottom: solid 3px;
     justify-content: space-between;
 }
 
 .pageHeader > h1 {
-    width: 70%;
+    width: 50%;
     text-align: left;
     text-transform: uppercase;
     cursor:default;
@@ -28,9 +29,27 @@
     cursor: pointer;
 }
 
-.pageHeaderWriteBtn {
-    margin: auto 10px;
-    font-weight: bold;
+.headerDiv {
+    display: flex;
+    margin: 10px 0px 10px 10px;
+    justify-content: right;
+}
+
+.headerDiv > button {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 6px 15px 6px 15px;
+    margin-right: 10px;
+    border: none;
+    background: none;
+    border-radius: 4px;
+    border: 1px solid #E6E6E6;
+}
+
+.writebtnIcon {
+    width: 16px;
+    margin-right: 5px;
+    margin-top: -3px;
 }
 
 .popoverButton {
@@ -40,7 +59,7 @@
 }
 
 .sortImg {
-    height: 30px;
+    width: 15px;
     margin-right: 10px;
 }
 
@@ -57,7 +76,7 @@
 .sectionBoard {
     padding: 25px;
     border-bottom: solid #C5C5C5 2px;
-    font-weight: bold;
+    font-weight: 500;
     color: black;
 }
 
@@ -85,7 +104,7 @@
 
 .boardDate {
     display: flex;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     padding-left: 35px;
     color: #C5C5C5;
 }
@@ -119,16 +138,30 @@
     color:#C5C5C5;
 }
 
-.sectionSearch {
-    width: 600px;
-    text-align: center;
-    margin: 0 auto;
-    /* margin-bottom: 33px; */
+.searchBar {
+    display: inline-block;
+    position: relative;
+}
+.searchBar>input {
+    border: 1px solid #767676;
+    border-radius: 25px;
+    height: 40px;
+    padding: 3px 42px 3px 13px;
+    width: 220px;
+    font-size: 18px;
+}
+.searchBtnIcon {
+    position: absolute;
+    top: 8px;
+    right: 14px;
+    width: 23px;
+    z-index: 1;
+    cursor: pointer;
 }
 
 .sectionSide {
     display: inline-block;
-    margin-left: 100px;
+    margin-left: 70px;
 }
 
 .sectionSide > div {
@@ -170,14 +203,13 @@
 
 .activePage {
     border: 1px solid #A3A3A3 !important;
-    background: #f8f8f8;
+    background: #FFFFD3;
 }
 
 .sectionRightArea {
     display: flex;
     flex-direction: column-reverse;
-
-    /* 푸터에 배경이미지 추가 후 플로팅버튼을 가리지 않도록 추가 */
+    /* 푸터에 배경 이미지 추가 후 플로팅 버튼을 가리지 않도록 추가 */
     position: relative;
     z-index: 10;
 }
