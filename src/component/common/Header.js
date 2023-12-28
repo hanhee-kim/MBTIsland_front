@@ -347,7 +347,7 @@ const Header = () => {
                               {/* {alert.alarmType === "댓글"? `${alert.alarmCnt}개의 새 ${alert.alarmType}이 있습니다.` */}
                               {alert.alarmType === "댓글"? `내 ${alert.alarmTargetFrom.includes('omment')? '댓글': '게시글'}의 새 ${alert.alarmType}(${alert.alarmCnt})이 있습니다`
                               : alert.alarmType === "쪽지"? `새 쪽지가 도착했습니다`
-                              : alert.alarmType === "답글"? `문의글에 답글이 달렸습니다`
+                              : alert.alarmType === "문의답글"? `문의글에 답글이 달렸습니다`
                               : alert.alarmType === "경고"? `경고처분을 받았습니다`
                               : alert.alarmType === "제재"? `정지처분을 받았습니다`
                               : null
