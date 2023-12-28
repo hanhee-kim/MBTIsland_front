@@ -157,13 +157,19 @@ const Main = () => {
             {/* The slideshow/carousel */}
             <div className="carousel-inner">
               <div className="carousel-item active" onClick={()=>goToBannerLink(1)}>
-                <img src={"/banner1.png"} alt="배너이미지1" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
+                <div className={style.bannerDiv1}>
+                <img src={"/banner1.png"} alt="배너이미지1" className="d-block" style={{minWidth: '1800px', width: '100%', height: '300px', objectFit: 'contain', objectPosition: 'center center'}}/>
+                </div>
               </div>
               <div className="carousel-item" onClick={()=>goToBannerLink(2)}>
-                <img src="/banner2.png" alt="배너이미지2" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
+                <div className={style.bannerDiv2}>
+                <img src="/banner2.png" alt="배너이미지2" className="d-block" style={{minWidth: '1800px', width: '100%', height: '300px', objectFit: 'contain', objectPosition: 'center center'}}/>
+                </div>
               </div>
               <div className="carousel-item" onClick={()=>goToBannerLink(3)}>
-                <img src="/banner3.png" alt="배너이미지3" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
+                <div className={style.bannerDiv3}>
+                <img src="/banner3.png" alt="배너이미지3" className="d-block" style={{minWidth: '1800px', width: '100%', height: '300px', objectFit: 'contain', objectPosition: 'center center'}}/>
+                </div>
               </div>
             </div>
             
