@@ -155,6 +155,11 @@ function MBattle() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    // 엔터키로 검색 수행
+    const handleKeyPress = (e) => {
+        if (e.key==="Enter") handleSearch();
+    };
+
     // page 핸들링
     const handlePage = (pageNo) => {
         setPage(pageNo);
@@ -219,20 +224,25 @@ function MBattle() {
             {/* 중앙 영역 */}
             <div className={style.sectionCenter}>
                 {/* 게시판 헤더 영역 */}
-                <div className={style.pageHeader}>
-                    <h1>M-Battle</h1>
-                    <div>
-                        <div className={style.pageHeaderContent}>MBTI 유형 별 성향을 알아보세요!</div>
-                        <div style={{display:"flex"}}>
-                            <div className={style.pageHeaderWriteBtn} onClick={()=>goMbattleWrite()}>글 작성</div>
-                            <button className={style.popoverButton} onClick={()=>setOpen(!open)} id="Popover1"><img src={"/sortIcon.png" } alt="" className={style.sortImg} />{!sort? "최신순" : sort}</button>
-                            <Popover placement="bottom" isOpen={open} target="Popover1" toggle={()=>handleToggle()}>
-                                <PopoverBody className={style.popoverItem} onClick={()=>handleSort("최신순")}>최신순</PopoverBody>
-                                <PopoverBody className={style.popoverItem} onClick={()=>handleSort("조회순")}>조회순</PopoverBody>
-                                <PopoverBody className={style.popoverItem} onClick={()=>handleSort("투표순")}>투표순</PopoverBody>
-                            </Popover>
-                        </div>
+                <div className={style.boardTitleB}>
+                    <div className={style.boardTitleTextArea}>
+                        <p>M-BATTLE</p>
+                        <p>MBTI 유형 별 성향을 알아보세요!</p>
                     </div>
+                    <div>
+                        <img alt="battle" src={"/mbattle.png"} width={"220px"} height={"120px"} className={style.boardTitleImg}></img>
+                    </div>
+                </div>
+
+                <div className={style.headerDiv}>
+                    <button onClick={()=>goMbattleWrite()}><img src={"/writebtnIcon.png" } alt="" className={style.writebtnIcon} />작성하기</button>
+                    <button className={style.popoverButton} onClick={()=>setOpen(!open)} id="Popover1"><img src={"/sortIcon.png" } alt="" className={style.sortImg} />{!sort? "최신순" : sort}</button>
+                    <Popover placement="bottom" isOpen={open} target="Popover1" toggle={()=>handleToggle()}>
+                        <PopoverBody className={style.popoverItem} onClick={()=>handleSort("최신순")}>최신순</PopoverBody>
+                        <PopoverBody className={style.popoverItem} onClick={()=>handleSort("조회순")}>조회순</PopoverBody>
+                        <PopoverBody className={style.popoverItem} onClick={()=>handleSort("투표순")}>투표순</PopoverBody>
+                    </Popover>
+
                 </div>
 
                 {/* 인기 게시글 영역 */}
@@ -319,22 +329,10 @@ function MBattle() {
                 {mbattleList.length===0?<></>:<PaginationInside/>}
 
                 {/* 검색 영역 */}
-                <FormGroup row className={style.sectionSearch}>
-                    <Col sm={3}>
-                        {/* <Input type='select' name="type">
-                            <option value='content'>내용</option>
-                            <option value='comment'>댓글</option>
-                            <option value='content&comment'>내용 + 댓글</option>
-                            <option value='writer'>작성자</option>
-                        </Input> */}
-                    </Col>
-                    <Col sm={6}>
-                        <Input type="text" id="searchInput" onChange={handleSearchChange}/>
-                    </Col>
-                    <Col sm={3}>
-                        <Button style={buttonStyle} onClick={()=>handleSearch()}>검색</Button>
-                    </Col>
-                </FormGroup>
+                <div className={style.searchBar}>
+                    <input type="text" id="searchInput" onChange={(handleSearchChange)} onKeyDown={(e)=>handleKeyPress(e)}/>
+                    <img src={"/searchIcon.png" } alt="검색" className={style.searchBtnIcon} onClick={()=>handleSearch()}/>
+                </div>
             </div>
             {/* 우측 영역*/}
             <section className={style.sectionRightArea}>

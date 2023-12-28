@@ -121,7 +121,7 @@ function MBattleWrite() {
                 icon: "warning",
             });
             return;
-        } else if((mbattle.voteItem1==="" && mbattle.voteItem2!=="") || (mbattle.voteItem1!=="" && mbattle.voteItem2==="")) {
+        } else if(mbattle.voteItem1==="" || mbattle.voteItem2==="") {
             Swal.fire({
                 title: "주제를 모두 입력해주세요.",
                 icon: "warning",
@@ -179,8 +179,14 @@ function MBattleWrite() {
             {/* 중앙 영역 */}
             <div className={style.sectionCenter}>
                 {/* 게시판 헤더 영역 */}
-                <div className={style.pageHeader}>
-                    <h1>M-Battle</h1>
+                <div className={style.boardTitleB}>
+                    <div className={style.boardTitleTextArea}>
+                        <p>M-BATTLE</p>
+                        <p>MBTI 유형 별 성향을 알아보세요!</p>
+                    </div>
+                    <div>
+                        <img alt="battle" src={"/mbattle.png"} width={"220px"} height={"120px"} className={style.boardTitleImg}></img>
+                    </div>
                 </div>
 
                 {/* 글 작성 타이틀 */}
@@ -207,7 +213,7 @@ function MBattleWrite() {
                     {/* 사진, 주제 작성 */}
                     <div className={style.sectionSubject}>
                         <div>
-                            <button onClick={()=>fileDelete("fileIdx1")}>X</button>
+                            <button className={style.deleteButton} onClick={()=>fileDelete("fileIdx1")}>✕</button>
                             <div className={style.inputFileDiv} onClick={()=>document.getElementById("fileIdx1").click()} >
                                 <img src="/attachIcon.png" alt="" ref={imgBoxRef1} width="200px" height="200px"/>
                                     <Input type="file" id="fileIdx1" name="fileIdx1" accept="image/*" onChange={fileChange} hidden/>
@@ -228,7 +234,7 @@ function MBattleWrite() {
                             />
                         </div>
                         <div>
-                            <button onClick={()=>fileDelete("fileIdx2")}>X</button>
+                        <button className={style.deleteButton} onClick={()=>fileDelete("fileIdx2")}>✕</button>
                             <div className={style.inputFileDiv} onClick={()=>document.getElementById("fileIdx2").click()}>
                                 <img src="/attachIcon.png" alt="" ref={imgBoxRef2} width="200px" height="200px"/>
                                     <Input type="file" id="fileIdx2" name="fileIdx2" accept="image/*" onChange={fileChange} hidden/>
@@ -250,7 +256,7 @@ function MBattleWrite() {
                         </div>
                     </div>
 
-                    <div className={style.ButtonDiv}>
+                    <div className={style.buttonDiv}>
                         <Button style={buttonStyle} onClick={()=>postMbattle()}>등록</Button>
                         <Button style={buttonStyle} onClick={()=>navigate(-1)}>취소</Button>
                     </div>
