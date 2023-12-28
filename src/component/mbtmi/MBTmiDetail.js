@@ -749,7 +749,7 @@ const MBTmiDetail = () => {
                         </p>
                         <div className={style.postBtns}>
                             <button onClick={goToPreviousList}>목록</button>
-                            <button onClick={()=>openReportWrite(mbtmi, "mbtmi")}><img src={"/reportIcon.png" } alt="" className={style.reportIcon} />&nbsp;신고</button>
+                            {mbtmi?.writerId !== user?.username && <button onClick={()=>openReportWrite(mbtmi, "mbtmi")}><img src={"/reportIcon.png" } alt="" className={style.reportIcon} />&nbsp;신고</button>}
                         </div>
                     </div>
                     </>

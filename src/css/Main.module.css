@@ -121,6 +121,21 @@
 }
 
 
+.bannerDiv1 {
+    background: #CCEDFF;
+}
+.bannerDiv2 {
+    /* background: #121318; */
+    background: linear-gradient(to right, #2C2340 0%, #2E2341 50%, black 100%);
+}
+.bannerDiv3 {
+    background: #33A474;
+}
+
+
+
+
+
 /* 게시판별 최신글 목록 */
 .newlyPosts {
     padding: 6px 30px;
