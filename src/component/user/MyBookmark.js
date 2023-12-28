@@ -14,6 +14,7 @@ const MyBookmark = () => {
   const [pageInfo, setPageInfo] = useState({});
   const [initData, setInitData] = useState(true);
   const [bookmarkList, setBookmarkList] = useState([]);
+  const [mbti, setMbti] = useState("");
   // 체크된 아이템을 담을 배열
   const [checkItems, setCheckItems] = useState([]);
   const formatDate = (dateString) => {
@@ -95,22 +96,21 @@ const MyBookmark = () => {
       </div>
     );
   };
-  // const [isBookmarked,setIsBookmarked] = useState(true);
-  const changeBookmarkIcon = (e, no, boardType) => {
-    //console.log("trClick"+no+boardType)
-    //해당 북마크 넘버 가져가서 북마크테이블에서 지우기
-    //원래 가져온게 (true) 만가져오긴함 true면 false로 ,
-    // false로 바꾸면 해당 리스트에서 지우고 한번 더 데이터 가져올지?
-    // const trClick = (bookmark) => {
-    //   //console.log("trClick ");
-    //   if(boardType === 'MBT-WHY'){
-    //     //console.log("???")
-    //     navigate('/mbtwhydetail/:no');
-    //   }
-    //   else{ //MBTMI
-    //    navigate('/mbtmidetail/:no');
-    //   }
-    // }
+  //
+  const goBookmark = (e, bookmark) => {
+    console.log(bookmark);
+    if (bookmark.boardType === "mbtwhy") {
+      //mbtwhy게시글일때
+
+      let url = `${urlroot}/mbtwhydetail?no=${bookmark.postNo}&username=${user.username}`;
+      navigate("/mbtwhydetail/" + bookmark.postNo);
+    } else if (bookmark.boardType === "mbtmi") {
+      //mbtmi게시글일때
+      navigate("/mbtmidetail/" + bookmark.postNo);
+    } else {
+      //mbattle게시글일때
+      navigate("/mbattledetail/" + bookmark.postNo);
+    }
   };
   // 체크박스 단일 선택
   const handleSingleCheck = (checked, no) => {
@@ -222,16 +222,25 @@ const MyBookmark = () => {
                           }
                         />
                       </td>
-                      <td sm={1} className="text-center">
+                      <td
+                        sm={1}
+                        className="text-center"
+                        onClick={(e) => goBookmark(e, bookmark)}
+                      >
                         {bookmark.no}
                       </td>
-                      <td sm={2} className="text-center">
+                      <td
+                        sm={2}
+                        className="text-center"
+                        onClick={(e) => goBookmark(e, bookmark)}
+                      >
                         [ {bookmark.boardType} ]
                       </td>
                       <td
                         sm={4}
                         className="text-truncate"
                         style={{ maxWidth: "400px" }}
+                        onClick={(e) => goBookmark(e, bookmark)}
                       >
                         {bookmark.boardTitle}
                       </td>
@@ -239,10 +248,15 @@ const MyBookmark = () => {
                         sm={3}
                         className="text-center"
                         style={{ minWidth: "105px" }}
+                        onClick={(e) => goBookmark(e, bookmark)}
                       >
                         {formatDate(bookmark.writeDate)}
                       </td>
-                      <td sm={1} className="text-center">
+                      <td
+                        sm={1}
+                        className="text-center"
+                        onClick={(e) => goBookmark(e, bookmark)}
+                      >
                         {bookmark.commentCnt}
                       </td>
                     </tr>

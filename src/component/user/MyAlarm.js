@@ -224,7 +224,7 @@ const MyAlarm = () => {
         getMyAlarmList(user.username, type, page);
         Swal.fire({
           title: alarm.alarmType + "가 1회",
-          text: "지금까지 총 " + alarm.warnCnt + " 회의 경고를 받으셨습니다.",
+          text: "지금까지 총 " + (alarm.warnCnt+1) + " 회의 경고를 받으셨습니다.",
           icon: "warning",
         });
         break;
@@ -408,7 +408,23 @@ const MyAlarm = () => {
                             goDetail(e, alarm);
                           }}
                         >
-                          {alarm.alarmContent}
+                          {alarm.alarmType === "댓글"
+                            ? `내 ${
+                                alarm.alarmTargetFrom.includes("omment")
+                                  ? "댓글"
+                                  : "게시글"
+                              }의 새 ${alarm.alarmType}(${
+                                alarm.alarmCnt
+                              })이 있습니다`
+                            : alarm.alarmType === "쪽지"
+                            ? `새 쪽지가 도착했습니다`
+                            : alarm.alarmType === "답글"
+                            ? `문의글에 답글이 달렸습니다`
+                            : alarm.alarmType === "경고"
+                            ? `경고처분을 받았습니다`
+                            : alarm.alarmType === "제재"
+                            ? `정지처분을 받았습니다`
+                            : null}
                         </td>
                         <td
                           sm={3}

@@ -147,11 +147,8 @@ const MyMbtWhy = (props) => {
     // path="/mbtwhydetail/:mbti?/:page?/:search?/:no?"
 
     let defaultUrl = `/mbtwhydetail`;
-    defaultUrl += `/${mbtwhy.mbtiCategory}`;
-    // if(page !== null) defaultUrl += `/${page}`;
-    // if(search) defaultUrl += `/${search}`;
-    // if(sort !== null) defaultUrl += `/${sort}`;
     defaultUrl += `/${mbtwhy.no}`;
+    defaultUrl += `/${mbtwhy.mbtiCategory}`;
     navigate(defaultUrl);
   };
 
