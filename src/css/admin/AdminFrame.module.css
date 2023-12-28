@@ -25,7 +25,7 @@
 .section {
     position:relative;
     /* right: 50px; */
-    min-height: 600px; /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
+    min-height: 750px; /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
     width: 100%;
     font-size: 20px;
     

@@ -14,7 +14,7 @@ const MyMbtmi = (props) => {
   const [pageInfo, setPageInfo] = useState({});
   // navigate
   const navigate = useNavigate();
-  const [tmiList,setTmiList] = useState([]);
+  const [tmiList, setTmiList] = useState([]);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -23,7 +23,7 @@ const MyMbtmi = (props) => {
     return `${year}-${month}-${day}`;
   };
   //서버와 통신할 메소드 정의
-  const getMyMbtmiList = (username,page) => {
+  const getMyMbtmiList = (username, page) => {
     //console.log(page);
     //console.log("url:" + `${urlroot}/mbtmilist?username=${username}&page=${page}`);
 
@@ -42,7 +42,7 @@ const MyMbtmi = (props) => {
   };
   useEffect(() => {
     //tmi controller + 변수 담아 맵핑
-    getMyMbtmiList(user.username,page);
+    getMyMbtmiList(user.username, page);
   }, []);
   // 체크된 아이템을 담을 배열
   const [checkItems, setCheckItems] = useState([]);
@@ -73,10 +73,10 @@ const MyMbtmi = (props) => {
     }
   };
   const delTmi = () => {
-    if(checkItems.length===0) {
+    if (checkItems.length === 0) {
       Swal.fire({
-          title: "체크된 항목이 없습니다.",
-          icon: "warning",
+        title: "체크된 항목이 없습니다.",
+        icon: "warning",
       });
       return;
     }
@@ -87,9 +87,7 @@ const MyMbtmi = (props) => {
 
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     axios
-      .delete(
-        `${urlroot}/deletembtmilist?sendArrayItems=${sendArrayItems}`
-      )
+      .delete(`${urlroot}/deletembtmilist?sendArrayItems=${sendArrayItems}`)
       .then((res) => {
         //console.log(res);
         Swal.fire({
@@ -111,21 +109,21 @@ const MyMbtmi = (props) => {
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
     //console.log("***페이지이동***");
-    getMyMbtmiList(user.username,pageNo);
+    getMyMbtmiList(user.username, pageNo);
     // getMyMbtmiList(user.username, pageNo);
     //페이지가 변경되면 checkItems 빈배열로 초기화.
     setCheckItems([]);
-
   };
   // 페이지네이션
   const PaginationInside = () => {
     // if(errorMsg) return null;
+    let color = user.userMbtiColor;
     const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
     for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
       pageGroup.push(
         <span
           key={i}
-          className={`${page === i ? style.activePage : ""}`}
+          style={{ border: page === i ? `2px solid ${color}` : "" }}
           onClick={() => handlePageNo(i)}
         >
           {i}
@@ -209,10 +207,18 @@ const MyMbtmi = (props) => {
                             checked={checkItems.includes(tmi.no) ? true : false}
                           />
                         </td>
-                        <td sm={1} className="text-center" onClick={(e) => goMyMbtmiDetail(e, tmi)}>
+                        <td
+                          sm={1}
+                          className="text-center"
+                          onClick={(e) => goMyMbtmiDetail(e, tmi)}
+                        >
                           {tmi.no}
                         </td>
-                        <td sm={2} className="text-center" onClick={(e) => goMyMbtmiDetail(e, tmi)}>
+                        <td
+                          sm={2}
+                          className="text-center"
+                          onClick={(e) => goMyMbtmiDetail(e, tmi)}
+                        >
                           [ {tmi.category} ]
                         </td>
                         <td
@@ -231,7 +237,11 @@ const MyMbtmi = (props) => {
                         >
                           {formatDate(tmi.writeDate)}
                         </td>
-                        <td sm={1} className="text-center" onClick={(e) => goMyMbtmiDetail(e, tmi)}>
+                        <td
+                          sm={1}
+                          className="text-center"
+                          onClick={(e) => goMyMbtmiDetail(e, tmi)}
+                        >
                           {tmi.recommendCnt}
                         </td>
                       </tr>

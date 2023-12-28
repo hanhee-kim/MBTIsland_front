@@ -62,13 +62,19 @@ function MbtwhyMain() {
         <div className={style.container}>
             {/* 중앙 영역 */}
             <div className={style.sectionCenter}>
+
                 {/* 게시판 헤더 영역 */}
-                <div className={style.pageHeader}>
-                    <h1>MBT-Why</h1>
-                    <div>
-                        <h6 className={style.pageHeaderContent}>원하는 MBTI 유형에게 질문을 남겨보세요!</h6>
-                        <div className={style.pageHeaderWriteBtn} onClick={()=>goMbtwhyWrite()}>글 작성</div>
+                <div className={style.boardTitleB}>
+                    <div className={style.boardTitleTextArea}>
+                        <p>MBT-WHY</p>
+                        <p>원하는 MBTI 유형에게 질문을 남겨보세요!</p>
                     </div>
+                    <div>
+                        <img alt="mbtwhy" src={"/why.png"} width={"220px"} height={"120px"} className={style.boardTitleImg}></img>
+                    </div>
+                </div>
+                <div className={style.writebtnDiv}>
+                    <button onClick={()=>goMbtwhyWrite()}><img src={"/writebtnIcon.png" } alt="" className={style.writebtnIcon} />작성하기</button>
                 </div>
 
                 <Table className={style.mbtwhyTable}>

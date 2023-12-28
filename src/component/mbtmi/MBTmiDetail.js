@@ -738,12 +738,14 @@ const MBTmiDetail = () => {
                         </h6>
                         <div className={style.postContent} dangerouslySetInnerHTML={{ __html: mbtmi.content }}></div>
                         <p>
-                            {!isRecommended? (
-                            <img src={"/thumbIcon.png" } alt="" className={style.thumbIconDetail} onClick={()=>mbtmiRecommend()}/>
-                            ) : (
-                            <img src={"/thumbIcon-full.png" } alt="" className={style.thumbIconDetail} onClick={()=>mbtmiRecommend()}/>
-                            )}
+                            <div onClick={()=>mbtmiRecommend()}>
+                                {!isRecommended? (
+                                <img src={"/thumbIcon.png" } alt="" className={style.thumbIconDetail}/>
+                                ) : (
+                                <img src={"/thumbIcon-full.png" } alt="" className={style.thumbIconDetail}/>
+                                )}
                             <span>&nbsp;추천&nbsp;{recommendCount}</span>
+                            </div>
                         </p>
                         <div className={style.postBtns}>
                             <button onClick={goToPreviousList}>목록</button>

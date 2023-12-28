@@ -146,7 +146,7 @@ const Notice = () => {
             <section className={style.sectionLeftArea}></section>
             <section className={style.section}>
 
-                <div className={style.boardTitle} >공지사항</div>
+                <div className={style.boardTitle}>공지사항</div>
 
                 <div className={style.aboveTable}>
                     <h5>총 {noticeCnt}건 현재 {pageInfo.curPage}/{pageInfo.allPage}페이지</h5>
@@ -156,26 +156,31 @@ const Notice = () => {
                     </div>
                 </div>
 
-                <table className={style.table}>
-                    <tbody>
-                        {errorMsg? (
-                            // <tr><td colSpan="4" className={style.errMsg}>{errorMsg}</td></tr>
-                            <tr><td colSpan="4" className={style.errMsg}>{JSON.stringify(errorMsg)}</td></tr>
-                        ) : (
-                            noticeList.length>0 && noticeList.map(post => {
-                                return(
-                                <tr key={post.no}>
-                                    <td>[공지]</td>
-                                    <td onClick={()=>makeFlexibleLink(post)}>{post.title}</td>
-                                    <td>{formatDate(post.writeDate)}</td>
-                                    <td><img src={"/viewIcon.png" } alt="view" className={style.viewIcon}/>{post.viewCnt}</td>
-                                </tr>
-                                )
-                            })
-                        )}
-                    </tbody>
-                </table>
-                {PaginationInside()}
+
+                <div className={style.tableAndPagination}>
+                    <table className={style.table}>
+                        <tbody>
+                            {errorMsg? (
+                                // <tr><td colSpan="4" className={style.errMsg}>{errorMsg}</td></tr>
+                                <tr><td colSpan="4" className={style.errMsg}>{JSON.stringify(errorMsg)}</td></tr>
+                            ) : (
+                                noticeList.length>0 && noticeList.map(post => {
+                                    return(
+                                    <tr key={post.no}>
+                                        <td>[공지]</td>
+                                        <td onClick={()=>makeFlexibleLink(post)}>{post.title}</td>
+                                        <td>{formatDate(post.writeDate)}</td>
+                                        <td><img src={"/viewIcon.png" } alt="view" className={style.viewIcon}/>{post.viewCnt}</td>
+                                    </tr>
+                                    )
+                                })
+                            )}
+                        </tbody>
+                    </table>
+                    {PaginationInside()}
+                </div>
+
+
             </section>
             <section className={style.sectionRightArea}>
                 <div>
