@@ -509,6 +509,14 @@ function MbtwhyDetail() {
             });
             return;
         }
+
+        if(!commentValue || commentValue==='') {
+            Swal.fire({
+                title: "댓글 내용을 입력해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
         
         // 로그인한 유저의 MBTI 유형이 맞지 않고, 로그인한 유저가 게시글 작성자가 아닐 경우
         if(user.userMbti !== mbti.toUpperCase() && user.username !== mbtwhy.writerId) {
