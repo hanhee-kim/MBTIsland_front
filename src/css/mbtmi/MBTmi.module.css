@@ -88,6 +88,9 @@
 .weeklyPostsTable>tbody {
     line-height: 100%;
 }
+.weeklyPostsTable>tbody>tr {
+    cursor: pointer;
+}
 .weeklyPostsTable>tbody>tr:not(:first-child) {
     border-top: 1px solid #9B9B9B;
 }
@@ -295,6 +298,7 @@
 }
 .mbtmiTable>tbody>tr {
     /* background: seashell; */
+    cursor: pointer;
     height: 90px;
 }
 .mbtmiTable>tbody>tr>td>div {
@@ -378,7 +382,6 @@
     padding: 5px 10px 4px 10px;
     width:auto;
     margin-left: 28px;
-    /* cursor: pointer; */
 }
 .bookmarkIcon {
     width: 25px;
@@ -440,11 +443,13 @@
     /* word-break: auto-phrase; 띄어쓰기하지 않을 시 */
 }
 .postContent+p {
-    /* background-color:lavender; */
     display: flex;
     justify-content: center;
     font-size: 18px;
     color: #8F8F8F;
+}
+/* 추천아이콘과 추천수를 포함하는 div(클릭이벤트)*/
+.postContent+p>div {
     cursor: pointer;
 }
 

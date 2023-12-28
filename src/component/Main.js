@@ -129,6 +129,14 @@ const Main = () => {
     if(url) window.open(url, '_blank');
   }
 
+  // 게시글목록의 tr 클릭시
+  const goToPostDetail = (boardType, post) => {
+    if(boardType==='mbtmi') navigate(`/mbtmidetail/${post.no}`);
+    if(boardType==='mbtwhy') navigate(`/mbtwhydetail/${post.no}/${post.mbtiCategory}`);
+    if(boardType==='mbattle') navigate(`/mbattledetail/${post.no}`);
+    else return;
+  }
+
   return (
     <>
       <div className={style.container} id="top">
@@ -202,12 +210,10 @@ const Main = () => {
                 <tbody>
                   {mbtmiList.length>0 && mbtmiList.slice(0,5).map((post)=> {
                     return (
-                      <tr key={post.no}>
+                      <tr key={post.no} onClick={()=>goToPostDetail('mbtmi', post)}>
                         <td>
                           <span className={style.postTitleAndEtc}>
-                            <span className={style.overflowLong}>
-                              <Link to={`/mbtmidetail/${post.no}`}>{post.title}</Link>
-                            </span>
+                            <span className={style.overflowLong}>{post.title}</span>
                             <span>[{post.commentCnt}]</span>
                             <small>{formatDatetimeGap(post.writeDate)}</small>
                           </span>
@@ -243,12 +249,10 @@ const Main = () => {
                 <tbody>
                 {mbtwhyList.length>0 && mbtwhyList.slice(0,5).map((post)=> {
                     return (
-                      <tr key={post.no}>
+                      <tr key={post.no} onClick={()=>goToPostDetail('mbtwhy', post)}>
                         <td>
                           <span className={style.postTitleAndEtc}>
-                            <span className={style.overflowLong}>
-                              <Link to={`/mbtwhydetail/${post.no}/${post.mbtiCategory}`}>{post.content}</Link>
-                            </span>
+                            <span className={style.overflowLong}>{post.content}</span>
                             <span>[{post.commentCnt}]</span>
                             <small>{formatDatetimeGap(post.writeDate)}</small>
                           </span>
@@ -284,12 +288,10 @@ const Main = () => {
                 <tbody>
                 {mbattleList.length>0 && mbattleList.slice(0,5).map((post)=> {
                     return (
-                      <tr key={post.no}>
+                      <tr key={post.no} onClick={()=>goToPostDetail('mbattle', post)}>
                         <td>
                           <span className={style.postTitleAndEtc}>
-                            <span className={style.overflowLong}>
-                              <Link to={`/mbattledetail/${post.no}`}>{post.title}</Link>
-                            </span>
+                            <span className={style.overflowLong}>{post.title}</span>
                             <span>[{post.commentCnt}]</span>
                             <small>{formatDatetimeGap(post.writeDate)}</small>
                           </span>

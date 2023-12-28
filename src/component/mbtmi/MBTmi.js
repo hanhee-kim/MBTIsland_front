@@ -449,10 +449,10 @@ const MBTmi = () => {
                             ) : (
                                 weeklyHotList.length>0 && weeklyHotList.map(post => {
                                     return (
-                                    <tr key={post.no}>
+                                    <tr key={post.no} onClick={()=>makeFlexibleLink(post)}>
                                         <td>[{post.category}]</td>
                                         <td>
-                                            <span className={style.overflow} onClick={()=>makeFlexibleLink(post)}>{post.title}</span>&nbsp;&nbsp;
+                                            <span className={style.overflow}>{post.title}</span>&nbsp;&nbsp;
                                             <span>[{post.commentCnt}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                             <small>{formatDatetimeGap(post.writeDate)}</small>
                                         </td>
@@ -523,7 +523,7 @@ const MBTmi = () => {
                         ) : (
                             mbtmiList.length>0 && mbtmiList.map(post => {
                                 return(
-                                <tr key={post.no}>
+                                <tr key={post.no} onClick={()=>makeFlexibleLink(post)}>
                                     <td>
                                         <div className={style.td1row}>
                                             <div className={style.profileColor} style={{ background: post.writerMbtiColor, borderColor: post.writerMbtiColor }}/>&nbsp;
@@ -531,7 +531,7 @@ const MBTmi = () => {
                                             <small>{formatDatetimeGap(post.writeDate)}</small>
                                         </div>
                                         <div className={style.td2row}>
-                                            <span className={style.overflowLong} onClick={()=>makeFlexibleLink(post)}>{post.title}</span>
+                                            <span className={style.overflowLong}>{post.title}</span>
                                             <span>
                                                 <small><img src={"/thumbIcon.png" } alt="" className={style.thumbIcon} />&nbsp;{post.recommendCnt}</small>
                                                 <small><img src={"/commentIcon.png" } alt="" className={style.commentIcon} />&nbsp;&nbsp;{post.commentCnt}</small>
