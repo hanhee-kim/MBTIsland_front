@@ -82,7 +82,7 @@ const NoteWrite = (props) => {
           }}
         >
           <FormGroup row style={{ justifyContent: "center" }}>
-            <h3 style={{ fontSize: "40px" }}>쪽지 보내기</h3>
+            <h3 style={{ fontSize: "40px" ,textAlign:'center'}}>쪽지 보내기</h3>
           </FormGroup>
           <FormGroup style={{ justifyContent: "center" }}>
             <Label for="sentUserNick" sm={3}>
