@@ -1,7 +1,7 @@
 /* 리스트 */
 
 .container{
-    padding-top: 80px;
+    padding-top: 100px;
     /* border: 1px solid blue; */
 	height: auto;
     min-height: 100%;
@@ -22,10 +22,14 @@
 
 .section {
     /* border: 1px solid red; */
-    min-height: 600px; /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
+    min-height: 750px; 
+    /* 컨텐츠가 매우 짧더라도 푸터가 바로 붙지 않도록 최소높이 지정 */
+    
     width: 883px;
     font-size: 20px;
 }
+
+
 
 .boardTitle {
     background-color:#F3F3F3;
