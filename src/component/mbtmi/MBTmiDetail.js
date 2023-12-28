@@ -524,7 +524,7 @@ const MBTmiDetail = () => {
         window.open(
             url,
             "_blank",
-            "width=650,height=600,location=no,status=no,scrollbars=yes"
+            "width=650,height=700,location=no,status=no,scrollbars=yes"
         );
     }
 

@@ -453,7 +453,7 @@ function MbtwhyDetail() {
         window.open(
             url,
             "_blank",
-            "width=650,height=450,location=no,status=no,scrollbars=yes"
+            "width=650,height=700,location=no,status=no,scrollbars=yes"
         );
     };
 
