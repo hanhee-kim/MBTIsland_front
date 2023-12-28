@@ -82,7 +82,9 @@ const Login = () => {
   //엔터 포커싱
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
+      //pw인풋에서 엔터 눌렀을떄
       login(e); // Enter 키를 눌렀을 때 로그인 함수 호출
+      
     }
   };
   const login = (e) => {
@@ -203,6 +205,7 @@ const Login = () => {
               id="username"
               placeholder="ID를 입력하세요."
               onChange={(e) => change(e)}
+              onKeyDown={(e) => handleKeyPress(e)}
             />
           </Col>
         </FormGroup>
