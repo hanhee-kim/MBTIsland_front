@@ -52,7 +52,7 @@ const MyQnA = () => {
   const getMyQnaList = (username, answered, page) => {
     let defaultUrl = `${urlroot}/questionlist`;
 
-    defaultUrl += `?user=${username}`;
+    defaultUrl += `?username=${username}`;
     if (answered !== null)
       defaultUrl += `${username !== null ? "&" : "?"}answered=${answered}`;
 
@@ -60,7 +60,7 @@ const MyQnA = () => {
       defaultUrl += `${
         username !== null || answered !== null ? "&" : "?"
       }page=${page}`;
-    //console.log("요청url:" + defaultUrl);
+    // console.log("요청url:" + defaultUrl);
 
     axios
       .get(defaultUrl)
