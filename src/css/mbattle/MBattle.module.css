@@ -142,7 +142,18 @@
 
 .activePage {
     border: 1px solid #A3A3A3 !important;
-    background: #f8f8f8;
+    /* background-color: #b9e0fd; */
+    /* background-color: #96B0E5; */
+    /* background-color: #BDD7F3; */
+    color: #0055ff;
+
+    /* background-color: #edfca4; */
+    /* background-color: #fff9dd; */
+    /* background-color: #ffffdd; */
+
+    /* background-color: #ffcce6; */
+    /* background-color: #ffc0cb; */
+    /* background-color: #F4EBE7; */
 }
 
 .noMbattle {
