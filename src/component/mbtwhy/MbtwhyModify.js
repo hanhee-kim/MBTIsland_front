@@ -68,11 +68,6 @@ function MbtwhyModify() {
     };
 
     const navigate = useNavigate();
-    // 취소 버튼
-    // Mbtwhy 게시판으로 이동
-    const goMbtwhy = () => {
-        navigate(`/mbtwhy/${mbti}`);
-    };
 
     // Mbtwhy 게시글 조회
     const getMbtwhy = () => {
@@ -171,7 +166,7 @@ function MbtwhyModify() {
                     />
                     <div className={style.postContentDiv}>
                         <Button style={buttonStyle} onClick={()=>modifyMbtwhy()}>수정</Button>
-                        <Button style={buttonStyle} onClick={()=>goMbtwhy()}>취소</Button>
+                        <Button style={buttonStyle} onClick={()=>navigate(-1)}>취소</Button>
                     </div>
                 </div>
             </div>

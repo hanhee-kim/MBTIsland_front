@@ -926,7 +926,7 @@ function MBattleDetail() {
                         <div className={style.writerDiv}>
                             <div className={style.circleDiv} style={{backgroundColor:`${mbattle.writerMbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
                             {mbattle.writerMbti}&nbsp;&nbsp;&nbsp;
-                            {mbattle.writerId}
+                            {mbattle.writerNickname}
                             {mbattle.writerId !== user.username && (
                                 <img src={"/sendNoteIcon.png" } alt="쪽지보내기" className={style.sendNoteIcon} onClick={()=> sendNote(mbattle.writerId, mbattle.writerNickname)}/>
                             )}

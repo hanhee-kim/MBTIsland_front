@@ -85,6 +85,10 @@
 .sectionRightArea {
     display: flex;
     flex-direction: column-reverse;
+    
+    /* 푸터에 배경이미지 추가 후 플로팅버튼을 가리지 않도록 추가 */
+    position: relative;
+    z-index: 10;
 }
 .sectionRightArea>div {
     /* border: dashed red 3px; */
@@ -105,10 +109,13 @@
     /* border: 3px dashed orange; */
     box-sizing: border-box;
     height: 300px;
-    width: 100%;
+    /* width: 100%; */
     min-width: 1400px;
     margin-bottom: 25px;
     overflow: hidden;
+}
+.bannerArea img {
+    height: 300px;
 }
 
 
