@@ -52,7 +52,7 @@ const QuestionDetail = (props) => {
           }}
         >
           <FormGroup row style={{ justifyContent: "center" }}>
-            <h3 style={{ fontSize: "40px" }}>문의 내용</h3>
+            <h3 style={{ fontSize: "40px" ,textAlign:'center'}}>문의 내용</h3>
           </FormGroup>
           <FormGroup>
             <div>

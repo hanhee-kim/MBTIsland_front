@@ -52,7 +52,7 @@ useEffect(()=>{
           }}
         >
           <FormGroup row style={{ justifyContent: "center" }}>
-            <h3 style={{ fontSize: "40px" }}>* 보낸 쪽지 *</h3>
+            <h3 style={{ fontSize: "40px",textAlign:'center' }}>* 보낸 쪽지 *</h3>
           </FormGroup>
           <FormGroup style={{ justifyContent: "center" }}>
             <Label for="receiveUserNick" sm={3}>
