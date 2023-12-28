@@ -73,7 +73,7 @@ const AdminReportDetail = () => {
         .then(res=> {
             Swal.fire({
                 title: "경고 처리 완료",
-                icon: "warning",
+                icon: "success",
             });
             getReportDetail();
         })
@@ -128,8 +128,9 @@ const AdminReportDetail = () => {
                                 <>MB-TMI</>
                                 :(report.tableType==="mbtwhy" || report.tableType==="mbtwhycomment"?
                                     <>MBT-WHY</>
-                                    :(report.tableType==="mbattle" || report.tableType==="mbattlecomment" &&
+                                    :((report.tableType==="mbattle" || report.tableType==="mbattlecomment") &&
                                         <>M-BATTLE</>
+                                        
                                     )
                                 )
                             }
