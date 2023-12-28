@@ -87,35 +87,43 @@ function MBattleDetail() {
     const [mbtiData, setMbtiData] = useState([
         {
             name: "I",
-            투표수: 0,
+            1: 0,
+            2: 0
         },
         {
             name: "E",
-            투표수: 0,
+            1: 0,
+            2: 0
         },
         {
             name: "S",
-            투표수: 0,
+            1: 0,
+            2: 0
         },
         {
             name: "N",
-            투표수: 0,
+            1: 0,
+            2: 0
         },
         {
             name: "T",
-            투표수: 0,
+            1: 0,
+            2: 0
         },
         {
             name: "F",
-            투표수: 0,
+            1: 0,
+            2: 0
         },
         {
             name: "J",
-            투표수: 0,
+            1: 0,
+            2: 0
         },
         {
             name: "P",
-            투표수: 0,
+            1: 0,
+            2: 0
         },
     ]);
 
@@ -343,70 +351,87 @@ function MBattleDetail() {
             }
 
             // data mbti 결과
-            let I = 0;
-            let E = 0;
-            let S = 0;
-            let N = 0;
-            let T = 0;
-            let F = 0;
-            let J = 0;
-            let P = 0;
+            let I1 = 0;
+            let E1 = 0;
+            let S1 = 0;
+            let N1 = 0;
+            let T1 = 0;
+            let F1 = 0;
+            let J1 = 0;
+            let P1 = 0;
+
+            let I2 = 0;
+            let E2 = 0;
+            let S2 = 0;
+            let N2 = 0;
+            let T2 = 0;
+            let F2 = 0;
+            let J2 = 0;
+            let P2 = 0;
 
             if(mbattleResult1!==null) {
-                I += mbattleResult1.i;
-                E += mbattleResult1.e;
-                S += mbattleResult1.s;
-                N += mbattleResult1.n;
-                T += mbattleResult1.t;
-                F += mbattleResult1.f;
-                J += mbattleResult1.j;
-                P += mbattleResult1.p;
+                I1 += mbattleResult1.i;
+                E1 += mbattleResult1.e;
+                S1 += mbattleResult1.s;
+                N1 += mbattleResult1.n;
+                T1 += mbattleResult1.t;
+                F1 += mbattleResult1.f;
+                J1 += mbattleResult1.j;
+                P1 += mbattleResult1.p;
             }
 
             if(mbattleResult2!==null) {
-                I += mbattleResult2.i;
-                E += mbattleResult2.e;
-                S += mbattleResult2.s;
-                N += mbattleResult2.n;
-                T += mbattleResult2.t;
-                F += mbattleResult2.f;
-                J += mbattleResult2.j;
-                P += mbattleResult2.p;
+                I2 += mbattleResult2.i;
+                E2 += mbattleResult2.e;
+                S2 += mbattleResult2.s;
+                N2 += mbattleResult2.n;
+                T2 += mbattleResult2.t;
+                F2 += mbattleResult2.f;
+                J2 += mbattleResult2.j;
+                P2 += mbattleResult2.p;
             }
 
             setMbtiData([
                 {
                     name: "I",
-                    투표수: I,
+                    1: I1,
+                    2: I2
                 },
                 {
                     name: "E",
-                    투표수: E,
+                    1: E1,
+                    2: E2
                 },
                 {
                     name: "S",
-                    투표수: S,
+                    1: S1,
+                    2: S2
                 },
                 {
                     name: "N",
-                    투표수: N,
+                    1: N1,
+                    2: N2
                 },
                 {
                     name: "T",
-                    투표수: T,
+                    1: T1,
+                    2: T2
                 },
                 {
                     name: "F",
-                    투표수: F,
+                    1: F1,
+                    2: F2
                 },
                 {
                     name: "J",
-                    투표수: J,
+                    1: J1,
+                    2: J2
                 },
                 {
                     name: "P",
-                    투표수: P,
-                },
+                    1: P1,
+                    2: P2
+                }
             ]);
 
             // 게시글 set
@@ -860,7 +885,8 @@ function MBattleDetail() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="투표수" fill="#82ca9d" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+                            <Bar dataKey="1" fill="#FF6D6D" activeBar={<Rectangle fill="gold" stroke="purple" />} />
+                            <Bar dataKey="2" fill="#7EBAFF" activeBar={<Rectangle fill="pink" stroke="blue" />} />
                             {/* <Bar dataKey="E" fill="blue" activeBar={<Rectangle fill="gold" stroke="purple" />} /> */}
                         </BarChart>
                     </ResponsiveContainer>
@@ -878,7 +904,7 @@ function MBattleDetail() {
     const replyButtonStyle = {
         background:"none",
         color:"#C5C5C5",
-        fontWeight:"bold",
+        fontWeight:500,
         border:"none",
         padding:"0px"
     };
@@ -900,8 +926,14 @@ function MBattleDetail() {
             {/* 중앙 영역 */}
             <div className={style.sectionCenter}>
                 {/* 게시판 헤더 영역 */}
-                <div className={style.pageHeader}>
-                    <h1>M-Battle</h1>
+                <div className={style.boardTitleB}>
+                    <div className={style.boardTitleTextArea}>
+                        <p>M-BATTLE</p>
+                        <p>MBTI 유형 별 성향을 알아보세요!</p>
+                    </div>
+                    <div>
+                        <img alt="battle" src={"/mbattle.png"} width={"220px"} height={"120px"} className={style.boardTitleImg}></img>
+                    </div>
                 </div>
 
                 {/* 수직 중간 영역 */}
@@ -942,7 +974,7 @@ function MBattleDetail() {
 
                         {/* 투표 영역 */}
                         <div className={style.sectionVote}>
-                            <div>
+                            <div style={{minHeight:"344px"}}>
                                 <div className={style.subject}>
                                     {mbattle.fileIdx1!==null?
                                         <React.Fragment>
@@ -1038,7 +1070,7 @@ function MBattleDetail() {
                     {user.userRole==="ROLE_ADMIN" || !user.username?
                         <></>
                         :
-                        <div>
+                        <div className={style.commentDiv}>
                             <Input
                                 style={inputComment}
                                 type="textarea"

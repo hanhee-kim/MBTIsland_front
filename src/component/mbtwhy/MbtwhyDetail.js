@@ -819,7 +819,7 @@ function MbtwhyDetail() {
     const replyButtonStyle = {
         background:"none",
         color:"#C5C5C5",
-        fontWeight:"bold",
+        fontWeight:500,
         border:"none",
         padding:"0px"
     };
@@ -870,23 +870,23 @@ function MbtwhyDetail() {
                         </div>
                         <div style={{color:"#C5C5C5"}}>
                             {formatDatetimeGap(mbtwhy.writeDate)}
-                            <img className={style.viewIcon} src="/viewIcon-bold.png" alt=""></img>
+                            <img className={style.viewIcon} src="/viewIcon-bold.png" alt="조회수"></img>
                             {mbtwhy.viewCnt}
                         </div>
                         <div className={style.boardContent}>
                             {mbtwhy.content}
                         </div>
                         <div className={style.boardLow}>
-                            <div className={style.bookmarkDiv} onClick={()=>mbtwhyBookmark()}>
+                            <div className={style.bookmarkDiv}>
                                 {!isBookmarked?
-                                    <img src="/bookmark.png" alt=""/>
-                                    :<img src="/bookmarked.png" alt=""/>
+                                    <img src="/bookmark.png" alt="북마크" onClick={()=>mbtwhyBookmark()}/>
+                                    :<img src="/bookmarked.png" alt="북마크 완료" onClick={()=>mbtwhyBookmark()}/>
                                 }
                             </div>
                             <div className={style.thumbDiv} onClick={()=>mbtwhyRecommend()}>
                                 {!isRecommended?
-                                    <img src="/thumbIcon.png" alt=""/>
-                                    :<img src="/thumbIcon-full.png" alt=""/>
+                                    <img src="/thumbIcon.png" alt="추천"/>
+                                    :<img src="/thumbIcon-full.png" alt="추천 완료"/>
                                 }&nbsp;
                                 추천&nbsp;
                                 {recommendCount}
@@ -925,7 +925,7 @@ function MbtwhyDetail() {
                     {user.userRole==="ROLE_ADMIN" || !user.username?
                         <></>
                         :
-                        <div>
+                        <div className={style.commentDiv}>
                             <Input
                                 style={inputComment}
                                 type="textarea"
