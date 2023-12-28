@@ -659,6 +659,14 @@ function MBattleDetail() {
             return;
         }
 
+        if(!commentValue || commentValue==='') {
+            Swal.fire({
+                title: "댓글 내용을 입력해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
         let defaultUrl = `${urlroot}/mbattlecomment?no=${no}&comment=${encodeURIComponent(commentValue)}`;
 
         axios.post(defaultUrl, sendUser)

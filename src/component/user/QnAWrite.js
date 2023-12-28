@@ -78,7 +78,7 @@ const QnAWrite = (props) => {
           }}
         >
           <FormGroup row style={{ justifyContent: "center" }}>
-            <h3 style={{ fontSize: "40px" }}>문의하기</h3>
+            <h3 style={{ fontSize: "40px" ,textAlign:'center'}}>문의하기</h3>
           </FormGroup>
           <FormGroup style={{ justifyContent: "center" }}>
             <Label for="title" sm={3}>
