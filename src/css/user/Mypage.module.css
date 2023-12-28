@@ -189,10 +189,6 @@
   cursor: pointer;
 }
 
-/* tr */
-.alarmTr:hover {
-  cursor: pointer;
-}
 /* qnaModal */
 .qnaModal {
   height: 700px;
