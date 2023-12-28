@@ -33,7 +33,9 @@ const MyQnA = () => {
     return `${year}-${month}-${day}`;
   };
   const user = useSelector((state) => state.persistedReducer.user);
-  const registration = useSelector((state) => state.persistedReducer.isRegistration);
+  const registration = useSelector(
+    (state) => state.persistedReducer.isRegistration
+  );
   const dispatch = useDispatch();
   // const isRegistration = props.isRegistration;
   useEffect(() => {
@@ -41,15 +43,13 @@ const MyQnA = () => {
   }, []);
   useEffect(() => {
     //console.log("여기는 오는지");
-    if(registration){
-
+    if (registration) {
       getMyQnaList(user.username, answered, page);
       // setIsRegistration(false);
-      dispatch({type:"isReg",payload:false});
+      dispatch({ type: "isReg", payload: false });
     }
-  },[registration]);
+  }, [registration]);
   const getMyQnaList = (username, answered, page) => {
-    
     let defaultUrl = `${urlroot}/questionlist`;
 
     defaultUrl += `?user=${username}`;
@@ -69,7 +69,6 @@ const MyQnA = () => {
         let list = res.data.questionList;
         setQnaList([...list]);
         setPageInfo({ ...pageInfo });
-
       })
       .catch((err) => {
         //console.log(err);
@@ -92,12 +91,13 @@ const MyQnA = () => {
   // 페이지네이션
   const PaginationInside = () => {
     // if(errorMsg) return null;
+    let color = user.userMbtiColor;
     const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
     for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
       pageGroup.push(
         <span
           key={i}
-          className={`${page === i ? style.activePage : ""}`}
+          style={{ border: page === i ? `2px solid ${color}` : "" }}
           onClick={() => handlePageNo(i)}
         >
           {i}

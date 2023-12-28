@@ -99,10 +99,10 @@ const MyAlarm = () => {
     }
   };
   const readAlarm = () => {
-    if(checkItems.length===0) {
+    if (checkItems.length === 0) {
       Swal.fire({
-          title: "체크된 항목이 없습니다.",
-          icon: "warning",
+        title: "체크된 항목이 없습니다.",
+        icon: "warning",
       });
       return;
     }
@@ -185,17 +185,17 @@ const MyAlarm = () => {
       case "MBTMI":
         checkAlarm(alarm.alarmNo);
         getMyAlarmList(user.username, type, page);
-        navigate("/mbtmidetail/" + no );
+        navigate("/mbtmidetail/" + no);
         break;
       case "MBTWHY":
         checkAlarm(alarm.alarmNo);
         getMyAlarmList(user.username, type, page);
-        navigate("/mbtwhydetail/" + no + "/" + mbti );
+        navigate("/mbtwhydetail/" + no + "/" + mbti);
         break;
       case "MBATTLE":
         checkAlarm(alarm.alarmNo);
         getMyAlarmList(user.username, type, page);
-        navigate("/mbattledetail/" + no );
+        navigate("/mbattledetail/" + no);
         break;
       case "NOTE":
         checkAlarm(alarm.alarmNo);
@@ -244,12 +244,13 @@ const MyAlarm = () => {
   // 페이지네이션
   const PaginationInside = () => {
     // if(errorMsg) return null;
+    let color = user.userMbtiColor;
     const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
     for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
       pageGroup.push(
         <span
           key={i}
-          className={`${page === i ? style.activePage : ""}`}
+          style={{ border: page === i ? `2px solid ${color}` : "" }}
           onClick={() => handlePageNo(i)}
         >
           {i}
