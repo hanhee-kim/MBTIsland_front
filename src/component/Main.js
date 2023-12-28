@@ -68,31 +68,31 @@ const Main = () => {
   const getMbtmiList = async () => {
     try {
       const response = await axios.get(`${urlroot}/mbtmilist`);
-      // console.log('getMbtmiList 요청결과: ', response);
+      // //console.log('getMbtmiList 요청결과: ', response);
       let mbtmiList = response.data.mbtmiList;
       setMbtmiList([...mbtmiList]);
     } catch (error) {
-      console.error('오류내용: ', error);
+      //console.error('오류내용: ', error);
     }
   }
   const getMbtwhyList = async () => {
     try {
       const response = await axios.get(`${urlroot}/mbtwhy`);
-      // console.log('getMbtwhyList 요청결과: ', response);
+      // //console.log('getMbtwhyList 요청결과: ', response);
       let mbtwhyList = response.data.mbtwhyList;
       setMbtwhyList([...mbtwhyList]);
     } catch (error) {
-      console.error('오류내용: ', error);
+      //console.error('오류내용: ', error);
     }
   }
   const getMbattleList = async () => {
     try {
       const response = await axios.get(`${urlroot}/mbattle`);
-      console.log('getMbattleList 요청결과: ', response);
+      // console.log('getMbattleList 요청결과: ', response);
       let mbattleList = response.data.mbattleList;
       setMbattleList([...mbattleList]);
     } catch (error) {
-      console.error('오류내용: ', error);
+      //console.error('오류내용: ', error);
     }
   }
 
@@ -113,20 +113,31 @@ const Main = () => {
   // 활동정지회원의 정지기간을 조회
   const banperiod = async () => {
     const response = await axios.get(`${urlroot}/usersbanperiod/${user.username}`)
-    // console.log('banperiod의 결과: ', response);
+    // //console.log('banperiod의 결과: ', response);
     const startDate = response.data.banStartDate;
     const endDate = response.data.banEndDate;
     setStartDate(startDate);
     setEndDate(endDate);
   }
 
+  // 배너이미지 클릭시
+  const goToBannerLink = (bannerNo) => {
+    let url='';
+    if(bannerNo===1) url='https://www.youtube.com/channel/UCH2FfTgEnOGu2dTDuIyUjjA';
+    else if (bannerNo===2) url='https://www.personality-database.com/chemistry';
+    else if (bannerNo===3) url='https://www.16personalities.com/ko/%EB%AC%B4%EB%A3%8C-%EC%84%B1%EA%B2%A9-%EC%9C%A0%ED%98%95-%EA%B2%80%EC%82%AC';
+    if(url) window.open(url, '_blank');
+  }
 
   return (
     <>
       <div className={style.container} id="top">
         <div className={style.bannerArea}>
           {/* 부트스트랩5 캐러셀 */}
-          <div id="demo" className="carousel slide" data-bs-ride="carousel" style={{width: '100%'}}> 
+          {/* <div id="demo" className="carousel slide" data-bs-ride="carousel" style={{width: '100%'}}>  */}
+
+          {/* 이미지 전환 효과 변경(넘김대신 흐리게 전환) */}
+          <div id="demo" className="carousel slide carousel-fade" data-bs-ride="carousel" style={{width: '100%'}}> 
 
             {/* Indicators/dots */}
             <div className="carousel-indicators">
@@ -137,14 +148,14 @@ const Main = () => {
             
             {/* The slideshow/carousel */}
             <div className="carousel-inner">
-              <div className="carousel-item active" onClick={()=>console.log('배너이미지1 클릭!')}>
-                <img src={"/bannersample1.png"} alt="배너이미지1" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
+              <div className="carousel-item active" onClick={()=>goToBannerLink(1)}>
+                <img src={"/banner1.png"} alt="배너이미지1" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
               </div>
-              <div className="carousel-item" onClick={()=>console.log('배너이미지2 클릭!')}>
-                <img src="/2200x300.png" alt="배너이미지2" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
+              <div className="carousel-item" onClick={()=>goToBannerLink(2)}>
+                <img src="/banner2.png" alt="배너이미지2" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
               </div>
-              <div className="carousel-item" onClick={()=>console.log('배너이미지3 클릭!')}>
-                <img src="/1800x400.png" alt="배너이미지3" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
+              <div className="carousel-item" onClick={()=>goToBannerLink(3)}>
+                <img src="/banner3.png" alt="배너이미지3" className="d-block" style={{minWidth: '1400px', width: '100%', height: '300px', objectFit: 'cover', objectPosition: 'center center'}}/>
               </div>
             </div>
             
@@ -158,6 +169,7 @@ const Main = () => {
           </div>
 
         </div>
+
         <div>
           <section className={style.sectionLeftArea}></section>
           <section className={style.section}>
@@ -235,7 +247,7 @@ const Main = () => {
                         <td>
                           <span className={style.postTitleAndEtc}>
                             <span className={style.overflowLong}>
-                              <Link to={`/mbtwhydetail/${post.mbtiCategory}/${post.no}/1`}>{post.content}</Link>
+                              <Link to={`/mbtwhydetail/${post.no}/${post.mbtiCategory}`}>{post.content}</Link>
                             </span>
                             <span>[{post.commentCnt}]</span>
                             <small>{formatDatetimeGap(post.writeDate)}</small>
@@ -276,7 +288,7 @@ const Main = () => {
                         <td>
                           <span className={style.postTitleAndEtc}>
                             <span className={style.overflowLong}>
-                              <Link to={`/mbattledetail/${post.no}/1`}>{post.title}</Link>
+                              <Link to={`/mbattledetail/${post.no}`}>{post.title}</Link>
                             </span>
                             <span>[{post.commentCnt}]</span>
                             <small>{formatDatetimeGap(post.writeDate)}</small>

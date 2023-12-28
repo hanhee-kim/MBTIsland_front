@@ -23,10 +23,9 @@ const Footer = () => {
                         {/* <a href='/emailadress@email.com'>이메일 문의 emailadress@email.com</a> */}
                         이메일 문의 mbtisland2023@gmail.com
                     </li>
+                    <img src={"/seashells1.png" } alt="" className={style.seashells1} />
                 </div>
-                <div>
-                    ⓒ2023 MBTIsland All rights reserved.
-                </div>
+                <div>ⓒ2023 MBTIsland All rights reserved.</div>
             </ul>
         </div>
     )

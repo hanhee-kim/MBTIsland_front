@@ -39,7 +39,7 @@ const AdminQnaForm = () => {
     const getQuestionDetail = (no) => {
         axios.get(`${urlroot}/questiondetail/${no}`)
         .then(res=> {
-            console.log("getQuestionDetail결과: ", res);
+            //console.log("getQuestionDetail결과: ", res);
             let question = res.data.question;
             let answer = null;
             if(res.data.answer) answer = res.data.answer;
@@ -47,7 +47,7 @@ const AdminQnaForm = () => {
             setAnswer(answer);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     }
 
@@ -84,7 +84,7 @@ const AdminQnaForm = () => {
 
 
     const addPost = async () => {
-        console.log('답변 등록 버튼 클릭');
+        //console.log('답변 등록 버튼 클릭');
         try {
             if(!content) {
                 Swal.fire({
@@ -94,7 +94,7 @@ const AdminQnaForm = () => {
                 });
                 return;
             }
-            console.log("content: ", content, ", writerId: ", user.username, "문의글번호인 파라미터no: ", no, ", 문의글제목: ", question.title, ", 문의글작성자: ", question.writerId);
+            //console.log("content: ", content, ", writerId: ", user.username, "문의글번호인 파라미터no: ", no, ", 문의글제목: ", question.title, ", 문의글작성자: ", question.writerId);
             let defaultUrl = `${urlroot}/answerwrite`;
             const response = await axios.post(defaultUrl, {
                                 title: `Re: ${question.title}`,
@@ -103,12 +103,12 @@ const AdminQnaForm = () => {
                                 questionNo: question.no,
                                 questionWriterId: question.writerId
                             });
-            console.log('요청결과: ', response); // 요청성공시 컨트롤러로부터 반환받은 res
+            //console.log('요청결과: ', response); // 요청성공시 컨트롤러로부터 반환받은 res
             const answer = response.data.answer;
             setAnswer(answer); // state변경으로 인해 재렌더링되도록 한다
 
         } catch (error) {
-            console.error('오류내용: ', error);
+            //console.error('오류내용: ', error);
         }
     }
     

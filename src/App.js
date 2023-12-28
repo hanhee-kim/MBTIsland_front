@@ -55,6 +55,7 @@ import ReportWrite from "./component/user/ReportWrite";
 import AdminReportDetail from "./component/admin/AdminReportDetail"
 import AdminBanDetail from "./component/admin/AdminBanDetail";
 import MyMbattle from "./component/user/MyMbattle";
+import ErrorPage from "./component/common/ErrorPage";
 
 export const persistor = persistStore(store);
 
@@ -178,7 +179,7 @@ function App() {
               <Route exact path="/mbattlewrite" element={<MBattleWrite />} />
               <Route exact path="/mbattledetail/:no" element={<MBattleDetail />} />
               <Route exact path="/adminreport" element={<AdminFrame />}>
-                <Route exact path="/adminreport/detail/:no/:page/:filter/:boardtype/:reporttype" element={<AdminReportDetail />} />
+                <Route exact path="/adminreport/detail/:no/:page?/:filter?/:boardtype?/:reporttype?" element={<AdminReportDetail />} />
               </Route>
               <Route exact path="/adminban" element={<AdminFrame />} >
                 <Route exact path="/adminban/detail/:username" element={<AdminBanDetail />} />
@@ -188,6 +189,8 @@ function App() {
                 path="/reportwrite"
                 element={<ReportWrite setIsPopup={setIsPopup} />}
               />
+              {/* 에러 페이지 */}
+              <Route path="*" element={<ErrorPage />}/>
             </Routes>
             {!isPopup && <Footer />}
           </BrowserRouter>

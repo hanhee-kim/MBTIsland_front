@@ -5,6 +5,7 @@ import {
     Button,
     Input
 } from "reactstrap";
+import Swal from "sweetalert2";
 import axios from 'axios';
 import { urlroot } from "../../config";
 
@@ -108,16 +109,23 @@ function MBattleWrite() {
 
     // 게시글 작성
     const postMbattle = () => {
-        console.log(mbattle.fileIdx1);
-        console.log(mbattle.fileIdx2);
         if((mbattle.fileIdx1.length===0 && mbattle.fileIdx2.length!==0) || (mbattle.fileIdx1.length!==0 && mbattle.fileIdx2.length===0)) {
-            alert("파일을 모두 첨부해주세요.");
+            Swal.fire({
+                title: "파일을 모두 첨부해주세요.",
+                icon: "warning",
+            });
             return;
         } else if (mbattle.title==="") {
-            alert("제목을 입력해주세요.");
+            Swal.fire({
+                title: "제목을 입력해주세요.",
+                icon: "warning",
+            });
             return;
         } else if((mbattle.voteItem1==="" && mbattle.voteItem2!=="") || (mbattle.voteItem1!=="" && mbattle.voteItem2==="")) {
-            alert("주제를 모두 입력해주세요.");
+            Swal.fire({
+                title: "주제를 모두 입력해주세요.",
+                icon: "warning",
+            });
             return;
         }
 
@@ -138,12 +146,11 @@ function MBattleWrite() {
     
         axios.post(`${urlroot}/mbattlewrite/`, formData)
         .then(res=> {
-            console.log(res);
             let no = res.data.no;
             navigate(`/mbattledetail/${no}`);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
     }
 
@@ -194,6 +201,7 @@ function MBattleWrite() {
                         required="required"
                         value={mbattle.title}
                         placeholder="제목을 입력해주세요."
+                        maxLength={32}
                     />
 
                     {/* 사진, 주제 작성 */}
@@ -216,6 +224,7 @@ function MBattleWrite() {
                                 required="required"
                                 value={mbattle.voteItem1}
                                 placeholder="주제를 입력해주세요."
+                                maxLength={10}
                             />
                         </div>
                         <div>
@@ -236,13 +245,14 @@ function MBattleWrite() {
                                 required="required"
                                 value={mbattle.voteItem2}
                                 placeholder="주제를 입력해주세요."
+                                maxLength={10}
                             />
                         </div>
                     </div>
 
                     <div className={style.ButtonDiv}>
                         <Button style={buttonStyle} onClick={()=>postMbattle()}>등록</Button>
-                        <Button style={buttonStyle} href="mbattle/1">취소</Button>
+                        <Button style={buttonStyle} onClick={()=>navigate(-1)}>취소</Button>
                     </div>
                 </div>
             </div>

@@ -40,7 +40,7 @@ const MyQnA = () => {
     getMyQnaList(user.username, answered, page);
   }, []);
   useEffect(() => {
-    console.log("여기는 오는지");
+    //console.log("여기는 오는지");
     if(registration){
 
       getMyQnaList(user.username, answered, page);
@@ -60,7 +60,7 @@ const MyQnA = () => {
       defaultUrl += `${
         username !== null || answered !== null ? "&" : "?"
       }page=${page}`;
-    console.log("요청url:" + defaultUrl);
+    //console.log("요청url:" + defaultUrl);
 
     axios
       .get(defaultUrl)
@@ -72,7 +72,7 @@ const MyQnA = () => {
 
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   };
   const openQnaWrite = () => {
@@ -86,7 +86,7 @@ const MyQnA = () => {
   };
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
-    console.log("***페이지이동***");
+    //console.log("***페이지이동***");
     getMyQnaList(user.username, answered, pageNo);
   };
   // 페이지네이션
@@ -126,7 +126,7 @@ const MyQnA = () => {
   };
   //tr 클릭시
   const goQuestionDeatail = (e, no) => {
-    // console.log("tr클릭" + no);
+    // //console.log("tr클릭" + no);
     const url = "/questiondetail/" + no;
     window.open(
       url,
@@ -135,10 +135,10 @@ const MyQnA = () => {
     );
   };
   const call = (answered) => {
-    console.log(answered);
+    //console.log(answered);
   };
   const changeFilter = (e, answerType) => {
-    console.log(answerType);
+    //console.log(answerType);
 
     if (answerType === null) {
       setAnswered(null);

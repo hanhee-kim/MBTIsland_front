@@ -77,7 +77,7 @@ const Login = () => {
   //function
   const change = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
-    console.log("user:" + user.username + "  " + user.userPassword);
+    // console.log("user:" + user.username + "  " + user.userPassword);
   };
   //엔터 포커싱
   const handleKeyPress = (e) => {
@@ -91,7 +91,7 @@ const Login = () => {
       .post(`${urlroot}/login`, user)
       .then((res) => {
         if(res.data.checkLeave === "Y"){
-          console.log("탈퇴회원!")
+          // console.log("탈퇴회원!");
           Swal.fire({
             title:'탈퇴한 회원입니다.',
             text:'서비스 이용을 위해 회원가입을 진행해주세요.',
@@ -113,7 +113,7 @@ const Login = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         Swal.fire({
           title: "회원정보가 일치하지 않습니다.",
           icon: "error",
@@ -127,8 +127,8 @@ const Login = () => {
   };
   //비밀번호 아이디 찾기에서 보내기 눌렀을때
   const sendFindEmail = (e, type) => {
-    console.log(type);
-    console.log(findForm.userEmail);
+    // console.log(type);
+    // console.log(findForm.userEmail);
     //Email의 유효성조건
     var emailRegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (emailRegExp.test(findForm.userEmail)) {
@@ -138,7 +138,7 @@ const Login = () => {
       axios
         .post(`${urlroot}/find`, sendFindForm)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.data === "해당 Email 존재하지 않음.") {
             Swal.fire({
               title: res.data,
@@ -159,7 +159,7 @@ const Login = () => {
           }
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     } else {
       Swal.fire({
@@ -179,7 +179,7 @@ const Login = () => {
       }}
     >
       <Form style={loginFormStyle}>
-        <FormGroup row style={{ justifyContent: "center" }}>
+        <FormGroup row style={{ justifyContent: "center" ,textAlign:'center'}}>
           <h3 style={{ fontSize: "40px" }}>LOGIN</h3>
         </FormGroup>
         <FormGroup row style={{ justifyContent: "center" }}>
@@ -250,10 +250,9 @@ const Login = () => {
           
           >
             <img
-              className=""
-              src={"../kakao_login.png"}
+              className="kakaLoginImg"
+              src={"/kakaoLogin.png"}
               style={{ width: "183px", height: "45px" }}
-              // onClick={goKakaoLogin}
               alt="kakaoLogin"
             />
           </a>
@@ -262,10 +261,9 @@ const Login = () => {
             
           >
             <img
-              className=""
-              src={"../naver_Login.png"}
+              className="naverLoginImg"
+              src={"/naverLogin.png"}
               style={{ width: "183px", height: "45px" }}
-              // onClick={goNaverLogin}
               alt="naverLogin"
             />
           </a>

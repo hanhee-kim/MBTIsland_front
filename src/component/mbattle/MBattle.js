@@ -9,10 +9,10 @@ import {
     Input,
     Button } from "reactstrap";
 import axios from 'axios';
+import { urlroot } from "../../config";
 
 import style from "../../css/mbattle/MBattle.module.css";
 import Swal from "sweetalert2";
-import { urlroot } from "../../config";
 
 function MBattle() {
     // 로그인 유저 정보]
@@ -90,13 +90,15 @@ function MBattle() {
             let hotMbattleList = res.data.hotMbattleList;
 
             setMbattleList([...mbattleList]);
-            setHotMbattleList([...hotMbattleList]);
+            if(hotMbattleList) {
+                setHotMbattleList([...hotMbattleList]);
+            }
             
             setPageInfo({...pageInfo});
             setPage(page);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             // setMbattleList([]);
             // setHotMbattleList([]);
             // setPageInfo({});
@@ -314,7 +316,7 @@ function MBattle() {
                 </div>
 
                 {/* 페이징 영역 */}
-                {mbattleList.length <= 1?<></>:<PaginationInside/>}
+                {mbattleList.length===0?<></>:<PaginationInside/>}
 
                 {/* 검색 영역 */}
                 <FormGroup row className={style.sectionSearch}>

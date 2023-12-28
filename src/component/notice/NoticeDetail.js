@@ -33,12 +33,12 @@ const NoticeDetail = () => {
     const getNoticeDetail = (no) => {
         axios.get(`${urlroot}/noticedetail/${no}`)
         .then(res=> {
-            console.log(res);
+            //console.log(res);
             let notice = res.data.notice;
             setNotice(notice);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     }
     
@@ -80,7 +80,7 @@ const NoticeDetail = () => {
                         goToPreviousList();
                     })
                     .catch(err => {
-                        console.log(err);
+                        //console.log(err);
                         Swal.fire({
                             title: 'Error',
                             icon: 'error'
@@ -114,7 +114,7 @@ const NoticeDetail = () => {
                         goToPreviousList();
                     })
                     .catch(err => {
-                        console.log(err);
+                        //console.log(err);
                         Swal.fire({
                             title: 'Error',
                             icon: 'error'

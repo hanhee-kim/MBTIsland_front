@@ -321,12 +321,6 @@ function MBattleDetail() {
             // 항목2 투표 결과
             let mbattleResult2 = res.data.mbattleResult2;
 
-            console.log(mbattle);
-            console.log(mbattleVoter);
-            console.log(isMbattleBookmarked);
-            console.log(mbattleResult1);
-            console.log(mbattleResult2);
-
             if(mbattleResult1!==null) {
                 setVoteData1([
                     {
@@ -440,7 +434,7 @@ function MBattleDetail() {
             // setPageInfo({...pageInfo});
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             setMbattle({});
         })
     };
@@ -481,17 +475,30 @@ function MBattleDetail() {
 
     // 게시글 삭제
     const mbattleDelete = () => {
-        const isConfirmed = window.confirm("게시글을 삭제하시겠습니까?");
-        if(isConfirmed) {
-            axios.delete(`${urlroot}/mbattledelete/${no}`)
-            .then(res => {
-                alert('완료되었습니다.');
-                goToPreviousList();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        }
+        Swal.fire({
+            title: '게시글을 삭제하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${urlroot}/mbattledelete/${no}`)
+                .then(res => {
+                    Swal.fire({
+                        title: "완료되었습니다.",
+                        icon: "success",
+                    });
+                    goToPreviousList();
+                })
+                .catch(err => {
+                    //console.log(err);
+                });
+            }
+        }); 
+
         setOpen(false);
     };
 
@@ -523,19 +530,50 @@ function MBattleDetail() {
 
         // let defaultUrl = `${urlroot}/mbattlevote/${no}/${vote}/${user.username}/${user.userMbti}`
         let defaultUrl = `${urlroot}/mbattlevote/${user.userMbti}/${vote}`
-        console.log("ㅋ");
         axios.post(defaultUrl, voter)
         .then(res=> {
-            let mbattleResult = res.data.mbattleResult;
-            
-            // setResult({...result, mbattleResult});
             setVoter({...voter, voteItem:vote});
             getMbattleDetail();
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         })
-    }
+    };
+
+    // 쪽지보내기 아이콘 클릭시(게시글, Comment, Reply)
+    const sendNote = (receiveUsername, receiveNickname) => {
+        if(!user.username) {
+            Swal.fire({
+                title: "로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.isBanned==="Y") {
+            Swal.fire({
+                title: "정지 상태에서는 쪽지 보내기가 불가합니다.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if(user.userRole==="ROLE_ADMIN") {
+            Swal.fire({
+                title: "게시판 이용을 위해 일반회원으로 로그인해주세요.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        const url = `/notewrite/${receiveUsername}/${receiveNickname}`; // 받을 유저
+
+        window.open(
+            url,
+            "_blank",
+            "width=650,height=450,location=no,status=no,scrollbars=yes"
+        );
+    };
 
     // 댓글 목록 조회
     const getMbattleCommentList = (commentPage) => {
@@ -564,7 +602,7 @@ function MBattleDetail() {
             setCommentPage(commentPage);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             setComments([]);
             setCommentPageInfo({});
         });
@@ -596,16 +634,15 @@ function MBattleDetail() {
             return;
         }
 
-        let defaultUrl = `${urlroot}/mbattlecomment?no=${no}&comment=${commentValue}`;
+        let defaultUrl = `${urlroot}/mbattlecomment?no=${no}&comment=${encodeURIComponent(commentValue)}`;
 
         axios.post(defaultUrl, sendUser)
         .then(res=> {
-            console.log(res);
             setInputCommentValue("");
             getMbattleCommentList(commentPage);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -618,29 +655,38 @@ function MBattleDetail() {
             });
             return;
         }
-    
-        const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
-        if(isConfirmed) {
-            axios.get(`${urlroot}/mbattlecommentdelete/${commentNo}`)
-            .then(res => {
-                console.log(res);
-                alert('완료되었습니다.');
 
-                // console.log('commentPage: ', commentPage);
-                getMbattleCommentList(commentPage); // 이 함수를 호출하여 댓글목록 재조회하여 재렌더링 시킨다
-                
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        }
+        Swal.fire({
+            title: '댓글을 삭제하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.get(`${urlroot}/mbattlecommentdelete/${commentNo}`)
+                .then(res => {
+                    Swal.fire({
+                        title: "완료되었습니다.",
+                        icon: "success",
+                    });
+
+                    getMbattleCommentList(commentPage); // 이 함수를 호출하여 댓글목록 재조회하여 재렌더링 시킨다
+                })
+                .catch(err => {
+                    //console.log(err);
+                });
+            }
+        });
+    
         setOpen(false);
     };
 
     // commentPage 핸들링
     const handleCommentPageNo = (commentPageNo) => {
         setCommentPage(commentPageNo);
-        console.log(commentPageNo);
         
         getMbattleCommentList(commentPageNo); // setCommentPage(pageNo)는 업데이트가 지연되기 때문에, state인 page가 아니라 전달인자 pageNo로 요청해야함
     };
@@ -670,10 +716,9 @@ function MBattleDetail() {
             randomNo = res.data.randomNo;
             navigate(`/mbattledetail/${randomNo}`);
             navigate(0);
-            console.log(randomNo);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -720,9 +765,10 @@ function MBattleDetail() {
                             {comment.writerMbti}&nbsp;&nbsp;&nbsp;
                             {comment.writerNickname}
                             {isPostWriter && <div className={style.isPostWriterComment}>작성자</div>}
+                            {!isCommentWritter && <img src={"/sendNoteIcon.png" } alt="쪽지보내기" className={style.sendNoteIcon} onClick={()=> sendNote(comment.writerId, comment.writerNickname)}/>}
                         </div>
                     </div>
-                    <div className={style.boardContent}>
+                    <div className={style.commentContent}>
                         {comment.isRemoved==="Y"?
                             <div className={style.noComment}>삭제된 댓글입니다.</div>
                             :(comment.isBlocked==="Y"?
@@ -769,10 +815,10 @@ function MBattleDetail() {
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart width={600} height={400} data={voteData1} layout="vertical">
                                 {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                                {/* <XAxis dataKey="name" /> */}
+                                <XAxis type="number" domain={[0, mbattle.voteCnt]}/>
                                 <YAxis type="category" dataKey="name" />
                                 <Tooltip />
-                                {/* <Legend /> */}
+                                <Legend />
                                 <Bar dataKey="투표수" fill="#FF6D6D" background={{ fill: '#eee' }} barSize={50} stroke="#000" strokeWidth={1}/>
                             </BarChart>
                         </ResponsiveContainer>
@@ -786,18 +832,17 @@ function MBattleDetail() {
                     </div>
                     <div style={{width:"600px", height:"100px"}}>
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart width={600} height={400} data={voteData2} layout="vertical">
+                            <BarChart width={600} height={400} data={voteData2} layout="vertical" >
                                 {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                                {/* <XAxis dataKey="name" /> */}
-                                <YAxis type="category" dataKey="name" />
+                                <XAxis type="number" domain={[0, mbattle.voteCnt]}/>
+                                <YAxis type="category" dataKey="name"/>
                                 <Tooltip />
-                                {/* <Legend /> */}
+                                <Legend />
                                 <Bar dataKey="투표수" fill="#7EBAFF" background={{ fill: '#eee' }} barSize={50} stroke="#000" strokeWidth={1}/>
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
-                
 
                 <div className={style.heightGraph} style={{width:"600px", height:"400px"}}>
                     <ResponsiveContainer width="100%" height="100%">
@@ -820,31 +865,6 @@ function MBattleDetail() {
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
-                {/* <div style={{width:"600px", height:"400px"}}>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart width={150} height={40} data={data} layout="vertical">
-                            <YAxis/>
-                            <Bar dataKey="uv" fill="#8884d8" background={{ fill: '#eee' }}/>
-                        </BarChart>
-                    </ResponsiveContainer>
-                </div>
-
-                <div>
-                    <BarChart
-                        width={430}
-                        height={170}
-                        data={data}
-                        layout="vertical">
-                        <XAxis type="number" orientation="top"/>
-                        <YAxis type="category" dataKey="currency" axisLine={false} dx={-5} tickLine={false} 
-                            style={{ fill: "#285A64" }} />
-                        <Bar background dataKey="uv" fill="#285A64" barSize={{ height: 300 }}>
-                            
-                        </Bar>
-                    </BarChart>
-                </div> */}
-
-                
             </div>
         )
     };
@@ -890,7 +910,7 @@ function MBattleDetail() {
                     <div key={mbattle.no} className={style.sectionBoard}>
                         <div className={style.boardTitle}>
                             <h1>{mbattle.title}</h1>
-                            <div> 
+                            <div>
                                 <img className={style.randomIcon} src="/randomIcon.png" height="30px" alt="" onClick={()=>goRandomMbattleDetail()} />
                                 <button onClick={()=>setOpen(!open)} id="Popover1" className={style.popoverButton}><img className={style.popoverImg} src="/popover-icon.png" alt=""/></button>
                                 <Popover placement="bottom" isOpen={open} name="mbattle" target="Popover1" toggle={()=>handleToggle()}>
@@ -906,7 +926,10 @@ function MBattleDetail() {
                         <div className={style.writerDiv}>
                             <div className={style.circleDiv} style={{backgroundColor:`${mbattle.writerMbtiColor}`}}> </div>&nbsp;&nbsp;&nbsp;
                             {mbattle.writerMbti}&nbsp;&nbsp;&nbsp;
-                            {mbattle.writerId}
+                            {mbattle.writerNickname}
+                            {mbattle.writerId !== user.username && (
+                                <img src={"/sendNoteIcon.png" } alt="쪽지보내기" className={style.sendNoteIcon} onClick={()=> sendNote(mbattle.writerId, mbattle.writerNickname)}/>
+                            )}
                         </div>
                         <div style={{color:"#C5C5C5"}}>
                             {formatDatetimeGap(mbattle.writeDate)}
@@ -935,19 +958,11 @@ function MBattleDetail() {
                                     </div>
                                     :(voter.voteItem===1?
                                         <div className={style.voteButtonDiv}>
-                                            <Button style={boardVoteButton} onClick={()=>alert("이미 투표하셨습니다.")}>투표완료</Button>
+                                            <Button style={boardVoteButton} onClick={()=>Swal.fire({title: "이미 투표하셨습니다.", icon: "warning"})}>투표완료</Button>
                                         </div>
                                         :<></>
                                     )
                                 }
-                                {/* {voter.voterId===user.username && voter.voteItem===1?
-                                    <div className={style.voteButtonDiv}>
-                                        <Button style={boardVoteButton}>투표완료</Button>
-                                    </div>
-                                    :<div className={style.voteButtonDiv}>
-                                        <Button style={boardVoteButton} onClick={()=>voteItem(1)}>투표하기</Button>
-                                    </div>
-                                } */}
                             </div>
                             <div style={{margin:"30px"}}>
                                 <img src="/vsIcon.png" alt=""/>
@@ -970,19 +985,11 @@ function MBattleDetail() {
                                     </div>
                                     :(voter.voteItem===2?
                                         <div className={style.voteButtonDiv}>
-                                            <Button style={boardVoteButton} onClick={()=>alert("이미 투표하셨습니다.")}>투표완료</Button>
+                                            <Button style={boardVoteButton} onClick={()=>Swal.fire({title: "이미 투표하셨습니다.", icon: "warning"})}>투표완료</Button>
                                         </div>
                                         :<></>
                                     )
                                 }
-                                {/* {voter.voterId===user.username && voter.voteItem===2?
-                                    <div className={style.voteButtonDiv}>
-                                        <Button style={boardVoteButton}>투표완료</Button>
-                                    </div>
-                                    :<div className={style.voteButtonDiv}>
-                                        <Button style={boardVoteButton} onClick={()=>voteItem(2)}>투표하기</Button>
-                                    </div>
-                                } */}
                             </div>
                         </div>
 
@@ -1015,19 +1022,13 @@ function MBattleDetail() {
                 <div>
                     {/* 댓글 목록 */}
                     <div>
-                        {comments
-                            // .filter(comment=> comment.parentcommentNo===null)
-                            .map(comment => {
-                                return (
-                                    <React.Fragment key={comment.commentNo}>
-                                        <Comment comment={comment} key={comment.commentNo}/>
-                                            {/* {comments
-                                                .filter(reply => reply.parentcommentNo === comment.commentNo)
-                                                .map(reply =><Reply reply={reply} key={reply.commentNo}/>)} */}
-                                    </React.Fragment>
-                                );
-                            })
-                        }
+                        {comments.map(comment => {
+                            return (
+                                <React.Fragment key={comment.commentNo}>
+                                    <Comment comment={comment} key={comment.commentNo}/>
+                                </React.Fragment>
+                            );
+                        })}
                     </div>
 
                     {/* 페이징 영역 */}

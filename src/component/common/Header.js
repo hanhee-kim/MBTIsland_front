@@ -15,8 +15,9 @@ const Header = () => {
   const [noteCnt, setNoteCnt] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
   // const localUser = localStorage.getItem("user");
+  const token = useSelector((state) => state.persistedReducer.token);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -29,11 +30,11 @@ const Header = () => {
   // 미확인 알림리스트
   const [alertNotRead, setAlertNotRead] = useState([]);
   useEffect(() => {
-    console.log(uri);
+    //console.log(uri);
     //토큰보내서 유저 store에 올림
-    console.log("token???:" + token);
+    //console.log("token???:" + token);
     if (token === null || token == "") {
-      console.log("token없음");
+      //console.log("token없음");
     } else {
       // user 정보
       axios
@@ -43,22 +44,21 @@ const Header = () => {
           },
         })
         .then((res) => {
-          console.log(res);
-          console.log("data:" + res.data);
-          // setUser(res.data);
+          //console.log(res);
+          //console.log("data:" + res.data);
           dispatch({ type: "user", payload: res.data });
         })
         .catch((err) => {
-          console.log("user가져오기 에러");
-          console.log(err);
+          //console.log("user가져오기 에러");
+          //console.log(err);
         });
     }
     //먼저 한번 실행
     getNoteListAndAlarmList();
-    // //컴포넌트 마운트될 때 실행할 interval(10초마다 실행)
+    // //컴포넌트 마운트될 때 실행할 interval(1초마다 실행)
     const intervalId = setInterval(() => {
       getNoteListAndAlarmList();
-    }, 10000);
+    }, 1000);
     // 컴포넌트가 언마운트될 때 clearInterval을 통해 정리
     return () => {
       clearInterval(intervalId);
@@ -81,7 +81,8 @@ const Header = () => {
     await axios
       .get(`${urlroot}/getnoteandalarm?username=${user.username}`)
       .then((res) => {
-        console.log(res);
+        // console.log('getNoteListAndAlarmList 결과: ', res);
+
         //alarmList
         setAlertNotRead(res.data.alarmList);
         //alarmCnt
@@ -92,7 +93,7 @@ const Header = () => {
         setNoteCnt(res.data.noteCnt);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   };
   useEffect(() => {
@@ -131,37 +132,37 @@ const Header = () => {
 
   //알림 모두읽음 버튼
   const allReadAlarm = (e) => {
-    console.log("allreadAlarm");
+    //console.log("allreadAlarm");
     axios
       .put(`${urlroot}/updatealarmisreadall?username=${user.username}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         //데이터 다시 불러오기
         getNoteListAndAlarmList();
       })
       .catch((err) => {
-        console.log(err.response.data);
+        //console.log(err.response.data);
         let errLog = err.response.data;
       });
   };
   //노트 모두읽음 버튼
   const allReadNote = (e) => {
-    console.log("allreadNote");
+    //console.log("allreadNote");
     axios
       .put(`${urlroot}/updatenoteisreadall?username=${user.username}`)
       .then((res) => {
-        console.log("성공");
+        //console.log("성공");
         getNoteListAndAlarmList();
       })
       .catch((err) => {});
   };
   //알림 클릭시
   const goAlarmDetail = (e, index, alarm) => {
-    console.log(e);
+    //console.log(e);
     //navigate()
-    console.log(alarm.detailType);
-    console.log(alarm.detailNo);
-    console.log(alarm.detailMbti);
+    //console.log(alarm.detailType);
+    //console.log(alarm.detailNo);
+    //console.log(alarm.detailMbti);
     switch (alarm.detailType) {
       case "NOTE":
         checkAlarm(alarm.alarmNo);
@@ -212,7 +213,7 @@ const Header = () => {
     axios
       .put(`${urlroot}/checkalarm/${no}`)
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
       })
       .catch((err) => {});
   };
@@ -226,7 +227,7 @@ const Header = () => {
   };
   //쪽지 클릭시
   const goNoteDetail = (e, no) => {
-    console.log(e);
+    //console.log(e);
     const noteUrl = "/notedetail/" + no;
     window.open(
       noteUrl,
@@ -245,7 +246,7 @@ const Header = () => {
               MBTIsland
               <img
                 src={"/desert-island.png"}
-                alt="로고이미지"
+                alt="로고"
                 width="30px"
                 className={style.logoIcon}
               />
@@ -341,16 +342,18 @@ const Header = () => {
                       (alert, index) =>
                         index < 5 && (
                           <div key={index} className={style.alertContentAndCnt}>
-                            <div
-                              className={style.alertContent}
-                              onClick={(e) => goAlarmDetail(e, index, alert)}
-                            >
-                              {alert.alarmType === "댓글"
-                                ? `내 ${alert.detailType} 게시글의 새 ${alert.alarmType}이 있습니다.`
-                                : `새 ${alert.alarmType}가 있습니다`}
+                            <div className={style.alertContent} onClick={(e) => goAlarmDetail(e, index, alert)}>
+
+                              {/* {alert.alarmType === "댓글"? `${alert.alarmCnt}개의 새 ${alert.alarmType}이 있습니다.` */}
+                              {alert.alarmType === "댓글"? `내 ${alert.alarmTargetFrom.includes('omment')? '댓글': '게시글'}의 새 ${alert.alarmType}(${alert.alarmCnt})이 있습니다`
+                              : alert.alarmType === "쪽지"? `새 쪽지가 도착했습니다`
+                              : alert.alarmType === "답글"? `문의글에 답글이 달렸습니다`
+                              : alert.alarmType === "경고"? `경고처분을 받았습니다`
+                              : alert.alarmType === "제재"? `정지처분을 받았습니다`
+                              : null
+                              }
+
                             </div>
-                            {alert.alarmType === "댓글" &&
-                              `(${alert.alarmCnt})`}
                           </div>
                         )
                     )
@@ -427,11 +430,8 @@ const Header = () => {
                       (note, index) =>
                         index < 5 && (
                           <div key={index}>
-                            <div
-                              className={style.messageTitle}
-                              onClick={(e) => goNoteDetail(e, note.noteNo)}
-                            >
-                              {`[${note.sentUserNick}]  ${note.noteContent}`}
+                            <div className={style.messageTitle} onClick={(e) => goNoteDetail(e, note.noteNo)}>
+                              {`[${note.sentUserNick}]에게 쪽지를 받았습니다.`}
                             </div>
                           </div>
                         )

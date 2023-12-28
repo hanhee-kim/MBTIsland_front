@@ -1,13 +1,11 @@
-import { useReducer } from "react";
-import { useSelector } from "react-redux";
-
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { Button } from 'reactstrap';
-import { FormGroup } from 'reactstrap';
-import { Input } from 'reactstrap';
-import { Label } from 'reactstrap';
-import { Form } from 'reactstrap';
+import {
+  Button,
+  FormGroup,
+  Input,
+  Label,
+  Form
+} from 'reactstrap';
 import Swal from "sweetalert2";
 import axios from 'axios';
 import { urlroot } from "../../config";
@@ -18,12 +16,6 @@ const ReportWrite = (props) => {
   const urlParams = new URLSearchParams(queryString);
   const serializedReportData = urlParams.get('data');
   const reportData = JSON.parse(decodeURIComponent(serializedReportData));
-  // 로그인 유저 정보]
-  // const user = useSelector((state) => state.persistedReducer.user);
-
-  // const {reportedId, reportedTable} = useParams();
-  // const formatReportedId = reportedId.startsWith(':') ? reportedId.substring(1) : reportedId;
-  // const formatReportedITable = reportedTable.startsWith(':') ? reportedTable.substring(1) : reportedTable;
 
   const [report,setReport] = useState(reportData);
   
@@ -48,7 +40,7 @@ const ReportWrite = (props) => {
       });
     })
     .catch(err=> {
-      console.log(err);
+      //console.log(err);
       Swal.fire({
         title: "신고 실패",
         icon: "fail",
@@ -58,14 +50,9 @@ const ReportWrite = (props) => {
     });
   };
 
-  // const changeReportReason = (e) => {
-  //   console.log(e.target.value);
-  //   setReport({...report,reportType:e.target.value});
-  // };
-
-  useEffect(()=> {
-    console.log("신고 정보:", report);
-  }, [report]);
+  // useEffect(()=> {
+  //   console.log("신고 정보:", report);
+  // }, [report]);
 
   return (
   <div>

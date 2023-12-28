@@ -26,24 +26,24 @@ const MyMbtWhy = (props) => {
   }, []);
 
   const getMyMbtiList = (username, page) => {
-    console.log(page);
-    console.log("url:" + `${urlroot}/mymbtwhy/${username}/${page}`);
+    //console.log(page);
+    //console.log("url:" + `${urlroot}/mymbtwhy/${username}/${page}`);
     axios
       .get(`${urlroot}/mymbtwhy/${username}/${page}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setInitData(true);
         setPageInfo(res.data.pageInfo);
         setMbtwhyList(res.data.myMbtwhyList);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         setInitData(false);
       });
   };
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
-    console.log("***페이지이동***");
+    //console.log("***페이지이동***");
     getMyMbtiList(user.username, pageNo);
     //페이지가 변경되면 checkItems 빈배열로 초기화.
     setCheckItems([]);
@@ -97,7 +97,7 @@ const MyMbtWhy = (props) => {
       // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
       setCheckItems(checkItems.filter((el) => el !== no));
     }
-    console.log(checkItems);
+    //console.log(checkItems);
   };
 
   // 체크박스 전체 선택
@@ -113,9 +113,16 @@ const MyMbtWhy = (props) => {
     }
   };
   const delWhy = () => {
+    if(checkItems.length===0) {
+      Swal.fire({
+          title: "체크된 항목이 없습니다.",
+          icon: "warning",
+      });
+      return;
+    }
     let sendArrayItems = checkItems.join(",");
-    console.log(checkItems.type);
-    console.log(checkItems);
+    //console.log(checkItems.type);
+    //console.log(checkItems);
 
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     axios
@@ -123,7 +130,7 @@ const MyMbtWhy = (props) => {
         `${urlroot}/deletembtwhy?sendArrayItems=${sendArrayItems}`
       )
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         Swal.fire({
           title: "삭제 성공!",
           icon: "success",
@@ -133,7 +140,7 @@ const MyMbtWhy = (props) => {
         getMyMbtiList(user.username, 1);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   };
   //tr클릭시(해당 상세로 이동)

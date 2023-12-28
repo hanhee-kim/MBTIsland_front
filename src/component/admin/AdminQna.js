@@ -79,7 +79,7 @@ const AdminQna = () => {
             page: page,
             username: username,
         };
-        // console.log('$$$ 로컬스토리지에 저장될 currentValue: ', currentValue);
+        // //console.log('$$$ 로컬스토리지에 저장될 currentValue: ', currentValue);
         localStorage.setItem('adminQuestionValue', JSON.stringify({ ...currentValue, ...newValue }));
     };
 
@@ -89,7 +89,7 @@ const AdminQna = () => {
         const searchParams = new URLSearchParams(location.search);
         const writerId = searchParams.get('writerId');
         if (writerId) {
-            console.log(`모아볼 아이디: ${writerId}`);
+            //console.log(`모아볼 아이디: ${writerId}`);
             getQuestionList(search, null, 1, writerId);
             setUsername(writerId);
 
@@ -108,11 +108,11 @@ const AdminQna = () => {
         if (page !== null) defaultUrl += `${search !== null || answered !== null ? '&' : '?'}page=${page}`;
         if (username !== null) defaultUrl += `${search !== null || answered !== null || page !== null ? '&' : '?'}username=${username}`;
 
-        console.log('요청url:' + defaultUrl);
+        //console.log('요청url:' + defaultUrl);
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
+            //console.log(res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.questionList;
             let questionCnts = res.data.questionCnts;
@@ -124,9 +124,9 @@ const AdminQna = () => {
             setUsername(username);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             if(err.response && err.response.data) {
-                console.log('err.response.data: ' + err.response.data);
+                //console.log('err.response.data: ' + err.response.data);
                 setErrorMsg(err.response.data);
                 setQuestionCnts({'totalCnt':0, 'answeredCnt':0, 'answeredNotCnt':0});
             }
@@ -135,17 +135,17 @@ const AdminQna = () => {
 
     const handlePageNo = (pageNo) => {
         setPage(pageNo);
-        console.log('***페이지이동***')
-        console.log('현재 적용되는 필터값: ' + answered);
-        console.log('현재 적용되는 검색어: ' + search);
+        //console.log('***페이지이동***')
+        //console.log('현재 적용되는 필터값: ' + answered);
+        //console.log('현재 적용되는 검색어: ' + search);
         getQuestionList(search, answered, pageNo, username);
         
         updateLocalStorage({ page: pageNo });
     };
     const handleFilterChange = (answered) => {
-        console.log('***필터변경***')
-        console.log('현재 적용되는 필터값: ' + answered);
-        console.log('현재 적용되는 검색어: ' + search);
+        //console.log('***필터변경***')
+        //console.log('현재 적용되는 필터값: ' + answered);
+        //console.log('현재 적용되는 검색어: ' + search);
         getQuestionList(search, answered, 1, username);
         setActiveFilter(answered);
 
@@ -156,7 +156,7 @@ const AdminQna = () => {
         setTmpSearch(searchTerm);
     };
     const handleSearch = () => {
-        console.log('검색 수행');
+        //console.log('검색 수행');
         setSearch(tmpSearch);
         setAnswered(null);
         setActiveFilter(null);
@@ -185,7 +185,7 @@ const AdminQna = () => {
     };
 
     const getQuestionListOfWriterId = (writerId) => {
-        console.log('모아볼 writerId: ', writerId);
+        //console.log('모아볼 writerId: ', writerId);
         getQuestionList(search, null, 1, writerId); // 문의글모아보기 클릭시 검색값은 유지, answered와 page는 초기값으로 목록 요청
         setUsername(writerId);
         setActiveFilter(null);

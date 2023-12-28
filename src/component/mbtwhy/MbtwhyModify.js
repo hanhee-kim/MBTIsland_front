@@ -68,11 +68,6 @@ function MbtwhyModify() {
     };
 
     const navigate = useNavigate();
-    // 취소 버튼
-    // Mbtwhy 게시판으로 이동
-    const goMbtwhy = () => {
-        navigate(`/mbtwhy/${mbti}`);
-    };
 
     // Mbtwhy 게시글 조회
     const getMbtwhy = () => {
@@ -88,7 +83,7 @@ function MbtwhyModify() {
             setContent(content);
         })
         .catch(err => {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -101,11 +96,10 @@ function MbtwhyModify() {
         let defaultUrl = `${urlroot}/mbtwhymodify/${no}/${content}`;
         axios.post(defaultUrl)
         .then(res => {
-            console.log(res);
             navigate(`/mbtwhydetail/${no}/${mbti.toLowerCase()}`);
         })
         .catch(err => {
-            console.log(err);
+            //console.log(err);
         });
     };
 
@@ -114,9 +108,9 @@ function MbtwhyModify() {
         getMbtwhy();
     }, []);
 
-    useEffect(() => {
-        console.log(content);
-    }, [content]);
+    //     console.log(content);
+    // useEffect(() => {
+    // }, [content]);
 
     const pageHeader = {
         display:"flex",
@@ -172,7 +166,7 @@ function MbtwhyModify() {
                     />
                     <div className={style.postContentDiv}>
                         <Button style={buttonStyle} onClick={()=>modifyMbtwhy()}>수정</Button>
-                        <Button style={buttonStyle} onClick={()=>goMbtwhy()}>취소</Button>
+                        <Button style={buttonStyle} onClick={()=>navigate(-1)}>취소</Button>
                     </div>
                 </div>
             </div>

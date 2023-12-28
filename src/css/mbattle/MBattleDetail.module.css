@@ -13,13 +13,15 @@
     border-bottom: solid #C5C5C5 3px;
 }
 
-/* .dropDownStyle {
-    margin: 0 auto;
-    border: none;
-    box-shadow: none;
-    background-color: white;
-    color: black;
-} */
+.sendNoteIcon {
+    width: 18px;
+    height: 18px;
+    margin-top: 7px;
+    margin-left: 5px;
+    cursor: pointer;
+    position: relative;
+    bottom: 2px;
+}
 
 .pageHeader > h1 {
     width: 70%;
@@ -61,6 +63,10 @@
     justify-content: space-between;
 }
 
+.boardTitle > div {
+    margin-top: 20px;
+}
+
 .randomIcon {
     cursor: pointer;
 }
@@ -78,6 +84,15 @@
     width: 23px;
     height: 23px;
     border-radius: 50%;
+}
+
+/* 작성자 표시태그 */
+.isPostWriterComment { 
+    font-size: 14px;
+    border: 1px solid #8F8F8F;
+    padding: 0px 3px 0px 3px;
+    border-radius: 4px;
+    margin-left: 8px;
 }
 
 .boardVotedCount {
@@ -110,6 +125,7 @@
     width: 300px;
     position: relative;
     margin-bottom: 20px;
+    white-space: pre;
 }
 
 .subject > img {
@@ -132,6 +148,7 @@
     justify-content: center;
     width: 300px;
     height: 300px;
+    white-space: pre;
 }
 
 .voteItemDiv > h5 {
@@ -147,7 +164,7 @@
     justify-content: right;
 }
 
-.boardContent {
+.commentContent {
     display: flex;
     overflow: hidden;
     width: 700px;
@@ -208,6 +225,7 @@
 .sectionComment {
     padding: 25px;
     border-bottom: solid #C5C5C5 1px;
+    white-space: pre;
 }
 
 .sectionComment > div {
@@ -266,6 +284,10 @@
 .sectionRightArea {
     display: flex;
     flex-direction: column-reverse;
+
+    /* 푸터에 배경이미지 추가 후 플로팅버튼을 가리지 않도록 추가 */
+    position: relative;
+    z-index: 10;
 }
 
 .sectionRightArea>div {

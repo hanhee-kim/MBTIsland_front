@@ -11,7 +11,7 @@ const OAuth2User = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("token:" + token);
+    //console.log("token:" + token);
     dispatch({ type: "token", payload: token });
 
     localStorage.setItem("token", token);
@@ -23,17 +23,17 @@ const OAuth2User = () => {
         }
     })
     .then(res=> {
-        console.log(res);
-        console.log("data:"+res.data);
+        //console.log(res);
+        //console.log("data:"+res.data);
         // setUser(res.data);
         dispatch({type:"user",payload:res.data});
     })
     .catch(err=> {
-        console.log("user가져오기 에러");
-        console.log(err);
+        //console.log("user가져오기 에러");
+        //console.log(err);
     })
     
-    console.log("loginType : " + loginType);
+    //console.log("loginType : " + loginType);
     if (loginType === "join") {
       navigate("/addjoin");
     } else {

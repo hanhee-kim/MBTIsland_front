@@ -146,17 +146,15 @@ function Mbtwhy() {
             let pageInfo = res.data.pageInfo;
             let mbtwhyList = res.data.mbtwhyList;
             let hotMbtwhy = res.data.hotMbtwhy;
-            // let mbtwhyCnt = res.data.mbtwhyCnt;
 
             setMbtwhyList([...mbtwhyList]);
             setHotMbtwhy({...hotMbtwhy});
-            // setMbtwhyCnt(mbtwhyCnt);
             
             setPageInfo({...pageInfo});
             setPage(page);
         })
         .catch(err=> {
-            console.log(err);
+            // console.log(err);
             // setMbtwhyList([]);
             // setHotMbtwhy({});
             // setPageInfo({});

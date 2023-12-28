@@ -33,6 +33,9 @@
     margin-left: 15px;
     margin-right: 40px;
     width: 30px;
+    
+    position:relative;
+    bottom: 4px;
 }
 
 .navItems {
@@ -133,7 +136,9 @@
 .popoverBellOrMessageItem {
     /* background-color: lemonchiffon; */
     text-align: left;
-    max-width: 220px;
+
+    /* max-width: 220px; */
+    max-width: 500px;
 }
 .messageTitle {
     /* background: ghostwhite; */
@@ -141,7 +146,7 @@
 
     /* 줄바꿈을 막고 생략기호 표시 */
     display: block;
-    max-width: 200px;
+    max-width: 300px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -153,6 +158,8 @@
     display: flex;
     justify-content: flex-start;
     cursor: pointer;
+
+    max-width: 500px;
 }
 .alertContent {
     /* background: lavenderblush; */
@@ -164,7 +171,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     min-width: 140px;
-    max-width: 150px;
+
+    /* max-width: 150px; */
+    max-width: 500px;
 }
 .alertContent+div {
     padding: 2px 0;

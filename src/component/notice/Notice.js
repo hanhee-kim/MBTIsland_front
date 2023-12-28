@@ -50,11 +50,11 @@ const Notice = () => {
         if (search !== null) defaultUrl += `&search=${search}`;
         if (page !== null) defaultUrl += `&page=${page}`;
 
-        console.log('요청url:' + defaultUrl);
+        //console.log('요청url:' + defaultUrl);
 
         axios.get(defaultUrl)
         .then(res=> {
-            console.log(res);
+            //console.log(res);
             let pageInfo = res.data.pageInfo;
             let list = res.data.noticeList;
             let noticeCnt = res.data.noticeCnts.displayCnt;
@@ -64,9 +64,9 @@ const Notice = () => {
             setErrorMsg(null);
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             if(err.response && err.response.data) {
-                console.log('err.response.data: ' + err.response.data);
+                //console.log('err.response.data: ' + err.response.data);
                 setErrorMsg(err.response.data);
                 setNoticeCnt(0);
                 setPageInfo({});
@@ -79,7 +79,7 @@ const Notice = () => {
         localStorage.setItem('noticeCurPage', pageNo.toString());
 
         setPage(pageNo);
-        console.log('현재 적용되는 검색어: ' + search);
+        //console.log('현재 적용되는 검색어: ' + search);
         getNoticeList(search, pageNo); // setPage(pageNo)는 업데이트가 지연되기 때문에, state인 page가 아니라 전달인자 pageNo로 요청해야함
     };
     const handleSearchChange = (event) => {
@@ -130,7 +130,7 @@ const Notice = () => {
     // 게시글 제목 클릭시 동적으로 라우터 링크 생성하고 연결
     const navigate = useNavigate();
     const makeFlexibleLink = (post) => {
-        // console.log('no, search, page: ' + post.no + ", " + search + ", " + page);
+        // //console.log('no, search, page: ' + post.no + ", " + search + ", " + page);
         const linkTo = `/noticedetail/${post.no}` +
                         (search ? `/${search}` : '') +
                         (page ? `/${page}` : '');

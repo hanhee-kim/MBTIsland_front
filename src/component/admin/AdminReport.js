@@ -2,12 +2,9 @@ import {
     FormGroup,
     Col,
     Input,
-    Button,
-    Pagination,
-    PaginationItem,
-    PaginationLink } from "reactstrap";
+    Button
+} from "reactstrap";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AdminNav from "./AdminNav";
@@ -47,11 +44,11 @@ const AdminReport = () => {
 
     // reportDetail 이동
     const goReportDetail = (no) => {
-        let defaultUrl = `/adminreport/detail/${no}` +
-                            (page? `/${page}` : "") +
-                            (filter? `/${filter}` : "") +
-                            (boardType? `/${boardType}` : "") +
-                            (reportType? `/${reportType}` : "");
+        let defaultUrl = `/adminreport/detail/${no}`;
+                            // (page? `/${page}` : "") +
+                            // (filter? `/${filter}` : "") +
+                            // (boardType? `/${boardType}` : "") +
+                            // (reportType? `/${reportType}` : "");
         navigate(defaultUrl, {replace:false});
     };
 
@@ -59,11 +56,8 @@ const AdminReport = () => {
     const getReportList = (page, filter) => {
         axios.get(`${urlroot}/adminreport/${page}/${filter}/${boardType}/${reportType}`)
         .then(res=> {
-            console.log(res);
             let pageInfo = res.data.pageInfo;
             let reportList = res.data.reportList;
-
-            console.log(reportList);
 
             setReportList([...reportList]);
             
@@ -71,19 +65,13 @@ const AdminReport = () => {
             setPageInfo({...pageInfo});
         })
         .catch(err=> {
-            console.log(err);
+            //console.log(err);
             // setReportList([]);
             // setPageInfo({});
         })
     };
 
     useEffect(() => {
-        // const searchInput = document.getElementById("searchInput");
-        // searchInput.value = null;
-        
-        // setPage(1);
-        // setSearch("");
-        // setFilter("all");
         getReportList(page, filter);
     }, []);
 
@@ -171,7 +159,6 @@ const AdminReport = () => {
                         <Button style={buttonStyle} onClick={()=>handleSearch()}>검색</Button>
                     </Col>
                 </FormGroup>
-                {/* 검색 영역 */}
             
                 {/* 분류 영역 */}
                 <div className={style.filterBtns}>
@@ -181,15 +168,6 @@ const AdminReport = () => {
                         <span className={`${style.filterBtn} ${filter==="N"? style.filterActive :""}`} onClick={() => handleFilter("N")}>미처리</span>
                     </div>
                 </div>
-                {/* 분류 영역 */}
-
-                {/* 분류 영역 */}
-                {/* <div className={style.sortDiv}>
-                    <div>전체</div>&nbsp;&nbsp;&nbsp;
-                    <div style={{color:"#C5C5C5"}}>처리완료</div>&nbsp;&nbsp;&nbsp;
-                    <div style={{color:"#C5C5C5"}}>미처리</div>&nbsp;&nbsp;&nbsp;
-                </div> */}
-                {/* 분류 영역 */}
 
                 {/* 게시글 영역 */}
                 <table className={style.boardTable}>
@@ -201,7 +179,7 @@ const AdminReport = () => {
                     <tbody>
                         {reportList.length !== 0 && reportList.map(report => {
                             return (
-                                    <tr key={report.no} onClick={()=>goReportDetail(report.no)}>
+                                    <tr key={report.no} className={style.sectionTr} onClick={()=>goReportDetail(report.no)}>
                                         <td>{report.reportedId}</td>
                                         <td><div className={style.boardContent}>{(report.reportedTitle)!==null?(report.reportedTitle):(report.reportedContent)}</div></td>
                                         <td>{report.reporterId}</td>

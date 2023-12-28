@@ -21,9 +21,9 @@ const QnAWrite = (props) => {
   const changeQna = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    console.log(name + value);
+    //console.log(name + value);
     setQuestion({ ...question, writerId: user.username, [name]: value });
-    console.log(question);
+    //console.log(question);
   };
 
   const close = (e) => {
@@ -32,13 +32,13 @@ const QnAWrite = (props) => {
   };
   const submit = (e) => {
     e.preventDefault();
-    console.log(question.writerId);
-    console.log(user.username);
+    //console.log(question.writerId);
+    //console.log(user.username);
     //데이터 전달
     axios
       .post(`${urlroot}/questionwrite`, question)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         dispatch({type:"isReg",payload:true});
         Swal.fire({
           title: "문의가 등록되었습니다.",
@@ -48,7 +48,7 @@ const QnAWrite = (props) => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         Swal.fire({
           title: "문의 등록에 실패했습니다.",
           icon: "error",
@@ -75,7 +75,7 @@ const QnAWrite = (props) => {
           </FormGroup>
           <FormGroup style={{ justifyContent: "center" }}>
             <Label for="title" sm={3}>
-              제목{console.log("is?"+props.isRegistration)}
+              제목
             </Label>
             <Input
               id="title"

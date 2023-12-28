@@ -25,16 +25,16 @@ const close = (e) => {
 useEffect(()=>{
   props.setIsPopup(true);
   let userType = "sent";
-  console.log(`${urlroot}/notedetail/${noteNo}/${userType}`);
+  //console.log(`${urlroot}/notedetail/${noteNo}/${userType}`);
   axios
       .get(`${urlroot}/notedetail/${noteNo}/${userType}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setNote(res.data);
         // setAnswer(res.data.answer);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
 },[])
 

@@ -19,6 +19,16 @@
     cursor: default;
 }
 
+.sendNoteIcon {
+    width: 18px;
+    height: 18px;
+    margin-top: 7px;
+    margin-left: 5px;
+    cursor: pointer;
+    position: relative;
+    bottom: 2px;
+}
+
 .popoverButton {
     background: none;
     font-weight: bold;
@@ -85,6 +95,7 @@
     width: 700px;
     text-align: left;
     margin-bottom: 30px;
+    white-space: pre;
 }
 
 .boardLow {
@@ -124,6 +135,7 @@
 .sectionComment {
     padding: 25px;
     border-bottom: solid #C5C5C5 1px;
+    white-space: pre;
 }
 
 .sectionComment > div{
@@ -169,9 +181,9 @@
     font-size: 18px;
     width: 32px;
     height: 32px;
-    /* line-height: 32px; */
-    border:0px solid white;
+    border: 0px solid white;
     text-align: center;
+    line-height: 32px;
     cursor: pointer;
 }
 
@@ -187,6 +199,7 @@
 .sectionPostReply {
     display: flex;
     justify-content: space-between;
+    white-space: pre;
 }
 
 .sectionReply {
@@ -194,6 +207,7 @@
     justify-content: space-between;
     padding: 25px;
     border-bottom: solid #C5C5C5 2px;
+    white-space: pre;
 }
 
 .sectionReply > div {
@@ -208,6 +222,10 @@
 .sectionRightArea {
     display: flex;
     flex-direction: column-reverse;
+
+    /* 푸터에 배경이미지 추가 후 플로팅버튼을 가리지 않도록 추가 */
+    position: relative;
+    z-index: 10;
 }
 
 .sectionRightArea>div {

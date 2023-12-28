@@ -40,7 +40,7 @@ const NoteWrite = (props) => {
     axios
       .post(`${urlroot}/notewrite`,sendNote)
       .then((res)=>{
-        console.log(res);
+        //console.log(res);
         Swal.fire({
           title: "쪽지가 발송되었습니다.",
           icon: "success",
@@ -49,7 +49,7 @@ const NoteWrite = (props) => {
         });
       })
       .catch((err)=>{
-        console.log(err);
+        //console.log(err);
         Swal.fire({
           title: "쪽지 발송이 실패했습니다.",
           icon: "error",
