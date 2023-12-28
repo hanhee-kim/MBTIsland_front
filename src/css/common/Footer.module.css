@@ -1,13 +1,23 @@
 .footer {
-    background-color: white;
+    /* background-color: white; */
+
     /* width: 100%; */
     /* left:0;
     top:0; */
-    z-index:10;
+
+    /* z-index:10; */
     border-top: 1px solid #999999;
     padding: 10px 0 8px 0;
-
+    
     min-width: 1300px;
+    
+    /* 배경이미지 관련 */
+    position: relative;
+    overflow: hidden;
+    background-image: url(../../../public/sand1.png);
+    background-repeat: no-repeat; 
+    background-position: right bottom;
+    z-index: 0;
 }
 .siteTitle {
     margin-left: 100px;
@@ -40,3 +50,11 @@
     font-size: 18px;
     margin-bottom: 30px;
 }
+
+.seashells1 {
+    width: 120px;
+    /* display: inline-block; */
+    float: right;
+    margin-right: 150px;
+}
+

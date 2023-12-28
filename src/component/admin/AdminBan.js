@@ -126,7 +126,7 @@ const AdminBan = () => {
     return (
         <>
         <div>
-            <div className={styleFrame.sectionTitle}>신고 목록</div>
+            <div className={styleFrame.sectionTitle}>정지 회원</div>
             <div className={styleFrame.sectionContents}>
                 {/* 검색 영역 */}
                 <FormGroup row className={style.sectionSearch}>

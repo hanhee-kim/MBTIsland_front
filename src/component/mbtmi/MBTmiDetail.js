@@ -120,11 +120,11 @@ const MBTmiDetail = () => {
         let defaultUrl = `${urlroot}/mbtmicomment?no=${no}&comment=${encodeURIComponent(commentContent)}`;
         if(parentcommentNo !== '') defaultUrl += `&parentcommentNo=${parentcommentNo}`
         defaultUrl += `&commentpage=${commentPage}`; // 3페이지에서 대댓글 작성시 url에 파라미터로 3페이지가 붙음
-        //console.log('요청url: ', defaultUrl);
+        // console.log('요청url: ', defaultUrl);
 
         axios.post(defaultUrl, sendUser)
         .then(res=> {
-            //console.log(res);
+            // console.log(res);
             let comments = res.data.mbtmiCommentList;
             let allPage = res.data.pageInfo.allPage;
             let mbtmiCommentCnt = res.data.mbtmiCommentCnt;
@@ -152,7 +152,7 @@ const MBTmiDetail = () => {
             // getMbtmiCommentList(allPage); // ***
         })
         .catch(err=> {
-            //console.log(err);
+            // console.log(err);
         })
     };
     
@@ -738,16 +738,18 @@ const MBTmiDetail = () => {
                         </h6>
                         <div className={style.postContent} dangerouslySetInnerHTML={{ __html: mbtmi.content }}></div>
                         <p>
-                            {!isRecommended? (
-                            <img src={"/thumbIcon.png" } alt="" className={style.thumbIconDetail} onClick={()=>mbtmiRecommend()}/>
-                            ) : (
-                            <img src={"/thumbIcon-full.png" } alt="" className={style.thumbIconDetail} onClick={()=>mbtmiRecommend()}/>
-                            )}
+                            <div onClick={()=>mbtmiRecommend()}>
+                                {!isRecommended? (
+                                <img src={"/thumbIcon.png" } alt="" className={style.thumbIconDetail}/>
+                                ) : (
+                                <img src={"/thumbIcon-full.png" } alt="" className={style.thumbIconDetail}/>
+                                )}
                             <span>&nbsp;추천&nbsp;{recommendCount}</span>
+                            </div>
                         </p>
                         <div className={style.postBtns}>
                             <button onClick={goToPreviousList}>목록</button>
-                            <button onClick={()=>openReportWrite(mbtmi, "mbtmi")}><img src={"/reportIcon.png" } alt="" className={style.reportIcon} />&nbsp;신고</button>
+                            {mbtmi?.writerId !== user?.username && <button onClick={()=>openReportWrite(mbtmi, "mbtmi")}><img src={"/reportIcon.png" } alt="" className={style.reportIcon} />&nbsp;신고</button>}
                         </div>
                     </div>
                     </>

@@ -2,45 +2,66 @@
     display: flex;
     text-align: center;
     justify-content: center;
-    margin-top: 80px;
+    margin-top: 100px;
 }
 
 .sectionCenter {
     width: 800px;
 }
 
-.pageHeader {
-    display: inline-block;
-    width: 800px;
-    border-bottom: solid #C5C5C5 3px;
+.boardTitleB {
+    display: inline-flex;
+    justify-content: space-between;
+    background-color:#F3F3F3;
+    width:740px; 
+    height:110px;
+    border: 1px solid #A6A6A6;
+    border-radius: 10px;
+    padding-left: 35px;
+    /* margin-bottom: 40px; */
+    padding-top: 20px;
 }
-
-.pageHeader > h1 {
+.boardTitleB>.boardTitleTextArea>p:first-child {
+    font-size: 25px;
+    margin-bottom: 0px;
     text-align: left;
-    margin-bottom: 30px;
-    cursor: default;
+} 
+.boardTitleB>.boardTitleTextArea>p+p {
+    font-size: 15px;
+    font-weight: 600;
+    color: #868484;
+} 
+.boardTitleImg {
+    position: relative;
+    bottom: 25px;
 }
 
-.pageHeader > div {
+.writebtnDiv {
     display: flex;
+    margin: 20px;
+    justify-content: right;
 }
 
-.pageHeaderContent {
-    width: 90%;
-    text-align: left;
-    color: #C5C5C5;
-    cursor: default;
+.writebtnDiv>button {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 6px 15px 6px 15px;
+    margin-right: 10px;
+    border: none;
+    background: none;
+    border-radius: 4px;
+    border: 1px solid #E6E6E6;
 }
 
-.pageHeaderWriteBtn {
-    width: 10%;
-    cursor: pointer;
-    font-weight: bold;
+.writebtnIcon {
+    width: 16px;
+    margin-right: 5px;
+    margin-top: -3px;
 }
 
 .mbtwhyTable {
     width: 800px;
-    margin: 50px auto;
+    margin-bottom: 50px;
     display: flex;
     justify-content: space-evenly;
 }
@@ -52,6 +73,8 @@
 .sectionRightArea {
     display: flex;
     flex-direction: column-reverse;
+    position: relative;
+    z-index: 10;
 }
 
 .sectionRightArea>div {

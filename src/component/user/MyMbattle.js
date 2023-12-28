@@ -14,8 +14,8 @@ const MyMbattle = () => {
   const [pageInfo, setPageInfo] = useState({});
   // navigate
   const navigate = useNavigate();
-  const [tmiList,setTmiList] = useState([]);
-  const [battleList,setBattleList] = useState([]);
+  const [tmiList, setTmiList] = useState([]);
+  const [battleList, setBattleList] = useState([]);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -24,8 +24,7 @@ const MyMbattle = () => {
     return `${year}-${month}-${day}`;
   };
   //서버와 통신할 메소드 정의
-  const getMyMbattleList = (username,page) => {
-    
+  const getMyMbattleList = (username, page) => {
     axios
       .get(`${urlroot}/mbattlelistbyuser?username=${username}&page=${page}`)
       .then((res) => {
@@ -38,9 +37,9 @@ const MyMbattle = () => {
         //console.log(err);
         setInitData(false);
       });
-  }
+  };
   useEffect(() => {
-    getMyMbattleList(user.username,page);
+    getMyMbattleList(user.username, page);
   }, []);
   // 체크된 아이템을 담을 배열
   const [checkItems, setCheckItems] = useState([]);
@@ -71,10 +70,10 @@ const MyMbattle = () => {
     }
   };
   const delBattle = () => {
-    if(checkItems.length===0) {
+    if (checkItems.length === 0) {
       Swal.fire({
-          title: "체크된 항목이 없습니다.",
-          icon: "warning",
+        title: "체크된 항목이 없습니다.",
+        icon: "warning",
       });
       return;
     }
@@ -85,9 +84,7 @@ const MyMbattle = () => {
 
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     axios
-      .delete(
-        `${urlroot}/deletembattlelist?sendArrayItems=${sendArrayItems}`
-      )
+      .delete(`${urlroot}/deletembattlelist?sendArrayItems=${sendArrayItems}`)
       .then((res) => {
         //console.log(res);
         Swal.fire({
@@ -103,28 +100,28 @@ const MyMbattle = () => {
       });
   };
   //tr 클릭시 detail로 이동
-  const goMyMbattleDetail = (e,battle) => {
+  const goMyMbattleDetail = (e, battle) => {
     // navigate(`/mbattledetail/${battle.no}`);
     navigate(`/mbattledetail/${battle.no}`);
-  }
+  };
 
   const handlePageNo = (pageNo) => {
     setPage(pageNo);
     //console.log("***페이지이동***");
-    getMyMbattleList(user.username,pageNo);
+    getMyMbattleList(user.username, pageNo);
     //페이지가 변경되면 checkItems 빈배열로 초기화.
     setCheckItems([]);
-
   };
   // 페이지네이션
   const PaginationInside = () => {
     // if(errorMsg) return null;
+    let color = user.userMbtiColor;
     const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
     for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
       pageGroup.push(
         <span
           key={i}
-          className={`${page === i ? style.activePage : ""}`}
+          style={{ border: page === i ? `2px solid ${color}` : "" }}
           onClick={() => handlePageNo(i)}
         >
           {i}
@@ -179,7 +176,7 @@ const MyMbattle = () => {
                     <th scope="col" sm={1}>
                       번호
                     </th>
-                    
+
                     <th scope="col" sm={4} style={{ minWidth: "200px" }}>
                       제목
                     </th>
@@ -203,13 +200,19 @@ const MyMbattle = () => {
                               handleSingleCheck(e.target.checked, battle.no)
                             }
                             // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
-                            checked={checkItems.includes(battle.no) ? true : false}
+                            checked={
+                              checkItems.includes(battle.no) ? true : false
+                            }
                           />
                         </td>
-                        <td sm={1} className="text-center" onClick={(e) => goMyMbattleDetail(e, battle)}>
+                        <td
+                          sm={1}
+                          className="text-center"
+                          onClick={(e) => goMyMbattleDetail(e, battle)}
+                        >
                           {battle.no}
                         </td>
-                        
+
                         <td
                           sm={4}
                           className="text-truncate"
@@ -226,7 +229,11 @@ const MyMbattle = () => {
                         >
                           {formatDate(battle.writeDate)}
                         </td>
-                        <td sm={1} className="text-center" onClick={(e) => goMyMbattleDetail(e, battle)}>
+                        <td
+                          sm={1}
+                          className="text-center"
+                          onClick={(e) => goMyMbattleDetail(e, battle)}
+                        >
                           {battle.voteCnt}
                         </td>
                       </tr>

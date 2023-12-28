@@ -51,12 +51,13 @@ const MyMbtWhy = (props) => {
   // 페이지네이션
   const PaginationInside = () => {
     // if(errorMsg) return null;
+    let color = user.userMbtiColor;
     const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
     for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
       pageGroup.push(
         <span
           key={i}
-          className={`${page === i ? style.activePage : ""}`}
+          style={{ border: page === i ? `2px solid ${color}` : "" }}
           onClick={() => handlePageNo(i)}
         >
           {i}
@@ -113,10 +114,10 @@ const MyMbtWhy = (props) => {
     }
   };
   const delWhy = () => {
-    if(checkItems.length===0) {
+    if (checkItems.length === 0) {
       Swal.fire({
-          title: "체크된 항목이 없습니다.",
-          icon: "warning",
+        title: "체크된 항목이 없습니다.",
+        icon: "warning",
       });
       return;
     }
@@ -126,9 +127,7 @@ const MyMbtWhy = (props) => {
 
     //checkItems를 전송해서 삭제 + list새로 가져오는 작업 필요
     axios
-      .delete(
-        `${urlroot}/deletembtwhy?sendArrayItems=${sendArrayItems}`
-      )
+      .delete(`${urlroot}/deletembtwhy?sendArrayItems=${sendArrayItems}`)
       .then((res) => {
         //console.log(res);
         Swal.fire({
@@ -148,11 +147,8 @@ const MyMbtWhy = (props) => {
     // path="/mbtwhydetail/:mbti?/:page?/:search?/:no?"
 
     let defaultUrl = `/mbtwhydetail`;
-    defaultUrl += `/${mbtwhy.mbtiCategory}`;
-    // if(page !== null) defaultUrl += `/${page}`;
-    // if(search) defaultUrl += `/${search}`;
-    // if(sort !== null) defaultUrl += `/${sort}`;
     defaultUrl += `/${mbtwhy.no}`;
+    defaultUrl += `/${mbtwhy.mbtiCategory}`;
     navigate(defaultUrl);
   };
 
@@ -199,7 +195,7 @@ const MyMbtWhy = (props) => {
               <tbody>
                 {whyList.map((why, index) => {
                   return (
-                    <tr key={index} >
+                    <tr key={index}>
                       <td sm={1} className="text-center">
                         <input
                           type="checkbox"
@@ -211,11 +207,18 @@ const MyMbtWhy = (props) => {
                           checked={checkItems.includes(why.no) ? true : false}
                         />
                       </td>
-                      <td sm={1} className="text-center" onClick={(e) => goMbtwhyDetail(e, why)}>
+                      <td
+                        sm={1}
+                        className="text-center"
+                        onClick={(e) => goMbtwhyDetail(e, why)}
+                      >
                         {why.no}
-                        
                       </td>
-                      <td sm={2} className="text-center" onClick={(e) => goMbtwhyDetail(e, why)}>
+                      <td
+                        sm={2}
+                        className="text-center"
+                        onClick={(e) => goMbtwhyDetail(e, why)}
+                      >
                         {why.mbtiCategory}
                       </td>
                       <td
@@ -234,7 +237,11 @@ const MyMbtWhy = (props) => {
                       >
                         {formatDate(why.writeDate)}
                       </td>
-                      <td sm={1} className="text-center" onClick={(e) => goMbtwhyDetail(e, why)}>
+                      <td
+                        sm={1}
+                        className="text-center"
+                        onClick={(e) => goMbtwhyDetail(e, why)}
+                      >
                         {why.recommendCnt}
                       </td>
                     </tr>

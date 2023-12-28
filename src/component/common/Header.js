@@ -192,7 +192,7 @@ const Header = () => {
         checkAlarm(alarm.alarmNo);
         Swal.fire({
           title: alarm.alarmType + "가 1회",
-          text: "지금까지 총 " + alarm.warnCnt + " 회의 경고를 받으셨습니다.",
+          text: "지금까지 총 " + (alarm.warnCnt+1) + " 회의 경고를 받으셨습니다.",
           icon: "warning",
         });
         getNoteListAndAlarmList();
@@ -343,12 +343,14 @@ const Header = () => {
                         index < 5 && (
                           <div key={index} className={style.alertContentAndCnt}>
                             <div className={style.alertContent} onClick={(e) => goAlarmDetail(e, index, alert)}>
-                              
-                              {alert.alarmType === "댓글"? `${alert.alarmCnt}개의 새 ${alert.alarmType}이 있습니다.`
-                              : alert.alarmType === "쪽지"? `새 ${alert.alarmType}가 도착했습니다.`
-                              : alert.alarmType === "답글"? `문의글에 ${alert.alarmType}이 달렸습니다.`
-                              : alert.alarmType === "경고"? `경고처분을 받았습니다.`
-                              : `정지처분을 받았습니다.` 
+
+                              {/* {alert.alarmType === "댓글"? `${alert.alarmCnt}개의 새 ${alert.alarmType}이 있습니다.` */}
+                              {alert.alarmType === "댓글"? `내 ${alert.alarmTargetFrom.includes('omment')? '댓글': '게시글'}의 새 ${alert.alarmType}(${alert.alarmCnt})이 있습니다`
+                              : alert.alarmType === "쪽지"? `새 쪽지가 도착했습니다`
+                              : alert.alarmType === "문의답글"? `문의글에 답글이 달렸습니다`
+                              : alert.alarmType === "경고"? `경고처분을 받았습니다`
+                              : alert.alarmType === "제재"? `정지처분을 받았습니다`
+                              : null
                               }
 
                             </div>

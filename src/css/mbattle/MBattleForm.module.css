@@ -7,9 +7,31 @@
     margin: 0 auto;
 }
 
-.pageHeader {
-    display: flex;
-    border-bottom: solid #C5C5C5 3px;
+.boardTitleB {
+    display: inline-flex;
+    justify-content: space-between;
+    background-color:#F3F3F3;
+    width:800px;
+    height:110px;
+    border: 1px solid #A6A6A6;
+    border-radius: 10px;
+    padding-left: 35px;
+    /* margin-bottom: 40px; */
+    padding-top: 20px;
+}
+.boardTitleB>.boardTitleTextArea>p:first-child {
+    font-size: 25px;
+    margin-bottom: 0px;
+    text-align: left;
+} 
+.boardTitleB>.boardTitleTextArea>p+p {
+    font-size: 15px;
+    font-weight: 600;
+    color: #868484;
+} 
+.boardTitleImg {
+    position: relative;
+    bottom: 25px;
 }
 
 .formTitleDiv {
@@ -22,7 +44,7 @@
     font-weight: bold;
 }
 
-.ButtonDiv {
+.buttonDiv {
     width: 775px;
     padding: 15px;
     text-align: right;
@@ -31,6 +53,11 @@
 .sectionSubject {
     display: flex;
     /* justify-content: center; */
+}
+
+.deleteButton {
+    border: none;
+    color: #adadad; 
 }
 
 .sectionSubject > div {
@@ -55,6 +82,8 @@
 .sectionRightArea {
     display: flex;
     flex-direction: column-reverse;
+    position: relative;
+    z-index: 10;
 }
 
 .sectionRightArea>div {

@@ -43,6 +43,8 @@
 .sectionRightArea {
     display: flex;
     flex-direction: column-reverse;
+    position: relative;
+    z-index: 10;
 }
 
 .sectionRightArea>div {

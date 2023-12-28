@@ -69,7 +69,7 @@ const NoteDetail = (props) => {
           }}
         >
           <FormGroup row style={{ justifyContent: "center" }}>
-            <h3 style={{ fontSize: "40px" }}>* 받은 쪽지 *</h3>
+            <h3 style={{ fontSize: "40px",textAlign:'center' }}>* 받은 쪽지 *</h3>
           </FormGroup>
           <FormGroup style={{ justifyContent: "center" }}>
             <Label for="sentUserNick" sm={3}>

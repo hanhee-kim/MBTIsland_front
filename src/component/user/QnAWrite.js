@@ -35,11 +35,18 @@ const QnAWrite = (props) => {
     //console.log(question.writerId);
     //console.log(user.username);
     //데이터 전달
+    if (question.title.length === 0 || question.content.length === 0) {
+      Swal.fire({
+        title: "제목과 내용을 입력해주세요",
+        icon: "warning",
+      });
+      return;
+    }
     axios
       .post(`${urlroot}/questionwrite`, question)
       .then((res) => {
         //console.log(res);
-        dispatch({type:"isReg",payload:true});
+        dispatch({ type: "isReg", payload: true });
         Swal.fire({
           title: "문의가 등록되었습니다.",
           icon: "success",
@@ -71,7 +78,7 @@ const QnAWrite = (props) => {
           }}
         >
           <FormGroup row style={{ justifyContent: "center" }}>
-            <h3 style={{ fontSize: "40px" }}>문의하기</h3>
+            <h3 style={{ fontSize: "40px" ,textAlign:'center'}}>문의하기</h3>
           </FormGroup>
           <FormGroup style={{ justifyContent: "center" }}>
             <Label for="title" sm={3}>

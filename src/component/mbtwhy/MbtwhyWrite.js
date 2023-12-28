@@ -5,6 +5,7 @@ import {
     Button,
     Input
 } from "reactstrap";
+import Swal from "sweetalert2";
 import axios from 'axios';
 import { urlroot } from "../../config";
 
@@ -96,7 +97,12 @@ function MbtwhyWrite() {
     // 게시글 작성
     const postMbtwhy = () => {
         if(content === "") {
-            alert("내용을 입력해주세요.");
+            Swal.fire({
+                title: "게시글 등록 실패",
+                text: "게시글 내용을 입력하세요.",
+                icon: "warning",
+                confirmButtonText: '확인',
+            });
             return;
         }
         
@@ -129,7 +135,8 @@ function MbtwhyWrite() {
     const buttonStyle = {
         background:"white",
         color:"black",
-        border:"1px solid lightgray"
+        border:"1px solid lightgray",
+        margin:"10px"
     };
     
     return (
@@ -184,6 +191,7 @@ function MbtwhyWrite() {
                     />
                     <div className={style.postContentDiv}>
                         <Button style={buttonStyle} onClick={()=>postMbtwhy()}>등록</Button>
+                        <Button style={buttonStyle} onClick={()=>navigate(-1)}>취소</Button>
                     </div>
                 </div>
             </div>

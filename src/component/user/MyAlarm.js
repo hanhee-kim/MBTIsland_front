@@ -99,10 +99,10 @@ const MyAlarm = () => {
     }
   };
   const readAlarm = () => {
-    if(checkItems.length===0) {
+    if (checkItems.length === 0) {
       Swal.fire({
-          title: "체크된 항목이 없습니다.",
-          icon: "warning",
+        title: "체크된 항목이 없습니다.",
+        icon: "warning",
       });
       return;
     }
@@ -185,17 +185,17 @@ const MyAlarm = () => {
       case "MBTMI":
         checkAlarm(alarm.alarmNo);
         getMyAlarmList(user.username, type, page);
-        navigate("/mbtmidetail/" + no );
+        navigate("/mbtmidetail/" + no);
         break;
       case "MBTWHY":
         checkAlarm(alarm.alarmNo);
         getMyAlarmList(user.username, type, page);
-        navigate("/mbtwhydetail/" + no + "/" + mbti );
+        navigate("/mbtwhydetail/" + no + "/" + mbti);
         break;
       case "MBATTLE":
         checkAlarm(alarm.alarmNo);
         getMyAlarmList(user.username, type, page);
-        navigate("/mbattledetail/" + no );
+        navigate("/mbattledetail/" + no);
         break;
       case "NOTE":
         checkAlarm(alarm.alarmNo);
@@ -224,7 +224,7 @@ const MyAlarm = () => {
         getMyAlarmList(user.username, type, page);
         Swal.fire({
           title: alarm.alarmType + "가 1회",
-          text: "지금까지 총 " + alarm.warnCnt + " 회의 경고를 받으셨습니다.",
+          text: "지금까지 총 " + (alarm.warnCnt+1) + " 회의 경고를 받으셨습니다.",
           icon: "warning",
         });
         break;
@@ -244,12 +244,13 @@ const MyAlarm = () => {
   // 페이지네이션
   const PaginationInside = () => {
     // if(errorMsg) return null;
+    let color = user.userMbtiColor;
     const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
     for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
       pageGroup.push(
         <span
           key={i}
-          className={`${page === i ? style.activePage : ""}`}
+          style={{ border: page === i ? `2px solid ${color}` : "" }}
           onClick={() => handlePageNo(i)}
         >
           {i}
@@ -407,7 +408,23 @@ const MyAlarm = () => {
                             goDetail(e, alarm);
                           }}
                         >
-                          {alarm.alarmContent}
+                          {alarm.alarmType === "댓글"
+                            ? `내 ${
+                                alarm.alarmTargetFrom.includes("omment")
+                                  ? "댓글"
+                                  : "게시글"
+                              }의 새 ${alarm.alarmType}(${
+                                alarm.alarmCnt
+                              })이 있습니다`
+                            : alarm.alarmType === "쪽지"
+                            ? `새 쪽지가 도착했습니다`
+                            : alarm.alarmType === "문의답글"
+                            ? `문의글에 답글이 달렸습니다`
+                            : alarm.alarmType === "경고"
+                            ? `경고처분을 받았습니다`
+                            : alarm.alarmType === "제재"
+                            ? `정지처분을 받았습니다`
+                            : null}
                         </td>
                         <td
                           sm={3}

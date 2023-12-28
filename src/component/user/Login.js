@@ -82,28 +82,30 @@ const Login = () => {
   //엔터 포커싱
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
+      //pw인풋에서 엔터 눌렀을떄
       login(e); // Enter 키를 눌렀을 때 로그인 함수 호출
+      
     }
-  }
+  };
   const login = (e) => {
     e.preventDefault();
     axios
       .post(`${urlroot}/login`, user)
       .then((res) => {
-        if(res.data.checkLeave === "Y"){
+        if (res.data.checkLeave === "Y") {
           // console.log("탈퇴회원!");
           Swal.fire({
-            title:'탈퇴한 회원입니다.',
-            text:'서비스 이용을 위해 회원가입을 진행해주세요.',
-            icon:'warning',
-          }).then(function (){
-            navigate('/join');
-          })
+            title: "탈퇴한 회원입니다.",
+            text: "서비스 이용을 위해 회원가입을 진행해주세요.",
+            icon: "warning",
+          }).then(function () {
+            navigate("/join");
+          });
         } else {
           // console.log(res.headers.authorization);
           // console.log(res.data);
           dispatch({ type: "token", payload: res.headers.authorization });
-          dispatch({ type: "user", payload: res.data.user});
+          dispatch({ type: "user", payload: res.data.user });
           Swal.fire({
             title: "로그인되었습니다.",
             icon: "success",
@@ -127,6 +129,7 @@ const Login = () => {
   };
   //비밀번호 아이디 찾기에서 보내기 눌렀을때
   const sendFindEmail = (e, type) => {
+    //type : modalType
     // console.log(type);
     // console.log(findForm.userEmail);
     //Email의 유효성조건
@@ -156,6 +159,12 @@ const Login = () => {
               text: "전송이 완료되었습니다. Email을 확인해주세요!",
               icon: "success",
             }).then(toggle());
+          } else {
+            Swal.fire({
+              title: "ID,PW찾기 오류.",
+              text: "회원가입시 입력한 Email을 입력해주세요.",
+              icon: "warning",
+            });
           }
         })
         .catch((err) => {
@@ -179,7 +188,10 @@ const Login = () => {
       }}
     >
       <Form style={loginFormStyle}>
-        <FormGroup row style={{ justifyContent: "center" ,textAlign:'center'}}>
+        <FormGroup
+          row
+          style={{ justifyContent: "center", textAlign: "center" }}
+        >
           <h3 style={{ fontSize: "40px" }}>LOGIN</h3>
         </FormGroup>
         <FormGroup row style={{ justifyContent: "center" }}>
@@ -193,6 +205,7 @@ const Login = () => {
               id="username"
               placeholder="ID를 입력하세요."
               onChange={(e) => change(e)}
+              onKeyDown={(e) => handleKeyPress(e)}
             />
           </Col>
         </FormGroup>
@@ -207,7 +220,7 @@ const Login = () => {
               id="userPassword"
               placeholder="PW를 입력하세요."
               onChange={(e) => change(e)}
-              onKeyDown={(e)=>handleKeyPress(e)} // Enter 키 이벤트 처리
+              onKeyDown={(e) => handleKeyPress(e)} // Enter 키 이벤트 처리
             />
           </Col>
         </FormGroup>
@@ -246,9 +259,7 @@ const Login = () => {
           <div style={{ width: "440px", border: "1px solid gray" }}></div>
         </div>
         <div style={socialBtnStyle}>
-          <a href = {`${urlroot}/oauth2/authorization/kakao`}
-          
-          >
+          <a href={`${urlroot}/oauth2/authorization/kakao`}>
             <img
               className="kakaLoginImg"
               src={"/kakaoLogin.png"}
@@ -256,10 +267,7 @@ const Login = () => {
               alt="kakaoLogin"
             />
           </a>
-          <a
-            href={`${urlroot}/oauth2/authorization/naver`}
-            
-          >
+          <a href={`${urlroot}/oauth2/authorization/naver`}>
             <img
               className="naverLoginImg"
               src={"/naverLogin.png"}

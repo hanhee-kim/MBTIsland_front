@@ -33,16 +33,17 @@ const MyNote = () => {
 
   const goNoteDetail = (e, note) => {
     //tr클릭시
-    if (note.receiveUsername == user.username) { //받은 쪽지일경우
+    if (note.receiveUsername == user.username) {
+      //받은 쪽지일경우
 
       axios
         .put(`${urlroot}/readnote?noteNo=${note.noteNo}`)
-        .then((res)=>{
+        .then((res) => {
           //console.log(res);
         })
-        .catch((err)=>{
+        .catch((err) => {
           //console.log(err);
-        })
+        });
       const url = "/notedetail/" + note.noteNo;
       window.open(
         url,
@@ -50,7 +51,7 @@ const MyNote = () => {
         "width=650,height=700,location=no,status=no,scrollbars=yes"
       );
       //
-      getMyNoteList(user.username,noteType, readType, page);
+      getMyNoteList(user.username, noteType, readType, page);
     } else if (note.sentUsername == user.username) {
       const url = "/sentnotedetail/" + note.noteNo;
       window.open(
@@ -132,12 +133,13 @@ const MyNote = () => {
   // 페이지네이션
   const PaginationInside = () => {
     // if(errorMsg) return null;
+    let color = user.userMbtiColor;
     const pageGroup = []; // 렌더링될때마다 빈배열로 초기화됨
     for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
       pageGroup.push(
         <span
           key={i}
-          className={`${page === i ? style.activePage : ""}`}
+          style={{ border: page === i ? `2px solid ${color}` : "" }}
           onClick={() => handlePageNo(i)}
         >
           {i}
@@ -301,11 +303,19 @@ const MyNote = () => {
                           {(page - 1) * 10 + index + 1}
                         </td>
                         {noteType === "sent" ? (
-                          <td sm={1} className="text-center" style={{minWidth:'110px'}}>
+                          <td
+                            sm={1}
+                            className="text-center"
+                            style={{ minWidth: "110px" }}
+                          >
                             {note.receiveUserNick}
                           </td>
                         ) : (
-                          <td sm={1} className="text-center" style={{minWidth:'110px'}}>
+                          <td
+                            sm={1}
+                            className="text-center"
+                            style={{ minWidth: "110px" }}
+                          >
                             {note.sentUserNick}
                           </td>
                         )}
