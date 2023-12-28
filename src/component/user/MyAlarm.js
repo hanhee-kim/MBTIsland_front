@@ -224,7 +224,7 @@ const MyAlarm = () => {
         getMyAlarmList(user.username, type, page);
         Swal.fire({
           title: alarm.alarmType + "가 1회",
-          text: "지금까지 총 " + alarm.warnCnt + " 회의 경고를 받으셨습니다.",
+          text: "지금까지 총 " + (alarm.warnCnt+1) + " 회의 경고를 받으셨습니다.",
           icon: "warning",
         });
         break;
