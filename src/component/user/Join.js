@@ -177,9 +177,9 @@ const Join = () => {
     axios
       .get(`${urlroot}/sendmail/${user.userEmail}`)
       .then((res) => {
-        //console.log(res);
+        // console.log(res);
         setServerEmailCode(res.data);
-        //console.log("serverCode : " + res.data);
+        console.log("serverCode : " + res.data);
         if (res.data === "email중복") {
           Swal.fire({
             title: "Email이 중복됩니다.",

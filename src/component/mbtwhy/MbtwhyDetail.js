@@ -12,6 +12,7 @@ import axios from 'axios';
 import { urlroot } from "../../config";
 
 import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
+import userEvent from "@testing-library/user-event";
 
 function MbtwhyDetail() {
     // 로그인 유저 정보
@@ -25,7 +26,9 @@ function MbtwhyDetail() {
     });
 
     // MBTI 분류, 글 번호, 댓글 페이지 번호
-    const {no, mbti} = useParams();
+    const {no} = useParams();
+
+    const [mbti, setMbti] = useState("");
 
     // Mbtwhy 게시글
     const [mbtwhy, setMbtwhy] = useState({});
@@ -262,10 +265,13 @@ function MbtwhyDetail() {
     }, []);
 
     useEffect(() => {
-        setMbtiColorTo(mbti.toUpperCase());
         getMbtwhyDetail();
         getMbtwhyCommentList(commentPage);
     }, []);
+    
+    useEffect(()=> {
+        setMbtiColorTo(mbti.toUpperCase());
+    }, [mbti]);
 
     // 게시글 상세보기 조회
     const getMbtwhyDetail = () => {
@@ -287,6 +293,8 @@ function MbtwhyDetail() {
             setMbtwhy(mbtwhy);
             // 추천수 set
             setRecommendCount(mbtwhy.recommendCnt);
+
+            setMbti(mbtwhy.mbtiCategory.toLowerCase());
 
             // 로그인한 유저에게 추천되어 있다면 (추천 데이터 존재한다면, isMbtwhyRecommend === true)
             if(isMbtwhyRecommended) {
@@ -819,7 +827,7 @@ function MbtwhyDetail() {
     const replyButtonStyle = {
         background:"none",
         color:"#C5C5C5",
-        fontWeight:"bold",
+        fontWeight:500,
         border:"none",
         padding:"0px"
     };
@@ -870,23 +878,23 @@ function MbtwhyDetail() {
                         </div>
                         <div style={{color:"#C5C5C5"}}>
                             {formatDatetimeGap(mbtwhy.writeDate)}
-                            <img className={style.viewIcon} src="/viewIcon-bold.png" alt=""></img>
+                            <img className={style.viewIcon} src="/viewIcon-bold.png" alt="조회수"></img>
                             {mbtwhy.viewCnt}
                         </div>
                         <div className={style.boardContent}>
                             {mbtwhy.content}
                         </div>
                         <div className={style.boardLow}>
-                            <div className={style.bookmarkDiv} onClick={()=>mbtwhyBookmark()}>
+                            <div className={style.bookmarkDiv}>
                                 {!isBookmarked?
-                                    <img src="/bookmark.png" alt=""/>
-                                    :<img src="/bookmarked.png" alt=""/>
+                                    <img src="/bookmark.png" alt="북마크" onClick={()=>mbtwhyBookmark()}/>
+                                    :<img src="/bookmarked.png" alt="북마크 완료" onClick={()=>mbtwhyBookmark()}/>
                                 }
                             </div>
                             <div className={style.thumbDiv} onClick={()=>mbtwhyRecommend()}>
                                 {!isRecommended?
-                                    <img src="/thumbIcon.png" alt=""/>
-                                    :<img src="/thumbIcon-full.png" alt=""/>
+                                    <img src="/thumbIcon.png" alt="추천"/>
+                                    :<img src="/thumbIcon-full.png" alt="추천 완료"/>
                                 }&nbsp;
                                 추천&nbsp;
                                 {recommendCount}
@@ -925,7 +933,7 @@ function MbtwhyDetail() {
                     {user.userRole==="ROLE_ADMIN" || !user.username?
                         <></>
                         :
-                        <div>
+                        <div className={style.commentDiv}>
                             <Input
                                 style={inputComment}
                                 type="textarea"
