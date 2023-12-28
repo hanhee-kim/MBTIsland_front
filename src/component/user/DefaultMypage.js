@@ -50,13 +50,13 @@ const DefaultMypage = (props) => {
     borderColor: "gray",
   };
   //css---
- 
+
   //state
   const user = useSelector((state) => state.persistedReducer.user);
   const token = useSelector((state) => state.persistedReducer.token);
   const navigate = useNavigate();
   const [pwInput, setPwInput] = useState(false);
-  const [totalCnt,setTotalCnt] = useState(0);
+  const [totalCnt, setTotalCnt] = useState(0);
   const [changeUser, setChangeUser] = useState({
     ...user,
     userPassword: "",
@@ -114,7 +114,6 @@ const DefaultMypage = (props) => {
     }
   };
   useEffect(() => {
-    
     axios
       .get(`${urlroot}/mypage/${user.username}`)
       .then((res) => {
@@ -123,8 +122,8 @@ const DefaultMypage = (props) => {
       })
       .catch((err) => {
         //console.log(err);
-      })
-  },[])
+      });
+  }, []);
   //email작성후 보내기버튼 눌렀을때(이때 이메일 중복여부도 확인해주어야함.)
   const sendCode = (e) => {
     e.preventDefault();
@@ -236,40 +235,40 @@ const DefaultMypage = (props) => {
   const leaveUser = (e) => {
     e.preventDefault();
     Swal.fire({
-      title:"정말 탈퇴하시겠습니까?",
+      title: "정말 탈퇴하시겠습니까?",
       html:
-        '작성 게시물은 탈퇴해도 사라지지 않습니다.<br>'+
-         'MBTIsland의 소유입니다. <br> '
-        + '탈퇴 후 같은 이메일로 재가입이 불가합니다.',
-      icon:'question',
-      showCancelButton: true,  
+        "작성 게시물은 탈퇴해도 사라지지 않습니다.<br>" +
+        "MBTIsland의 소유입니다. <br> " +
+        "탈퇴 후 같은 이메일로 재가입이 불가합니다.",
+      icon: "question",
+      showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "탈퇴",
-      cancelButtonText:'취소',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios
-            .get(`${urlroot}/leaveuser`,{
-              headers : {
-                  Authorization : token,
-              }
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .get(`${urlroot}/leaveuser`, {
+            headers: {
+              Authorization: token,
+            },
           })
-            .then((res) => {
-              //console.log(res);
-              Swal.fire({
-                title: "탈퇴완료되었습니다!",
-                text: "MBTIsland는 언제나 여러분을 기다리겠습니다.",
-                icon: "success"
-              });
-              navigate("/logout");
-            })
-            .catch((err) => {
-              //console.log(err);
-            })
-        }
-      })
-  }
+          .then((res) => {
+            //console.log(res);
+            Swal.fire({
+              title: "탈퇴완료되었습니다!",
+              text: "MBTIsland는 언제나 여러분을 기다리겠습니다.",
+              icon: "success",
+            });
+            navigate("/logout");
+          })
+          .catch((err) => {
+            //console.log(err);
+          });
+      }
+    });
+  };
   //수정버튼 눌렀을때
   const modifyUser = (e) => {
     e.preventDefault();
@@ -384,7 +383,7 @@ const DefaultMypage = (props) => {
       </div>
       <Form style={formStyle}>
         <FormGroup row style={{ justifyContent: "center" }}>
-          <h3 style={{ fontSize: "40px" ,textAlign:'center'}}>프로필</h3>
+          <h3 style={{ fontSize: "40px", textAlign: "center" }}>프로필</h3>
         </FormGroup>
         <FormGroup row>
           <Label for="username" sm={3}>
@@ -414,7 +413,6 @@ const DefaultMypage = (props) => {
                     type="password"
                     name="userPassword"
                     id="userPassword"
-                    // defaultValue={changeUser.userPassword}
                     minLength={4}
                     maxLength={8}
                     onChange={(e) => change(e)}
@@ -431,11 +429,9 @@ const DefaultMypage = (props) => {
                     name="user_password_check"
                     id="user_password_check"
                     placeholder="PASSWORD를 한번더 입력하세요."
-                    // defaultValue={changeUser.userPassword}
                     maxLength={8}
                     onChange={(e) => passwordCheck(e)}
                   />
-                  {changeUser.userPassword}
                 </Col>
                 {isSamePassword ? (
                   <span
@@ -630,7 +626,7 @@ const DefaultMypage = (props) => {
             </>
           ))}
         <FormGroup style={{ justifyContent: "flex-end", display: "flex" }}>
-        <Button
+          <Button
             color="light"
             style={{
               borderRadius: "10px",
@@ -638,7 +634,7 @@ const DefaultMypage = (props) => {
               marginTop: "25px",
               width: "80px",
               fontSize: "20px",
-              color:"gray",
+              color: "gray",
             }}
             type="submit"
             name="submit"
