@@ -12,6 +12,7 @@ import axios from 'axios';
 import { urlroot } from "../../config";
 
 import style from "../../css/mbtwhy/MbtwhyDetail.module.css";
+import userEvent from "@testing-library/user-event";
 
 function MbtwhyDetail() {
     // 로그인 유저 정보
@@ -25,7 +26,9 @@ function MbtwhyDetail() {
     });
 
     // MBTI 분류, 글 번호, 댓글 페이지 번호
-    const {no, mbti} = useParams();
+    const {no} = useParams();
+
+    const [mbti, setMbti] = useState("");
 
     // Mbtwhy 게시글
     const [mbtwhy, setMbtwhy] = useState({});
@@ -262,10 +265,13 @@ function MbtwhyDetail() {
     }, []);
 
     useEffect(() => {
-        setMbtiColorTo(mbti.toUpperCase());
         getMbtwhyDetail();
         getMbtwhyCommentList(commentPage);
     }, []);
+    
+    useEffect(()=> {
+        setMbtiColorTo(mbti.toUpperCase());
+    }, [mbti]);
 
     // 게시글 상세보기 조회
     const getMbtwhyDetail = () => {
@@ -287,6 +293,8 @@ function MbtwhyDetail() {
             setMbtwhy(mbtwhy);
             // 추천수 set
             setRecommendCount(mbtwhy.recommendCnt);
+
+            setMbti(mbtwhy.mbtiCategory.toLowerCase());
 
             // 로그인한 유저에게 추천되어 있다면 (추천 데이터 존재한다면, isMbtwhyRecommend === true)
             if(isMbtwhyRecommended) {
